@@ -133,7 +133,11 @@ export default function CardItem({
         </CardDetailedPreview>
       </Modal>
 
-      <View className="relative w-full h-0 z-10 max-w-full">
+      <View
+        className={`relative w-full h-0 z-10 max-w-full ${
+          !condensed ? "-my-1" : ""
+        }`}
+      >
         <View
           className={`absolute top-0 left-0 flex gap-2 w-full !bg-background-100 rounded-xl overflow-hidden transition-all duration-300 z-10 ${
             hovered && !expanded ? "max-h-[412px]" : "max-h-0"
