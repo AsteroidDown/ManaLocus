@@ -20,6 +20,7 @@ export default function CardImage({
   placeHolder,
   onClick,
 }: CardImageProps) {
+  const [hovered, setHovered] = React.useState(false);
   const [focused, setFocused] = React.useState(false);
   const [showFront, setShowFront] = React.useState(true);
 
@@ -155,29 +156,31 @@ export default function CardImage({
             )}
           </View>
         )}
-
-        {card?.faces && card.cardBackId !== CardBackIds.DEFAULT && (
-          <Pressable
-            className="absolute m-2 bottom-0 right-0"
-            onPress={() => setShowFront(!showFront)}
-          >
-            <View
-              className={
-                "bg-background-100 p-4 rounded-full transition-all " +
-                (focused ? "bg-opacity-100" : "bg-opacity-60")
-              }
-            >
-              <FontAwesomeIcon
-                className={
-                  "text-white transition-all " +
-                  (!showFront ? "rotate-[270deg]" : "")
-                }
-                icon={faRotateRight}
-              />
-            </View>
-          </Pressable>
-        )}
       </View>
+
+      {card?.faces && card.cardBackId !== CardBackIds.DEFAULT && (
+        <Pressable
+          onPointerEnter={() => setHovered(true)}
+          onPointerLeave={() => setHovered(false)}
+          className="absolute bottom-2 left-2"
+          onPress={() => setShowFront(!showFront)}
+        >
+          <View
+            className={
+              "bg-background-300 p-2 rounded-full transition-all duration-300 " +
+              (hovered ? "bg-opacity-100" : "bg-opacity-75")
+            }
+          >
+            <FontAwesomeIcon
+              className={
+                "text-white transition-all " +
+                (!showFront ? "rotate-[270deg]" : "")
+              }
+              icon={faRotateRight}
+            />
+          </View>
+        </Pressable>
+      )}
     </Pressable>
   );
 }
