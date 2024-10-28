@@ -30,13 +30,13 @@ export default function CardsLayout() {
   const [condensed, setCondensed] = React.useState(false);
 
   const tabs: TabProps[] = [
-    { title: "Mana Value", link: "(tabs)/maybe-board", name: "cost" },
+    { title: "Mana Value", link: "builder/maybe-board", name: "cost" },
     {
       title: "Color",
-      link: "(tabs)/maybe-board/color",
+      link: "builder/maybe-board/color",
       name: "color",
     },
-    { title: "Type", link: "(tabs)/maybe-board/type", name: "type" },
+    { title: "Type", link: "builder/maybe-board/type", name: "type" },
   ];
 
   useEffect(() => {

@@ -6,9 +6,10 @@ import { getLocalStorageDashboard } from "@/functions/local-storage/dashboard-lo
 import "@/global.css";
 import { Card } from "@/models/card/card";
 import { Dashboard } from "@/models/dashboard/dashboard";
-import { Stack } from "expo-router";
+import { Link, Stack } from "expo-router";
 import React, { useEffect } from "react";
-import { SafeAreaView } from "react-native";
+import { SafeAreaView, View } from "react-native";
+import Button from "../components/ui/button/button";
 
 export default function RootLayout() {
   const [storedCards, setStoredCards] = React.useState([] as Card[]);
@@ -22,18 +23,44 @@ export default function RootLayout() {
 
   return (
     <SafeAreaView className="flex w-full h-full bg-background-100">
-      <Text size="2xl" thickness="medium" className="px-6 py-4">
-        Chromatic Cube
-      </Text>
-
       <StoredCardsContext.Provider value={{ storedCards, setStoredCards }}>
         <DashboardContext.Provider value={{ dashboard, setDashboard }}>
-          <Stack>
-            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          <Stack
+            screenOptions={{
+              headerTitle: () => <Logo />,
+              headerTintColor: "rgb(var(--background-200))",
+              headerStyle: {
+                backgroundColor: "black",
+              },
+            }}
+          >
+            <Stack.Screen name="index" />
+            <Stack.Screen name="builder" />
+            <Stack.Screen name="profile" />
             <Stack.Screen name="+not-found" />
           </Stack>
         </DashboardContext.Provider>
       </StoredCardsContext.Provider>
     </SafeAreaView>
+  );
+}
+
+function Logo() {
+  return (
+    <View className="flex flex-row items-center gap-2 px-6 py-4">
+      <Link href="/">
+        <Text size="2xl" thickness="medium" className="mr-2">
+          Mana Locus
+        </Text>
+      </Link>
+
+      <Button type="clear" text="Decks" size="lg" />
+
+      <Link href="/cards">
+        <Button type="clear" text="Cards" size="lg" />
+      </Link>
+
+      <Button type="clear" text="Explore" size="lg" />
+    </View>
   );
 }

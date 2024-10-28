@@ -111,7 +111,7 @@ export default function CardViewMultipleModal({
             title="No Cards Found!"
             subtitle={`Add some ${title.toLowerCase()} and they'll show up here!`}
           >
-            <Link href="./(tabs)/main-board">
+            <Link href="./builder/main-board">
               <Button icon={faPlus} text="Add Cards"></Button>
             </Link>
           </Placeholder>

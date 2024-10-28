@@ -98,7 +98,7 @@ export default function App() {
   }
 
   return (
-    <SafeAreaView className="flex-1 bg-background-100 ">
+    <SafeAreaView className="flex-1 bg-background-100">
       <ScrollView>
         <View className="flex-1 flex flex-row flex-wrap gap-6 px-6 justify-center items-center">
           {dashboard?.sections.map((section, index) => (

@@ -1,4 +1,3 @@
-import CardImportExportModal from "@/components/cards/card-import-export-modal";
 import CardSearch from "@/components/cards/card-search";
 import Button from "@/components/ui/button/button";
 import { TabProps } from "@/components/ui/tabs/tab";
@@ -17,26 +16,31 @@ import {
   faExpand,
   faEye,
   faEyeSlash,
-  faFileArrowDown,
 } from "@fortawesome/free-solid-svg-icons";
 import React, { useContext, useEffect } from "react";
 import { ScrollView, View } from "react-native";
 
-export default function CardsLayout() {
+export default function AcquireBoardLayout() {
   const { setStoredCards } = useContext(StoredCardsContext);
   const { setPreferences } = useContext(CardPreferencesContext);
 
-  const [board, setBoard] = React.useState("main" as BoardType);
-
-  const [open, setOpen] = React.useState(false);
+  const [board, setBoard] = React.useState("acquire" as BoardType);
 
   const [hideImages, setHideImages] = React.useState(false);
   const [condensed, setCondensed] = React.useState(false);
 
   const tabs: TabProps[] = [
-    { title: "Mana Value", link: "(tabs)/main-board", name: "cost" },
-    { title: "Color", link: "(tabs)/main-board/color", name: "color" },
-    { title: "Type", link: "(tabs)/main-board/type", name: "type" },
+    {
+      title: "Mana Value",
+      link: "builder/acquire-board",
+      name: "cost",
+    },
+    {
+      title: "Color",
+      link: "builder/side-board/color",
+      name: "color",
+    },
+    { title: "Type", link: "builder/acquire-board/type", name: "type" },
   ];
 
   useEffect(() => {
@@ -84,13 +88,6 @@ export default function CardsLayout() {
 
           <TabBar tabs={tabs}>
             <View className="flex flex-row gap-2 mx-4">
-              <Button
-                rounded
-                type="clear"
-                icon={faFileArrowDown}
-                onClick={() => setOpen(!open)}
-              />
-
               <Tooltip
                 title={
                   hideImages ? "Expand Card Gallery" : "Condense Card Gallery"
@@ -119,8 +116,6 @@ export default function CardsLayout() {
             </View>
           </TabBar>
         </View>
-
-        <CardImportExportModal open={open} setOpen={setOpen} />
       </BoardContext.Provider>
     </ScrollView>
   );
