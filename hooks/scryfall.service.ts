@@ -1,8 +1,13 @@
 import { ScryfallCatalog } from "@/models/scryfall/scryfall-catalog";
-import { ScryfallToCard } from "../functions/scryfall";
+import { ScryfallSet } from "@/models/scryfall/scryfall-set";
+import { ScryfallToCard, ScryfallToSet } from "../functions/scryfall";
 import { Card, CardIdentifier } from "../models/card/card";
+import { Set } from "../models/card/set";
 import { ScryfallCard } from "../models/scryfall/scryfall-card";
-import { ScryfallList } from "../models/scryfall/scryfall-list";
+import {
+  ScryfallCardList,
+  ScryfallSetList,
+} from "../models/scryfall/scryfall-list";
 import Api from "./api-methods";
 
 async function autocomplete(query: string): Promise<string[]> {
@@ -16,7 +21,7 @@ async function autocomplete(query: string): Promise<string[]> {
 }
 
 async function findCards(query: string): Promise<Card[]> {
-  const response: ScryfallList = await Api.get(`cards/search`, {
+  const response: ScryfallCardList = await Api.get(`cards/search`, {
     q: query + " game:paper",
   }).catch((error) => console.error(error));
 
@@ -63,7 +68,7 @@ async function getCardsFromCollection(cardsIdentifiers: CardIdentifier[]) {
         await Api.post(`cards/collection`, {
           identifiers: bundle,
         })
-          .then((response: ScryfallList) =>
+          .then((response: ScryfallCardList) =>
             response.data.forEach((scryfallCard) =>
               scryfallCards.push(scryfallCard)
             )
@@ -83,6 +88,36 @@ async function getRandomCard(): Promise<Card> {
   return ScryfallToCard(card);
 }
 
+async function getSets(): Promise<Set[]> {
+  const response: ScryfallSetList = await Api.get(`sets`).catch((error) =>
+    console.error(error)
+  );
+
+  return response ? response.data.map((set) => ScryfallToSet(set)) : [];
+}
+
+async function getSetByCode(setId: string): Promise<Set> {
+  const set: ScryfallSet = await Api.get(`sets/${setId}`).catch((error) =>
+    console.error(error)
+  );
+
+  return ScryfallToSet(set);
+}
+
+async function getSetCards(searchURI: string): Promise<Card[]> {
+  const response: ScryfallCardList = await Api.get(
+    `${searchURI.split("api.scryfall.com/")[1]}`
+  ).catch((error) => console.error(error));
+
+  const cards = response.data.map((card) => ScryfallToCard(card));
+
+  if (!response.has_more) console.log(response);
+
+  if (response.has_more) {
+    return [...cards, ...(await getSetCards(response.next_page))];
+  } else return cards;
+}
+
 const ScryfallService = {
   autocomplete,
   findCards,
@@ -90,6 +125,9 @@ const ScryfallService = {
   getCardPrints,
   getCardsFromCollection,
   getRandomCard,
+  getSets,
+  getSetByCode,
+  getSetCards,
 };
 
 export default ScryfallService;
