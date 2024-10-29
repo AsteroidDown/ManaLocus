@@ -7,6 +7,9 @@ export interface Card {
   name: string;
   count: number;
   set: string;
+  borderColor: string;
+  frameEffects: string[];
+  promo: boolean;
   collectorNumber: string;
   cardBackId: string;
   rarity: MTGRarity;
@@ -24,6 +27,10 @@ export interface Card {
   priceUris: CardPriceUris;
   legalities: CardLegalities;
 }
+
+export type CardBorderColor = "black" | "borderless";
+
+export type CardFrameEffect = "showcase" | "extendedart";
 
 export interface CardImageUris {
   small: string;

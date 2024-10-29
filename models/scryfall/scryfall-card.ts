@@ -1,12 +1,16 @@
 import { MTGLegality } from "@/constants/mtg/mtg-legality";
 import { MTGRarity } from "@/constants/mtg/mtg-rarity";
 import { MTGColorSymbol } from "../../constants/mtg/mtg-colors";
+import { CardFrameEffect } from "../card/card";
 
 export interface ScryfallCard {
   id: string;
   name: string;
   set: string;
   collector_number: string;
+  border_color: string;
+  frame_effects: CardFrameEffect[];
+  promo: boolean;
   card_back_id: string;
   rarity: MTGRarity;
   cmc: number;
