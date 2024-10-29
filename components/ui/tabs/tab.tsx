@@ -5,8 +5,9 @@ import { View, ViewProps } from "react-native";
 
 export type TabProps = ViewProps & {
   title: string;
-  link: Href;
-  name: string;
+  link?: Href;
+  name?: string;
+  hideBorder?: boolean;
   index?: number;
   focused?: boolean;
   focusedIndex?: number;
@@ -15,6 +16,7 @@ export type TabProps = ViewProps & {
 export default function Tab({
   title,
   index,
+  hideBorder = false,
   focusedIndex,
   focused = false,
   className,
@@ -32,7 +34,7 @@ export default function Tab({
       style={{ zIndex: index === focusedIndex ? 2 : 1 }}
       className={`${className} ${baseClasses} ${
         focused ? focusedClasses : unfocusedClasses
-      }`}
+      } ${hideBorder ? "!border-transparent !ml-0" : ""}`}
     >
       <Text
         size="lg"
