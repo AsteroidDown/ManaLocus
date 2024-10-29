@@ -111,8 +111,6 @@ async function getSetCards(searchURI: string): Promise<Card[]> {
 
   const cards = response.data.map((card) => ScryfallToCard(card));
 
-  if (!response.has_more) console.log(response);
-
   if (response.has_more) {
     return [...cards, ...(await getSetCards(response.next_page))];
   } else return cards;
