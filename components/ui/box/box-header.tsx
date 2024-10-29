@@ -6,7 +6,7 @@ import { View, ViewProps } from "react-native";
 import Divider from "../divider/divider";
 
 export type BoxHeaderProps = ViewProps & {
-  title: string;
+  title?: string;
   subtitle?: string;
 
   start?: ReactNode;
@@ -27,7 +27,7 @@ export default function BoxHeader({
   hideDivider = false,
 }: BoxHeaderProps) {
   return (
-    <View className="flex-1 -mx-6">
+    <View className="flex-1 -mx-6 max-h-fit">
       <View className="flex flex-row flex-wrap gap-2 justify-between items-center px-6 pb-4">
         <View className="flex flex-row items-center gap-4">
           {start}
@@ -40,11 +40,13 @@ export default function BoxHeader({
           )}
 
           <View className="flex flex-1">
-            <Text size="2xl" thickness="bold">
-              {title}
-            </Text>
+            {title && (
+              <Text size="2xl" thickness="bold">
+                {title}
+              </Text>
+            )}
 
-            <Text className="text-dark-600">{subtitle}</Text>
+            {subtitle && <Text className="text-dark-600">{subtitle}</Text>}
           </View>
 
           {titleEnd}
