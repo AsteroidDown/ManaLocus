@@ -1,6 +1,6 @@
 import { MTGLegality } from "@/constants/mtg/mtg-legality";
+import { MTGRarity } from "@/constants/mtg/mtg-rarity";
 import { MTGColorSymbol } from "../../constants/mtg/mtg-colors";
-import { Rarity } from "../card/card";
 
 export interface ScryfallCard {
   id: string;
@@ -8,7 +8,7 @@ export interface ScryfallCard {
   set: string;
   collector_number: string;
   card_back_id: string;
-  rarity: Rarity;
+  rarity: MTGRarity;
   cmc: number;
   color_identity: MTGColorSymbol[];
   mana_cost: string;

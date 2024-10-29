@@ -1,4 +1,6 @@
+import { ScryfallSet } from "@/models/scryfall/scryfall-set";
 import { Card, CardImageUris } from "../models/card/card";
+import { Set } from "../models/card/set";
 import {
   ScryfallCard,
   ScryfallImageUris,
@@ -69,5 +71,21 @@ export function ScryfallToCard(scryfallCard: ScryfallCard): Card {
       cardmarket: scryfallCard.purchase_uris.cardmarket,
       cardhoarder: scryfallCard.purchase_uris.cardhoarder,
     },
+  };
+}
+
+export function ScryfallToSet(scryfallSet: ScryfallSet): Set {
+  return {
+    id: scryfallSet.id,
+    code: scryfallSet.code,
+    name: scryfallSet.name,
+    uri: scryfallSet.uri,
+    scryfallUri: scryfallSet.scryfall_uri,
+    searchUri: scryfallSet.search_uri,
+    releasedAt: scryfallSet.released_at,
+    setType: scryfallSet.set_type,
+    cardCount: scryfallSet.card_count,
+    digital: scryfallSet.digital,
+    iconSvgUri: scryfallSet.icon_svg_uri,
   };
 }
