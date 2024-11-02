@@ -42,7 +42,7 @@ export default function CardsPage() {
           {sets.map((set, index) => (
             <Link
               key={set.id + index}
-              href={`cards/set/${set.code}`}
+              href={`cards/${set.code}`}
               className="px-4 py-2 border-t border-dark-200"
             >
               <Text>{set.name}</Text>
