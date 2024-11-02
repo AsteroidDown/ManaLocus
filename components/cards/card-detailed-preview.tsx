@@ -9,15 +9,20 @@ import { CardLegalities } from "./card-legalities";
 
 export type CardDetailedPreview = ViewProps & {
   card?: Card;
+  fullHeight?: boolean;
 };
 
 export default function CardDetailedPreview({
   card,
+  fullHeight = false,
+  className,
   children,
 }: CardDetailedPreview) {
   return (
-    <Box className="flex flex-row flex-wrap flex-1 max-w-max min-w-fit justify-center gap-3 h-fit">
-      <View className="flex gap-3  min-w-[250px]">
+    <Box
+      className={`flex flex-row flex-wrap flex-1 max-w-max min-w-fit justify-center gap-3 h-fit ${className}`}
+    >
+      <View className="flex gap-3 min-w-[250px]">
         <CardImage
           card={card}
           placeHolder="Search for a card and it will be previewed here"
@@ -27,7 +32,9 @@ export default function CardDetailedPreview({
       </View>
 
       <Box
-        className="flex gap-3 w-[364px] max-h-[458px] overflow-y-auto"
+        className={`flex gap-3 w-[400px] overflow-y-auto ${
+          fullHeight ? "h-fit" : "max-h-[458px]"
+        }`}
         shade={300}
       >
         {!card?.faces && <CardInfo card={card} />}
