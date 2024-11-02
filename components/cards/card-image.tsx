@@ -26,7 +26,9 @@ export default function CardImage({
   const [showFront, setShowFront] = React.useState(true);
 
   const [frontLoading, setFrontLoading] = React.useState(false);
+  const [frontLoaded, setFrontLoaded] = React.useState(false);
   const [backLoading, setBackLoading] = React.useState(false);
+  const [backLoaded, setBackLoaded] = React.useState(false);
 
   const ref = React.useRef<View>(null);
   const onScreen = isOnScreen(ref);
@@ -42,6 +44,16 @@ export default function CardImage({
   );
 
   const cardImage = useMemo(() => {
+    if (frontLoaded) {
+      return (
+        <Image
+          source={{ uri: card?.images?.png }}
+          style={[{ resizeMode: "contain" }]}
+          className={`max-h-[350px] aspect-[2.5/3.5] rounded-xl h-full`}
+        />
+      );
+    }
+
     if (!onScreen) return;
 
     return (
@@ -51,14 +63,33 @@ export default function CardImage({
         className={`max-h-[350px] aspect-[2.5/3.5] rounded-xl ${
           frontLoading ? "!h-0" : "h-full"
         }`}
-        onLoad={() => setFrontLoading(false)}
-        onLoadEnd={() => setFrontLoading(false)}
-        onLoadStart={() => setFrontLoading(true)}
+        onLoad={() => {
+          setFrontLoading(false);
+          setFrontLoaded(true);
+        }}
+        onLoadEnd={() => {
+          setFrontLoading(false);
+          setFrontLoaded(true);
+        }}
+        onLoadStart={() => {
+          setFrontLoading(true);
+          setFrontLoaded(false);
+        }}
       />
     );
   }, [card?.images?.png, onScreen]);
 
   const cardFrontImage = useMemo(() => {
+    if (frontLoaded) {
+      return (
+        <Image
+          source={{ uri: card?.faces?.front.imageUris?.png }}
+          style={[{ resizeMode: "contain" }]}
+          className={`max-h-[350px] aspect-[2.5/3.5] rounded-xl h-full`}
+        />
+      );
+    }
+
     if (!onScreen) return;
 
     return (
@@ -68,14 +99,33 @@ export default function CardImage({
         className={`max-h-[350px] aspect-[2.5/3.5] rounded-xl ${
           frontLoading ? "!h-0" : "h-full"
         }`}
-        onLoad={() => setFrontLoading(false)}
-        onLoadEnd={() => setFrontLoading(false)}
-        onLoadStart={() => setFrontLoading(true)}
+        onLoad={() => {
+          setFrontLoading(false);
+          setFrontLoaded(true);
+        }}
+        onLoadEnd={() => {
+          setFrontLoading(false);
+          setFrontLoaded(true);
+        }}
+        onLoadStart={() => {
+          setFrontLoading(true);
+          setFrontLoaded(false);
+        }}
       />
     );
   }, [card?.faces?.front.imageUris?.png, onScreen]);
 
   const cardBackImage = useMemo(() => {
+    if (backLoaded) {
+      return (
+        <Image
+          source={{ uri: card?.faces?.back.imageUris?.png }}
+          style={[{ resizeMode: "contain" }]}
+          className={`max-h-[350px] aspect-[2.5/3.5] rounded-xl h-full`}
+        />
+      );
+    }
+
     if (!onScreen) return;
 
     return (
@@ -85,9 +135,18 @@ export default function CardImage({
         className={`max-h-[350px] aspect-[2.5/3.5] rounded-xl ${
           frontLoading ? "!h-0" : "h-full"
         }`}
-        onLoad={() => setBackLoading(false)}
-        onLoadEnd={() => setBackLoading(false)}
-        onLoadStart={() => setBackLoading(true)}
+        onLoad={() => {
+          setBackLoading(false);
+          setBackLoaded(true);
+        }}
+        onLoadEnd={() => {
+          setBackLoading(false);
+          setBackLoaded(true);
+        }}
+        onLoadStart={() => {
+          setBackLoading(true);
+          setBackLoaded(false);
+        }}
       />
     );
   }, [card?.faces?.back.imageUris?.png]);
