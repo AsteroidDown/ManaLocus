@@ -26,21 +26,18 @@ export default function SetPage() {
   useEffect(() => {
     if (typeof setId !== "string" || baseCards?.length) return;
 
-    console.log("request");
-    ScryfallService.getSetByCode(setId).then((set) => {
-      setSet(set);
-      ScryfallService.getSetCards(set.searchUri).then((cards) =>
-        setCards(cards)
-      );
-      console.log("got request");
-    });
+    ScryfallService.getSetByCode(setId).then((set) => setSet(set));
   }, [setId]);
+
+  useEffect(() => {
+    if (!set) return;
+
+    ScryfallService.getSetCards(set.searchUri).then((cards) => setCards(cards));
+  }, [set]);
 
   useEffect(() => {
     if (!cards?.length) return;
     if (baseCards?.length) return;
-
-    console.log("start");
 
     cards.forEach((card) => {
       if (card.frameEffects?.includes("showcase")) showcaseCards.push(card);
@@ -52,73 +49,18 @@ export default function SetPage() {
     });
 
     setTabs([
-      ...(baseCards?.length
-        ? [
-            {
-              title: "Base",
-              children: (
-                <CardList
-                  subtitle={baseCards.length + " Cards"}
-                  cards={baseCards}
-                />
-              ),
-            },
-          ]
-        : []),
+      ...(baseCards?.length ? getTabContent("Base", baseCards) : []),
       ...(showcaseCards?.length
-        ? [
-            {
-              title: "Showcase",
-              children: (
-                <CardList
-                  subtitle={showcaseCards.length + " Cards"}
-                  cards={showcaseCards}
-                />
-              ),
-            },
-          ]
+        ? getTabContent("Showcase", showcaseCards)
         : []),
       ...(borderlessCards?.length
-        ? [
-            {
-              title: "Borderless",
-              children: (
-                <CardList
-                  subtitle={borderlessCards.length + " Cards"}
-                  cards={borderlessCards}
-                />
-              ),
-            },
-          ]
+        ? getTabContent("Borderless", borderlessCards)
         : []),
       ...(extendedArtCards?.length
-        ? [
-            {
-              title: "Extended Art",
-              children: (
-                <CardList
-                  subtitle={extendedArtCards.length + " Cards"}
-                  cards={extendedArtCards}
-                />
-              ),
-            },
-          ]
+        ? getTabContent("Extended Art", extendedArtCards)
         : []),
-      ...(promoCards?.length
-        ? [
-            {
-              title: "Promo",
-              children: (
-                <CardList
-                  subtitle={promoCards.length + " Cards"}
-                  cards={promoCards}
-                />
-              ),
-            },
-          ]
-        : []),
+      ...(promoCards?.length ? getTabContent("Promo", promoCards) : []),
     ]);
-    console.log("finish");
   }, [cards]);
 
   if (!set) return;
@@ -136,4 +78,13 @@ export default function SetPage() {
       </View>
     </ScrollView>
   );
+}
+
+function getTabContent(title: string, cards: Card[]) {
+  return [
+    {
+      title,
+      children: <CardList subtitle={cards.length + " Cards"} cards={cards} />,
+    },
+  ];
 }
