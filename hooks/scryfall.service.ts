@@ -36,6 +36,25 @@ async function getCard(name: string, exact = false): Promise<Card> {
   return ScryfallToCard(card);
 }
 
+async function getCardByNumber(
+  setId: string,
+  cardNumber: number
+): Promise<Card> {
+  const card: ScryfallCard = await Api.get(
+    `cards/${setId}/${cardNumber}`
+  ).catch((error) => console.error(error));
+
+  return ScryfallToCard(card);
+}
+
+async function getCardById(cardId: string): Promise<Card> {
+  const card: ScryfallCard = await Api.get(`cards/${cardId}`).catch((error) =>
+    console.error(error)
+  );
+
+  return ScryfallToCard(card);
+}
+
 async function getCardPrints(name: string): Promise<Card[]> {
   return await findCards(`name:/^${name}$/ unique:prints game:paper`);
 }
@@ -120,6 +139,8 @@ const ScryfallService = {
   autocomplete,
   findCards,
   getCard,
+  getCardById,
+  getCardByNumber,
   getCardPrints,
   getCardsFromCollection,
   getRandomCard,
