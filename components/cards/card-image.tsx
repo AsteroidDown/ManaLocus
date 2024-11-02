@@ -1,5 +1,6 @@
 import Text from "@/components/ui/text/text";
 import { CardBackIds } from "@/constants/scryfall/ids";
+import { isOnScreen } from "@/hooks/on-screen";
 import { Card } from "@/models/card/card";
 import { faRotateRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -27,6 +28,9 @@ export default function CardImage({
   const [frontLoading, setFrontLoading] = React.useState(false);
   const [backLoading, setBackLoading] = React.useState(false);
 
+  const ref = React.useRef<View>(null);
+  const onScreen = isOnScreen(ref);
+
   const containerClasses =
     "min-w-[228px] max-h-fit border-2 border-primary-200 border-opacity-0 focus:border-opacity-100 rounded-xl overflow-hidden outline-none transition-all duration-300";
 
@@ -34,11 +38,13 @@ export default function CardImage({
     "flex h-full max-h-[350px] aspect-[2.5/3.5] rounded-lg overflow-hidden";
 
   const imagePlaceHolder = (
-    <View className="h-full max-h-[350px] aspect-[2.5/3.5] rounded-xl transition-all bg-background-100 animate-pulse"></View>
+    <View className="h-full max-h-[350px] aspect-[2.5/3.5] rounded-xl transition-all bg-background-200 animate-pulse"></View>
   );
 
-  const cardImage = useMemo(
-    () => (
+  const cardImage = useMemo(() => {
+    if (!onScreen) return;
+
+    return (
       <Image
         source={{ uri: card?.images?.png }}
         style={[{ resizeMode: "contain" }]}
@@ -49,12 +55,13 @@ export default function CardImage({
         onLoadEnd={() => setFrontLoading(false)}
         onLoadStart={() => setFrontLoading(true)}
       />
-    ),
-    [card?.images?.png]
-  );
+    );
+  }, [card?.images?.png, onScreen]);
 
-  const cardFrontImage = useMemo(
-    () => (
+  const cardFrontImage = useMemo(() => {
+    if (!onScreen) return;
+
+    return (
       <Image
         source={{ uri: card?.faces?.front.imageUris?.png }}
         style={[{ resizeMode: "contain" }]}
@@ -65,12 +72,13 @@ export default function CardImage({
         onLoadEnd={() => setFrontLoading(false)}
         onLoadStart={() => setFrontLoading(true)}
       />
-    ),
-    [card?.faces?.front.imageUris?.png]
-  );
+    );
+  }, [card?.faces?.front.imageUris?.png, onScreen]);
 
-  const cardBackImage = useMemo(
-    () => (
+  const cardBackImage = useMemo(() => {
+    if (!onScreen) return;
+
+    return (
       <Image
         source={{ uri: card?.faces?.back.imageUris?.png }}
         style={[{ resizeMode: "contain" }]}
@@ -81,9 +89,8 @@ export default function CardImage({
         onLoadEnd={() => setBackLoading(false)}
         onLoadStart={() => setBackLoading(true)}
       />
-    ),
-    [card?.faces?.back.imageUris?.png]
-  );
+    );
+  }, [card?.faces?.back.imageUris?.png]);
 
   useEffect(() => setShowFront(true), [card]);
 
@@ -100,7 +107,7 @@ export default function CardImage({
       tabIndex={!card ? -1 : focusable ? 0 : -1}
       onPress={() => (focusable ? onClick?.() : null)}
     >
-      <View className={baseClasses}>
+      <View ref={ref} className={baseClasses}>
         {card && !card.faces?.back.imageUris.png && (
           <>
             {frontLoading && imagePlaceHolder}
