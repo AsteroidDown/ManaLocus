@@ -77,7 +77,7 @@ export default function CardImage({
         }}
       />
     );
-  }, [card?.images?.png, onScreen]);
+  }, [card?.images?.png, onScreen, frontLoaded]);
 
   const cardFrontImage = useMemo(() => {
     if (frontLoaded) {
@@ -113,7 +113,7 @@ export default function CardImage({
         }}
       />
     );
-  }, [card?.faces?.front.imageUris?.png, onScreen]);
+  }, [card?.faces?.front.imageUris?.png, onScreen, frontLoaded]);
 
   const cardBackImage = useMemo(() => {
     if (backLoaded) {
@@ -149,7 +149,7 @@ export default function CardImage({
         }}
       />
     );
-  }, [card?.faces?.back.imageUris?.png]);
+  }, [card?.faces?.back.imageUris?.png, backLoaded]);
 
   useEffect(() => setShowFront(true), [card]);
 
