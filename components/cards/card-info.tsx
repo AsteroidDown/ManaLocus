@@ -81,12 +81,7 @@ export function CardInfo({ card }: CardInfoProps) {
             </Text>
 
             <Text className="flex-[3]">
-              <Text
-                thickness="bold"
-                className="px-2 py-0.5 bg-background-100 rounded"
-              >
-                {card.power} / {card.toughness}
-              </Text>
+              {card.power} / {card.toughness}
             </Text>
           </View>
         </>

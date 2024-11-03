@@ -8,6 +8,7 @@ import {
 } from "../models/scryfall/scryfall-card";
 
 export function ScryfallToCard(scryfallCard: ScryfallCard): Card {
+  console.log(scryfallCard);
   return {
     id: scryfallCard.id,
     name: scryfallCard.name,
@@ -25,6 +26,8 @@ export function ScryfallToCard(scryfallCard: ScryfallCard): Card {
     colorIdentity: scryfallCard.color_identity,
     manaCost: scryfallCard.mana_cost,
     typeLine: scryfallCard.type_line,
+    power: scryfallCard.power,
+    toughness: scryfallCard.toughness,
     loyalty: scryfallCard.loyalty,
     defense: scryfallCard.defense,
     producedMana: scryfallCard.produced_mana,
