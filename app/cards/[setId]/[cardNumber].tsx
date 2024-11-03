@@ -1,4 +1,7 @@
 import CardDetailedPreview from "@/components/cards/card-detailed-preview";
+import { CardLegalities } from "@/components/cards/card-legalities";
+import CardPrintsList from "@/components/cards/card-prints-list";
+import Box from "@/components/ui/box/box";
 import ScryfallService from "@/hooks/scryfall.service";
 import { Card } from "@/models/card/card";
 import { useLocalSearchParams } from "expo-router";
@@ -13,21 +16,34 @@ export default function SetPage() {
   useEffect(() => {
     if (typeof setId !== "string" || typeof cardNumber !== "string") return;
 
-    ScryfallService.getCardByNumber(setId, Number(cardNumber)).then((card) =>
+    ScryfallService.getCardByNumber(setId, cardNumber).then((card) =>
       setCard(card)
     );
   }, [cardNumber]);
 
+  if (!card) return;
+
   return (
     <ScrollView>
       <View className="flex items-center bg-background-100 min-h-[100vh] pt-6">
-        {card && (
+        <View className="flex flex-row gap-4">
           <CardDetailedPreview
             fullHeight
+            hideLegalities
             card={card}
-            className="max-h-fit !bg-transparent"
+            className="max-h-fit !bg-transparent !p-0"
           />
-        )}
+
+          <View className="flex gap-4">
+            <Box shade={200}>
+              <CardPrintsList card={card} />
+            </Box>
+
+            <Box shade={200}>
+              <CardLegalities card={card} />
+            </Box>
+          </View>
+        </View>
       </View>
     </ScrollView>
   );
