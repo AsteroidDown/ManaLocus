@@ -9,7 +9,8 @@ import Box from "../box/box";
 export interface SearchBarProps {
   search: string;
   searchChange: React.Dispatch<React.SetStateAction<string>>;
-  searchAction: (search?: string) => void;
+  searchAction?: (search?: string) => void;
+  placeholder?: string;
   noSearchResults?: boolean;
 }
 
@@ -17,6 +18,7 @@ export default function SearchBar({
   search,
   searchChange,
   searchAction,
+  placeholder,
   noSearchResults,
 }: SearchBarProps) {
   const [focused, setFocused] = React.useState(false);
@@ -56,7 +58,7 @@ export default function SearchBar({
 
         <View className="relative flex-1">
           <TextInput
-            placeholder="Find a Card"
+            placeholder={placeholder ?? "Find a Card"}
             placeholderTextColor="#8b8b8b"
             className="flex-1 h-10 -my-4 color-white outline-none text-base"
             value={search}
@@ -64,7 +66,7 @@ export default function SearchBar({
             onFocus={onFocus}
             onChangeText={searchChange}
             onKeyPress={(event) =>
-              (event as any)?.code === "Enter" ? searchAction() : null
+              (event as any)?.code === "Enter" ? searchAction?.() : null
             }
           />
 
@@ -90,7 +92,7 @@ export default function SearchBar({
                   className="px-4 py-1 rounded-full hover:bg-background-100 focus:bg-background-100 outline-none"
                   onPress={() => {
                     searchChange(name);
-                    searchAction(name);
+                    searchAction?.(name);
                   }}
                 >
                   <Text className="max-w-full truncate">{name}</Text>
@@ -101,7 +103,7 @@ export default function SearchBar({
         </View>
 
         <Pressable
-          onPress={() => searchAction()}
+          onPress={() => searchAction?.()}
           onBlur={() => setSearchHovered(false)}
           onFocus={() => setSearchHovered(true)}
           onPointerEnter={() => setSearchHovered(true)}
