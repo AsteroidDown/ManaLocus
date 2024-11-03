@@ -62,9 +62,9 @@ export interface CardPrices {
 }
 
 export interface CardPriceUris {
-  tcgplayer: string;
-  cardmarket: string;
-  cardhoarder: string;
+  tcgplayer?: string;
+  cardmarket?: string;
+  cardhoarder?: string;
 }
 
 export interface CardLegalities {

@@ -1,3 +1,4 @@
+import { MTGSetType } from "@/constants/mtg/mtg-set-types";
 import { ScryfallSet } from "@/models/scryfall/scryfall-set";
 import { Card, CardImageUris } from "../models/card/card";
 import { Set } from "../models/card/set";
@@ -70,9 +71,9 @@ export function ScryfallToCard(scryfallCard: ScryfallCard): Card {
       tix: Number(scryfallCard.prices.tix),
     },
     priceUris: {
-      tcgplayer: scryfallCard.purchase_uris.tcgplayer,
-      cardmarket: scryfallCard.purchase_uris.cardmarket,
-      cardhoarder: scryfallCard.purchase_uris.cardhoarder,
+      tcgplayer: scryfallCard.purchase_uris?.tcgplayer,
+      cardmarket: scryfallCard.purchase_uris?.cardmarket,
+      cardhoarder: scryfallCard.purchase_uris?.cardhoarder,
     },
   };
 }
@@ -86,7 +87,7 @@ export function ScryfallToSet(scryfallSet: ScryfallSet): Set {
     scryfallUri: scryfallSet.scryfall_uri,
     searchUri: scryfallSet.search_uri,
     releasedAt: scryfallSet.released_at,
-    setType: scryfallSet.set_type,
+    setType: scryfallSet.set_type as MTGSetType,
     cardCount: scryfallSet.card_count,
     digital: scryfallSet.digital,
     iconSvgUri: scryfallSet.icon_svg_uri,
