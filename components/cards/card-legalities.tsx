@@ -28,7 +28,7 @@ export function CardLegalities({ card }: CardLegalitiesProps) {
         />
       </View>
 
-      <View className="flex-1flex gap-2">
+      <View className="flex-1 flex gap-2">
         <Legality gameType="Alchemy" legality={card.legalities.alchemy} />
         <Legality gameType="Explorer" legality={card.legalities.explorer} />
         <Legality gameType="Historic" legality={card.legalities.historic} />
