@@ -31,8 +31,8 @@ export default function TabBar({
   return (
     <View className={`${className} flex mb-4`}>
       <View
-        className={`flex flex-1 flex-row w-full min-h-[46px] max-h-[46px] -mb-[2px] pl-[2px] overflow-x-auto overflow-y-hidden ${
-          hideBorder ? "border-b-2 border-background-200" : ""
+        className={`flex flex-1 flex-row w-full min-h-[46px] max-h-[46px] -mb-[2px] overflow-x-auto overflow-y-hidden ${
+          hideBorder ? "border-b-2 border-background-200" : "pl-[2px]"
         }`}
       >
         {tabs.map((tab, index) => (
