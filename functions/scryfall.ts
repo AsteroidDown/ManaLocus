@@ -38,6 +38,7 @@ export function ScryfallToCard(scryfallCard: ScryfallCard): Card {
     defense: scryfallCard.defense,
     producedMana: scryfallCard.produced_mana,
     oracleText: scryfallCard.oracle_text,
+    flavorText: scryfallCard.flavor_text,
     images: transferImageUris(scryfallCard.image_uris),
     legalities: scryfallCard.legalities,
     faces: scryfallCard.card_faces
@@ -49,6 +50,7 @@ export function ScryfallToCard(scryfallCard: ScryfallCard): Card {
             loyalty: scryfallCard.card_faces[0]?.loyalty,
             defense: scryfallCard.card_faces[0]?.defense,
             oracleText: scryfallCard.card_faces[0].oracle_text,
+            flavorText: scryfallCard.card_faces[0].flavor_text,
             imageUris: transferImageUris(scryfallCard.card_faces[0].image_uris),
           },
           back: {
@@ -58,6 +60,7 @@ export function ScryfallToCard(scryfallCard: ScryfallCard): Card {
             loyalty: scryfallCard.card_faces[1]?.loyalty,
             defense: scryfallCard.card_faces[1]?.defense,
             oracleText: scryfallCard.card_faces[1].oracle_text,
+            flavorText: scryfallCard.card_faces[1].flavor_text,
             imageUris: transferImageUris(scryfallCard.card_faces[1].image_uris),
           },
         }

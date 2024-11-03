@@ -21,6 +21,7 @@ export interface Card {
   defense?: string;
   producedMana?: string[];
   oracleText?: string;
+  flavorText?: string;
   images?: CardImageUris;
   faces: { front: CardFace; back: CardFace } | null;
   prices: CardPrices;
@@ -49,6 +50,7 @@ export interface CardFace {
   loyalty?: string;
   defense?: string;
   oracleText: string;
+  flavorText?: string;
   imageUris: CardImageUris;
 }
 

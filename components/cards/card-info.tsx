@@ -74,7 +74,10 @@ export function CardInfo({ card }: CardInfoProps) {
           Text
         </Text>
         <View className="flex-[3]">
-          <CardText text={card?.oracleText || "{T}: You win the game!"} />
+          <CardText
+            text={card?.oracleText || "{T}: You win the game!"}
+            flavor={card?.flavorText}
+          />
         </View>
       </View>
     </View>
@@ -155,7 +158,10 @@ export function CardFrontInfo({ card }: CardInfoProps) {
           Text
         </Text>
         <View className="flex-[3]">
-          <CardText text={card?.faces?.front.oracleText || ""} />
+          <CardText
+            text={card?.faces?.front.oracleText || ""}
+            flavor={card?.faces?.front.flavorText}
+          />
         </View>
       </View>
     </View>
@@ -236,7 +242,10 @@ export function CardBackInfo({ card }: CardInfoProps) {
           Text
         </Text>
         <View className="flex-[3]">
-          <CardText text={card?.faces?.back.oracleText || ""} />
+          <CardText
+            text={card?.faces?.back.oracleText || ""}
+            flavor={card?.faces?.back.flavorText}
+          />
         </View>
       </View>
     </View>

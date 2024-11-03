@@ -21,6 +21,7 @@ export interface ScryfallCard {
   defense?: string;
   produced_mana: any[];
   oracle_text: string;
+  flavor_text?: string;
   image_uris: ScryfallImageUris;
   card_faces: ScryfallCardFace[];
   prices: ScryfallCardPrices;
@@ -44,6 +45,7 @@ export interface ScryfallCardFace {
   loyalty?: string;
   defense?: string;
   oracle_text: string;
+  flavor_text?: string;
   image_uris: ScryfallImageUris;
 }
 
