@@ -8,22 +8,13 @@ import {
 } from "../models/scryfall/scryfall-card";
 
 export function ScryfallToCard(scryfallCard: ScryfallCard): Card {
-  function transferImageUris(imageUris: ScryfallImageUris): CardImageUris {
-    return {
-      small: imageUris?.small || "",
-      normal: imageUris?.normal || "",
-      large: imageUris?.large || "",
-      png: imageUris?.png,
-      artCrop: imageUris?.art_crop || "",
-      borderCrop: imageUris?.border_crop || "",
-    };
-  }
-
   return {
     id: scryfallCard.id,
     name: scryfallCard.name,
     count: 1,
     set: scryfallCard.set,
+    setName: scryfallCard.set_name,
+    released: scryfallCard.released_at,
     collectorNumber: scryfallCard.collector_number,
     borderColor: scryfallCard.border_color,
     frameEffects: scryfallCard.frame_effects,
@@ -87,6 +78,17 @@ export function ScryfallToCard(scryfallCard: ScryfallCard): Card {
       cardmarket: scryfallCard.purchase_uris?.cardmarket,
       cardhoarder: scryfallCard.purchase_uris?.cardhoarder,
     },
+  };
+}
+
+function transferImageUris(imageUris: ScryfallImageUris): CardImageUris {
+  return {
+    small: imageUris?.small || "",
+    normal: imageUris?.normal || "",
+    large: imageUris?.large || "",
+    png: imageUris?.png,
+    artCrop: imageUris?.art_crop || "",
+    borderCrop: imageUris?.border_crop || "",
   };
 }
 
