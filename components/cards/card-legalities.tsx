@@ -14,8 +14,8 @@ export function CardLegalities({ card }: CardLegalitiesProps) {
   if (!card) return;
 
   return (
-    <View className="flex flex-row flex-wrap gap-3 justify-between">
-      <View className="flex gap-2">
+    <View className="flex flex-row flex-wrap gap-4 justify-between">
+      <View className="flex-1 flex gap-2">
         <Legality gameType="Standard" legality={card.legalities.standard} />
         <Legality gameType="Pioneer" legality={card.legalities.pioneer} />
         <Legality gameType="Modern" legality={card.legalities.modern} />
@@ -28,7 +28,7 @@ export function CardLegalities({ card }: CardLegalitiesProps) {
         />
       </View>
 
-      <View className="flex gap-2">
+      <View className="flex-1flex gap-2">
         <Legality gameType="Alchemy" legality={card.legalities.alchemy} />
         <Legality gameType="Explorer" legality={card.legalities.explorer} />
         <Legality gameType="Historic" legality={card.legalities.historic} />
