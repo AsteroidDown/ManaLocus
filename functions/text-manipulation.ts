@@ -7,6 +7,7 @@ export function titleCase(text?: string) {
     : "";
 }
 
-export function currency(value: number) {
+export function currency(value?: number | null) {
+  if (!value) return "$0.00";
   return "$" + value.toFixed(2);
 }
