@@ -40,9 +40,16 @@ export default function SetPage() {
     if (baseCards?.length) return;
 
     cards.forEach((card) => {
-      if (card.frameEffects?.includes("showcase")) showcaseCards.push(card);
-      else if (card.borderColor === "borderless") borderlessCards.push(card);
-      else if (card.frameEffects?.includes("extendedart")) {
+      if (
+        card.faces?.front.frameEffects?.includes("showcase") ||
+        card.frameEffects?.includes("showcase")
+      ) {
+        showcaseCards.push(card);
+      } else if (card.borderColor === "borderless") borderlessCards.push(card);
+      else if (
+        card.faces?.front.frameEffects?.includes("extendedart") ||
+        card.frameEffects?.includes("extendedart")
+      ) {
         extendedArtCards.push(card);
       } else if (card.promo) promoCards.push(card);
       else baseCards.push(card);

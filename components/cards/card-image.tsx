@@ -149,7 +149,7 @@ export default function CardImage({
         }}
       />
     );
-  }, [card?.faces?.back.imageUris?.png, backLoaded]);
+  }, [card?.faces?.back.imageUris?.png, onScreen, backLoaded]);
 
   useEffect(() => setShowFront(true), [card]);
 

@@ -17,12 +17,15 @@ export interface ScryfallCard {
   color_identity: MTGColorSymbol[];
   mana_cost: string;
   type_line: string;
+  power?: string;
+  toughness?: string;
   loyalty?: string;
   defense?: string;
   produced_mana: any[];
   oracle_text: string;
   flavor_text?: string;
   image_uris: ScryfallImageUris;
+  artist?: string;
   card_faces: ScryfallCardFace[];
   prices: ScryfallCardPrices;
   purchase_uris: ScryfallCardPriceUris;
@@ -42,11 +45,15 @@ export interface ScryfallCardFace {
   name: string;
   type_line: string;
   mana_cost: string;
+  power?: string;
+  toughness?: string;
   loyalty?: string;
   defense?: string;
   oracle_text: string;
   flavor_text?: string;
   image_uris: ScryfallImageUris;
+  artist: string;
+  frame_effects: string[];
 }
 
 export interface ScryfallCardPrices {

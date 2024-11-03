@@ -16,6 +16,7 @@ export function CardInfo({ card }: CardInfoProps) {
         <Text thickness="bold" className="flex-1">
           Name
         </Text>
+
         <Text className="flex-[3]">
           {card?.name || "Something cool probably"}
         </Text>
@@ -29,6 +30,7 @@ export function CardInfo({ card }: CardInfoProps) {
             <Text thickness="bold" className="flex-1">
               Cost
             </Text>
+
             <View className="flex-[3]">
               <CardCost cost={card.manaCost} />
             </View>
@@ -42,6 +44,7 @@ export function CardInfo({ card }: CardInfoProps) {
         <Text thickness="bold" className="flex-1">
           Type
         </Text>
+
         <Text className="flex-[3]">
           {card?.typeLine || "Creature - Awesome"}
         </Text>
@@ -55,6 +58,7 @@ export function CardInfo({ card }: CardInfoProps) {
             <Text thickness="bold" className="flex-1">
               Loyalty
             </Text>
+
             <Text className="flex-[3]">
               <Text
                 thickness="bold"
@@ -67,18 +71,52 @@ export function CardInfo({ card }: CardInfoProps) {
         </>
       )}
 
+      {card?.power && (
+        <>
+          <Divider />
+
+          <View className="flex flex-row gap-2">
+            <Text thickness="bold" className="flex-1">
+              Stats
+            </Text>
+
+            <Text className="flex-[3]">
+              <Text
+                thickness="bold"
+                className="px-2 py-0.5 bg-background-100 rounded"
+              >
+                {card.power} / {card.toughness}
+              </Text>
+            </Text>
+          </View>
+        </>
+      )}
+
       <Divider />
 
       <View className="flex flex-row gap-2">
         <Text thickness="bold" className="flex-1">
           Text
         </Text>
+
         <View className="flex-[3]">
           <CardText
             text={card?.oracleText || "{T}: You win the game!"}
             flavor={card?.flavorText}
           />
         </View>
+      </View>
+
+      <Divider />
+
+      <View className="flex flex-row gap-2">
+        <Text thickness="bold" className="flex-1">
+          Artist
+        </Text>
+
+        <Text className="flex-[3] italic">
+          {card?.artist || "No artist listed"}
+        </Text>
       </View>
     </View>
   );
@@ -91,6 +129,7 @@ export function CardFrontInfo({ card }: CardInfoProps) {
         <Text thickness="bold" className="flex-1">
           Name
         </Text>
+
         <Text className="flex-[3]">{card?.faces?.front.name || ""}</Text>
       </View>
 
@@ -102,6 +141,7 @@ export function CardFrontInfo({ card }: CardInfoProps) {
             <Text thickness="bold" className="flex-1">
               Cost
             </Text>
+
             <View className="flex-[3]">
               <CardCost cost={card?.faces?.front?.manaCost || ""} />
             </View>
@@ -115,6 +155,7 @@ export function CardFrontInfo({ card }: CardInfoProps) {
         <Text thickness="bold" className="flex-1">
           Type
         </Text>
+
         <Text className="flex-[3]">{card?.faces?.front.typeLine || ""}</Text>
       </View>
 
@@ -126,6 +167,7 @@ export function CardFrontInfo({ card }: CardInfoProps) {
             <Text thickness="bold" className="flex-1">
               Loyalty
             </Text>
+
             <Text className="flex-[3]">
               <Text
                 thickness="bold"
@@ -146,7 +188,24 @@ export function CardFrontInfo({ card }: CardInfoProps) {
             <Text thickness="bold" className="flex-1">
               Defense
             </Text>
+
             <Text className="flex-[3]">{card.faces.front.defense}</Text>
+          </View>
+        </>
+      )}
+
+      {card?.faces?.front.power && (
+        <>
+          <Divider />
+
+          <View className="flex flex-row gap-2">
+            <Text thickness="bold" className="flex-1">
+              Stats
+            </Text>
+
+            <Text className="flex-[3]">
+              {card.faces.front.power}/{card.faces.front.toughness}
+            </Text>
           </View>
         </>
       )}
@@ -157,12 +216,25 @@ export function CardFrontInfo({ card }: CardInfoProps) {
         <Text thickness="bold" className="flex-1">
           Text
         </Text>
+
         <View className="flex-[3]">
           <CardText
             text={card?.faces?.front.oracleText || ""}
             flavor={card?.faces?.front.flavorText}
           />
         </View>
+      </View>
+
+      <Divider />
+
+      <View className="flex flex-row gap-2">
+        <Text thickness="bold" className="flex-1">
+          Artist
+        </Text>
+
+        <Text className="flex-[3] italic">
+          {card?.faces?.front.artist || "No artist listed"}
+        </Text>
       </View>
     </View>
   );
@@ -175,6 +247,7 @@ export function CardBackInfo({ card }: CardInfoProps) {
         <Text thickness="bold" className="flex-1">
           Name
         </Text>
+
         <Text className="flex-[3]">{card?.faces?.back.name || ""}</Text>
       </View>
 
@@ -186,6 +259,7 @@ export function CardBackInfo({ card }: CardInfoProps) {
             <Text thickness="bold" className="flex-1">
               Cost
             </Text>
+
             <View className="flex-[3]">
               <CardCost cost={card?.faces?.back?.manaCost || ""} />
             </View>
@@ -199,6 +273,7 @@ export function CardBackInfo({ card }: CardInfoProps) {
         <Text thickness="bold" className="flex-1">
           Type
         </Text>
+
         <Text className="flex-[3]">{card?.faces?.back.typeLine || ""}</Text>
       </View>
 
@@ -210,6 +285,7 @@ export function CardBackInfo({ card }: CardInfoProps) {
             <Text thickness="bold" className="flex-1">
               Loyalty
             </Text>
+
             <Text className="flex-[3]">
               <Text
                 thickness="bold"
@@ -230,7 +306,24 @@ export function CardBackInfo({ card }: CardInfoProps) {
             <Text thickness="bold" className="flex-1">
               Defense
             </Text>
+
             <Text className="flex-[3]">{card.faces.back.defense}</Text>
+          </View>
+        </>
+      )}
+
+      {card?.faces?.back.power && (
+        <>
+          <Divider />
+
+          <View className="flex flex-row gap-2">
+            <Text thickness="bold" className="flex-1">
+              Stats
+            </Text>
+
+            <Text className="flex-[3]">
+              {card.faces.back.power}/{card.faces.back.toughness}
+            </Text>
           </View>
         </>
       )}
@@ -241,12 +334,25 @@ export function CardBackInfo({ card }: CardInfoProps) {
         <Text thickness="bold" className="flex-1">
           Text
         </Text>
+
         <View className="flex-[3]">
           <CardText
             text={card?.faces?.back.oracleText || ""}
             flavor={card?.faces?.back.flavorText}
           />
         </View>
+      </View>
+
+      <Divider />
+
+      <View className="flex flex-row gap-2">
+        <Text thickness="bold" className="flex-1">
+          Artist
+        </Text>
+
+        <Text className="flex-[3] italic">
+          {card?.faces?.back.artist || "No artist listed"}
+        </Text>
       </View>
     </View>
   );

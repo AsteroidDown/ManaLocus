@@ -17,12 +17,15 @@ export interface Card {
   colorIdentity: MTGColorSymbol[];
   manaCost: string;
   typeLine: string;
+  power?: string;
+  toughness?: string;
   loyalty?: string;
   defense?: string;
   producedMana?: string[];
   oracleText?: string;
   flavorText?: string;
   images?: CardImageUris;
+  artist?: string;
   faces: { front: CardFace; back: CardFace } | null;
   prices: CardPrices;
   priceUris: CardPriceUris;
@@ -49,9 +52,13 @@ export interface CardFace {
   manaCost: string;
   loyalty?: string;
   defense?: string;
+  power?: string;
+  toughness?: string;
   oracleText: string;
   flavorText?: string;
   imageUris: CardImageUris;
+  artist: string;
+  frameEffects?: string[];
 }
 
 export interface CardPrices {
