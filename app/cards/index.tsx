@@ -40,8 +40,6 @@ export default function CardsPage() {
   useEffect(() => {
     if (!selectedSets?.length) return;
 
-    console.log(selectedSets);
-
     setFilteredSets(sets.filter((set) => selectedSets.includes(set.setType)));
   }, [sets, selectedSets]);
 
