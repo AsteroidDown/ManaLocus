@@ -7,6 +7,8 @@ export interface Card {
   name: string;
   count: number;
   set: string;
+  setName: string;
+  released: string;
   borderColor: string;
   frameEffects: string[];
   promo: boolean;

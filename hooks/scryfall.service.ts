@@ -38,7 +38,7 @@ async function getCard(name: string, exact = false): Promise<Card> {
 
 async function getCardByNumber(
   setId: string,
-  cardNumber: number
+  cardNumber: string
 ): Promise<Card> {
   const card: ScryfallCard = await Api.get(
     `cards/${setId}/${cardNumber}`
@@ -56,7 +56,9 @@ async function getCardById(cardId: string): Promise<Card> {
 }
 
 async function getCardPrints(name: string): Promise<Card[]> {
-  return await findCards(`name:/^${name}$/ unique:prints game:paper`);
+  return (await findCards(`name:/^${name}$/ unique:prints game:paper`)).sort(
+    (a, b) => new Date(b.released).getTime() - new Date(a.released).getTime()
+  );
 }
 
 async function getCardsFromCollection(cardsIdentifiers: CardIdentifier[]) {

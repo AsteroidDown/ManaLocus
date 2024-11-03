@@ -7,6 +7,8 @@ export interface ScryfallCard {
   id: string;
   name: string;
   set: string;
+  set_name: string;
+  released_at: string;
   collector_number: string;
   border_color: string;
   frame_effects: CardFrameEffect[];
