@@ -24,11 +24,14 @@ export default function BoxHeader({
   startIcon,
   titleEnd,
   end,
+  className,
   hideDivider = false,
 }: BoxHeaderProps) {
   return (
     <View className="flex-1 -mx-6 max-h-fit">
-      <View className="flex flex-row flex-wrap gap-2 justify-between items-center px-6 pb-4">
+      <View
+        className={`flex flex-row flex-wrap gap-2 justify-between items-center px-6 pb-4 ${className}`}
+      >
         <View className="flex flex-row items-center gap-4">
           {start}
           {startIcon && (
