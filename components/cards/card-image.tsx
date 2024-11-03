@@ -133,7 +133,7 @@ export default function CardImage({
         source={{ uri: card?.faces?.back.imageUris?.png }}
         style={[{ resizeMode: "contain" }]}
         className={`max-h-[350px] aspect-[2.5/3.5] rounded-xl ${
-          frontLoading ? "!h-0" : "h-full"
+          backLoading ? "!h-0" : "h-full"
         }`}
         onLoad={() => {
           setBackLoading(false);
@@ -229,7 +229,10 @@ export default function CardImage({
           onPointerEnter={() => setHovered(true)}
           onPointerLeave={() => setHovered(false)}
           className="absolute bottom-2 left-2"
-          onPress={() => setShowFront(!showFront)}
+          onPress={(event) => {
+            setShowFront(!showFront);
+            event.stopPropagation();
+          }}
         >
           <View
             className={
