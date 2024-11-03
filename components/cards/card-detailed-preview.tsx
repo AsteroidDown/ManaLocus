@@ -10,11 +10,13 @@ import { CardLegalities } from "./card-legalities";
 export type CardDetailedPreview = ViewProps & {
   card?: Card;
   fullHeight?: boolean;
+  hideLegalities?: boolean;
 };
 
 export default function CardDetailedPreview({
   card,
   fullHeight = false,
+  hideLegalities = false,
   className,
   children,
 }: CardDetailedPreview) {
@@ -49,9 +51,9 @@ export default function CardDetailedPreview({
           </View>
         )}
 
-        <Divider thick />
+        {!hideLegalities && <Divider thick />}
 
-        <CardLegalities card={card} />
+        {!hideLegalities && <CardLegalities card={card} />}
       </Box>
     </Box>
   );
