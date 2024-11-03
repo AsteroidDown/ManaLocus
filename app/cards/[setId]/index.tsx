@@ -37,7 +37,10 @@ export default function SetPage() {
   useEffect(() => {
     if (!set) return;
 
-    ScryfallService.getSetCards(set.searchUri).then((cards) => setCards(cards));
+    ScryfallService.getSetCards(set.searchUri).then((cards) => {
+      setCards(cards);
+      setFilteredCards(cards);
+    });
   }, [set]);
 
   useEffect(() => {
@@ -52,7 +55,7 @@ export default function SetPage() {
   }, [search]);
 
   useEffect(() => {
-    if (!filteredCards?.length) return;
+    if (!cards?.length) return;
 
     filteredCards.forEach((card) => {
       if (

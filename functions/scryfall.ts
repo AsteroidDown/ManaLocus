@@ -8,7 +8,6 @@ import {
 } from "../models/scryfall/scryfall-card";
 
 export function ScryfallToCard(scryfallCard: ScryfallCard): Card {
-  console.log(scryfallCard);
   return {
     id: scryfallCard.id,
     name: scryfallCard.name,
