@@ -12,6 +12,7 @@ export type ButtonType = "default" | "outlined" | "clear";
 export type ButtonProps = ViewProps & {
   text?: string;
   icon?: IconProp;
+  iconRight?: boolean;
   action?: ActionColor;
   size?: Size;
   type?: ButtonType;
@@ -34,6 +35,7 @@ export default function Button({
   text,
   icon,
   className,
+  iconRight = false,
   action = "primary",
   size = "md",
   type = "default",
@@ -103,7 +105,7 @@ export default function Button({
           squareRight ? "!rounded-r-none" : ""
         }`}
       >
-        {icon && (
+        {icon && !iconRight && (
           <FontAwesomeIcon
             icon={icon}
             className={`${textColor} ${text || children ? "mr-2" : ""} ${
@@ -124,6 +126,16 @@ export default function Button({
         )}
 
         {children}
+
+        {icon && iconRight && (
+          <FontAwesomeIcon
+            icon={icon}
+            className={`${textColor} ${
+              children || text ? "pl-2" : ""
+            } ml-auto select-none`}
+            size={size !== "md" ? size : undefined}
+          />
+        )}
       </View>
     </Pressable>
   );
