@@ -161,10 +161,10 @@ export default function CardImage({
     <Pressable
       className={containerClasses}
       disabled={!card || !onClick}
-      onBlur={() => setFocused(false)}
-      onFocus={() => setFocused(true)}
       tabIndex={!card ? -1 : focusable ? 0 : -1}
       onPress={() => (focusable ? onClick?.() : null)}
+      onBlur={() => (focusable ? setFocused(false) : null)}
+      onFocus={() => (focusable ? setFocused(true) : null)}
     >
       <View ref={ref} className={baseClasses}>
         {card && !card.faces?.back.imageUris.png && (
