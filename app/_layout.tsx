@@ -30,13 +30,17 @@ export default function RootLayout() {
               headerTitle: () => <Logo />,
               headerTintColor: "rgb(var(--background-200))",
               headerStyle: {
+                height: 48,
+                borderBottomWidth: 0,
                 backgroundColor: "black",
               },
+              headerRight: () => <Login />,
             }}
           >
             <Stack.Screen name="index" />
             <Stack.Screen name="builder" />
             <Stack.Screen name="profile" />
+            <Stack.Screen name="login" />
             <Stack.Screen name="+not-found" />
           </Stack>
         </DashboardContext.Provider>
@@ -54,13 +58,23 @@ function Logo() {
         </Text>
       </Link>
 
-      <Button type="clear" text="Decks" size="lg" />
+      <Button square type="clear" text="Decks" size="lg" />
 
       <Link href="/cards">
-        <Button type="clear" text="Cards" size="lg" />
+        <Button square type="clear" text="Cards" size="lg" />
       </Link>
 
-      <Button type="clear" text="Explore" size="lg" />
+      <Button square type="clear" text="Explore" size="lg" />
+    </View>
+  );
+}
+
+function Login() {
+  return (
+    <View className="flex flex-row items-center gap-2 px-6 py-4">
+      <Link href="/login">
+        <Button square type="clear" text="Login" size="lg" />
+      </Link>
     </View>
   );
 }
