@@ -1,4 +1,6 @@
+import CardSearch from "@/components/cards/card-search";
 import Box from "@/components/ui/box/box";
+import BoxHeader from "@/components/ui/box/box-header";
 import Button from "@/components/ui/button/button";
 import Dropdown from "@/components/ui/dropdown/dropdown";
 import Text from "@/components/ui/text/text";
@@ -13,12 +15,6 @@ import { Image, ScrollView, View } from "react-native";
 import { Set } from "../../models/card/set";
 
 export default function CardsPage() {
-  // const [search, setSearch] = React.useState("");
-
-  // function searchCards(search?: string) {
-  //   console.log(search);
-  // }
-
   const [selectSetsOpen, setSelectSetsOpen] = React.useState(false);
 
   const [sets, setSets] = React.useState([] as Set[]);
@@ -56,22 +52,15 @@ export default function CardsPage() {
   return (
     <ScrollView>
       <View className="flex flex-1 gap-4 px-11 py-8 min-h-[100vh] bg-background-100">
-        <View className="flex">
-          <Text size="xl" thickness="medium">
-            Find Cards
-          </Text>
-          <Text>Search for cards or view full sets</Text>
-        </View>
+        <BoxHeader
+          title="Find Cards"
+          subtitle="Search for cards or view full sets"
+          className="!pb-0"
+        />
 
-        {/* <SearchBar
-        search={search}
-        searchChange={setSearch}
-        searchAction={searchCards}
-      /> */}
+        <CardSearch hideCardPreview linkToCardPage />
 
-        {/* <CardSearch /> */}
-
-        <View className="flex">
+        <View className="flex z-[-1]">
           <View className="sticky top-0 flex flex-row gap-2 items-center px-4 py-2 border-b border-dark-200 bg-background-100 z-10">
             <View className="flex flex-row items-center gap-4">
               <View className="w-6" />
