@@ -40,7 +40,7 @@ export default function CardImage({
     "flex h-full max-h-[350px] aspect-[2.5/3.5] rounded-lg overflow-hidden";
 
   const imagePlaceHolder = (
-    <View className="h-full max-h-[350px] aspect-[2.5/3.5] rounded-xl transition-all bg-background-200 animate-pulse"></View>
+    <View className="h-full max-h-[350px] aspect-[2.5/3.5] rounded-xl transition-all bg-background-300 animate-pulse"></View>
   );
 
   const cardImage = useMemo(() => {
