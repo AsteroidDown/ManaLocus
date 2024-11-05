@@ -1,10 +1,18 @@
-import axios, { AxiosResponse } from "axios";
+import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 import {
   CubeApiUrl,
+  DECK_ENDPOINT,
+  LOGIN_ENDPOINT,
+  REFRESH_ACCESS_ENDPOINT,
+  REGISTER_USER_ENDPOINT,
   ScryfallURL,
 } from "../constants/urls";
-import { getLocalStorageJwt, removeLocalStorageJwt } from "@/functions/local-storage/auth-token";
+import {
+  getLocalStorageJwt,
+  removeLocalStorageJwt,
+} from "@/functions/local-storage/auth-token";
 import { Card } from "@/models/card/card";
+import cubeApiAxiosConfig from "./axios-config";
 
 function getHeaders() {
   return {
@@ -14,14 +22,13 @@ function getHeaders() {
 }
 
 function getCubeApiHeaders() {
-  const access_token = getLocalStorageJwt()?.access;
   return {
-    Authorization: `Bearer ${access_token}`,
     "Content-Type": "application/json",
   };
 }
 
 async function handleResponse(response: AxiosResponse<any, any>) {
+  console.log("handle");
   try {
     return response.data;
   } catch (e) {
@@ -33,7 +40,7 @@ async function Get(url: string, query?: Record<string, any>) {
   const headers = getHeaders();
 
   return handleResponse(
-    await axios.get(`${ScryfallURL}/${url}`, {
+    await cubeApiAxiosConfig.get(`${ScryfallURL}/${url}`, {
       headers,
       params: query,
     })
@@ -44,7 +51,7 @@ async function Post(url: string, data?: Record<string, any>) {
   const headers = getHeaders();
 
   return handleResponse(
-    await axios.post(`${ScryfallURL}/${url}`, {
+    await cubeApiAxiosConfig.post(`${ScryfallURL}/${url}`, {
       headers,
       ...data,
     })
@@ -59,83 +66,40 @@ const Api = {
 export default Api;
 
 interface CubeApiCard {
-  model: string,  // reference to Django model name
-  pk: number,     // card primary key
-  name: string,
-  scryfall_id: string, 
-  deck: number    // deck primary key, this being required means every card in our database must belong to a deck
-}
-
-/**
- * Uses the JWT refresh token to generate a new access token.
- * @param callbackOnSuccess presumably a function tried to do something but couldn't because the access token was expired. 
- * Provide this function as a callback to repeat calling it after a new access token is issued
- * @param callbackParams the parameters to pass to callbackOnSuccess
- */
-async function refreshAccessToken(callbackOnSuccess: Function, ...callbackParams: any[]) {
-  axios
-    .post(
-      `${CubeApiUrl}api/token/refresh/`,
-      { refresh: getLocalStorageJwt()?.refresh},
-      {
-        headers: getCubeApiHeaders(),
-        withCredentials: true,
-      }
-    )
-    .then((response) => {
-
-      localStorage.setItem("access", response.data.access);
-
-      callbackOnSuccess(...callbackParams);
-    })
-    .catch((error) => {
-      if (error.response.status == 401) {
-        console.log("Refresh token expired. Redirect to login page.", error.response.data);
-        removeLocalStorageJwt();
-      }
-    });
+  model: string; // reference to Django model name
+  pk: number; // card primary key
+  name: string;
+  scryfall_id: string;
+  deck: number; // deck primary key, this being required means every card in our database must belong to a deck
 }
 
 export async function saveDeck(name: string, cards: Card[]) {
-  console.log("Call saveDeck cards: ", cards)
-  axios
+  cubeApiAxiosConfig
     .post(
-      `${CubeApiUrl}api/deck/`,
+      DECK_ENDPOINT,
       { name: name, cards: cards },
       {
-        headers: getCubeApiHeaders(),
         withCredentials: true,
       }
     )
     .then((response) => console.log("saveDeck response: ", response))
-    .catch((error) => {
-      if (error.response.status == 401) {
-        refreshAccessToken(saveDeck, name, cards);
-      }
-    });
+    .catch((error) => {});
 }
 
 export async function getDeck(id: number) {
-  axios
-    .get(`${CubeApiUrl}api/deck/`, {
-      params: {
-        id: id,
-      },
-      headers: getCubeApiHeaders(),
-      withCredentials: true,
+  cubeApiAxiosConfig
+    .get(DECK_ENDPOINT, { params: { id: id } })
+    .then((res) => {
+      return res;
     })
-    .then((response) => console.log("Deck of cards:", response))
     .catch((error) => {
-      if (error.response.status == 401) {
-        refreshAccessToken(getDeck, id);
-      }
-      console.log(error.response.data)
+      console.log("error in cube", error);
     });
 }
 
 export async function loginUser(username: string, password: string) {
   axios
-    .post(`${CubeApiUrl}api/token/`, {
+    .post(LOGIN_ENDPOINT, {
       username: username,
       password: password,
     })
@@ -152,7 +116,7 @@ export async function loginUser(username: string, password: string) {
 
 export async function registerUser(username: string, password: string) {
   axios
-    .post(`${CubeApiUrl}api/user/register/`, {
+    .post(REGISTER_USER_ENDPOINT, {
       username: username,
       password: password,
     })
@@ -164,3 +128,64 @@ export async function registerUser(username: string, password: string) {
       console.log(error.response?.data?.username[0]);
     });
 }
+
+const REFRESH_TOKEN_BLACKLIST: string[] = [
+  LOGIN_ENDPOINT,
+  REGISTER_USER_ENDPOINT,
+];
+
+// add authentication tokens to each api request
+cubeApiAxiosConfig.interceptors.request.use(
+  (config) => {
+    console.log(config.url);
+    const access_token = getLocalStorageJwt()?.access;
+    if (access_token) {
+      config.headers["Authorization"] = `Bearer ${access_token}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
+// refresh access token upon expiry, logout users with expired refresh token
+cubeApiAxiosConfig.interceptors.response.use(
+  (res) => {
+    return res;
+  },
+  async (err) => {
+    const originalRequest = err.config;
+
+    // Access Token was expired
+    if (
+      !REFRESH_TOKEN_BLACKLIST.includes(originalRequest.url) &&
+      err.response.status === 401 &&
+      !originalRequest._retry
+    ) {
+      originalRequest._retry = true;
+
+      try {
+        const response = await axios.post(
+          REFRESH_ACCESS_ENDPOINT,
+          { refresh: getLocalStorageJwt()?.refresh },
+          {
+            headers: getCubeApiHeaders(),
+            withCredentials: true,
+          }
+        );
+        // don't use axios instance that already configured for refresh token api call
+        const newAccessToken = response.data.access;
+
+        localStorage.setItem("access", newAccessToken);
+        originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+        return axios(originalRequest); //recall Api with new token
+      } catch (error) {
+        // Handle token refresh failure - session has expired (configured in Django)
+        removeLocalStorageJwt();
+      }
+    }
+
+    return;
+  }
+);
