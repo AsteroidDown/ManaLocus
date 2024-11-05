@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import { Pressable, TextInput, View } from "react-native";
-import { getDeck, loginUser, registerUser, saveDeck } from "@/hooks/api-methods";
+import { getDeck, loginUser, registerUser } from "@/hooks/api-methods";
 import Text from "@/components/ui/text/text";
-import { getLocalStorageStoredCards } from "@/functions/local-storage/card-local-storage";
 import { removeLocalStorageJwt } from "@/functions/local-storage/auth-token";
 
 export default function Login() {

@@ -1,6 +1,5 @@
-import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
+import axios, { AxiosResponse } from "axios";
 import {
-  CubeApiUrl,
   DECK_ENDPOINT,
   LOGIN_ENDPOINT,
   REFRESH_ACCESS_ENDPOINT,
