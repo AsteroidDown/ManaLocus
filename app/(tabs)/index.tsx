@@ -1,5 +1,4 @@
 import DashboardSectionView from "@/components/dashboard/dashboard-section";
-import Login from "@/components/login/login";
 import Button from "@/components/ui/button/button";
 import { MTGColor } from "@/constants/mtg/mtg-colors";
 import DashboardContext from "@/contexts/dashboard/dashboard.context";
@@ -90,7 +89,6 @@ export default function App() {
 
   return (
     <SafeAreaView className="flex-1 bg-background-100 ">
-      <Login></Login>
       <ScrollView>
         <View className="flex-1 flex flex-row flex-wrap gap-6 px-6 justify-center items-center">
           {dashboard?.sections.map((section, index) => (
