@@ -27,16 +27,13 @@ export default function CardsPage() {
     ScryfallService.getSets().then((sets) =>
       setSets(sets.filter((set) => set.code.length === 3))
     );
-
-    Object.values(MTGSetTypes).forEach((setType) =>
-      selectedSets.push(setType as MTGSetType)
-    );
   }, []);
 
   useEffect(() => {
-    if (!selectedSets?.length) return;
-
-    setFilteredSets(sets.filter((set) => selectedSets.includes(set.setType)));
+    if (!selectedSets?.length) setFilteredSets(sets);
+    else {
+      setFilteredSets(sets.filter((set) => selectedSets.includes(set.setType)));
+    }
   }, [sets, selectedSets]);
 
   function toggleSetType(setType: MTGSetType) {
