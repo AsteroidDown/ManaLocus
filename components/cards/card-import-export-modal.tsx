@@ -81,7 +81,7 @@ export default function CardImportExportModal({
     importText.split("\n").forEach((card) => {
       if (errorFound) return;
 
-      const cardInfo = card.split(" ");
+      const cardInfo = card.split(" // ")[0].split(" ");
       const infoLength = cardInfo.length;
 
       const cardCount = Number(cardInfo?.[0]);
