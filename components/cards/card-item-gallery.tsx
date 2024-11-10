@@ -5,11 +5,11 @@ import BoardContext from "@/contexts/cards/board.context";
 import StoredCardsContext from "@/contexts/cards/stored-cards.context";
 import { filterCards } from "@/functions/card-filtering";
 import {
+  sortCards,
   sortCardsAlphabetically,
   sortCardsByColor,
   sortCardsByCost,
   sortCardsByManaValue,
-  sortCardsByPrice,
   sortCardsByType,
 } from "@/functions/card-sorting";
 import { getCountOfCards, getTotalValueOfCards } from "@/functions/card-stats";
@@ -89,36 +89,7 @@ export default function CardItemGallery({
       filters.manaValueSort ||
       filters.alphabeticalSort
     ) {
-      if (filters.alphabeticalSort) {
-        sortedCards =
-          filters.alphabeticalSort === "ASC"
-            ? sortCardsAlphabetically(cards)
-            : filters.alphabeticalSort === "DESC"
-            ? sortCardsAlphabetically(cards, false)
-            : cards;
-      }
-
-      if (filters.priceSort) {
-        const cardsToSort: Card[] = sortedCards?.length ? sortedCards : cards;
-
-        sortedCards =
-          filters.priceSort === "ASC"
-            ? sortCardsByPrice(cardsToSort)
-            : filters.priceSort === "DESC"
-            ? sortCardsByPrice(cardsToSort, false)
-            : cardsToSort;
-      }
-
-      if (filters.manaValueSort) {
-        const cardsToSort: Card[] = sortedCards?.length ? sortedCards : cards;
-
-        sortedCards =
-          filters.manaValueSort === "ASC"
-            ? sortCardsByManaValue(cardsToSort)
-            : filters.manaValueSort === "DESC"
-            ? sortCardsByManaValue(cardsToSort, false)
-            : cardsToSort;
-      }
+      sortedCards = sortCards(cards, filters);
     } else {
       sortedCards = sortCardsByManaValue(sortCardsAlphabetically(cards));
     }

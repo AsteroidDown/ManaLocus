@@ -7,10 +7,8 @@ import { TabProps } from "@/components/ui/tabs/tab";
 import TabBar from "@/components/ui/tabs/tab-bar";
 import { filterCards } from "@/functions/card-filtering";
 import {
-  sortCardsAlphabetically,
+  sortCards,
   sortCardsByCollectorNumber,
-  sortCardsByManaValue,
-  sortCardsByPrice,
 } from "@/functions/card-sorting";
 import ScryfallService from "@/hooks/scryfall.service";
 import { Card } from "@/models/card/card";
@@ -71,40 +69,7 @@ export default function SetPage() {
       filters.manaValueSort ||
       filters.alphabeticalSort
     ) {
-      if (filters.alphabeticalSort) {
-        sortedCards =
-          filters.alphabeticalSort === "ASC"
-            ? sortCardsAlphabetically(searchedCards)
-            : filters.alphabeticalSort === "DESC"
-            ? sortCardsAlphabetically(searchedCards, false)
-            : searchedCards;
-      }
-
-      if (filters.priceSort) {
-        const cardsToSort: Card[] = sortedCards?.length
-          ? sortedCards
-          : searchedCards;
-
-        sortedCards =
-          filters.priceSort === "ASC"
-            ? sortCardsByPrice(cardsToSort)
-            : filters.priceSort === "DESC"
-            ? sortCardsByPrice(cardsToSort, false)
-            : cardsToSort;
-      }
-
-      if (filters.manaValueSort) {
-        const cardsToSort: Card[] = sortedCards?.length
-          ? sortedCards
-          : searchedCards;
-
-        sortedCards =
-          filters.manaValueSort === "ASC"
-            ? sortCardsByManaValue(cardsToSort)
-            : filters.manaValueSort === "DESC"
-            ? sortCardsByManaValue(cardsToSort, false)
-            : cardsToSort;
-      }
+      sortedCards = sortCards(searchedCards, filters);
     } else {
       sortedCards = sortCardsByCollectorNumber(searchedCards);
     }

@@ -1,12 +1,58 @@
 import { MTGRarities } from "@/constants/mtg/mtg-rarity";
-import { MTGCardType, MTGCardTypes } from "../constants/mtg/mtg-types";
-import { Card } from "../models/card/card";
+import { Card } from "@/models/card/card";
 import {
+  CardFilters,
   CardsSortedByColor,
   CardsSortedByCost,
   CardsSortedByRarity,
   CardsSortedByType,
-} from "../models/sorted-cards/sorted-cards";
+} from "@/models/sorted-cards/sorted-cards";
+import { MTGCardType, MTGCardTypes } from "../constants/mtg/mtg-types";
+
+export function sortCards(cards: Card[], filters: CardFilters) {
+  let sortedCards: Card[] = [];
+
+  if (
+    !filters.alphabeticalSort &&
+    !filters.priceSort &&
+    !filters.manaValueSort
+  ) {
+    return cards;
+  }
+
+  if (filters.alphabeticalSort) {
+    sortedCards =
+      filters.alphabeticalSort === "ASC"
+        ? sortCardsAlphabetically(cards)
+        : filters.alphabeticalSort === "DESC"
+        ? sortCardsAlphabetically(cards, false)
+        : cards;
+  }
+
+  if (filters.priceSort) {
+    const cardsToSort: Card[] = sortedCards?.length ? sortedCards : cards;
+
+    sortedCards =
+      filters.priceSort === "ASC"
+        ? sortCardsByPrice(cardsToSort)
+        : filters.priceSort === "DESC"
+        ? sortCardsByPrice(cardsToSort, false)
+        : cardsToSort;
+  }
+
+  if (filters.manaValueSort) {
+    const cardsToSort: Card[] = sortedCards?.length ? sortedCards : cards;
+
+    sortedCards =
+      filters.manaValueSort === "ASC"
+        ? sortCardsByManaValue(cardsToSort)
+        : filters.manaValueSort === "DESC"
+        ? sortCardsByManaValue(cardsToSort, false)
+        : cardsToSort;
+  }
+
+  return sortedCards;
+}
 
 export function sortCardsByCollectorNumber(cards: Card[]) {
   return cards.sort(
