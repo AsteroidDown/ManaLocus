@@ -23,11 +23,12 @@ import TypeFilter from "./filter-types/type-filter";
 import SortingFilter from "./sorting-filter";
 
 export interface FilterBarProps {
-  type: CardFilterSortType;
+  clear?: boolean;
+  type?: CardFilterSortType;
   setFilters: React.Dispatch<React.SetStateAction<CardFilters>>;
 }
 
-export default function FilterBar({ setFilters, type }: FilterBarProps) {
+export default function FilterBar({ clear, type, setFilters }: FilterBarProps) {
   const { setPreferences } = useContext(CardPreferencesContext);
 
   const [showFilters, setShowFilters] = React.useState(false);
@@ -101,7 +102,11 @@ export default function FilterBar({ setFilters, type }: FilterBarProps) {
         showFilters ? "max-w-[1000px]" : "max-w-[8px]"
       }`}
     >
-      <View className="bg-background-200 rounded-l-full z-10">
+      <View
+        className={`rounded-l-full z-10 ${
+          clear ? "bg-background-100" : "bg-background-200"
+        }`}
+      >
         <Button
           rounded
           icon={faFilter}
