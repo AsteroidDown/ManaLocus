@@ -8,6 +8,12 @@ import {
   CardsSortedByType,
 } from "../models/sorted-cards/sorted-cards";
 
+export function sortCardsByCollectorNumber(cards: Card[]) {
+  return cards.sort(
+    (a, b) => Number(a.collectorNumber) - Number(b.collectorNumber)
+  );
+}
+
 export function sortCardsAlphabetically(cards: Card[], ascending = true) {
   return cards.sort((a, b) =>
     ascending ? a.name.localeCompare(b.name) : b.name.localeCompare(a.name)
