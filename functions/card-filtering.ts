@@ -41,7 +41,9 @@ export function filterCardByColor(card: Card, colors: MTGColor[]) {
   if (
     monoColored &&
     card.colorIdentity.length === 1 &&
-    card.colorIdentity.some((color) => filterColors?.includes(color))
+    (filterColors?.length === 1
+      ? true
+      : card.colorIdentity.some((color) => filterColors?.includes(color)))
   ) {
     return false;
   }
