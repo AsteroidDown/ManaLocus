@@ -38,7 +38,6 @@ export default function RootLayout() {
             }}
           >
             <Stack.Screen name="index" />
-            <Stack.Screen name="builder" />
             <Stack.Screen name="profile" />
             <Stack.Screen name="login" />
             <Stack.Screen name="+not-found" />
@@ -58,7 +57,9 @@ function Logo() {
         </Text>
       </Link>
 
-      <Button square type="clear" text="Decks" size="lg" />
+      <Link href="/decks">
+        <Button square type="clear" text="Decks" size="lg" />
+      </Link>
 
       <Link href="/cards">
         <Button square type="clear" text="Cards" size="lg" />
