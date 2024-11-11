@@ -2,6 +2,7 @@ import DeckCard from "@/components/decks/deck-card";
 import BoxHeader from "@/components/ui/box/box-header";
 import { MTGFormats } from "@/constants/mtg/mtg-format";
 import { Deck } from "@/models/deck/deck";
+import { Link } from "expo-router";
 import React from "react";
 import { ScrollView, View } from "react-native";
 
@@ -49,7 +50,9 @@ export default function DecksPage() {
 
         <View className="flex flex-row flex-wrap gap-4">
           {decks.map((deck, index) => (
-            <DeckCard key={deck.id + index} deck={deck} />
+            <Link key={deck.id + index} href={`decks/${deck.id}`}>
+              <DeckCard deck={deck} />
+            </Link>
           ))}
         </View>
       </View>
