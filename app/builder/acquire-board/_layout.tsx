@@ -37,7 +37,7 @@ export default function AcquireBoardLayout() {
     },
     {
       title: "Color",
-      link: "builder/side-board/color",
+      link: "builder/acquire-board/color",
       name: "color",
     },
     { title: "Type", link: "builder/acquire-board/type", name: "type" },
