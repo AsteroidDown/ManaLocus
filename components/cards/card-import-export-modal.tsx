@@ -1,7 +1,8 @@
 import Text from "@/components/ui/text/text";
+import { SortDirection } from "@/constants/sorting";
 import BoardContext from "@/contexts/cards/board.context";
 import StoredCardsContext from "@/contexts/cards/stored-cards.context";
-import { sortCardsAlphabetically } from "@/functions/card-sorting";
+import { sortCards } from "@/functions/card-sorting";
 import {
   getLocalStorageStoredCards,
   saveLocalStorageCard,
@@ -19,6 +20,8 @@ import {
 import React, { useContext, useEffect } from "react";
 import { View } from "react-native";
 import Button from "../ui/button/button";
+import Chip from "../ui/chip/chip";
+import SortingFilter from "../ui/filters/sorting-filter";
 import Modal from "../ui/modal/modal";
 
 export interface CardImportExportModalProps {
@@ -33,6 +36,14 @@ export default function CardImportExportModal({
   const { board } = useContext(BoardContext);
   const { setStoredCards } = useContext(StoredCardsContext);
 
+  const [colorSort, setColorSort] = React.useState(false);
+  const [manaValueSort, setManaValueSort] = React.useState(
+    null as SortDirection
+  );
+  const [alphabeticalSort, setAlphabeticalSort] = React.useState(
+    null as SortDirection
+  );
+
   const [cards, setCards] = React.useState("");
   const [disabled, setDisabled] = React.useState(false);
   const [error, setError] = React.useState(false);
@@ -43,10 +54,14 @@ export default function CardImportExportModal({
 
   useEffect(() => {
     setCards(getCardsForExport());
-  });
+  }, [board, colorSort, manaValueSort, alphabeticalSort]);
 
   function getCardsForExport() {
-    let decklist = sortCardsAlphabetically(getLocalStorageStoredCards(board))
+    let decklist = sortCards(getLocalStorageStoredCards(board), {
+      alphabeticalSort,
+      manaValueSort,
+      colorSort,
+    })
       .map(
         (card) =>
           `${card.count} ${card.name} (${card.set?.toUpperCase()}) ${
@@ -56,7 +71,12 @@ export default function CardImportExportModal({
       .join("\n");
 
     if (board === "side" || board === "main") {
-      const sideBoardCards = getLocalStorageStoredCards("side");
+      const sideBoardCards = sortCards(getLocalStorageStoredCards("side"), {
+        alphabeticalSort,
+        manaValueSort,
+        colorSort,
+      });
+
       if (sideBoardCards.length > 0) {
         decklist = "Deck\n" + decklist + "\n\nSideboard";
 
@@ -190,6 +210,30 @@ export default function CardImportExportModal({
     <Modal open={open} setOpen={setOpen}>
       <View className="flex gap-3">
         <Text size="xl">Import/Export Cards</Text>
+
+        <Text>Sort Cards</Text>
+        <View className="flex flex-row gap-2 items-center">
+          <SortingFilter
+            className="flex-1"
+            title="Mana Value"
+            sortDirection={manaValueSort}
+            setSortDirection={setManaValueSort}
+          />
+
+          <SortingFilter
+            className="flex-1"
+            title="Name"
+            sortDirection={alphabeticalSort}
+            setSortDirection={setAlphabeticalSort}
+          />
+
+          <Chip
+            className="flex-1"
+            text="Color"
+            type={colorSort ? "default" : "outlined"}
+            onClick={() => setColorSort(!colorSort)}
+          />
+        </View>
 
         <View className="bg-background-100 p-4 rounded-xl overflow-hidden">
           <View className="max-h-40 overflow-y-auto">

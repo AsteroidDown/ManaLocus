@@ -53,4 +53,5 @@ export interface CardFilters {
   manaValueSort?: SortDirection;
   priceSort?: SortDirection;
   alphabeticalSort?: SortDirection;
+  colorSort?: boolean;
 }

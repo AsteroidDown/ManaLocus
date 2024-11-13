@@ -18,7 +18,7 @@ export type SortingFilterProps = ViewProps & {
   action?: ActionColor;
   disabled?: boolean;
 
-  reset: boolean;
+  reset?: boolean;
   sortDirection: SortDirection;
   setSortDirection: React.Dispatch<React.SetStateAction<SortDirection>>;
 };

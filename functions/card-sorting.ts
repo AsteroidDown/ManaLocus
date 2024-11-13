@@ -1,6 +1,6 @@
-import { MTGColorSymbols } from "@/constants/mtg/mtg-colors";
 import { Card } from "@/models/card/card";
 import { CardFilters } from "@/models/sorted-cards/sorted-cards";
+import { groupCardsByColor } from "./card-grouping";
 
 export function sortCards(cards: Card[], filters: CardFilters) {
   let sortedCards: Card[] = [];
@@ -8,7 +8,8 @@ export function sortCards(cards: Card[], filters: CardFilters) {
   if (
     !filters.alphabeticalSort &&
     !filters.priceSort &&
-    !filters.manaValueSort
+    !filters.manaValueSort &&
+    !filters.colorSort
   ) {
     return cards;
   }
@@ -81,4 +82,17 @@ export function sortCardsByPrice(
   );
 }
 
+export function sortCardsByColor(cards: Card[]): Card[] {
+  const groupedCards = groupCardsByColor(cards);
+
+  return [
+    ...groupedCards.white,
+    ...groupedCards.blue,
+    ...groupedCards.black,
+    ...groupedCards.red,
+    ...groupedCards.green,
+    ...groupedCards.gold,
+    ...groupedCards.colorless,
+    ...groupedCards.land,
+  ];
 }
