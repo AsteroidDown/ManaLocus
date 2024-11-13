@@ -1,6 +1,7 @@
 import Text from "@/components/ui/text/text";
 import BoardContext from "@/contexts/cards/board.context";
 import StoredCardsContext from "@/contexts/cards/stored-cards.context";
+import { sortCardsAlphabetically } from "@/functions/card-sorting";
 import {
   getLocalStorageStoredCards,
   saveLocalStorageCard,
@@ -45,7 +46,7 @@ export default function CardImportExportModal({
   });
 
   function getCardsForExport() {
-    let decklist = getLocalStorageStoredCards()
+    let decklist = sortCardsAlphabetically(getLocalStorageStoredCards(board))
       .map(
         (card) =>
           `${card.count} ${card.name} (${card.set?.toUpperCase()}) ${
@@ -54,16 +55,18 @@ export default function CardImportExportModal({
       )
       .join("\n");
 
-    const sideBoardCards = getLocalStorageStoredCards("side");
-    if (sideBoardCards.length > 0) {
-      decklist = "Deck\n" + decklist + "\n\nSideboard";
+    if (board === "side" || board === "main") {
+      const sideBoardCards = getLocalStorageStoredCards("side");
+      if (sideBoardCards.length > 0) {
+        decklist = "Deck\n" + decklist + "\n\nSideboard";
 
-      sideBoardCards.forEach(
-        (card) =>
-          (decklist += `\n${card.count} ${
-            card.name
-          } (${card.set?.toUpperCase()}) ${card.collectorNumber}`)
-      );
+        sideBoardCards.forEach(
+          (card) =>
+            (decklist += `\n${card.count} ${
+              card.name
+            } (${card.set?.toUpperCase()}) ${card.collectorNumber}`)
+        );
+      }
     }
 
     return decklist;
@@ -150,11 +153,20 @@ export default function CardImportExportModal({
     } else {
       ScryfallService.getCardsFromCollection(cardIdentifiers).then(
         (newCards) => {
-          setLocalStorageCards([], "main");
-          newCards.forEach((card) => saveLocalStorageCard(card, 1, "main"));
+          setLocalStorageCards(
+            [],
+            sideBoardCardIdentifiers.length ? "main" : board
+          );
+          newCards.forEach((card) =>
+            saveLocalStorageCard(
+              card,
+              1,
+              sideBoardCardIdentifiers.length ? "main" : board
+            )
+          );
           setStoredCards(newCards);
 
-          if (sideboard) {
+          if (sideboard && sideBoardCardIdentifiers.length) {
             ScryfallService.getCardsFromCollection(
               sideBoardCardIdentifiers
             ).then((newSideBoardCards) => {

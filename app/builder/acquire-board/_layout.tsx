@@ -1,3 +1,4 @@
+import CardImportExportModal from "@/components/cards/card-import-export-modal";
 import CardSearch from "@/components/cards/card-search";
 import Button from "@/components/ui/button/button";
 import { TabProps } from "@/components/ui/tabs/tab";
@@ -16,6 +17,7 @@ import {
   faExpand,
   faEye,
   faEyeSlash,
+  faFileArrowDown,
 } from "@fortawesome/free-solid-svg-icons";
 import React, { useContext, useEffect } from "react";
 import { ScrollView, View } from "react-native";
@@ -25,6 +27,8 @@ export default function AcquireBoardLayout() {
   const { setPreferences } = useContext(CardPreferencesContext);
 
   const [board, setBoard] = React.useState("acquire" as BoardType);
+
+  const [open, setOpen] = React.useState(false);
 
   const [hideImages, setHideImages] = React.useState(false);
   const [condensed, setCondensed] = React.useState(false);
@@ -88,6 +92,13 @@ export default function AcquireBoardLayout() {
 
           <TabBar tabs={tabs}>
             <View className="flex flex-row gap-2 mx-4">
+              <Button
+                rounded
+                type="clear"
+                icon={faFileArrowDown}
+                onClick={() => setOpen(!open)}
+              />
+
               <Tooltip
                 title={
                   hideImages ? "Expand Card Gallery" : "Condense Card Gallery"
@@ -116,6 +127,8 @@ export default function AcquireBoardLayout() {
             </View>
           </TabBar>
         </View>
+
+        <CardImportExportModal open={open} setOpen={setOpen} />
       </BoardContext.Provider>
     </ScrollView>
   );
