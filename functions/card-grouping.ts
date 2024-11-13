@@ -1,3 +1,4 @@
+import { MTGColorSymbols } from "@/constants/mtg/mtg-colors";
 import { MTGRarities } from "@/constants/mtg/mtg-rarity";
 import { MTGCardType, MTGCardTypes } from "@/constants/mtg/mtg-types";
 import { Card } from "@/models/card/card";
@@ -33,19 +34,19 @@ export function groupCardsByColor(cards: Card[]): CardsSortedByColor {
       groupedCards.colorless.push(card);
     } else {
       switch (card.colorIdentity[0]) {
-        case "W":
+        case MTGColorSymbols.WHITE:
           groupedCards.white.push(card);
           return;
-        case "U":
+        case MTGColorSymbols.BLUE:
           groupedCards.blue.push(card);
           return;
-        case "B":
+        case MTGColorSymbols.BLACK:
           groupedCards.black.push(card);
           return;
-        case "R":
+        case MTGColorSymbols.RED:
           groupedCards.red.push(card);
           return;
-        case "G":
+        case MTGColorSymbols.GREEN:
           groupedCards.green.push(card);
           return;
       }

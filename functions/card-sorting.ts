@@ -81,12 +81,4 @@ export function sortCardsByPrice(
   );
 }
 
-      }
-    }
-
-    }
-
-    }
-
-  });
 }
