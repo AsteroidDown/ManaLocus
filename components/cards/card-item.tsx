@@ -101,37 +101,43 @@ export default function CardItem({
       >
         <CardItemHeader card={card} condensed={condensed} focused={focused} />
 
-        <Divider thick className="-mt-2" />
-
-        {!hideImage && (
+        {expanded && (
           <>
-            <View className={"flex gap-2 px-2"}>
-              <CardImage
-                card={card}
-                focusable={expanded}
-                onClick={() => setModalOpen(true)}
-              />
-            </View>
+            <Divider thick className="-mt-2" />
 
-            <Divider thick />
+            {!hideImage && (
+              <>
+                <View className={"flex gap-2 px-2"}>
+                  <CardImage
+                    card={card}
+                    focusable={expanded}
+                    onClick={() => setModalOpen(true)}
+                  />
+                </View>
+
+                <Divider thick />
+              </>
+            )}
+
+            <CardItemFooter
+              card={card}
+              expanded={expanded}
+              modalOpen={modalOpen}
+              setModalOpen={setModalOpen}
+              itemsExpanded={itemsExpanded}
+              setItemsExpanded={setItemsExpanded}
+            />
           </>
         )}
-
-        <CardItemFooter
-          card={card}
-          expanded={expanded}
-          modalOpen={modalOpen}
-          setModalOpen={setModalOpen}
-          itemsExpanded={itemsExpanded}
-          setItemsExpanded={setItemsExpanded}
-        />
       </Pressable>
 
-      <Modal transparent open={modalOpen} setOpen={setModalOpen}>
-        <CardDetailedPreview card={card}>
-          <CardItemFooter card={card} />
-        </CardDetailedPreview>
-      </Modal>
+      {expanded && (
+        <Modal transparent open={modalOpen} setOpen={setModalOpen}>
+          <CardDetailedPreview card={card}>
+            <CardItemFooter card={card} />
+          </CardDetailedPreview>
+        </Modal>
+      )}
 
       <View
         className={`relative w-full h-0 z-10 max-w-full ${
@@ -151,9 +157,11 @@ export default function CardItem({
               action="info"
               className="flex-1"
               icon={faShop}
+              disabled={!card.priceUris?.tcgplayer}
               text={`$${card.prices?.usd}`}
               onClick={async () =>
-                await Linking.openURL(card.priceUris.tcgplayer)
+                card.priceUris?.tcgplayer &&
+                (await Linking.openURL(card.priceUris.tcgplayer))
               }
             />
 
@@ -162,9 +170,11 @@ export default function CardItem({
               action="info"
               className="flex-1"
               icon={faShop}
+              disabled={!card.priceUris?.cardmarket}
               text={`€${card.prices?.eur}`}
               onClick={async () =>
-                await Linking.openURL(card.priceUris.cardmarket)
+                card.priceUris?.cardmarket &&
+                (await Linking.openURL(card.priceUris?.cardmarket))
               }
             />
           </View>
