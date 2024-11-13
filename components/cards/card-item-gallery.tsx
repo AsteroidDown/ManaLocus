@@ -5,12 +5,14 @@ import BoardContext from "@/contexts/cards/board.context";
 import StoredCardsContext from "@/contexts/cards/stored-cards.context";
 import { filterCards } from "@/functions/card-filtering";
 import {
+  groupCardsByColor,
+  groupCardsByCost,
+  groupCardsByType,
+} from "@/functions/card-grouping";
+import {
   sortCards,
   sortCardsAlphabetically,
-  sortCardsByColor,
-  sortCardsByCost,
   sortCardsByManaValue,
-  sortCardsByType,
 } from "@/functions/card-sorting";
 import { getCountOfCards, getTotalValueOfCards } from "@/functions/card-stats";
 import { getLocalStorageStoredCards } from "@/functions/local-storage/card-local-storage";
@@ -100,13 +102,13 @@ export default function CardItemGallery({
     setCardsValue(getTotalValueOfCards(filteredCards));
 
     if (type === "cost") {
-      setCardsSortedByCost(sortCardsByCost(filteredCards));
+      setCardsSortedByCost(groupCardsByCost(filteredCards));
     }
     if (type === "color") {
-      setCardsSortedByColor(sortCardsByColor(filteredCards));
+      setCardsSortedByColor(groupCardsByColor(filteredCards));
     }
     if (type === "type") {
-      setCardsSortedByType(sortCardsByType(filteredCards));
+      setCardsSortedByType(groupCardsByType(filteredCards));
     }
   }, [cards, filters]);
 

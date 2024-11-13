@@ -6,16 +6,15 @@ import { SetData } from "../components/graph/layout/graph-plot";
 import { Card } from "../models/card/card";
 import { CardsSortedByColor } from "../models/sorted-cards/sorted-cards";
 import {
-  sortCardsAlphabetically,
-  sortCardsByColor,
-  sortCardsByCost,
-  sortCardsByManaValue,
-  sortCardsByType,
-} from "./card-sorting";
+  groupCardsByColor,
+  groupCardsByCost,
+  groupCardsByType,
+} from "./card-grouping";
+import { sortCardsAlphabetically, sortCardsByManaValue } from "./card-sorting";
 import { getCountOfCards } from "./card-stats";
 
 export function graphCardsByColor(cards: Card[]): SetData[] {
-  const sortedCards = sortCardsByColor(
+  const sortedCards = groupCardsByColor(
     sortCardsByManaValue(sortCardsAlphabetically(cards))
   );
 
@@ -115,15 +114,15 @@ export function graphCardsByColor(cards: Card[]): SetData[] {
 }
 
 export function graphCardsByCost(cards: Card[]): SetData[] {
-  const sortedCards = sortCardsByCost(sortCardsAlphabetically(cards));
+  const sortedCards = groupCardsByCost(sortCardsAlphabetically(cards));
 
-  const sortedZero = sortCardsByColor(sortedCards.zero);
-  const sortedOne = sortCardsByColor(sortedCards.one);
-  const sortedTwo = sortCardsByColor(sortedCards.two);
-  const sortedThree = sortCardsByColor(sortedCards.three);
-  const sortedFour = sortCardsByColor(sortedCards.four);
-  const sortedFive = sortCardsByColor(sortedCards.five);
-  const sortedSix = sortCardsByColor(sortedCards.six);
+  const sortedZero = groupCardsByColor(sortedCards.zero);
+  const sortedOne = groupCardsByColor(sortedCards.one);
+  const sortedTwo = groupCardsByColor(sortedCards.two);
+  const sortedThree = groupCardsByColor(sortedCards.three);
+  const sortedFour = groupCardsByColor(sortedCards.four);
+  const sortedFive = groupCardsByColor(sortedCards.five);
+  const sortedSix = groupCardsByColor(sortedCards.six);
 
   const sets: SetData[] = [];
 
@@ -143,16 +142,16 @@ export function graphCardsByCost(cards: Card[]): SetData[] {
 }
 
 export function graphCardsByType(cards: Card[]): SetData[] {
-  const sortedCards = sortCardsByType(sortCardsAlphabetically(cards));
+  const sortedCards = groupCardsByType(sortCardsAlphabetically(cards));
 
-  const sortedLands = sortCardsByColor(sortedCards.land);
-  const sortedEnchantments = sortCardsByColor(sortedCards.enchantment);
-  const sortedCreatures = sortCardsByColor(sortedCards.creature);
-  const sortedSorceries = sortCardsByColor(sortedCards.sorcery);
-  const sortedPlaneswalkers = sortCardsByColor(sortedCards.planeswalker);
-  const sortedArtifacts = sortCardsByColor(sortedCards.artifact);
-  const sortedBattles = sortCardsByColor(sortedCards.battle);
-  const sortedInstants = sortCardsByColor(sortedCards.instant);
+  const sortedLands = groupCardsByColor(sortedCards.land);
+  const sortedEnchantments = groupCardsByColor(sortedCards.enchantment);
+  const sortedCreatures = groupCardsByColor(sortedCards.creature);
+  const sortedSorceries = groupCardsByColor(sortedCards.sorcery);
+  const sortedPlaneswalkers = groupCardsByColor(sortedCards.planeswalker);
+  const sortedArtifacts = groupCardsByColor(sortedCards.artifact);
+  const sortedBattles = groupCardsByColor(sortedCards.battle);
+  const sortedInstants = groupCardsByColor(sortedCards.instant);
 
   const sets: SetData[] = [
     createSetDataByColor("Creature", sortedCreatures, {

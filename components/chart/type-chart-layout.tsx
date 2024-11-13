@@ -1,5 +1,5 @@
 import { MTGCardTypes } from "@/constants/mtg/mtg-types";
-import { sortCardsByColor, sortCardsByType } from "@/functions/card-sorting";
+import { groupCardsByColor, groupCardsByType } from "@/functions/card-grouping";
 import { titleCase } from "@/functions/text-manipulation";
 import { Card } from "@/models/card/card";
 import { CardFilters } from "@/models/sorted-cards/sorted-cards";
@@ -22,17 +22,17 @@ export default function TypeChartLayout({
 }: TypeChartLayoutProps) {
   const colors = filters.colorFilter;
 
-  const sortedCards = sortCardsByType(cards);
-  const cardsSortedByColor = sortCardsByColor(cards);
+  const sortedCards = groupCardsByType(cards);
+  const cardsSortedByColor = groupCardsByColor(cards);
 
-  const sortedCreature = sortCardsByColor(sortedCards.creature);
-  const sortedInstant = sortCardsByColor(sortedCards.instant);
-  const sortedSorcery = sortCardsByColor(sortedCards.sorcery);
-  const sortedArtifact = sortCardsByColor(sortedCards.artifact);
-  const sortedEnchantment = sortCardsByColor(sortedCards.enchantment);
-  const sortedLand = sortCardsByColor(sortedCards.land);
-  const sortedPlans = sortCardsByColor(sortedCards.planeswalker);
-  const sortedBattle = sortCardsByColor(sortedCards.battle);
+  const sortedCreature = groupCardsByColor(sortedCards.creature);
+  const sortedInstant = groupCardsByColor(sortedCards.instant);
+  const sortedSorcery = groupCardsByColor(sortedCards.sorcery);
+  const sortedArtifact = groupCardsByColor(sortedCards.artifact);
+  const sortedEnchantment = groupCardsByColor(sortedCards.enchantment);
+  const sortedLand = groupCardsByColor(sortedCards.land);
+  const sortedPlans = groupCardsByColor(sortedCards.planeswalker);
+  const sortedBattle = groupCardsByColor(sortedCards.battle);
 
   return (
     <>

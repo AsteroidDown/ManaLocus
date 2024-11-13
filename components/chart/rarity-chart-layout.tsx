@@ -1,5 +1,8 @@
 import { MTGRarities } from "@/constants/mtg/mtg-rarity";
-import { sortCardsByColor, sortCardsByRarity } from "@/functions/card-sorting";
+import {
+  groupCardsByColor,
+  groupCardsByRarity,
+} from "@/functions/card-grouping";
 import { titleCase } from "@/functions/text-manipulation";
 import { Card } from "@/models/card/card";
 import { CardFilters } from "@/models/sorted-cards/sorted-cards";
@@ -22,13 +25,13 @@ export default function RarityChartLayout({
 }: RarityChartLayoutProps) {
   const colors = filters.colorFilter;
 
-  const sortedCards = sortCardsByRarity(cards);
-  const cardsSortedByColor = sortCardsByColor(cards);
+  const sortedCards = groupCardsByRarity(cards);
+  const cardsSortedByColor = groupCardsByColor(cards);
 
-  const sortedCommon = sortCardsByColor(sortedCards.common);
-  const sortedUncommon = sortCardsByColor(sortedCards.uncommon);
-  const sortedRare = sortCardsByColor(sortedCards.rare);
-  const sortedMythic = sortCardsByColor(sortedCards.mythic);
+  const sortedCommon = groupCardsByColor(sortedCards.common);
+  const sortedUncommon = groupCardsByColor(sortedCards.uncommon);
+  const sortedRare = groupCardsByColor(sortedCards.rare);
+  const sortedMythic = groupCardsByColor(sortedCards.mythic);
 
   return (
     <>
