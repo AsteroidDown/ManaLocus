@@ -1,7 +1,11 @@
 import Text from "@/components/ui/text/text";
+import { MTGColor } from "@/constants/mtg/mtg-colors";
+import { MTGRarity } from "@/constants/mtg/mtg-rarity";
+import { MTGCardType } from "@/constants/mtg/mtg-types";
 import { SortDirection } from "@/constants/sorting";
 import BoardContext from "@/contexts/cards/board.context";
 import StoredCardsContext from "@/contexts/cards/stored-cards.context";
+import { filterCards } from "@/functions/card-filtering";
 import { sortCards } from "@/functions/card-sorting";
 import {
   getLocalStorageStoredCards,
@@ -21,6 +25,10 @@ import React, { useContext, useEffect } from "react";
 import { View } from "react-native";
 import Button from "../ui/button/button";
 import Chip from "../ui/chip/chip";
+import Divider from "../ui/divider/divider";
+import ColorFilter from "../ui/filters/filter-types/color-filter";
+import RarityFilter from "../ui/filters/filter-types/rarity-filter";
+import TypeFilter from "../ui/filters/filter-types/type-filter";
 import SortingFilter from "../ui/filters/sorting-filter";
 import Modal from "../ui/modal/modal";
 
@@ -44,6 +52,16 @@ export default function CardImportExportModal({
     null as SortDirection
   );
 
+  const [colorFilter, setColorFilter] = React.useState(
+    undefined as MTGColor[] | undefined
+  );
+  const [typeFilter, setTypeFilter] = React.useState(
+    undefined as MTGCardType[] | undefined
+  );
+  const [rarityFilter, setRarityFilter] = React.useState(
+    undefined as MTGRarity[] | undefined
+  );
+
   const [cards, setCards] = React.useState("");
   const [disabled, setDisabled] = React.useState(false);
   const [error, setError] = React.useState(false);
@@ -54,14 +72,29 @@ export default function CardImportExportModal({
 
   useEffect(() => {
     setCards(getCardsForExport());
-  }, [board, colorSort, manaValueSort, alphabeticalSort]);
+  }, [
+    board,
+    colorSort,
+    manaValueSort,
+    alphabeticalSort,
+    colorFilter,
+    typeFilter,
+    rarityFilter,
+  ]);
 
   function getCardsForExport() {
-    let decklist = sortCards(getLocalStorageStoredCards(board), {
-      alphabeticalSort,
-      manaValueSort,
-      colorSort,
-    })
+    let decklist = filterCards(
+      sortCards(getLocalStorageStoredCards(board), {
+        alphabeticalSort,
+        manaValueSort,
+        colorSort,
+      }),
+      {
+        colorFilter,
+        typeFilter,
+        rarityFilter,
+      }
+    )
       .map(
         (card) =>
           `${card.count} ${card.name} (${card.set?.toUpperCase()}) ${
@@ -208,43 +241,98 @@ export default function CardImportExportModal({
 
   return (
     <Modal open={open} setOpen={setOpen}>
-      <View className="flex gap-3">
-        <Text size="xl">Import/Export Cards</Text>
-
-        <Text>Sort Cards</Text>
-        <View className="flex flex-row gap-2 items-center">
-          <SortingFilter
-            className="flex-1"
-            title="Mana Value"
-            sortDirection={manaValueSort}
-            setSortDirection={setManaValueSort}
-          />
-
-          <SortingFilter
-            className="flex-1"
-            title="Name"
-            sortDirection={alphabeticalSort}
-            setSortDirection={setAlphabeticalSort}
-          />
-
-          <Chip
-            className="flex-1"
-            text="Color"
-            type={colorSort ? "default" : "outlined"}
-            onClick={() => setColorSort(!colorSort)}
-          />
-        </View>
-
-        <View className="bg-background-100 p-4 rounded-xl overflow-hidden">
-          <View className="max-h-40 overflow-y-auto">
-            <Text mono>{cards}</Text>
-          </View>
-        </View>
-
-        <Text className="pl-3">For importing use one of the standards:</Text>
-        <Text mono className="-mt-2 px-2.5 py-1.5 bg-background-100 rounded-lg">
-          1 id {"\n"}1 name {"\n"}1 name (set) collection_number
+      <View className="flex gap-4 max-w-2xl max-h-[80vh]">
+        <Text size="xl" thickness="bold">
+          Import/Export Cards
         </Text>
+
+        <View className="flex-1 flex gap-3 overflow-y-auto">
+          <View className="flex gap-2 ">
+            <Text size="md" thickness="bold">
+              Colors to Include
+            </Text>
+
+            <Divider thick />
+
+            <ColorFilter
+              flat
+              excludeMono
+              colorFilters={colorFilter}
+              setColorFilters={setColorFilter}
+            />
+          </View>
+
+          <View className="flex gap-2 ">
+            <Text size="md" thickness="bold">
+              Types to Filter By
+            </Text>
+
+            <Divider thick />
+
+            <TypeFilter
+              flat
+              typeFilters={typeFilter}
+              setTypeFilters={setTypeFilter}
+            />
+          </View>
+
+          <View className="flex gap-2 ">
+            <Text size="md" thickness="bold">
+              Rarities to Filter By
+            </Text>
+
+            <Divider thick />
+
+            <RarityFilter
+              flat
+              rarityFilters={rarityFilter}
+              setRarityFilters={setRarityFilter}
+            />
+          </View>
+
+          <Text size="md" thickness="bold">
+            Sort By
+          </Text>
+
+          <Divider thick />
+
+          <View className="flex flex-row gap-2 items-center">
+            <SortingFilter
+              className="flex-1"
+              title="Mana Value"
+              sortDirection={manaValueSort}
+              setSortDirection={setManaValueSort}
+            />
+
+            <SortingFilter
+              className="flex-1"
+              title="Name"
+              sortDirection={alphabeticalSort}
+              setSortDirection={setAlphabeticalSort}
+            />
+
+            <Chip
+              className="flex-1"
+              text="Color"
+              type={colorSort ? "default" : "outlined"}
+              onClick={() => setColorSort(!colorSort)}
+            />
+          </View>
+
+          <View className="bg-background-100 p-4 rounded-xl overflow-hidden">
+            <View className="max-h-40 overflow-y-auto">
+              <Text mono>{cards}</Text>
+            </View>
+          </View>
+
+          <Text className="pl-3">For importing use one of the standards:</Text>
+          <Text
+            mono
+            className="-mt-2 px-2.5 py-1.5 bg-background-100 rounded-lg"
+          >
+            1 id {"\n"}1 name {"\n"}1 name (set) collection_number
+          </Text>
+        </View>
 
         <View className="flex flex-row flex-wrap justify-center gap-3">
           <Button
