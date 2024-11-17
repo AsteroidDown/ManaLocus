@@ -1,7 +1,7 @@
 import { APIbaseURL } from "@/constants/urls";
 import axios from "axios";
 
-const baseURL = `${APIbaseURL}/api/token/users`;
+const baseURL = `${APIbaseURL}/api/users`;
 
 async function register(username: string, password: string) {
   axios

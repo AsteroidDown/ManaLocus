@@ -1,12 +1,12 @@
-import { ApiUrl } from "@/constants/urls";
+import { APIbaseURL } from "@/constants/urls";
 import {
   getLocalStorageJwt,
   removeLocalStorageJwt,
 } from "@/functions/local-storage/auth-token-local-storage";
 import axios from "axios";
-import APIAxiosConfig from "../services/axios-config";
+import APIAxiosConfig from "../api-methods/api-methods";
 
-const baseURL = `${ApiUrl}/api/token`;
+const baseURL = `${APIbaseURL}/api/token`;
 
 const LOGIN = `${baseURL}/login`;
 const REGISTER = `${baseURL}/register`;

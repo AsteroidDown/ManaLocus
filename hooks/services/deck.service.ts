@@ -1,8 +1,8 @@
 import { APIbaseURL } from "@/constants/urls";
 import { DeckDTO } from "@/models/deck/deck";
-import APIAxiosConfig from "./axios-config";
+import APIAxiosConfig from "../api-methods/api-methods";
 
-const baseURL = `${APIbaseURL}/api/token/decks`;
+const baseURL = `${APIbaseURL}/api/decks`;
 
 async function getPublic() {
   return await APIAxiosConfig.get(`${baseURL}/public`).catch((error) =>
