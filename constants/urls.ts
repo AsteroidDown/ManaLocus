@@ -1,2 +1,2 @@
 export const ScryfallURL = "https://api.scryfall.com";
-export const ApiUrl: string = "http://localhost:8001/";
+export const APIbaseURL: string = "http://localhost:8001/";
