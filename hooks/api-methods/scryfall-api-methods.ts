@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from "axios";
-import { ScryfallURL } from "../constants/urls";
+import { ScryfallURL } from "../../constants/urls";
 
 function getHeaders() {
   return {

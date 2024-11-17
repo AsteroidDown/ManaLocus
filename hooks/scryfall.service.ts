@@ -8,7 +8,7 @@ import {
   ScryfallCardList,
   ScryfallSetList,
 } from "../models/scryfall/scryfall-list";
-import Api from "./api-methods";
+import Api from "./api-methods/scryfall-api-methods";
 
 async function autocomplete(query: string): Promise<string[]> {
   const response: ScryfallCatalog = await Api.get(`cards/autocomplete`, {
