@@ -38,9 +38,9 @@ async function Post(url: string, data?: Record<string, any>) {
   );
 }
 
-const Api = {
+const ScryfallAPI = {
   get: Get,
   post: Post,
 };
 
-export default Api;
+export default ScryfallAPI;

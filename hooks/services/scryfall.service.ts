@@ -8,12 +8,15 @@ import {
   ScryfallSetList,
 } from "@/models/scryfall/scryfall-list";
 import { ScryfallSet } from "@/models/scryfall/scryfall-set";
-import Api from "../api-methods/scryfall-api-methods";
+import ScryfallAPI from "../api-methods/scryfall-api-methods";
 
 async function autocomplete(query: string): Promise<string[]> {
-  const response: ScryfallCatalog = await Api.get(`cards/autocomplete`, {
-    q: query,
-  }).catch((error) => console.error(error));
+  const response: ScryfallCatalog = await ScryfallAPI.get(
+    `cards/autocomplete`,
+    {
+      q: query,
+    }
+  ).catch((error) => console.error(error));
 
   return response
     ? response.data.filter((name) => name.substring(0, 2) !== "A-")
@@ -21,7 +24,7 @@ async function autocomplete(query: string): Promise<string[]> {
 }
 
 async function findCards(query: string): Promise<Card[]> {
-  const response: ScryfallCardList = await Api.get(`cards/search`, {
+  const response: ScryfallCardList = await ScryfallAPI.get(`cards/search`, {
     q: query + " game:paper",
   }).catch((error) => console.error(error));
 
@@ -29,7 +32,7 @@ async function findCards(query: string): Promise<Card[]> {
 }
 
 async function getCard(name: string, exact = false): Promise<Card> {
-  const card: ScryfallCard = await Api.get(`cards/named`, {
+  const card: ScryfallCard = await ScryfallAPI.get(`cards/named`, {
     ...(exact ? { exact: name } : { fuzzy: name }),
   }).catch((error) => console.error(error));
 
@@ -40,7 +43,7 @@ async function getCardByNumber(
   setId: string,
   cardNumber: string
 ): Promise<Card> {
-  const card: ScryfallCard = await Api.get(
+  const card: ScryfallCard = await ScryfallAPI.get(
     `cards/${setId}/${cardNumber}`
   ).catch((error) => console.error(error));
 
@@ -48,8 +51,8 @@ async function getCardByNumber(
 }
 
 async function getCardById(cardId: string): Promise<Card> {
-  const card: ScryfallCard = await Api.get(`cards/${cardId}`).catch((error) =>
-    console.error(error)
+  const card: ScryfallCard = await ScryfallAPI.get(`cards/${cardId}`).catch(
+    (error) => console.error(error)
   );
 
   return ScryfallToCard(card);
@@ -86,7 +89,7 @@ async function getCardsFromCollection(cardsIdentifiers: CardIdentifier[]) {
   await Promise.all(
     bundles.map(
       async (bundle) =>
-        await Api.post(`cards/collection`, {
+        await ScryfallAPI.post(`cards/collection`, {
           identifiers: bundle,
         })
           .then((response: ScryfallCardList) =>
@@ -102,32 +105,32 @@ async function getCardsFromCollection(cardsIdentifiers: CardIdentifier[]) {
 }
 
 async function getRandomCard(): Promise<Card> {
-  const card: ScryfallCard = await Api.get(`cards/random`).catch((error) =>
-    console.error(error)
+  const card: ScryfallCard = await ScryfallAPI.get(`cards/random`).catch(
+    (error) => console.error(error)
   );
 
   return ScryfallToCard(card);
 }
 
 async function getSets(): Promise<Set[]> {
-  const response: ScryfallSetList = await Api.get(`sets`).catch((error) =>
-    console.error(error)
+  const response: ScryfallSetList = await ScryfallAPI.get(`sets`).catch(
+    (error) => console.error(error)
   );
 
   return response ? response.data.map((set) => ScryfallToSet(set)) : [];
 }
 
 async function getSetByCode(setId: string): Promise<Set> {
-  const set: ScryfallSet = await Api.get(`sets/${setId}`).catch((error) =>
-    console.error(error)
+  const set: ScryfallSet = await ScryfallAPI.get(`sets/${setId}`).catch(
+    (error) => console.error(error)
   );
 
   return ScryfallToSet(set);
 }
 
 async function getSetCards(searchURI: string): Promise<Card[]> {
-  const response: ScryfallCardList = await Api.get(
-    `${searchURI.split("api.scryfall.com/")[1]}`
+  const response: ScryfallCardList = await ScryfallAPI.get(
+    `${searchURI.split("ScryfallApi.scryfall.com/")[1]}`
   ).catch((error) => console.error(error));
 
   const cards = response.data.map((card) => ScryfallToCard(card));
