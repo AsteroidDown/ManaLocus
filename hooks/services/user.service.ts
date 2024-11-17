@@ -1,17 +1,10 @@
-import { APIbaseURL } from "@/constants/urls";
 import axios from "axios";
 
-const baseURL = `${APIbaseURL}/api/users`;
-
 async function register(username: string, password: string) {
-  axios
-    .post(`${baseURL}/register`, {
+  return await axios
+    .post(`users/register/`, {
       username: username,
       password: password,
-    })
-    .then((response) => {
-      console.log(`User with username: ${username} created, logging in now.`);
-      login(username, password);
     })
     .catch((error) => {
       console.log(error.response?.data?.username[0]);
@@ -19,16 +12,13 @@ async function register(username: string, password: string) {
 }
 
 async function login(username: string, password: string) {
-  axios
-    .post(`${baseURL}/login`, {
+  return await axios
+    .post(`users/login/`, {
       username: username,
       password: password,
     })
     .then((response) => {
       if (response.data?.access && response.data?.refresh) {
-        console.log(`user logged in`);
-
-        // TODO: Set user context
         localStorage.setItem("user-access", response.data.access);
         localStorage.setItem("user-refresh", response.data.refresh);
       }

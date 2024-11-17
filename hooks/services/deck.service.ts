@@ -1,23 +1,20 @@
-import { APIbaseURL } from "@/constants/urls";
 import { DeckDTO } from "@/models/deck/deck";
-import APIAxiosConfig from "../api-methods/api-methods";
-
-const baseURL = `${APIbaseURL}/api/decks`;
+import API from "../api-methods/api-methods";
 
 async function getPublic() {
-  return await APIAxiosConfig.get(`${baseURL}/public`).catch((error) =>
+  return await API.get(`decks/public`).catch((error) =>
     console.log(`Error retrieving public decks.\nError: ${error}`)
   );
 }
 
 async function getById(deckId: string) {
-  return await APIAxiosConfig.get(`${baseURL}/${deckId}`).catch((error) => {
+  return await API.get(`decks/${deckId}`).catch((error) => {
     console.log(`Error retrieving deck with id: (${deckId}).\nError: ${error}`);
   });
 }
 
 async function getByUser(userId: string, includePrivate?: boolean) {
-  return await APIAxiosConfig.get(`${baseURL}/${userId}`, {
+  return await API.get(`decks/${userId}`, {
     params: { includePrivate: includePrivate ? "true" : "false" },
   }).catch((error) =>
     console.log(
@@ -27,35 +24,25 @@ async function getByUser(userId: string, includePrivate?: boolean) {
 }
 
 async function create(deckId: string, data: DeckDTO) {
-  return await APIAxiosConfig.patch(
-    `${baseURL}/${deckId}`,
-    { deckId, ...data },
-    {
-      withCredentials: true,
+  return await API.patch(`decks/${deckId}`, { deckId, ...data }, true).catch(
+    (error) => {
+      console.log(`Error creating deck with id: (${deckId}).\nError: ${error}`);
     }
-  ).catch((error) =>
-    console.log(`Error creating deck with id: (${deckId}).\nError: ${error}`)
   );
 }
 
 async function update(deckId: string, data: DeckDTO) {
-  return await APIAxiosConfig.patch(
-    `${baseURL}/${deckId}`,
-    { deckId, ...data },
-    {
-      withCredentials: true,
+  return await API.patch(`decks/${deckId}`, { deckId, ...data }, true).catch(
+    (error) => {
+      console.log(`Error updating deck with id: (${deckId}).\nError: ${error}`);
     }
-  ).catch((error) =>
-    console.log(`Error updating deck with id: (${deckId}).\nError: ${error}`)
   );
 }
 
 async function remove(deckId: string) {
-  return await APIAxiosConfig.delete(`${baseURL}/${deckId}`, {
-    withCredentials: true,
-  }).catch((error) =>
-    console.log(`Error removing deck with id: (${deckId}).\nError: ${error}`)
-  );
+  return await API.delete(`decks/${deckId}`, true).catch((error) => {
+    console.log(`Error removing deck with id: (${deckId}).\nError: ${error}`);
+  });
 }
 
 const DeckService = {
