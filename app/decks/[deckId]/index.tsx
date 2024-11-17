@@ -25,7 +25,9 @@ export default function DeckPage() {
           className="absolute h-[457px] w-[50%] top-0 right-0"
         />
 
-        <View className="absolute w-full h-full bg-gradient-to-r from-background-200 from-[51%] to-transparent to-75%" />
+        <View className="absolute w-full h-full bg-gradient-to-r from-primary-300 from-[51%] to-transparent to-75%" />
+
+        <View className="absolute w-full h-full bg-gradient-to-b from-transparent to-black opacity-40" />
 
         <View className="absolute flex justify-center w-full h-full px-11 top-0 left-0">
           <Text thickness="bold" className="!text-5xl">
