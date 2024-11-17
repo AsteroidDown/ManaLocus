@@ -16,7 +16,7 @@ async function handleResponse(response: AxiosResponse<any, any>) {
   }
 }
 
-async function Get(url: string, query?: Record<string, any>) {
+async function get(url: string, query?: Record<string, any>) {
   const headers = getHeaders();
 
   return handleResponse(
@@ -27,7 +27,7 @@ async function Get(url: string, query?: Record<string, any>) {
   );
 }
 
-async function Post(url: string, data?: Record<string, any>) {
+async function post(url: string, data?: Record<string, any>) {
   const headers = getHeaders();
 
   return handleResponse(
@@ -39,8 +39,8 @@ async function Post(url: string, data?: Record<string, any>) {
 }
 
 const ScryfallAPI = {
-  get: Get,
-  post: Post,
+  get,
+  post,
 };
 
 export default ScryfallAPI;

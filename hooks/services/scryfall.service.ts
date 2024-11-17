@@ -130,7 +130,7 @@ async function getSetByCode(setId: string): Promise<Set> {
 
 async function getSetCards(searchURI: string): Promise<Card[]> {
   const response: ScryfallCardList = await ScryfallAPI.get(
-    `${searchURI.split("ScryfallApi.scryfall.com/")[1]}`
+    `${searchURI.split("api.scryfall.com/")[1]}`
   ).catch((error) => console.error(error));
 
   const cards = response.data.map((card) => ScryfallToCard(card));
