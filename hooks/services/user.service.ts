@@ -1,22 +1,17 @@
-import axios from "axios";
+import API from "../api-methods/api-methods";
 
 async function register(username: string, password: string) {
-  return await axios
-    .post(`users/register/`, {
-      username: username,
-      password: password,
-    })
-    .catch((error) => {
-      console.log(error.response?.data?.username[0]);
-    });
+  return await API.post(`users/register/`, {
+    username: username,
+    password: password,
+  }).catch((error) => console.log(`Error registering user: ${error}`));
 }
 
 async function login(username: string, password: string) {
-  return await axios
-    .post(`users/login/`, {
-      username: username,
-      password: password,
-    })
+  return await API.post(`users/login/`, {
+    username: username,
+    password: password,
+  })
     .then((response) => {
       if (response.data?.access && response.data?.refresh) {
         localStorage.setItem("user-access", response.data.access);
