@@ -6,7 +6,7 @@ import Dropdown from "@/components/ui/dropdown/dropdown";
 import Text from "@/components/ui/text/text";
 import { MTGSetType, MTGSetTypes } from "@/constants/mtg/mtg-set-types";
 import { titleCase } from "@/functions/text-manipulation";
-import ScryfallService from "@/hooks/scryfall.service";
+import ScryfallService from "@/hooks/services/scryfall.service";
 import { faCheck, faFilter } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link } from "expo-router";

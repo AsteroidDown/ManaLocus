@@ -1,14 +1,14 @@
+import { ScryfallToCard, ScryfallToSet } from "@/functions/scryfall";
+import { Card, CardIdentifier } from "@/models/card/card";
+import { Set } from "@/models/card/set";
+import { ScryfallCard } from "@/models/scryfall/scryfall-card";
 import { ScryfallCatalog } from "@/models/scryfall/scryfall-catalog";
-import { ScryfallSet } from "@/models/scryfall/scryfall-set";
-import { ScryfallToCard, ScryfallToSet } from "../functions/scryfall";
-import { Card, CardIdentifier } from "../models/card/card";
-import { Set } from "../models/card/set";
-import { ScryfallCard } from "../models/scryfall/scryfall-card";
 import {
   ScryfallCardList,
   ScryfallSetList,
-} from "../models/scryfall/scryfall-list";
-import Api from "./api-methods/scryfall-api-methods";
+} from "@/models/scryfall/scryfall-list";
+import { ScryfallSet } from "@/models/scryfall/scryfall-set";
+import Api from "../api-methods/scryfall-api-methods";
 
 async function autocomplete(query: string): Promise<string[]> {
   const response: ScryfallCatalog = await Api.get(`cards/autocomplete`, {

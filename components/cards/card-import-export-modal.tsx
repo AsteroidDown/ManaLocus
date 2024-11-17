@@ -12,7 +12,7 @@ import {
   saveLocalStorageCard,
   setLocalStorageCards,
 } from "@/functions/local-storage/card-local-storage";
-import ScryfallService from "@/hooks/scryfall.service";
+import ScryfallService from "@/hooks/services/scryfall.service";
 import { CardIdentifier } from "@/models/card/card";
 import {
   faCheck,

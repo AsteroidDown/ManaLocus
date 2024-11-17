@@ -1,6 +1,6 @@
 import Box from "@/components/ui/box/box";
 import Button from "@/components/ui/button/button";
-import ScryfallService from "@/hooks/scryfall.service";
+import ScryfallService from "@/hooks/services/scryfall.service";
 import { Card } from "@/models/card/card";
 import { faPalette } from "@fortawesome/free-solid-svg-icons";
 import React, { useEffect } from "react";

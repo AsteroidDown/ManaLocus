@@ -9,7 +9,7 @@ import {
   getLocalStorageStoredCards,
   saveLocalStorageCard,
 } from "@/functions/local-storage/card-local-storage";
-import ScryfallService from "@/hooks/scryfall.service";
+import ScryfallService from "@/hooks/services/scryfall.service";
 import { Card } from "@/models/card/card";
 import { faEllipsisV, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "expo-router";

@@ -1,5 +1,5 @@
 import { currency } from "@/functions/text-manipulation";
-import ScryfallService from "@/hooks/scryfall.service";
+import ScryfallService from "@/hooks/services/scryfall.service";
 import { Card } from "@/models/card/card";
 import { Link, useLocalSearchParams } from "expo-router";
 import React, { useEffect } from "react";

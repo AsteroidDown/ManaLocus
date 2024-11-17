@@ -2,7 +2,7 @@ import CardDetailedPreview from "@/components/cards/card-detailed-preview";
 import { CardLegalities } from "@/components/cards/card-legalities";
 import CardPrintsList from "@/components/cards/card-prints-list";
 import Box from "@/components/ui/box/box";
-import ScryfallService from "@/hooks/scryfall.service";
+import ScryfallService from "@/hooks/services/scryfall.service";
 import { Card } from "@/models/card/card";
 import { useLocalSearchParams } from "expo-router";
 import React, { useEffect } from "react";

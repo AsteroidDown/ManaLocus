@@ -10,7 +10,7 @@ import {
   sortCards,
   sortCardsByCollectorNumber,
 } from "@/functions/card-sorting";
-import ScryfallService from "@/hooks/scryfall.service";
+import ScryfallService from "@/hooks/services/scryfall.service";
 import { Card } from "@/models/card/card";
 import { Set } from "@/models/card/set";
 import { CardFilters } from "@/models/sorted-cards/sorted-cards";
