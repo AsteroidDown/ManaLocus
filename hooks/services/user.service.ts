@@ -1,9 +1,15 @@
+import { User } from "@/models/user/user";
 import API from "../api-methods/api-methods";
 
-async function register(username: string, password: string) {
+async function register(
+  username: string,
+  password: string,
+  email: string
+): Promise<User> {
   return await API.post(`users/register/`, {
     username: username,
     password: password,
+    email: email,
   }).catch((error) => console.log(`Error registering user: ${error}`));
 }
 
@@ -17,6 +23,8 @@ async function login(username: string, password: string) {
         localStorage.setItem("user-access", response.data.access);
         localStorage.setItem("user-refresh", response.data.refresh);
       }
+
+      return response;
     })
     .catch((error) => console.log(`Error logging in: ${error}`));
 }

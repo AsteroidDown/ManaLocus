@@ -1,11 +1,14 @@
 import Button from "@/components/ui/button/button";
 import Input from "@/components/ui/input/input";
+import UserContext from "@/contexts/user/user.context";
 import UserService from "@/hooks/services/user.service";
-import React from "react";
+import React, { useContext } from "react";
 import { ScrollView, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Login() {
+  const { setUser } = useContext(UserContext);
+
   const [login, setLogin] = React.useState(true);
 
   const [username, setUsername] = React.useState("");
@@ -14,13 +17,15 @@ export default function Login() {
   const [confirmPassword, setConfirmPassword] = React.useState("");
 
   function loginUser() {
-    UserService.login(username, password).then((result) => console.log(result));
+    UserService.login(username, password).then((user) => {
+      if (user) setUser(user);
+    });
   }
 
   function registerUser() {
-    UserService.register(username, password).then((result) =>
-      console.log(result)
-    );
+    UserService.register(username, password, email).then((user) => {
+      if (user) setUser(user);
+    });
   }
 
   return (
