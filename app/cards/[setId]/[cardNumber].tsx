@@ -26,7 +26,7 @@ export default function SetPage() {
   return (
     <ScrollView>
       <View className="flex items-center bg-background-100 min-h-[100vh] pt-6">
-        <View className="flex flex-row gap-4">
+        <View className="flex flex-row flex-wrap gap-4 max-w-full">
           <CardDetailedPreview
             fullHeight
             hideLegalities
