@@ -15,6 +15,8 @@ export default function DecksPage() {
     });
   });
 
+  if (!decks?.length) return;
+
   return (
     <ScrollView>
       <View className="flex flex-1 gap-4 px-11 py-8 min-h-[100vh] bg-background-100">

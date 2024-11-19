@@ -6,12 +6,12 @@ import { getLocalStorageStoredCards } from "@/functions/local-storage/card-local
 import DeckService from "@/hooks/services/deck.service";
 import { Card } from "@/models/card/card";
 import { Deck, DeckDTO } from "@/models/deck/deck";
-import { useLocalSearchParams } from "expo-router";
+import { useGlobalSearchParams } from "expo-router";
 import React, { useEffect } from "react";
 import { Image, View } from "react-native";
 
 export default function DeckSettingsPage() {
-  const { deckId } = useLocalSearchParams();
+  const { deckId } = useGlobalSearchParams();
 
   const [deck, setDeck] = React.useState(null as Deck | null);
 
@@ -85,7 +85,10 @@ export default function DeckSettingsPage() {
     //     console.log(deck);
     //   });
     // } else {
-    DeckService.update("7", dto).then((deck) => {
+
+    if (typeof deckId !== "string") return;
+
+    DeckService.update(deckId, dto).then((deck) => {
       console.log(deck);
     });
     // }

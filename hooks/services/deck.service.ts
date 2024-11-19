@@ -7,8 +7,8 @@ async function getPublic() {
   );
 }
 
-async function getById(deckId: string) {
-  return await API.get(`decks/`, { id: deckId })
+async function getById(deckId: string, publicDecks?: boolean) {
+  return await API.get(`decks/${publicDecks ? "public/" : ""}`, { id: deckId })
     .then((decks) => decks[0])
     .catch((error) => {
       console.log(
