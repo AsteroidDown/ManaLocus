@@ -17,10 +17,10 @@ export interface Deck {
   format: MTGFormat;
   colors: MTGColorSymbol[];
 
-  mainBoard: string[];
-  sideBoard: string[];
-  maybeBoard: string[];
-  acquireBoard: string[];
+  mainBoard: DeckCardDetails[];
+  sideBoard: DeckCardDetails[];
+  maybeBoard: DeckCardDetails[];
+  acquireBoard: DeckCardDetails[];
 }
 
 export interface DeckDTO {
@@ -30,8 +30,14 @@ export interface DeckDTO {
   format?: MTGFormat;
   colors?: MTGColorSymbol[];
 
-  mainBoard?: string[];
-  sideBoard?: string[];
-  maybeBoard?: string[];
-  acquireBoard?: string[];
+  mainBoard?: DeckCardDetails[];
+  sideBoard?: DeckCardDetails[];
+  maybeBoard?: DeckCardDetails[];
+  acquireBoard?: DeckCardDetails[];
+}
+
+export interface DeckCardDetails {
+  name: string;
+  count: number;
+  scryfallId: string;
 }
