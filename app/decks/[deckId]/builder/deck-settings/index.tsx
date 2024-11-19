@@ -2,18 +2,16 @@ import BoxHeader from "@/components/ui/box/box-header";
 import Button from "@/components/ui/button/button";
 import Input from "@/components/ui/input/input";
 import { MTGFormat } from "@/constants/mtg/mtg-format";
+import DeckContext from "@/contexts/deck/deck.context";
 import { getLocalStorageStoredCards } from "@/functions/local-storage/card-local-storage";
 import DeckService from "@/hooks/services/deck.service";
 import { Card } from "@/models/card/card";
-import { Deck, DeckDTO } from "@/models/deck/deck";
-import { useGlobalSearchParams } from "expo-router";
-import React, { useEffect } from "react";
+import { DeckDTO } from "@/models/deck/deck";
+import React, { useContext, useEffect } from "react";
 import { Image, View } from "react-native";
 
 export default function DeckSettingsPage() {
-  const { deckId } = useGlobalSearchParams();
-
-  const [deck, setDeck] = React.useState(null as Deck | null);
+  const { deck } = useContext(DeckContext);
 
   const [name, setName] = React.useState("");
   const [description, setDescription] = React.useState("");
@@ -25,16 +23,10 @@ export default function DeckSettingsPage() {
   const mainBoardCards = getLocalStorageStoredCards("main");
 
   useEffect(() => {
-    if (typeof deckId !== "string") return;
-
-    DeckService.getById(deckId).then((deck) => setDeck(deck));
-  }, [deckId]);
-
-  useEffect(() => {
     if (!deck) return;
 
     setName(deck.name);
-    // setDescription(deck.description);
+    setDescription(deck.description || "");
     setFormat(deck.format);
 
     const foundFeaturedCard = mainBoardCards.find(
@@ -71,6 +63,7 @@ export default function DeckSettingsPage() {
   function saveDeck() {
     const dto: DeckDTO = {
       name,
+      description,
       featuredArtUrl: featuredCard?.images?.artCrop,
       format: format || undefined,
       // mainBoard: mainBoardCards.map((card) => ({
@@ -80,24 +73,8 @@ export default function DeckSettingsPage() {
       // })),
     };
 
-    // if (!deck) {
-    //   DeckService.create(dto).then((deck) => {
-    //     console.log(deck);
-    //   });
-    // } else {
-
-    if (typeof deckId !== "string") return;
-
-    DeckService.update(deckId, dto).then((deck) => {
-      console.log(deck);
-    });
-    // }
-  }
-
-  function getDeck() {
-    DeckService.getById("7").then((deck) => {
-      console.log(deck);
-    });
+    if (!deck) DeckService.create(dto);
+    else DeckService.update(deck.id, dto);
   }
 
   return (
@@ -112,6 +89,7 @@ export default function DeckSettingsPage() {
       <Input
         label="Description"
         placeholder="Description"
+        value={description}
         onChange={setDescription}
       />
 

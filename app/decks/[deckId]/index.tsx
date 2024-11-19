@@ -1,23 +1,14 @@
 import Button from "@/components/ui/button/button";
 import Text from "@/components/ui/text/text";
+import DeckContext from "@/contexts/deck/deck.context";
 import UserContext from "@/contexts/user/user.context";
-import DeckService from "@/hooks/services/deck.service";
-import { Deck } from "@/models/deck/deck";
-import { Link, useLocalSearchParams } from "expo-router";
-import React, { useContext, useEffect } from "react";
+import { Link } from "expo-router";
+import React, { useContext } from "react";
 import { Image, ScrollView, View } from "react-native";
 
 export default function DeckPage() {
-  const { deckId } = useLocalSearchParams();
   const { user } = useContext(UserContext);
-
-  const [deck, setDeck] = React.useState(null as Deck | null);
-
-  useEffect(() => {
-    if (typeof deckId === "string") {
-      DeckService.getById(deckId, !user).then((deck) => setDeck(deck));
-    }
-  }, [deckId]);
+  const { deck } = useContext(DeckContext);
 
   if (!deck) return;
 
