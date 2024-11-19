@@ -7,6 +7,7 @@ export default function RootLayout() {
     <Stack>
       <Stack.Screen name="index" options={{ headerShown: false }} />
       <Stack.Screen name="[deckId]/index" options={{ headerShown: false }} />
+      <Stack.Screen name="[deckId]/builder" options={{ headerShown: false }} />
     </Stack>
   );
 }

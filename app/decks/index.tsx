@@ -11,7 +11,6 @@ export default function DecksPage() {
 
   useEffect(() => {
     DeckService.getPublic().then((publicDecks) => {
-      console.log(publicDecks);
       if (!decks?.length) setDecks(publicDecks);
     });
   });

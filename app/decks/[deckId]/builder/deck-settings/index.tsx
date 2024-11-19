@@ -6,10 +6,13 @@ import { getLocalStorageStoredCards } from "@/functions/local-storage/card-local
 import DeckService from "@/hooks/services/deck.service";
 import { Card } from "@/models/card/card";
 import { Deck, DeckDTO } from "@/models/deck/deck";
+import { useLocalSearchParams } from "expo-router";
 import React, { useEffect } from "react";
 import { Image, View } from "react-native";
 
 export default function DeckSettingsPage() {
+  const { deckId } = useLocalSearchParams();
+
   const [deck, setDeck] = React.useState(null as Deck | null);
 
   const [name, setName] = React.useState("");
@@ -22,29 +25,28 @@ export default function DeckSettingsPage() {
   const mainBoardCards = getLocalStorageStoredCards("main");
 
   useEffect(() => {
-    // if (deck) {
-    //   return;
-    // } else {
-    //   if (mainBoardCards.length) {
-    //     setFeaturedCard(mainBoardCards[0]);
-    //     setFeaturedCardSearch(mainBoardCards[0].name);
-    //   }
-    //   setDeck({
-    //     id: "1",
-    //     userId: "1",
-    //     name: "",
-    //     featuredArtUrl: "",
-    //     format: "standard",
-    //     colors: [],
-    //     mainBoard: [],
-    //     sideBoard: [],
-    //     maybeBoard: [],
-    //     acquireBoard: [],
-    //     created: new Date(),
-    //     updated: new Date(),
-    //   });
-    // }
-  });
+    if (typeof deckId !== "string") return;
+
+    DeckService.getById(deckId).then((deck) => setDeck(deck));
+  }, [deckId]);
+
+  useEffect(() => {
+    if (!deck) return;
+
+    setName(deck.name);
+    // setDescription(deck.description);
+    setFormat(deck.format);
+
+    const foundFeaturedCard = mainBoardCards.find(
+      (card) =>
+        card.images?.artCrop === deck.featuredArtUrl ||
+        card.faces?.front.imageUris?.artCrop === deck.featuredArtUrl
+    );
+    if (foundFeaturedCard) {
+      setFeaturedCard(foundFeaturedCard);
+      setFeaturedCardSearch(foundFeaturedCard.name);
+    }
+  }, [deck]);
 
   useEffect(() => {
     if (!featuredCardSearch) return;
@@ -102,7 +104,7 @@ export default function DeckSettingsPage() {
         end={<Button text="Save" onClick={() => saveDeck()} />}
       />
 
-      <Input label="Name" placeholder="Name" onChange={setName} />
+      <Input label="Name" placeholder="Name" value={name} onChange={setName} />
 
       <Input
         label="Description"
@@ -127,7 +129,12 @@ export default function DeckSettingsPage() {
             onChange={setFeaturedCardSearch}
           />
 
-          <Input label="Format" placeholder="Format" onChange={setFormat} />
+          {/* <Input
+            label="Format"
+            placeholder="Format"
+            value={format}
+            onChange={setFormat}
+          /> */}
         </View>
       </View>
     </View>

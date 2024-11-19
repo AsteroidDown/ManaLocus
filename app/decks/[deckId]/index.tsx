@@ -1,7 +1,8 @@
+import Button from "@/components/ui/button/button";
 import Text from "@/components/ui/text/text";
 import DeckService from "@/hooks/services/deck.service";
 import { Deck } from "@/models/deck/deck";
-import { useLocalSearchParams } from "expo-router";
+import { Link, useLocalSearchParams } from "expo-router";
 import React, { useEffect } from "react";
 import { Image, ScrollView, View } from "react-native";
 
@@ -12,10 +13,7 @@ export default function DeckPage() {
 
   useEffect(() => {
     if (typeof deckId === "string") {
-      DeckService.getById(deckId).then((deck) => {
-        console.log(deck);
-        setDeck(deck);
-      });
+      DeckService.getById(deckId).then((deck) => setDeck(deck));
     }
   }, [deckId]);
 
@@ -44,7 +42,11 @@ export default function DeckPage() {
         </View>
       </View>
 
-      <View className="flex flex-1 gap-4 px-11 py-8 min-h-[100vh] bg-background-100"></View>
+      <View className="flex flex-1 gap-4 px-11 py-8 min-h-[100vh] bg-background-100">
+        <Link href={`${deck.id}/builder/main-board`}>
+          <Button text="Edit" action="primary" className="w-full" />
+        </Link>
+      </View>
     </ScrollView>
   );
 }
