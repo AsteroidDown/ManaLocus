@@ -11,6 +11,7 @@ import {
   faClipboardList,
   faClipboardQuestion,
   faCube,
+  faGear,
   faList,
   faListCheck,
 } from "@fortawesome/free-solid-svg-icons";
@@ -170,6 +171,31 @@ export default function TabLayout() {
                         }`}
                       >
                         Acquire
+                      </Text>
+                    </View>
+                  ),
+                }}
+              />
+
+              <Tabs.Screen
+                name="deck-settings"
+                options={{
+                  tabBarLabel: ({ focused }) => (
+                    <View className="flex flex-row justify-center items-center gap-2 ">
+                      <FontAwesomeIcon
+                        size="lg"
+                        icon={faGear}
+                        className={
+                          focused ? "color-white" : "color-primary-400"
+                        }
+                      />
+
+                      <Text
+                        className={`whitespace-nowrap ${
+                          focused ? "" : "color-primary-400"
+                        }`}
+                      >
+                        Settings
                       </Text>
                     </View>
                   ),

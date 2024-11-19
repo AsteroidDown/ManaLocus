@@ -8,7 +8,7 @@ async function getPublic() {
 }
 
 async function getById(deckId: string) {
-  return await API.get(`decks/${deckId}`).catch((error) => {
+  return await API.get(`decks`, { id: deckId }).catch((error) => {
     console.log(`Error retrieving deck with id: (${deckId}).\nError: ${error}`);
   });
 }
@@ -23,12 +23,12 @@ async function getByUser(userId: string, includePrivate?: boolean) {
   );
 }
 
-async function create(deckId: string, data: DeckDTO) {
-  return await API.patch(`decks/${deckId}`, { deckId, ...data }, true).catch(
-    (error) => {
-      console.log(`Error creating deck with id: (${deckId}).\nError: ${error}`);
-    }
-  );
+async function create(data: DeckDTO) {
+  return await API.post(`decks/`, { ...data }, true).catch((error) => {
+    console.log(
+      `Error creating deck with name: (${data.name}).\nError: ${error}`
+    );
+  });
 }
 
 async function update(deckId: string, data: DeckDTO) {
