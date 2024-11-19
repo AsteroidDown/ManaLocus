@@ -1,6 +1,7 @@
 import BoxHeader from "@/components/ui/box/box-header";
 import Button from "@/components/ui/button/button";
 import Input from "@/components/ui/input/input";
+import Text from "@/components/ui/text/text";
 import { MTGFormat } from "@/constants/mtg/mtg-format";
 import DeckContext from "@/contexts/deck/deck.context";
 import { getLocalStorageStoredCards } from "@/functions/local-storage/card-local-storage";
@@ -14,6 +15,7 @@ export default function DeckSettingsPage() {
   const { deck } = useContext(DeckContext);
 
   const [name, setName] = React.useState("");
+  const [privateView, setPrivateView] = React.useState(false);
   const [description, setDescription] = React.useState("");
   const [format, setFormat] = React.useState(null as MTGFormat | null);
 
@@ -26,6 +28,7 @@ export default function DeckSettingsPage() {
     if (!deck) return;
 
     setName(deck.name);
+    setPrivateView(deck.private);
     setDescription(deck.description || "");
     setFormat(deck.format);
 
@@ -64,8 +67,9 @@ export default function DeckSettingsPage() {
     const dto: DeckDTO = {
       name,
       description,
-      featuredArtUrl: featuredCard?.images?.artCrop,
+      private: privateView,
       format: format || undefined,
+      featuredArtUrl: featuredCard?.images?.artCrop,
       // mainBoard: mainBoardCards.map((card) => ({
       //   name: card.name,
       //   count: card.count,
@@ -84,7 +88,39 @@ export default function DeckSettingsPage() {
         end={<Button text="Save" onClick={() => saveDeck()} />}
       />
 
-      <Input label="Name" placeholder="Name" value={name} onChange={setName} />
+      <View className="flex flex-row gap-6">
+        <Input
+          label="Name"
+          placeholder="Name"
+          value={name}
+          onChange={setName}
+        />
+
+        <View className="flex gap-2">
+          <Text size="md" thickness="bold">
+            Visibility
+          </Text>
+
+          <View className="flex flex-row -mt-[0.5px]">
+            <Button
+              squareRight
+              text="Private"
+              action="primary"
+              className="flex-1"
+              type={privateView ? "default" : "outlined"}
+              onClick={() => setPrivateView(true)}
+            />
+            <Button
+              squareLeft
+              text="Public"
+              action="primary"
+              className="flex-1"
+              type={privateView ? "outlined" : "default"}
+              onClick={() => setPrivateView(false)}
+            />
+          </View>
+        </View>
+      </View>
 
       <Input
         label="Description"

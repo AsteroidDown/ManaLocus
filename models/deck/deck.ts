@@ -13,9 +13,11 @@ export interface Deck {
 
   name: string;
   description?: string;
-  featuredArtUrl: string;
 
+  private: boolean;
   format: MTGFormat;
+
+  featuredArtUrl: string;
   colors: MTGColorSymbol[];
 
   mainBoard: DeckCardDetails[];
@@ -27,9 +29,11 @@ export interface Deck {
 export interface DeckDTO {
   name?: string;
   description?: string;
-  featuredArtUrl?: string;
 
+  private?: boolean;
   format?: MTGFormat;
+
+  featuredArtUrl?: string;
   colors?: MTGColorSymbol[];
 
   mainBoard?: DeckCardDetails[];
