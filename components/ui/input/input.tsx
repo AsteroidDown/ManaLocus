@@ -20,7 +20,7 @@ export default function Input({
   onChange,
 }: InputProps) {
   return (
-    <View className="flex gap-2">
+    <View className="flex-1 flex gap-2 max-h-fit">
       {label && (
         <Text size="md" thickness="bold">
           {label}
