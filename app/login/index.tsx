@@ -23,8 +23,10 @@ export default function Login() {
   }
 
   function registerUser() {
-    UserService.register(username, password, email).then((user) => {
-      if (user) setUser(user);
+    UserService.register(username, password, email).then(() => {
+      UserService.login(username, password).then((user) => {
+        if (user) setUser(user);
+      });
     });
   }
 

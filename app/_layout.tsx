@@ -1,14 +1,19 @@
 import Text from "@/components/ui/text/text";
 import UserContext from "@/contexts/user/user.context";
 import "@/global.css";
+import UserService from "@/hooks/services/user.service";
 import { User } from "@/models/user/user";
 import { Link, Stack } from "expo-router";
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { SafeAreaView, View } from "react-native";
 import Button from "../components/ui/button/button";
 
 export default function RootLayout() {
   const [user, setUser] = React.useState(null as User | null);
+
+  useEffect(() => {
+    UserService.getCurrentUser().then((user) => setUser(user));
+  }, []);
 
   return (
     <UserContext.Provider value={{ user, setUser }}>

@@ -5,14 +5,14 @@ export function getLocalStorageJwt(): JWT | null {
   if (Platform.OS === "ios") return null;
 
   const jwt: JWT = {
-    access: localStorage.getItem("access") || "",
-    refresh: localStorage.getItem("refresh") || "",
+    access: localStorage.getItem("user-access") || "",
+    refresh: localStorage.getItem("user-refresh") || "",
   };
 
   return jwt;
 }
 
 export function removeLocalStorageJwt(): void {
-  localStorage.removeItem("access");
-  localStorage.removeItem("refresh");
+  localStorage.removeItem("user-access");
+  localStorage.removeItem("user-refresh");
 }
