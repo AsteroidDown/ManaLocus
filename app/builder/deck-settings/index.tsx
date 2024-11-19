@@ -22,29 +22,28 @@ export default function DeckSettingsPage() {
   const mainBoardCards = getLocalStorageStoredCards("main");
 
   useEffect(() => {
-    if (deck) {
-      return;
-    } else {
-      if (mainBoardCards.length) {
-        setFeaturedCard(mainBoardCards[0]);
-        setFeaturedCardSearch(mainBoardCards[0].name);
-      }
-
-      setDeck({
-        id: "1",
-        userId: "1",
-        name: "",
-        featuredArtUrl: "",
-        format: "standard",
-        colors: [],
-        mainBoard: [],
-        sideBoard: [],
-        maybeBoard: [],
-        acquireBoard: [],
-        created: new Date(),
-        updated: new Date(),
-      });
-    }
+    // if (deck) {
+    //   return;
+    // } else {
+    //   if (mainBoardCards.length) {
+    //     setFeaturedCard(mainBoardCards[0]);
+    //     setFeaturedCardSearch(mainBoardCards[0].name);
+    //   }
+    //   setDeck({
+    //     id: "1",
+    //     userId: "1",
+    //     name: "",
+    //     featuredArtUrl: "",
+    //     format: "standard",
+    //     colors: [],
+    //     mainBoard: [],
+    //     sideBoard: [],
+    //     maybeBoard: [],
+    //     acquireBoard: [],
+    //     created: new Date(),
+    //     updated: new Date(),
+    //   });
+    // }
   });
 
   useEffect(() => {
@@ -70,16 +69,24 @@ export default function DeckSettingsPage() {
   function saveDeck() {
     const dto: DeckDTO = {
       name,
-      mainBoard: mainBoardCards.map((card) => ({
-        name: card.name,
-        count: card.count,
-        scryfallId: card.id,
-      })),
+      featuredArtUrl: featuredCard?.images?.artCrop,
+      format: format || undefined,
+      // mainBoard: mainBoardCards.map((card) => ({
+      //   name: card.name,
+      //   count: card.count,
+      //   scryfallId: card.id,
+      // })),
     };
 
-    DeckService.create(dto).then((deck) => {
+    // if (!deck) {
+    //   DeckService.create(dto).then((deck) => {
+    //     console.log(deck);
+    //   });
+    // } else {
+    DeckService.update("7", dto).then((deck) => {
       console.log(deck);
     });
+    // }
   }
 
   function getDeck() {

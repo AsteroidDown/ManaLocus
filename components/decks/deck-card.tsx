@@ -2,7 +2,6 @@ import { titleCase } from "@/functions/text-manipulation";
 import { Deck } from "@/models/deck/deck";
 import React from "react";
 import { Image, Pressable, View } from "react-native";
-import CardText from "../cards/card-text";
 import Text from "../ui/text/text";
 
 export interface DeckCardProps {
@@ -64,7 +63,7 @@ export default function DeckCard({ deck, hideFormat }: DeckCardProps) {
         </View>
 
         <View className="flex">
-          <CardText text={"{" + deck.colors.join("}{") + "}"} />
+          {/* <CardText text={"{" + deck.colors.join("}{") + "}"} /> */}
           <Text size="lg" thickness="bold">
             {deck.name}
           </Text>

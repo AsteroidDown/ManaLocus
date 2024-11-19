@@ -8,9 +8,13 @@ async function getPublic() {
 }
 
 async function getById(deckId: string) {
-  return await API.get(`decks`, { id: deckId }).catch((error) => {
-    console.log(`Error retrieving deck with id: (${deckId}).\nError: ${error}`);
-  });
+  return await API.get(`decks/`, { id: deckId })
+    .then((decks) => decks[0])
+    .catch((error) => {
+      console.log(
+        `Error retrieving deck with id: (${deckId}).\nError: ${error}`
+      );
+    });
 }
 
 async function getByUser(userId: string, includePrivate?: boolean) {
@@ -32,7 +36,7 @@ async function create(data: DeckDTO) {
 }
 
 async function update(deckId: string, data: DeckDTO) {
-  return await API.patch(`decks/${deckId}`, { deckId, ...data }, true).catch(
+  return await API.patch(`decks/`, { id: deckId, ...data }, true).catch(
     (error) => {
       console.log(`Error updating deck with id: (${deckId}).\nError: ${error}`);
     }
