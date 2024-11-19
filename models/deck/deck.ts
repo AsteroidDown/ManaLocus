@@ -12,6 +12,7 @@ export interface Deck {
   user?: User;
 
   name: string;
+  description?: string;
   featuredArtUrl: string;
 
   format: MTGFormat;
@@ -25,6 +26,7 @@ export interface Deck {
 
 export interface DeckDTO {
   name?: string;
+  description?: string;
   featuredArtUrl?: string;
 
   format?: MTGFormat;
@@ -37,6 +39,7 @@ export interface DeckDTO {
 }
 
 export interface DeckCardDetails {
+  deckId: string;
   name: string;
   count: number;
   scryfallId: string;
