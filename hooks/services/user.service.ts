@@ -2,6 +2,8 @@ import { User } from "@/models/user/user";
 import API from "../api-methods/api-methods";
 
 async function getCurrentUser(): Promise<User | null> {
+  if (!localStorage.getItem("user-access")) return null;
+
   return await API.get(`users/current/`)
     .then(
       (response) =>
@@ -49,10 +51,20 @@ async function login(username: string, password: string) {
     .catch((error) => console.log(`Error logging in: ${error}`));
 }
 
+async function logout() {
+  localStorage.removeItem("user-access");
+  localStorage.removeItem("user-refresh");
+
+  return await API.delete(`users/logout/`).catch((error) =>
+    console.log(`Error logging out: ${error}`)
+  );
+}
+
 const UserService = {
   getCurrentUser,
   register,
   login,
+  logout,
 };
 
 export default UserService;

@@ -103,9 +103,7 @@ APIAxiosConfig.interceptors.request.use(
 
 // Refresh access token upon expiry, logout users with expired refresh token
 APIAxiosConfig.interceptors.response.use(
-  (res) => {
-    return res;
-  },
+  (res) => res,
   async (err) => {
     const originalRequest = err.config;
 
@@ -118,6 +116,9 @@ APIAxiosConfig.interceptors.response.use(
       originalRequest._retry = true;
 
       try {
+        const refreshToken = getLocalStorageJwt()?.refresh;
+        if (!refreshToken) return;
+
         const response = await axios.post(
           REFRESH,
           { refresh: getLocalStorageJwt()?.refresh },

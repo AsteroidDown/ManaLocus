@@ -1,3 +1,4 @@
+import Button from "@/components/ui/button/button";
 import Text from "@/components/ui/text/text";
 import UserContext from "@/contexts/user/user.context";
 import "@/global.css";
@@ -6,7 +7,6 @@ import { User } from "@/models/user/user";
 import { Link, Stack } from "expo-router";
 import React, { useContext, useEffect } from "react";
 import { SafeAreaView, View } from "react-native";
-import Button from "../components/ui/button/button";
 
 export default function RootLayout() {
   const [user, setUser] = React.useState(null as User | null);
@@ -31,7 +31,7 @@ export default function RootLayout() {
           }}
         >
           <Stack.Screen name="index" />
-          <Stack.Screen name="profile" />
+          <Stack.Screen name="users" />
           <Stack.Screen name="login" />
           <Stack.Screen name="+not-found" />
         </Stack>
@@ -68,7 +68,9 @@ function Login() {
   return (
     <View className="flex flex-row items-center gap-2 px-6 py-4">
       {user ? (
-        <Button square type="clear" size="lg" text={user.name} />
+        <Link href={`/users/${user.id}`}>
+          <Button square type="clear" size="lg" text={user.name} />
+        </Link>
       ) : (
         <Link href="/login">
           <Button square type="clear" text="Login" size="lg" />
