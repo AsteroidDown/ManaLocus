@@ -6,6 +6,7 @@ import { MTGFormat } from "@/constants/mtg/mtg-format";
 import DeckContext from "@/contexts/deck/deck.context";
 import { getLocalStorageStoredCards } from "@/functions/local-storage/card-local-storage";
 import { mapCardToDeckCard } from "@/functions/mapping/card-mapping";
+import { getDeckColors, sortColors } from "@/functions/mtg-colors/mtg-colors";
 import DeckService from "@/hooks/services/deck.service";
 import { Card } from "@/models/card/card";
 import { DeckDTO } from "@/models/deck/deck";
@@ -67,15 +68,20 @@ export default function DeckSettingsPage() {
   function saveDeck() {
     if (!deck) return;
 
+    const mainBoard = getLocalStorageStoredCards("main");
+    const deckColors = sortColors(getDeckColors(mainBoard));
+
     const dto: DeckDTO = {
       name,
       description,
       private: privateView,
       format: format || undefined,
-      featuredArtUrl: featuredCard?.images?.artCrop,
-      mainBoard: getLocalStorageStoredCards("main").map((card) =>
-        mapCardToDeckCard(card)
-      ),
+      colors: `{${deckColors.join("}{")}}`,
+      featuredArtUrl:
+        featuredCard?.images?.artCrop ??
+        featuredCard?.faces?.front.imageUris?.artCrop,
+
+      mainBoard: mainBoard.map((card) => mapCardToDeckCard(card)),
       sideBoard: getLocalStorageStoredCards("side").map((card) =>
         mapCardToDeckCard(card)
       ),

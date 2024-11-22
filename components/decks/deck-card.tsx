@@ -2,6 +2,7 @@ import { titleCase } from "@/functions/text-manipulation";
 import { Deck } from "@/models/deck/deck";
 import React from "react";
 import { Image, Pressable, View } from "react-native";
+import CardText from "../cards/card-text";
 import Text from "../ui/text/text";
 
 export interface DeckCardProps {
@@ -32,23 +33,19 @@ export default function DeckCard({ deck, hideFormat }: DeckCardProps) {
           hovered ? "px-3 py-3" : "px-2 py-2"
         }`}
       >
-        <View className="flex flex-row">
+        <View className="flex flex-row justify-between items-center">
           {!hideFormat && (
             <Text
               size="xs"
               thickness="bold"
-              className={`px-2 py-1 bg-primary-200 bg-opacity-85 rounded-xl w-fit`}
+              className={`px-2 py-1 bg-primary-200 bg-opacity-85 rounded-xl w-fit h-fit`}
             >
               {titleCase(deck.format)}
             </Text>
           )}
 
-          <View
-            className={`ml-auto bg-dark-100 bg-opacity-70 rounded-bl-lg transition-all duration-300 ${
-              hovered ? "-mt-3 -mr-3" : "-mt-2 -mr-2"
-            }`}
-          >
-            {/* <CardText text={"{" + deck.colors.join("}{") + "}"} /> */}
+          <View className="px-1 py-0.5 bg-dark-100 bg-opacity-70 rounded-xl">
+            <CardText text={deck.colors} />
           </View>
         </View>
 

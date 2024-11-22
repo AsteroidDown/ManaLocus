@@ -1,6 +1,6 @@
 import { MTGColorSymbols } from "@/constants/mtg/mtg-colors";
 import { MTGRarities } from "@/constants/mtg/mtg-rarity";
-import { MTGCardType, MTGCardTypes } from "@/constants/mtg/mtg-types";
+import { MTGCardTypes } from "@/constants/mtg/mtg-types";
 import { Card } from "@/models/card/card";
 import {
   CardsSortedByColor,
@@ -8,6 +8,7 @@ import {
   CardsSortedByRarity,
   CardsSortedByType,
 } from "@/models/sorted-cards/sorted-cards";
+import { getCardType } from "./card-information";
 
 export function groupCardsByColor(cards: Card[]): CardsSortedByColor {
   const groupedCards: CardsSortedByColor = {
@@ -116,9 +117,7 @@ export function groupCardsByType(cards: Card[]): CardsSortedByType {
   };
 
   cards.forEach((card) => {
-    const cardType = card.faces?.front
-      ? getCardTypeFromTypeLine(card.faces.front.typeLine)
-      : getCardTypeFromTypeLine(card.typeLine);
+    const cardType = getCardType(card);
 
     switch (cardType.toLowerCase()) {
       case MTGCardTypes.CREATURE:
@@ -177,26 +176,4 @@ export function groupCardsByRarity(cards: Card[]): CardsSortedByRarity {
   });
 
   return groupedCards;
-}
-
-/**
- *
- * @param typeLine the type line for a card as given by scryfall api
- * @returns the creature type as given in CardTypes const (see sorted-cards.ts) or an empty string if the type could not be discerned
- */
-function getCardTypeFromTypeLine(typeLine: string): MTGCardType {
-  const cardTypeFromTypeLine = typeLine.split("-")[0].toLowerCase();
-
-  // Creature type has priority in multiple types
-  if (cardTypeFromTypeLine.includes(MTGCardTypes.CREATURE)) {
-    return MTGCardTypes.CREATURE;
-  }
-
-  for (const cardType in MTGCardTypes) {
-    if (cardTypeFromTypeLine.includes(cardType.toLowerCase()))
-      return cardType as MTGCardType;
-  }
-
-  // Card type couldn't be found
-  return MTGCardTypes.CREATURE;
 }

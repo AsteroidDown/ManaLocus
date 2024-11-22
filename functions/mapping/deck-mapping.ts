@@ -42,7 +42,7 @@ function mapDatabaseCardToDeckCard(card: any): any {
     scryfallId: card.scryfallId,
     name: card.name,
     count: card.count,
-    castingCost: card.castingCost,
+    manaCost: card.manaCost,
     frontImageUrl: card.frontImageUrl,
     backImageUrl: card.backImageUrl,
     tcgPlayerUrl: card.tcgPlayerUrl,

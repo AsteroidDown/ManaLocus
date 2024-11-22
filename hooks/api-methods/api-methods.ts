@@ -110,7 +110,7 @@ APIAxiosConfig.interceptors.response.use(
     // Access Token was expired
     if (
       !REFRESH_TOKEN_BLACKLIST.includes(originalRequest.url) &&
-      err.response.status === 401 &&
+      err.response?.status === 401 &&
       !originalRequest._retry
     ) {
       originalRequest._retry = true;

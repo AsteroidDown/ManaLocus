@@ -1,5 +1,6 @@
-import { MTGColorSymbol } from "@/constants/mtg/mtg-colors";
 import { MTGFormat } from "@/constants/mtg/mtg-format";
+import { MTGRarity } from "@/constants/mtg/mtg-rarity";
+import { MTGCardType } from "@/constants/mtg/mtg-types";
 import { User } from "../user/user";
 
 export interface Deck {
@@ -17,8 +18,8 @@ export interface Deck {
   private: boolean;
   format: MTGFormat;
 
+  colors: string;
   featuredArtUrl: string;
-  colors: MTGColorSymbol[];
 
   mainBoard: DeckCard[];
   sideBoard: DeckCard[];
@@ -31,7 +32,9 @@ export interface DeckCard {
   scryfallId: string;
   name: string;
   count: number;
-  castingCost: string;
+  manaCost: string;
+  type: MTGCardType;
+  rarity: MTGRarity;
   frontImageUrl?: string;
   backImageUrl?: string;
   tcgPlayerUrl?: string;
@@ -45,8 +48,8 @@ export interface DeckDTO {
   private?: boolean;
   format?: MTGFormat;
 
+  colors?: string;
   featuredArtUrl?: string;
-  colors?: MTGColorSymbol[];
 
   mainBoard?: DeckCard[];
   sideBoard?: DeckCard[];
