@@ -21,13 +21,18 @@ async function getById(deckId: string, publicDecks?: boolean): Promise<Deck> {
 }
 
 async function getByUser(userId: string, includePrivate?: boolean) {
-  return await API.get(`decks/${userId}`, {
-    params: { includePrivate: includePrivate ? "true" : "false" },
-  }).catch((error) =>
-    console.error(
-      `Error retrieving decks for user: (${userId}).\nError: ${error}`
-    )
-  );
+  return await API.get(`decks/`, {
+    params: {
+      userId,
+      includePrivate: includePrivate ? "true" : "false",
+    },
+  })
+    .then((decks) => decks.map((deck: any) => mapDatabaseDeck(deck)))
+    .catch((error) =>
+      console.error(
+        `Error retrieving decks for user: (${userId}).\nError: ${error}`
+      )
+    );
 }
 
 async function create(data: DeckDTO) {
