@@ -2,8 +2,11 @@ import Text from "@/components/ui/text/text";
 import CardPreferencesContext from "@/contexts/cards/card-preferences.context";
 import StoredCardsContext from "@/contexts/cards/stored-cards.context";
 import DashboardContext from "@/contexts/dashboard/dashboard.context";
-import { getLocalStorageStoredCards } from "@/functions/local-storage/card-local-storage";
+import DeckContext from "@/contexts/deck/deck.context";
+import { setLocalStorageCards } from "@/functions/local-storage/card-local-storage";
 import { getLocalStorageDashboard } from "@/functions/local-storage/dashboard-local-storage";
+import DeckService from "@/hooks/services/deck.service";
+import ScryfallService from "@/hooks/services/scryfall.service";
 import { Card } from "@/models/card/card";
 import { Dashboard } from "@/models/dashboard/dashboard";
 import { Preferences } from "@/models/preferences/preferences";
@@ -17,10 +20,12 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Tabs } from "expo-router";
-import React, { useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import { View } from "react-native";
 
 export default function TabLayout() {
+  const { deck } = useContext(DeckContext);
+
   const [storedCards, setStoredCards] = React.useState([] as Card[]);
 
   const [dashboard, setDashboard] = React.useState(null as Dashboard | null);
@@ -28,9 +33,31 @@ export default function TabLayout() {
   const [preferences, setPreferences] = React.useState({} as Preferences);
 
   useEffect(() => {
+    if (!deck) return;
+
     setDashboard(getLocalStorageDashboard());
-    setStoredCards(getLocalStorageStoredCards());
-  }, []);
+
+    DeckService.getById(deck.id, true).then((deck) => {
+      ScryfallService.getCardsFromCollection(
+        deck.mainBoard.map((card) => ({ id: card.scryfallId }))
+      ).then((cards) => {
+        setStoredCards(cards);
+        setLocalStorageCards(cards, "main");
+      });
+
+      ScryfallService.getCardsFromCollection(
+        deck.sideBoard.map((card) => ({ id: card.scryfallId }))
+      ).then((cards) => setLocalStorageCards(cards, "side"));
+
+      ScryfallService.getCardsFromCollection(
+        deck.maybeBoard.map((card) => ({ id: card.scryfallId }))
+      ).then((cards) => setLocalStorageCards(cards, "maybe"));
+
+      ScryfallService.getCardsFromCollection(
+        deck.acquireBoard.map((card) => ({ id: card.scryfallId }))
+      ).then((cards) => setLocalStorageCards(cards, "acquire"));
+    });
+  }, [deck]);
 
   return (
     <StoredCardsContext.Provider value={{ storedCards, setStoredCards }}>
