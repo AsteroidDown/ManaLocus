@@ -20,10 +20,22 @@ export interface Deck {
   featuredArtUrl: string;
   colors: MTGColorSymbol[];
 
-  mainBoard: DeckCardDetails[];
-  sideBoard: DeckCardDetails[];
-  maybeBoard: DeckCardDetails[];
-  acquireBoard: DeckCardDetails[];
+  mainBoard: DeckCard[];
+  sideBoard: DeckCard[];
+  maybeBoard: DeckCard[];
+  acquireBoard: DeckCard[];
+}
+
+export interface DeckCard {
+  deckId?: string;
+  scryfallId: string;
+  name: string;
+  count: number;
+  castingCost: string;
+  frontImageUrl?: string;
+  backImageUrl?: string;
+  tcgPlayerUrl?: string;
+  cardMarketUrl?: string;
 }
 
 export interface DeckDTO {
@@ -36,15 +48,8 @@ export interface DeckDTO {
   featuredArtUrl?: string;
   colors?: MTGColorSymbol[];
 
-  mainBoard?: DeckCardDetails[];
-  sideBoard?: DeckCardDetails[];
-  maybeBoard?: DeckCardDetails[];
-  acquireBoard?: DeckCardDetails[];
-}
-
-export interface DeckCardDetails {
-  deckId: string;
-  name: string;
-  count: number;
-  scryfallId: string;
+  mainBoard?: DeckCard[];
+  sideBoard?: DeckCard[];
+  maybeBoard?: DeckCard[];
+  acquireBoard?: DeckCard[];
 }

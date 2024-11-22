@@ -5,6 +5,7 @@ import Text from "@/components/ui/text/text";
 import { MTGFormat } from "@/constants/mtg/mtg-format";
 import DeckContext from "@/contexts/deck/deck.context";
 import { getLocalStorageStoredCards } from "@/functions/local-storage/card-local-storage";
+import { mapCardToDeckCard } from "@/functions/mapping/card-mapping";
 import DeckService from "@/hooks/services/deck.service";
 import { Card } from "@/models/card/card";
 import { DeckDTO } from "@/models/deck/deck";
@@ -64,21 +65,29 @@ export default function DeckSettingsPage() {
   }, [featuredCardSearch]);
 
   function saveDeck() {
+    if (!deck) return;
+
     const dto: DeckDTO = {
       name,
       description,
       private: privateView,
       format: format || undefined,
       featuredArtUrl: featuredCard?.images?.artCrop,
-      // mainBoard: mainBoardCards.map((card) => ({
-      //   name: card.name,
-      //   count: card.count,
-      //   scryfallId: card.id,
-      // })),
+      mainBoard: getLocalStorageStoredCards("main").map((card) =>
+        mapCardToDeckCard(card)
+      ),
+      sideBoard: getLocalStorageStoredCards("side").map((card) =>
+        mapCardToDeckCard(card)
+      ),
+      maybeBoard: getLocalStorageStoredCards("maybe").map((card) =>
+        mapCardToDeckCard(card)
+      ),
+      acquireBoard: getLocalStorageStoredCards("acquire").map((card) =>
+        mapCardToDeckCard(card)
+      ),
     };
 
-    if (!deck) DeckService.create(dto);
-    else DeckService.update(deck.id, dto);
+    DeckService.update(deck.id, dto);
   }
 
   return (

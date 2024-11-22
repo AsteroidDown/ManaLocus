@@ -43,29 +43,26 @@ export default function DeckCard({ deck, hideFormat }: DeckCardProps) {
             </Text>
           )}
 
-          {deck.user && (
-            <View
-              className={`ml-auto bg-dark-100 bg-opacity-70 rounded-bl-lg transition-all duration-300 ${
-                hovered ? "-mt-3 -mr-3" : "-mt-2 -mr-2"
-              }`}
-            >
-              <Text
-                size="xs"
-                thickness="medium"
-                className={`mt-auto mb-1 pl-2 transition-all duration-300 ${
-                  hovered ? "pr-3" : "pr-2"
-                }`}
-              >
-                {deck.user.name}
-              </Text>
-            </View>
-          )}
+          <View
+            className={`ml-auto bg-dark-100 bg-opacity-70 rounded-bl-lg transition-all duration-300 ${
+              hovered ? "-mt-3 -mr-3" : "-mt-2 -mr-2"
+            }`}
+          >
+            {/* <CardText text={"{" + deck.colors.join("}{") + "}"} /> */}
+          </View>
         </View>
 
         <View className="flex">
-          {/* <CardText text={"{" + deck.colors.join("}{") + "}"} /> */}
           <Text size="lg" thickness="bold">
             {deck.name}
+          </Text>
+
+          <Text
+            size="xs"
+            thickness="medium"
+            className={`mt-auto mb-1 transition-all duration-300`}
+          >
+            By {deck.user?.name}
           </Text>
         </View>
       </View>

@@ -14,7 +14,7 @@ async function getCurrentUser(): Promise<User | null> {
         } as User)
     )
     .catch((error) => {
-      console.log(`Error retrieving current user: ${error}`);
+      console.error(`Error retrieving current user: ${error}`);
       return null;
     });
 }
@@ -28,7 +28,7 @@ async function register(
     username: username,
     password: password,
     email: email,
-  }).catch((error) => console.log(`Error registering user: ${error}`));
+  }).catch((error) => console.error(`Error registering user: ${error}`));
 }
 
 async function login(username: string, password: string) {
@@ -48,7 +48,7 @@ async function login(username: string, password: string) {
         email: response?.email,
       };
     })
-    .catch((error) => console.log(`Error logging in: ${error}`));
+    .catch((error) => console.error(`Error logging in: ${error}`));
 }
 
 async function logout() {
@@ -56,7 +56,7 @@ async function logout() {
   localStorage.removeItem("user-refresh");
 
   return await API.delete(`users/logout/`).catch((error) =>
-    console.log(`Error logging out: ${error}`)
+    console.error(`Error logging out: ${error}`)
   );
 }
 
