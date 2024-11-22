@@ -6,6 +6,7 @@ export type MTGFormat =
   | "vintage"
   | "commander"
   | "oathbreaker"
+  | "cube"
   | "alchemy"
   | "explorer"
   | "historic"
@@ -30,6 +31,7 @@ export enum MTGFormats {
   VINTAGE = "vintage",
   COMMANDER = "commander",
   OATHBREAKER = "oathbreaker",
+  CUBE = "cube",
   ALCHEMY = "alchemy",
   EXPLORER = "explorer",
   HISTORIC = "historic",
