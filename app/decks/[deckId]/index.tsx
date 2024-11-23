@@ -2,6 +2,7 @@ import Button from "@/components/ui/button/button";
 import Text from "@/components/ui/text/text";
 import DeckContext from "@/contexts/deck/deck.context";
 import UserContext from "@/contexts/user/user.context";
+import { setLocalStorageCards } from "@/functions/local-storage/card-local-storage";
 import DeckService from "@/hooks/services/deck.service";
 import { DeckCard } from "@/models/deck/deck";
 import { DeckChange } from "@/models/deck/deck-change";
@@ -28,6 +29,8 @@ export default function DeckPage() {
     setSideBoard(deck.side);
     setMaybeBoard(deck.maybe);
     setAcquireBoard(deck.acquire);
+
+    setLocalStorageCards([], "main");
 
     DeckService.getChanges(deck.id).then((changes) => {
       console.log(changes);

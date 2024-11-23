@@ -3,7 +3,10 @@ import CardPreferencesContext from "@/contexts/cards/card-preferences.context";
 import StoredCardsContext from "@/contexts/cards/stored-cards.context";
 import DashboardContext from "@/contexts/dashboard/dashboard.context";
 import DeckContext from "@/contexts/deck/deck.context";
-import { saveLocalStorageCard } from "@/functions/local-storage/card-local-storage";
+import {
+  getLocalStorageStoredCards,
+  saveLocalStorageCard,
+} from "@/functions/local-storage/card-local-storage";
 import { getLocalStorageDashboard } from "@/functions/local-storage/dashboard-local-storage";
 import DeckService from "@/hooks/services/deck.service";
 import ScryfallService from "@/hooks/services/scryfall.service";
@@ -34,6 +37,7 @@ export default function TabLayout() {
 
   useEffect(() => {
     if (!deck) return;
+    if (getLocalStorageStoredCards("main")?.length) return;
 
     setDashboard(getLocalStorageDashboard());
 
@@ -49,9 +53,10 @@ export default function TabLayout() {
           if (identifiers.length > 0) acc.push(...identifiers);
           return acc;
         }, [] as CardIdentifier[])
-      ).then((cards) =>
-        cards.forEach((card) => saveLocalStorageCard(card, 1, "main"))
-      );
+      ).then((cards) => {
+        cards.forEach((card) => saveLocalStorageCard(card, 1, "main"));
+        setStoredCards(getLocalStorageStoredCards("main"));
+      });
 
       ScryfallService.getCardsFromCollection(
         deck.side.reduce((acc, card) => {
