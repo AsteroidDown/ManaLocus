@@ -2,7 +2,9 @@ import Button from "@/components/ui/button/button";
 import Text from "@/components/ui/text/text";
 import DeckContext from "@/contexts/deck/deck.context";
 import UserContext from "@/contexts/user/user.context";
+import DeckService from "@/hooks/services/deck.service";
 import { DeckCard } from "@/models/deck/deck";
+import { DeckChange } from "@/models/deck/deck-change";
 import { faPen } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "expo-router";
 import React, { useContext, useEffect } from "react";
@@ -17,6 +19,8 @@ export default function DeckPage() {
   const [maybeBoard, setMaybeBoard] = React.useState([] as DeckCard[]);
   const [acquireBoard, setAcquireBoard] = React.useState([] as DeckCard[]);
 
+  const [changes, setChanges] = React.useState([] as DeckChange[]);
+
   useEffect(() => {
     if (!deck) return;
 
@@ -24,6 +28,11 @@ export default function DeckPage() {
     setSideBoard(deck.side);
     setMaybeBoard(deck.maybe);
     setAcquireBoard(deck.acquire);
+
+    DeckService.getChanges(deck.id).then((changes) => {
+      console.log(changes);
+      setChanges(changes);
+    });
   }, [deck]);
 
   if (!deck) return;

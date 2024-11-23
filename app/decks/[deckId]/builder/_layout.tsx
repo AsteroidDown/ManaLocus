@@ -3,11 +3,11 @@ import CardPreferencesContext from "@/contexts/cards/card-preferences.context";
 import StoredCardsContext from "@/contexts/cards/stored-cards.context";
 import DashboardContext from "@/contexts/dashboard/dashboard.context";
 import DeckContext from "@/contexts/deck/deck.context";
-import { setLocalStorageCards } from "@/functions/local-storage/card-local-storage";
+import { saveLocalStorageCard } from "@/functions/local-storage/card-local-storage";
 import { getLocalStorageDashboard } from "@/functions/local-storage/dashboard-local-storage";
 import DeckService from "@/hooks/services/deck.service";
 import ScryfallService from "@/hooks/services/scryfall.service";
-import { Card } from "@/models/card/card";
+import { Card, CardIdentifier } from "@/models/card/card";
 import { Dashboard } from "@/models/dashboard/dashboard";
 import { Preferences } from "@/models/preferences/preferences";
 import {
@@ -39,23 +39,64 @@ export default function TabLayout() {
 
     DeckService.get(deck.id, true).then((deck) => {
       ScryfallService.getCardsFromCollection(
-        deck.main.map((card) => ({ id: card.scryfallId }))
-      ).then((cards) => {
-        setStoredCards(cards);
-        setLocalStorageCards(cards, "main");
-      });
+        deck.main.reduce((acc, card) => {
+          const identifiers = [];
+
+          for (let i = 0; i < card.count; i++) {
+            identifiers.push({ id: card.scryfallId });
+          }
+
+          if (identifiers.length > 0) acc.push(...identifiers);
+          return acc;
+        }, [] as CardIdentifier[])
+      ).then((cards) =>
+        cards.forEach((card) => saveLocalStorageCard(card, 1, "main"))
+      );
 
       ScryfallService.getCardsFromCollection(
-        deck.side.map((card) => ({ id: card.scryfallId }))
-      ).then((cards) => setLocalStorageCards(cards, "side"));
+        deck.side.reduce((acc, card) => {
+          const identifiers = [];
+
+          for (let i = 0; i < card.count; i++) {
+            identifiers.push({ id: card.scryfallId });
+          }
+
+          if (identifiers.length > 0) acc.push(...identifiers);
+          return acc;
+        }, [] as CardIdentifier[])
+      ).then((cards) =>
+        cards.forEach((card) => saveLocalStorageCard(card, 1, "side"))
+      );
 
       ScryfallService.getCardsFromCollection(
-        deck.maybe.map((card) => ({ id: card.scryfallId }))
-      ).then((cards) => setLocalStorageCards(cards, "maybe"));
+        deck.maybe.reduce((acc, card) => {
+          const identifiers = [];
+
+          for (let i = 0; i < card.count; i++) {
+            identifiers.push({ id: card.scryfallId });
+          }
+
+          if (identifiers.length > 0) acc.push(...identifiers);
+          return acc;
+        }, [] as CardIdentifier[])
+      ).then((cards) =>
+        cards.forEach((card) => saveLocalStorageCard(card, 1, "maybe"))
+      );
 
       ScryfallService.getCardsFromCollection(
-        deck.acquire.map((card) => ({ id: card.scryfallId }))
-      ).then((cards) => setLocalStorageCards(cards, "acquire"));
+        deck.acquire.reduce((acc, card) => {
+          const identifiers = [];
+
+          for (let i = 0; i < card.count; i++) {
+            identifiers.push({ id: card.scryfallId });
+          }
+
+          if (identifiers.length > 0) acc.push(...identifiers);
+          return acc;
+        }, [] as CardIdentifier[])
+      ).then((cards) =>
+        cards.forEach((card) => saveLocalStorageCard(card, 1, "acquire"))
+      );
     });
   }, [deck]);
 
