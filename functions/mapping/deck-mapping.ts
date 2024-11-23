@@ -24,16 +24,12 @@ export function mapDatabaseDeck(data: any, withCards = false): Deck {
     featuredArtUrl: deck.featuredArtUrl,
     colors: deck.colors,
 
-    main:
-      data.mainBoard?.map((card: any) => mapDatabaseCardToDeckCard(card)) ?? [],
-    side:
-      data.sideBoard?.map((card: any) => mapDatabaseCardToDeckCard(card)) ?? [],
+    main: data.main?.map((card: any) => mapDatabaseCardToDeckCard(card)) ?? [],
+    side: data.side?.map((card: any) => mapDatabaseCardToDeckCard(card)) ?? [],
     maybe:
-      data.maybeBoard?.map((card: any) => mapDatabaseCardToDeckCard(card)) ??
-      [],
+      data.maybe?.map((card: any) => mapDatabaseCardToDeckCard(card)) ?? [],
     acquire:
-      data.acquireBoard?.map((card: any) => mapDatabaseCardToDeckCard(card)) ??
-      [],
+      data.acquire?.map((card: any) => mapDatabaseCardToDeckCard(card)) ?? [],
   };
 }
 
