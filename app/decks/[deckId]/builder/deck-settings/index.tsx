@@ -173,6 +173,7 @@ export default function DeckSettingsPage() {
       </View>
 
       <Input
+        multiline
         label="Description"
         placeholder="Description"
         value={description}

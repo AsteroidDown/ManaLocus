@@ -7,7 +7,7 @@ export interface InputProps {
   placeholder?: string;
   disabled?: boolean;
   secured?: boolean;
-
+  multiline?: boolean;
   value?: string;
   onChange: React.Dispatch<React.SetStateAction<string>>;
 }
@@ -17,6 +17,7 @@ export default function Input({
   placeholder,
   disabled,
   secured,
+  multiline,
   value,
   onChange,
 }: InputProps) {
@@ -38,6 +39,7 @@ export default function Input({
       <View className="flex-1 flex flex-row gap-2">
         <TextInput
           value={value}
+          multiline={multiline}
           placeholder={placeholder}
           tabIndex={disabled ? -1 : 0}
           secureTextEntry={secured}
@@ -48,9 +50,9 @@ export default function Input({
               : hovered
               ? "border-primary-200"
               : "border-background-200"
-          } ${
-            disabled ? "!border-background-100" : ""
-          } flex-1 h-10 px-3 py-2 color-white rounded-lg text-base border-2 border-background-200 focus:border-primary-300 outline-none transition-all`}
+          } ${disabled ? "!border-background-100" : ""} ${
+            multiline ? "min-h-24" : "h-10"
+          } flex-1 px-3 py-2 color-white rounded-lg text-base border-2 border-background-200 focus:border-primary-300 outline-none transition-all`}
           onChangeText={onChange}
           onFocus={() => setFocused(true)}
           onBlur={() => setFocused(false)}
