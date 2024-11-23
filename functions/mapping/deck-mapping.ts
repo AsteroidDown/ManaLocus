@@ -24,14 +24,14 @@ export function mapDatabaseDeck(data: any, withCards = false): Deck {
     featuredArtUrl: deck.featuredArtUrl,
     colors: deck.colors,
 
-    mainBoard:
+    main:
       data.mainBoard?.map((card: any) => mapDatabaseCardToDeckCard(card)) ?? [],
-    sideBoard:
+    side:
       data.sideBoard?.map((card: any) => mapDatabaseCardToDeckCard(card)) ?? [],
-    maybeBoard:
+    maybe:
       data.maybeBoard?.map((card: any) => mapDatabaseCardToDeckCard(card)) ??
       [],
-    acquireBoard:
+    acquire:
       data.acquireBoard?.map((card: any) => mapDatabaseCardToDeckCard(card)) ??
       [],
   };

@@ -21,10 +21,10 @@ export interface Deck {
   colors: string;
   featuredArtUrl: string;
 
-  mainBoard: DeckCard[];
-  sideBoard: DeckCard[];
-  maybeBoard: DeckCard[];
-  acquireBoard: DeckCard[];
+  main: DeckCard[];
+  side: DeckCard[];
+  maybe: DeckCard[];
+  acquire: DeckCard[];
 }
 
 export interface DeckCard {
@@ -51,8 +51,8 @@ export interface DeckDTO {
   colors?: string;
   featuredArtUrl?: string;
 
-  mainBoard?: DeckCard[];
-  sideBoard?: DeckCard[];
-  maybeBoard?: DeckCard[];
-  acquireBoard?: DeckCard[];
+  main?: DeckCard[];
+  side?: DeckCard[];
+  maybe?: DeckCard[];
+  acquire?: DeckCard[];
 }

@@ -37,24 +37,24 @@ export default function TabLayout() {
 
     setDashboard(getLocalStorageDashboard());
 
-    DeckService.getById(deck.id, true).then((deck) => {
+    DeckService.get(deck.id, true).then((deck) => {
       ScryfallService.getCardsFromCollection(
-        deck.mainBoard.map((card) => ({ id: card.scryfallId }))
+        deck.main.map((card) => ({ id: card.scryfallId }))
       ).then((cards) => {
         setStoredCards(cards);
         setLocalStorageCards(cards, "main");
       });
 
       ScryfallService.getCardsFromCollection(
-        deck.sideBoard.map((card) => ({ id: card.scryfallId }))
+        deck.side.map((card) => ({ id: card.scryfallId }))
       ).then((cards) => setLocalStorageCards(cards, "side"));
 
       ScryfallService.getCardsFromCollection(
-        deck.maybeBoard.map((card) => ({ id: card.scryfallId }))
+        deck.maybe.map((card) => ({ id: card.scryfallId }))
       ).then((cards) => setLocalStorageCards(cards, "maybe"));
 
       ScryfallService.getCardsFromCollection(
-        deck.acquireBoard.map((card) => ({ id: card.scryfallId }))
+        deck.acquire.map((card) => ({ id: card.scryfallId }))
       ).then((cards) => setLocalStorageCards(cards, "acquire"));
     });
   }, [deck]);

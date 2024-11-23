@@ -20,10 +20,10 @@ export default function DeckPage() {
   useEffect(() => {
     if (!deck) return;
 
-    setMainBoard(deck.mainBoard);
-    setSideBoard(deck.sideBoard);
-    setMaybeBoard(deck.maybeBoard);
-    setAcquireBoard(deck.acquireBoard);
+    setMainBoard(deck.main);
+    setSideBoard(deck.side);
+    setMaybeBoard(deck.maybe);
+    setAcquireBoard(deck.acquire);
   }, [deck]);
 
   if (!deck) return;

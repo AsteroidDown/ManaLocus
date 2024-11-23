@@ -1,5 +1,6 @@
 import { mapDatabaseDeck } from "@/functions/mapping/deck-mapping";
 import { Deck, DeckDTO } from "@/models/deck/deck";
+import { DeckChange } from "@/models/deck/deck-change";
 import API from "../api-methods/api-methods";
 
 async function getPublic() {
@@ -10,7 +11,7 @@ async function getPublic() {
     );
 }
 
-async function getById(deckId: string, publicDecks?: boolean): Promise<Deck> {
+async function get(deckId: string, publicDecks?: boolean): Promise<Deck> {
   return await API.get(`decks/${publicDecks ? "public/" : ""}`, { id: deckId })
     .then((data) => mapDatabaseDeck(data, true) as any)
     .catch((error) => {
@@ -60,8 +61,8 @@ async function remove(deckId: string) {
 }
 
 const DeckService = {
+  get,
   getPublic,
-  getById,
   getByUser,
   create,
   update,

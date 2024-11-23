@@ -85,14 +85,14 @@ export default function DeckSettingsPage() {
         featuredCard?.images?.artCrop ??
         featuredCard?.faces?.front.imageUris?.artCrop,
 
-      mainBoard: mainBoard.map((card) => mapCardToDeckCard(card)),
-      sideBoard: getLocalStorageStoredCards("side").map((card) =>
+      main: mainBoard.map((card) => mapCardToDeckCard(card)),
+      side: getLocalStorageStoredCards("side").map((card) =>
         mapCardToDeckCard(card)
       ),
-      maybeBoard: getLocalStorageStoredCards("maybe").map((card) =>
+      maybe: getLocalStorageStoredCards("maybe").map((card) =>
         mapCardToDeckCard(card)
       ),
-      acquireBoard: getLocalStorageStoredCards("acquire").map((card) =>
+      acquire: getLocalStorageStoredCards("acquire").map((card) =>
         mapCardToDeckCard(card)
       ),
     };

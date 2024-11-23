@@ -12,7 +12,7 @@ export default function BuilderLayout() {
 
   useEffect(() => {
     if (typeof deckId === "string") {
-      DeckService.getById(deckId, true).then((deck) => setDeck(deck));
+      DeckService.get(deckId, true).then((deck) => setDeck(deck));
     }
   }, [deckId]);
 
