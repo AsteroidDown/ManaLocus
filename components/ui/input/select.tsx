@@ -61,6 +61,7 @@ export default function Select({
 
   function selectOption(option: any) {
     onBlur();
+    setHovered(false);
     onChange(optionProperty ? option[optionProperty] : option);
     setFilteredOptions(options);
   }
@@ -138,7 +139,7 @@ export default function Select({
               : "border-background-200"
           } ${
             disabled ? "!border-background-100" : ""
-          } z-10 absolute left-0 flex gap-2 w-full h-fit px-2 py-1 border-2 bg-background-100 rounded-b-lg overflow-y-auto transition-all`}
+          } z-10 absolute left-0 flex w-full h-fit px-2 py-1 border-2 bg-background-100 rounded-b-lg overflow-y-auto transition-all`}
         >
           {filteredOptions.map((option, index) => (
             <Pressable
