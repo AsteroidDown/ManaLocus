@@ -25,7 +25,7 @@ export default function Input({
 
   return (
     <View
-      className="flex-1 flex gap-2 max-h-fit"
+      className="flex-1 flex gap-2 max-h-fit z-[-1]"
       onPointerEnter={() => setHovered(true)}
       onPointerLeave={() => setHovered(false)}
     >

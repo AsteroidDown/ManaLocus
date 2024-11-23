@@ -11,7 +11,6 @@ export interface InputProps {
   label?: string;
   placeholder?: string;
   disabled?: boolean;
-  secured?: boolean;
 
   value?: any;
   onChange: React.Dispatch<React.SetStateAction<any>>;
@@ -23,7 +22,6 @@ export default function Select({
   label,
   placeholder,
   disabled,
-  secured,
   value,
   onChange,
 }: InputProps) {
@@ -35,24 +33,21 @@ export default function Select({
   const [search, setSearch] = React.useState("");
   const [filteredOptions, setFilteredOptions] = React.useState(options);
 
+  React.useEffect(() => setSearch(value ?? ""), [value]);
+
   React.useEffect(() => {
-    if (!search) {
-      setFilteredOptions(options);
-      if (value) setSearch(value);
-    }
+    const filteredOptions = options.filter((option) => {
+      if (!optionProperty) {
+        return option.toLowerCase().includes(search.toLowerCase());
+      }
+      return option[optionProperty]
+        .toLowerCase()
+        .includes(search.toLowerCase());
+    });
 
-    setFilteredOptions(
-      options.filter((option) => {
-        if (!optionProperty) {
-          return option.toLowerCase().includes(search.toLowerCase());
-        }
-
-        return option[optionProperty]
-          .toLowerCase()
-          .includes(search.toLowerCase());
-      })
-    );
-  }, [search, options]);
+    if (filteredOptions.includes(search)) setFilteredOptions(options);
+    else setFilteredOptions(filteredOptions);
+  }, [search]);
 
   function onFocus() {
     setFocused(true);
@@ -65,15 +60,14 @@ export default function Select({
   }
 
   function selectOption(option: any) {
-    value = optionProperty ? option[optionProperty] : option;
-    onChange(option);
-    setOpen(false);
-    setSearch(value);
+    onBlur();
+    onChange(optionProperty ? option[optionProperty] : option);
+    setFilteredOptions(options);
   }
 
   return (
     <View
-      className="flex-1 flex gap-2 max-h-fit"
+      className="flex-1 flex gap-2 max-h-fit z-[-1]"
       onPointerEnter={() => setHovered(true)}
       onPointerLeave={() => setHovered(false)}
     >
@@ -83,7 +77,13 @@ export default function Select({
         </Text>
       )}
 
-      <View className="relative flex-1">
+      <View
+        className={`${
+          open
+            ? "overflow-visible"
+            : "max-h-[40px] min-h-[40px] overflow-hidden"
+        } relative flex-1`}
+      >
         <View
           className={`${
             focused || open
@@ -93,24 +93,24 @@ export default function Select({
               : "border-background-200"
           } ${disabled ? "!border-background-100" : ""} ${
             open ? "!rounded-b-none" : ""
-          } flex-1 flex flex-row items-center gap-2 px-3 py-2 rounded-lg h-10 border-2 transition-all`}
+          } flex-1 flex flex-row items-center gap-2 px-3 py-2 rounded-lg min-h-10 border-2 transition-all`}
         >
           <TextInput
-            readOnly={disabled}
             value={search}
+            readOnly={disabled}
             placeholder={placeholder}
             tabIndex={disabled ? -1 : 0}
-            secureTextEntry={secured}
             placeholderTextColor="#8b8b8b"
             className={`flex-1 color-white text-base outline-none`}
             onFocus={() => onFocus()}
-            onBlur={() => onBlur()}
+            onBlur={() => setTimeout(() => onBlur(), 200)}
             onChangeText={(text) => setSearch(text)}
           />
 
           <Pressable
             tabIndex={disabled ? -1 : 0}
             onPress={() => setOpen(!open)}
+            onBlur={() => setTimeout(() => onBlur(), 200)}
           >
             <FontAwesomeIcon
               icon={faChevronDown}
@@ -128,8 +128,8 @@ export default function Select({
         <View
           className={`${
             open
-              ? "max-h-[500px] border-2 top-10"
-              : "max-h-0 border-0 top-[44px]"
+              ? "max-h-[500px] border-2 top-[38px]"
+              : "max-h-0 border-0 top-[40px]"
           } ${
             focused || open
               ? "border-primary-300"
@@ -138,15 +138,18 @@ export default function Select({
               : "border-background-200"
           } ${
             disabled ? "!border-background-100" : ""
-          } absolute left-0 flex gap-2 w-full h-fit px-2 py-1 border-2 bg-background-100 rounded-b-lg overflow-y-auto transition-all`}
+          } z-10 absolute left-0 flex gap-2 w-full h-fit px-2 py-1 border-2 bg-background-100 rounded-b-lg overflow-y-auto transition-all`}
         >
           {filteredOptions.map((option, index) => (
             <Pressable
-              tabIndex={disabled || !open ? -1 : 0}
               key={option + index}
+              tabIndex={disabled || !open ? -1 : 0}
               onPress={() => selectOption(option)}
             >
-              <Text className="px-3 py-2 rounded-lg hover:bg-background-300 transition-all">
+              <Text
+                size="md"
+                className="px-3 py-2 rounded-lg hover:bg-background-300 transition-all"
+              >
                 {optionProperty ? option[optionProperty] : option}
               </Text>
             </Pressable>
