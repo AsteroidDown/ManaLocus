@@ -13,7 +13,9 @@ async function getPublic() {
 
 async function get(deckId: string, publicDecks?: boolean): Promise<Deck> {
   return await API.get(`decks/${publicDecks ? "public/" : ""}`, { id: deckId })
-    .then((data) => mapDatabaseDeck(data, true) as any)
+    .then((data) => {
+      return mapDatabaseDeck(data, true) as any;
+    })
     .catch((error) => {
       console.error(
         `Error retrieving deck with id: (${deckId}).\nError: ${error}`
@@ -34,6 +36,14 @@ async function getByUser(userId: string, includePrivate?: boolean) {
         `Error retrieving decks for user: (${userId}).\nError: ${error}`
       )
     );
+}
+
+async function getChanges(deckId: string): Promise<DeckChange[]> {
+  return await API.get(`decks/${deckId}/changes`).catch((error) =>
+    console.error(
+      `Error retrieving changes for deck: (${deckId}).\nError: ${error}`
+    )
+  );
 }
 
 async function create(data: DeckDTO) {
@@ -64,6 +74,7 @@ const DeckService = {
   get,
   getPublic,
   getByUser,
+  getChanges,
   create,
   update,
   remove,
