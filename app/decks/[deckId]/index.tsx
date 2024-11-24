@@ -1,3 +1,4 @@
+import DeckChangeLog from "@/components/decks/deck-card-change";
 import Button from "@/components/ui/button/button";
 import Text from "@/components/ui/text/text";
 import DeckContext from "@/contexts/deck/deck.context";
@@ -20,7 +21,7 @@ export default function DeckPage() {
   const [maybeBoard, setMaybeBoard] = React.useState([] as DeckCard[]);
   const [acquireBoard, setAcquireBoard] = React.useState([] as DeckCard[]);
 
-  const [changes, setChanges] = React.useState([] as DeckChange[]);
+  const [changes, setChanges] = React.useState(null as DeckChange | null);
 
   useEffect(() => {
     if (!deck) return;
@@ -32,10 +33,7 @@ export default function DeckPage() {
 
     setLocalStorageCards([], "main");
 
-    DeckService.getChanges(deck.id).then((changes) => {
-      console.log(changes);
-      setChanges(changes);
-    });
+    DeckService.getChanges(deck.id).then((changes) => setChanges(changes));
   }, [deck]);
 
   if (!deck) return;
@@ -108,6 +106,8 @@ export default function DeckPage() {
             <Column title="Lands" cards={byType?.land} />
           )} */}
         </View>
+
+        {changes && <DeckChangeLog changes={changes} />}
       </View>
     </ScrollView>
   );
