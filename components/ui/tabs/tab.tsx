@@ -11,6 +11,8 @@ export type TabProps = ViewProps & {
   index?: number;
   focused?: boolean;
   focusedIndex?: number;
+
+  onClick?: () => void;
 };
 
 export default function Tab({
