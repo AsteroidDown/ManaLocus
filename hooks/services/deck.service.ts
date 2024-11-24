@@ -38,7 +38,7 @@ async function getByUser(userId: string, includePrivate?: boolean) {
     );
 }
 
-async function getChanges(deckId: string): Promise<DeckChange[]> {
+async function getChanges(deckId: string): Promise<DeckChange> {
   return await API.get(`decks/${deckId}/changes`).catch((error) =>
     console.error(
       `Error retrieving changes for deck: (${deckId}).\nError: ${error}`
