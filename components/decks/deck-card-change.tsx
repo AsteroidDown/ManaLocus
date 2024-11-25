@@ -64,7 +64,7 @@ export default function DeckChangeLog({ changes }: DeckChangeLogProps) {
   }, [changes]);
 
   return (
-    <View className="flex mb-[1000px]">
+    <View className="flex">
       <Text size="lg" thickness="bold" className="mb-2">
         Change Log
       </Text>
