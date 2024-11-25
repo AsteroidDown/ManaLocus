@@ -1,4 +1,4 @@
-import { Deck } from "@/models/deck/deck";
+import { Deck, DeckCard } from "@/models/deck/deck";
 
 export function mapDatabaseDeck(data: any, withCards = false): Deck {
   const deck = withCards ? data.deck : data;
@@ -33,14 +33,19 @@ export function mapDatabaseDeck(data: any, withCards = false): Deck {
   };
 }
 
-function mapDatabaseCardToDeckCard(card: any): any {
+function mapDatabaseCardToDeckCard(card: any): DeckCard {
   return {
     scryfallId: card.scryfallId,
     name: card.name,
+    setId: card.setId,
+    collectorNumber: card.collectorNumber,
     count: card.count,
     manaCost: card.manaCost,
+    cardType: card.cardType,
+    rarity: card.rarity,
     frontImageUrl: card.frontImageUrl,
     backImageUrl: card.backImageUrl,
+    price: card.price,
     tcgPlayerUrl: card.tcgPlayerUrl,
     cardMarketUrl: card.cardMarketUrl,
   };

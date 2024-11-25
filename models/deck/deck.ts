@@ -31,12 +31,15 @@ export interface DeckCard {
   deckId?: string;
   scryfallId: string;
   name: string;
+  setId: string;
+  collectorNumber: string;
   count: number;
   manaCost: string;
-  type: MTGCardType;
+  cardType: MTGCardType;
   rarity: MTGRarity;
   frontImageUrl?: string;
   backImageUrl?: string;
+  price: number;
   tcgPlayerUrl?: string;
   cardMarketUrl?: string;
 }
