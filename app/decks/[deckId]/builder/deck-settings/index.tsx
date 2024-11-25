@@ -3,6 +3,7 @@ import Button from "@/components/ui/button/button";
 import Input from "@/components/ui/input/input";
 import Select from "@/components/ui/input/select";
 import Text from "@/components/ui/text/text";
+import { MTGColorSymbols } from "@/constants/mtg/mtg-colors";
 import { MTGFormat, MTGFormats } from "@/constants/mtg/mtg-format";
 import DeckContext from "@/contexts/deck/deck.context";
 import { getLocalStorageStoredCards } from "@/functions/local-storage/card-local-storage";
@@ -73,7 +74,10 @@ export default function DeckSettingsPage() {
     if (!deck) return;
 
     const mainBoard = getLocalStorageStoredCards("main");
-    const deckColors = sortColors(getDeckColors(mainBoard));
+    const colorsInDeck = sortColors(getDeckColors(mainBoard));
+    const deckColors = colorsInDeck?.length
+      ? sortColors(colorsInDeck)
+      : [MTGColorSymbols.COLORLESS];
 
     const dto: DeckDTO = {
       name,
