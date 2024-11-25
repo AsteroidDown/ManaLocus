@@ -41,7 +41,7 @@ function mapDatabaseCardToDeckCard(card: any): DeckCard {
     collectorNumber: card.collectorNumber,
     count: card.count,
     manaCost: card.manaCost,
-    cardType: card.cardType,
+    cardType: card.cardType.toLowerCase(),
     rarity: card.rarity,
     frontImageUrl: card.frontImageUrl,
     backImageUrl: card.backImageUrl,
