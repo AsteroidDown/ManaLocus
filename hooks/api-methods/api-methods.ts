@@ -131,7 +131,7 @@ APIAxiosConfig.interceptors.response.use(
         // Don't use axios instance that already configured for refresh token api call
         const newAccessToken = response.data.access;
 
-        localStorage.setItem("access", newAccessToken);
+        localStorage.setItem("user-access", newAccessToken);
         originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
         return axios(originalRequest); //recall Api with new token
       } catch (error) {
