@@ -53,7 +53,12 @@ export default function TabBar({
                 />
               </Link>
             ) : (
-              <Pressable onPress={() => setFocusedIndex(index)}>
+              <Pressable
+                onPress={() => {
+                  setFocusedIndex(index);
+                  tab.onClick?.();
+                }}
+              >
                 <Tab
                   {...tab}
                   index={index}
