@@ -1,4 +1,5 @@
 import Text from "@/components/ui/text/text";
+import { BoardTypes } from "@/constants/boards";
 import { MTGColor } from "@/constants/mtg/mtg-colors";
 import { MTGRarity } from "@/constants/mtg/mtg-rarity";
 import { MTGCardType } from "@/constants/mtg/mtg-types";
@@ -103,7 +104,7 @@ export default function CardImportExportModal({
       )
       .join("\n");
 
-    if (board === "side" || board === "main") {
+    if (board === BoardTypes.SIDE || board === BoardTypes.MAIN) {
       const sideBoardCards = sortCards(getLocalStorageStoredCards("side"), {
         alphabeticalSort,
         manaValueSort,
@@ -208,13 +209,13 @@ export default function CardImportExportModal({
         (newCards) => {
           setLocalStorageCards(
             [],
-            sideBoardCardIdentifiers.length ? "main" : board
+            sideBoardCardIdentifiers.length ? BoardTypes.MAIN : board
           );
           newCards.forEach((card) =>
             saveLocalStorageCard(
               card,
               1,
-              sideBoardCardIdentifiers.length ? "main" : board
+              sideBoardCardIdentifiers.length ? BoardTypes.MAIN : board
             )
           );
           setStoredCards(newCards);

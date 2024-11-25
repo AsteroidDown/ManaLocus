@@ -2,6 +2,7 @@ import DeckChangeLog from "@/components/decks/deck-card-change";
 import DeckCardGallery from "@/components/decks/deck-card-gallery";
 import Button from "@/components/ui/button/button";
 import Text from "@/components/ui/text/text";
+import { BoardTypes } from "@/constants/boards";
 import DeckContext from "@/contexts/deck/deck.context";
 import UserContext from "@/contexts/user/user.context";
 import { setLocalStorageCards } from "@/functions/local-storage/card-local-storage";
@@ -21,7 +22,10 @@ export default function DeckPage() {
   useEffect(() => {
     if (!deck) return;
 
-    setLocalStorageCards([], "main");
+    setLocalStorageCards([], BoardTypes.MAIN);
+    setLocalStorageCards([], BoardTypes.SIDE);
+    setLocalStorageCards([], BoardTypes.MAYBE);
+    setLocalStorageCards([], BoardTypes.ACQUIRE);
 
     DeckService.getChanges(deck.id).then((changes) => setChanges(changes));
   }, [deck]);

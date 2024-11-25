@@ -1,10 +1,10 @@
+import { BoardType, BoardTypes } from "@/constants/boards";
 import { SideBoardLimit } from "@/constants/mtg/limits";
-import { BoardType } from "@/contexts/cards/board.context";
 import { Platform } from "react-native";
 import { Card } from "../../models/card/card";
 import { titleCase } from "../text-manipulation";
 
-export function getLocalStorageStoredCards(board: BoardType = "main") {
+export function getLocalStorageStoredCards(board: BoardType = BoardTypes.MAIN) {
   if (Platform.OS === "ios") return [];
 
   const storedCards: string[] = JSON.parse(

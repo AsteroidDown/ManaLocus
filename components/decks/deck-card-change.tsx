@@ -1,4 +1,4 @@
-import { BoardType } from "@/contexts/cards/board.context";
+import { BoardType, BoardTypes } from "@/constants/boards";
 import { titleCase } from "@/functions/text-manipulation";
 import { DeckCardChange, DeckChange } from "@/models/deck/deck-change";
 import moment from "moment";
@@ -29,7 +29,12 @@ export default function DeckChangeLog({ changes }: DeckChangeLogProps) {
     if (!changes) return;
 
     setBoardChanges(
-      ["main", "side", "maybe", "acquire"].map((boardType) => {
+      [
+        BoardTypes.MAIN,
+        BoardTypes.SIDE,
+        BoardTypes.MAYBE,
+        BoardTypes.ACQUIRE,
+      ].map((boardType) => {
         const timeChanges = changes[boardType as BoardType].reduce(
           (acc, change) => {
             const time = moment(change.timestamp).format("MMM D, YYYY h:mm A");
@@ -70,7 +75,12 @@ export default function DeckChangeLog({ changes }: DeckChangeLogProps) {
       </Text>
 
       <TabBar
-        tabs={["main", "side", "maybe", "acquire"].map((title, boardIndex) => ({
+        tabs={[
+          BoardTypes.MAIN,
+          BoardTypes.SIDE,
+          BoardTypes.MAYBE,
+          BoardTypes.ACQUIRE,
+        ].map((title, boardIndex) => ({
           title: titleCase(title),
           onClick: () => setOpenIndex(-1),
           children: (

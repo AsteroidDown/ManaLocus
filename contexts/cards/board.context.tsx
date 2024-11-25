@@ -1,9 +1,8 @@
+import { BoardType, BoardTypes } from "@/constants/boards";
 import { createContext } from "react";
 
-export type BoardType = "main" | "maybe" | "side" | "acquire";
-
 const BoardContext = createContext({
-  board: "main" as BoardType,
+  board: BoardTypes.MAIN as BoardType,
   setBoard: (board: BoardType) => {},
 });
 

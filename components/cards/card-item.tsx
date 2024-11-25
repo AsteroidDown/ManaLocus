@@ -2,8 +2,9 @@ import Button from "@/components/ui/button/button";
 import Divider from "@/components/ui/divider/divider";
 import Modal from "@/components/ui/modal/modal";
 import Text from "@/components/ui/text/text";
+import { BoardType, BoardTypes } from "@/constants/boards";
 import { SideBoardLimit } from "@/constants/mtg/limits";
-import BoardContext, { BoardType } from "@/contexts/cards/board.context";
+import BoardContext from "@/contexts/cards/board.context";
 import StoredCardsContext from "@/contexts/cards/stored-cards.context";
 import {
   addToLocalStorageCardCount,
@@ -244,7 +245,7 @@ export function CardItemFooter({
   const [print, setPrint] = React.useState(undefined as Card | undefined);
   const [moveOpen, setMoveOpen] = React.useState(false);
 
-  const sideboardCount = getLocalStorageStoredCards("side").reduce(
+  const sideboardCount = getLocalStorageStoredCards(BoardTypes.SIDE).reduce(
     (acc, storedCard) => acc + storedCard.count,
     0
   );
@@ -314,7 +315,7 @@ export function CardItemFooter({
 
         <Dropdown xOffset={-32} expanded={moveOpen} setExpanded={setMoveOpen}>
           <Box className="flex justify-start items-start !p-0 border-2 border-primary-300 !bg-background-100 !bg-opacity-90 overflow-hidden">
-            {board !== "main" && (
+            {board !== BoardTypes.MAIN && (
               <Button
                 start
                 square
@@ -322,11 +323,11 @@ export function CardItemFooter({
                 text="Main"
                 className="w-full"
                 icon={faList}
-                onClick={() => moveCard("main")}
+                onClick={() => moveCard(BoardTypes.MAIN)}
               />
             )}
 
-            {board !== "side" && (
+            {board !== BoardTypes.SIDE && (
               <Button
                 start
                 square
@@ -335,11 +336,11 @@ export function CardItemFooter({
                 className="w-full"
                 icon={faClipboardList}
                 disabled={sideboardCount >= SideBoardLimit}
-                onClick={() => moveCard("side")}
+                onClick={() => moveCard(BoardTypes.SIDE)}
               />
             )}
 
-            {board !== "maybe" && (
+            {board !== BoardTypes.MAYBE && (
               <Button
                 start
                 square
@@ -347,11 +348,11 @@ export function CardItemFooter({
                 text="Maybe"
                 className="w-full"
                 icon={faClipboardQuestion}
-                onClick={() => moveCard("maybe")}
+                onClick={() => moveCard(BoardTypes.MAYBE)}
               />
             )}
 
-            {board !== "acquire" && (
+            {board !== BoardTypes.ACQUIRE && (
               <Button
                 start
                 square
@@ -359,7 +360,7 @@ export function CardItemFooter({
                 text="Acquire"
                 className="w-full"
                 icon={faListCheck}
-                onClick={() => moveCard("acquire")}
+                onClick={() => moveCard(BoardTypes.ACQUIRE)}
               />
             )}
           </Box>
@@ -398,7 +399,9 @@ export function CardItemFooter({
           className="flex-1"
           icon={faPlus}
           tabbable={expanded}
-          disabled={board === "side" && sideboardCount >= SideBoardLimit}
+          disabled={
+            board === BoardTypes.SIDE && sideboardCount >= SideBoardLimit
+          }
           onClick={() => addToCount()}
         />
       </View>

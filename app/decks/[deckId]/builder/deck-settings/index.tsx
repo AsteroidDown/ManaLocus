@@ -3,6 +3,7 @@ import Button from "@/components/ui/button/button";
 import Input from "@/components/ui/input/input";
 import Select from "@/components/ui/input/select";
 import Text from "@/components/ui/text/text";
+import { BoardTypes } from "@/constants/boards";
 import { MTGColorSymbols } from "@/constants/mtg/mtg-colors";
 import { MTGFormat, MTGFormats } from "@/constants/mtg/mtg-format";
 import DeckContext from "@/contexts/deck/deck.context";
@@ -29,7 +30,7 @@ export default function DeckSettingsPage() {
   const [featuredCardSearch, setFeaturedCardSearch] = React.useState("");
   const [featuredCard, setFeaturedCard] = React.useState(null as Card | null);
 
-  const mainBoardCards = getLocalStorageStoredCards("main");
+  const mainBoardCards = getLocalStorageStoredCards(BoardTypes.MAIN);
 
   useEffect(() => {
     if (!deck) return;
@@ -73,7 +74,7 @@ export default function DeckSettingsPage() {
   function saveDeck() {
     if (!deck) return;
 
-    const mainBoard = getLocalStorageStoredCards("main");
+    const mainBoard = getLocalStorageStoredCards(BoardTypes.MAIN);
     const colorsInDeck = sortColors(getDeckColors(mainBoard));
     const deckColors = colorsInDeck?.length
       ? sortColors(colorsInDeck)

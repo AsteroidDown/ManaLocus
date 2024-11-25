@@ -1,4 +1,5 @@
 import Text from "@/components/ui/text/text";
+import { BoardTypes } from "@/constants/boards";
 import CardPreferencesContext from "@/contexts/cards/card-preferences.context";
 import StoredCardsContext from "@/contexts/cards/stored-cards.context";
 import DashboardContext from "@/contexts/dashboard/dashboard.context";
@@ -37,7 +38,7 @@ export default function TabLayout() {
 
   useEffect(() => {
     if (!deck) return;
-    if (getLocalStorageStoredCards("main")?.length) return;
+    if (getLocalStorageStoredCards(BoardTypes.MAIN)?.length) return;
 
     setDashboard(getLocalStorageDashboard());
 
@@ -54,8 +55,8 @@ export default function TabLayout() {
           return acc;
         }, [] as CardIdentifier[])
       ).then((cards) => {
-        cards.forEach((card) => saveLocalStorageCard(card, 1, "main"));
-        setStoredCards(getLocalStorageStoredCards("main"));
+        cards.forEach((card) => saveLocalStorageCard(card, 1, BoardTypes.MAIN));
+        setStoredCards(getLocalStorageStoredCards(BoardTypes.MAIN));
       });
 
       ScryfallService.getCardsFromCollection(

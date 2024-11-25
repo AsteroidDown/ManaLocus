@@ -1,6 +1,7 @@
 import Box from "@/components/ui/box/box";
 import BoxHeader from "@/components/ui/box/box-header";
 import FilterBar from "@/components/ui/filters/filter-bar";
+import { BoardTypes } from "@/constants/boards";
 import BoardContext from "@/contexts/cards/board.context";
 import StoredCardsContext from "@/contexts/cards/stored-cards.context";
 import { filterCards } from "@/functions/card-filtering";
@@ -141,7 +142,7 @@ export default function CardItemGallery({
               />
             </View>
 
-            {board === "main" && (
+            {board === BoardTypes.MAIN && (
               <>
                 <View className="-mx-1">
                   <CardSaveAsGraphModal
