@@ -232,14 +232,16 @@ export default function CardItemGallery({
               hideImages={hideImages}
               cards={cardsSortedByCost.five}
             />
-            <CardItemGalleryColumn
-              title="6+ Cost"
-              itemsExpanded={itemsExpanded}
-              setItemExpanded={setItemsExpanded}
-              condensed={condensed}
-              hideImages={hideImages}
-              cards={cardsSortedByCost.six}
-            />
+            {cardsSortedByCost.six?.length > 0 && (
+              <CardItemGalleryColumn
+                title="6+ Cost"
+                itemsExpanded={itemsExpanded}
+                setItemExpanded={setItemsExpanded}
+                condensed={condensed}
+                hideImages={hideImages}
+                cards={cardsSortedByCost.six}
+              />
+            )}
             {cardsSortedByCost.land?.length > 0 && (
               <CardItemGalleryColumn
                 title="Lands"
