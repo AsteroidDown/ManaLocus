@@ -1,4 +1,5 @@
 import { Card } from "@/models/card/card";
+import { DeckCard } from "@/models/deck/deck";
 import { CardFilters } from "@/models/sorted-cards/sorted-cards";
 import { groupCardsByColor } from "./card-grouping";
 
@@ -63,6 +64,12 @@ export function sortCardsByCollectorNumber(cards: Card[]) {
 export function sortCardsAlphabetically(cards: Card[], ascending = true) {
   return cards.sort((a, b) =>
     ascending ? a.name.localeCompare(b.name) : b.name.localeCompare(a.name)
+  );
+}
+
+export function sortDeckCardsAlphabetically(cards: DeckCard[]) {
+  return cards.sort((a, b) =>
+    a.name.localeCompare(b.name, undefined, { numeric: true })
   );
 }
 
