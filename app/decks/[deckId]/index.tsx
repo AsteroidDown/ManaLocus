@@ -1,11 +1,12 @@
-import DeckChangeLog from "@/components/decks/deck-card-change";
 import DeckCardGallery from "@/components/decks/deck-card-gallery";
+import DeckChangeLog from "@/components/decks/deck-change-log";
 import Button from "@/components/ui/button/button";
 import Text from "@/components/ui/text/text";
 import { BoardTypes } from "@/constants/boards";
 import DeckContext from "@/contexts/deck/deck.context";
 import UserContext from "@/contexts/user/user.context";
 import { setLocalStorageCards } from "@/functions/local-storage/card-local-storage";
+import { titleCase } from "@/functions/text-manipulation";
 import DeckService from "@/hooks/services/deck.service";
 import { DeckChange } from "@/models/deck/deck-change";
 import { faPen } from "@fortawesome/free-solid-svg-icons";
@@ -44,7 +45,15 @@ export default function DeckPage() {
 
         <View className="absolute w-full h-full bg-gradient-to-b from-transparent to-black opacity-40" />
 
-        <View className="absolute flex justify-center w-full h-full px-11 top-0 left-0">
+        <View className="absolute flex justify-center gap-1 w-full h-full px-11 top-0 left-0">
+          <Text
+            size="sm"
+            thickness="bold"
+            className={`px-2 py-1 bg-dark-200 bg-opacity-85 rounded-xl w-fit h-fit`}
+          >
+            {titleCase(deck.format)}
+          </Text>
+
           <Text thickness="bold" className="!text-5xl">
             {deck.name}
           </Text>
