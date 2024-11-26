@@ -1,6 +1,10 @@
 import { BoardTypes } from "@/constants/boards";
-import { MTGRarities } from "@/constants/mtg/mtg-rarity";
-import { MTGCardTypes } from "@/constants/mtg/mtg-types";
+import { sortDeckCardsAlphabetically } from "@/functions/card-sorting";
+import {
+  DeckCardGalleryGroupType,
+  DeckCardGalleryGroupTypes,
+  getCardGroupOrder,
+} from "@/functions/deck-card-ordering";
 import { titleCase } from "@/functions/text-manipulation";
 import { Deck, DeckCard } from "@/models/deck/deck";
 import { Link } from "expo-router";
@@ -11,13 +15,6 @@ import Divider from "../ui/divider/divider";
 import Select from "../ui/input/select";
 import TabBar from "../ui/tabs/tab-bar";
 import Text from "../ui/text/text";
-
-export type DeckCardGalleryGroupType = "cardType" | "rarity";
-
-export enum DeckCardGalleryGroupTypes {
-  TYPE = "cardType",
-  RARITY = "rarity",
-}
 
 export interface DeckCardGalleryProps {
   deck: Deck;
@@ -41,10 +38,10 @@ export default function DeckCardGallery({ deck }: DeckCardGalleryProps) {
     if (!deck) return;
 
     setBoardCards({
-      main: deck.main,
-      side: deck.side,
-      maybe: deck.maybe,
-      acquire: deck.acquire,
+      main: sortDeckCardsAlphabetically(deck.main),
+      side: sortDeckCardsAlphabetically(deck.side),
+      maybe: sortDeckCardsAlphabetically(deck.maybe),
+      acquire: sortDeckCardsAlphabetically(deck.acquire),
     });
 
     setBoardType(BoardTypes.MAIN);
@@ -63,67 +60,6 @@ export default function DeckCardGallery({ deck }: DeckCardGalleryProps) {
     if (!groupedCards) return;
     setGroupedCards(getCardGroupOrder(groupedCards, groupType));
   }, [boardCards, boardType, groupType]);
-
-  function getCardGroupOrder(
-    groupedCards: { [key: string]: DeckCard[] },
-    groupType: DeckCardGalleryGroupType
-  ) {
-    if (groupType === DeckCardGalleryGroupTypes.TYPE) {
-      return [
-        ...(groupedCards[MTGCardTypes.CREATURE]?.length
-          ? [{ title: "Creature", cards: groupedCards[MTGCardTypes.CREATURE] }]
-          : []),
-        ...(groupedCards[MTGCardTypes.INSTANT]?.length
-          ? [{ title: "Instant", cards: groupedCards[MTGCardTypes.INSTANT] }]
-          : []),
-        ...(groupedCards[MTGCardTypes.SORCERY]?.length
-          ? [{ title: "Sorcery", cards: groupedCards[MTGCardTypes.SORCERY] }]
-          : []),
-        ...(groupedCards[MTGCardTypes.ARTIFACT]?.length
-          ? [{ title: "Artifact", cards: groupedCards[MTGCardTypes.ARTIFACT] }]
-          : []),
-        ...(groupedCards[MTGCardTypes.ENCHANTMENT]?.length
-          ? [
-              {
-                title: "Enchantment",
-                cards: groupedCards[MTGCardTypes.ENCHANTMENT],
-              },
-            ]
-          : []),
-        ...(groupedCards[MTGCardTypes.LAND]?.length
-          ? [{ title: "Land", cards: groupedCards[MTGCardTypes.LAND] }]
-          : []),
-        ...(groupedCards[MTGCardTypes.PLANESWALKER]?.length
-          ? [
-              {
-                title: "Planeswalker",
-                cards: groupedCards[MTGCardTypes.PLANESWALKER],
-              },
-            ]
-          : []),
-        ...(groupedCards[MTGCardTypes.BATTLE]?.length
-          ? [{ title: "Battle", cards: groupedCards[MTGCardTypes.BATTLE] }]
-          : []),
-      ];
-    } else if (groupType === DeckCardGalleryGroupTypes.RARITY) {
-      return [
-        ...(groupedCards[MTGRarities.COMMON]?.length
-          ? [{ title: "Common", cards: groupedCards[MTGRarities.COMMON] }]
-          : []),
-        ...(groupedCards[MTGRarities.UNCOMMON]?.length
-          ? [{ title: "Uncommon", cards: groupedCards[MTGRarities.UNCOMMON] }]
-          : []),
-        ...(groupedCards[MTGRarities.RARE]?.length
-          ? [{ title: "Rare", cards: groupedCards[MTGRarities.RARE] }]
-          : []),
-        ...(groupedCards[MTGRarities.MYTHIC]?.length
-          ? [{ title: "Mythic", cards: groupedCards[MTGRarities.MYTHIC] }]
-          : []),
-      ];
-    }
-
-    return [];
-  }
 
   return (
     <View className="flex gap-4">
@@ -145,7 +81,7 @@ export default function DeckCardGallery({ deck }: DeckCardGalleryProps) {
             title: titleCase(board),
             onClick: () => setBoardType(board),
             children: (
-              <View className="flex flex-row flex-wrap gap-4 w-full mt-2 columns-4 z-[-1]">
+              <View className="block w-full mt-2 lg:columns-3 md:columns-2 columns-1">
                 {groupedCards?.map(({ title, cards }) => (
                   <Column key={title} title={title} cards={cards} />
                 ))}
@@ -160,7 +96,12 @@ export default function DeckCardGallery({ deck }: DeckCardGalleryProps) {
 
 function Column({ title, cards }: { title: string; cards?: DeckCard[] }) {
   return (
-    <View className="flex-1 flex min-w-[256px] z-[-1]">
+    <View
+      className="w-full break-inside-avoid"
+      onLayout={(event) => {
+        if (title === "Creature") console.log(event);
+      }}
+    >
       <View className="flex flex-row justify-between items-center">
         <Text size="lg" thickness="bold">
           {titleCase(title)}
