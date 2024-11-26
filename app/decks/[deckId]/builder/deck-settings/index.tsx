@@ -167,11 +167,12 @@ export default function DeckSettingsPage() {
             <Select
               label="Format"
               placeholder="Format"
-              options={Object.values(MTGFormats).map((format) =>
-                titleCase(format)
-              )}
               value={format}
               onChange={setFormat}
+              options={Object.values(MTGFormats).map((format) => ({
+                label: titleCase(format),
+                value: format,
+              }))}
             />
           </View>
         </View>

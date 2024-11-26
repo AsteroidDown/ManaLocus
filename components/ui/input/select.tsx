@@ -5,8 +5,7 @@ import { Pressable, TextInput, View } from "react-native";
 import Text from "../text/text";
 
 export interface InputProps {
-  options: any[];
-  optionProperty?: string;
+  options: { label: string; value: any }[];
 
   label?: string;
   placeholder?: string;
@@ -18,7 +17,6 @@ export interface InputProps {
 
 export default function Select({
   options,
-  optionProperty,
   label,
   placeholder,
   disabled,
@@ -33,21 +31,28 @@ export default function Select({
   const [search, setSearch] = React.useState("");
   const [filteredOptions, setFilteredOptions] = React.useState(options);
 
-  React.useEffect(() => setSearch(value ?? ""), [value]);
+  React.useEffect(
+    () =>
+      setSearch(options.find((option) => option.value === value)?.label ?? ""),
+    [value]
+  );
 
   React.useEffect(() => {
-    const filteredOptions = options.filter((option) => {
-      if (!optionProperty) {
-        return option.toLowerCase().includes(search.toLowerCase());
-      }
-      return option[optionProperty]
-        .toLowerCase()
-        .includes(search.toLowerCase());
-    });
+    const foundOption = options.find(
+      (option) => option.label.toLowerCase() === search.toLowerCase()
+    );
 
-    if (filteredOptions.includes(search)) setFilteredOptions(options);
-    else setFilteredOptions(filteredOptions);
-  }, [search]);
+    if (foundOption) {
+      setFilteredOptions(options);
+      setSearch(foundOption.label);
+    } else {
+      const filteredOptions = options.filter((option) =>
+        option.label.toLowerCase().includes(search.toLowerCase())
+      );
+
+      setFilteredOptions(filteredOptions);
+    }
+  }, [options, search]);
 
   function onFocus() {
     setFocused(true);
@@ -62,12 +67,15 @@ export default function Select({
   function selectOption(option: any) {
     onBlur();
     setHovered(false);
-    onChange(optionProperty ? option[optionProperty] : option);
+    setOpen(false);
+    onChange(option.value);
+    setSearch(option.label);
     setFilteredOptions(options);
   }
 
   return (
     <View
+      style={{ elevation: 10, zIndex: 10 }}
       className="flex-1 flex gap-2 max-h-fit z-[-1]"
       onPointerEnter={() => setHovered(true)}
       onPointerLeave={() => setHovered(false)}
@@ -80,10 +88,8 @@ export default function Select({
 
       <View
         className={`${
-          open
-            ? "overflow-visible"
-            : "max-h-[40px] min-h-[40px] overflow-hidden"
-        } relative flex-1`}
+          open ? "overflow-visible" : "overflow-hidden"
+        } max-h-[40px] min-h-[40px] relative flex-1`}
       >
         <View
           className={`${
@@ -127,6 +133,7 @@ export default function Select({
         </View>
 
         <View
+          style={{ elevation: 100, zIndex: 100 }}
           className={`${
             open
               ? "max-h-[500px] border-2 top-[38px]"
@@ -143,7 +150,7 @@ export default function Select({
         >
           {filteredOptions.map((option, index) => (
             <Pressable
-              key={option + index}
+              key={index}
               tabIndex={disabled || !open ? -1 : 0}
               onPress={() => selectOption(option)}
             >
@@ -151,7 +158,11 @@ export default function Select({
                 size="md"
                 className="px-3 py-2 rounded-lg hover:bg-background-300 transition-all"
               >
-                {optionProperty ? option[optionProperty] : option}
+                {typeof option === "object" && option?.label
+                  ? option.label
+                  : typeof option === "string"
+                  ? option
+                  : null}
               </Text>
             </Pressable>
           ))}

@@ -65,7 +65,12 @@ export default function DeckCardGallery({ deck }: DeckCardGalleryProps) {
     <View className="flex gap-4">
       <Select
         value={DeckCardGalleryGroupTypes.TYPE}
-        options={Object.values(DeckCardGalleryGroupTypes)}
+        options={Object.keys(DeckCardGalleryGroupTypes).map((key) => {
+          return {
+            label: titleCase(key),
+            value: (DeckCardGalleryGroupTypes as any)[key],
+          };
+        })}
         onChange={(type) => setGroupType(type)}
       />
 
@@ -96,12 +101,7 @@ export default function DeckCardGallery({ deck }: DeckCardGalleryProps) {
 
 function Column({ title, cards }: { title: string; cards?: DeckCard[] }) {
   return (
-    <View
-      className="w-full break-inside-avoid"
-      onLayout={(event) => {
-        if (title === "Creature") console.log(event);
-      }}
-    >
+    <View className="w-full break-inside-avoid mb-4">
       <View className="flex flex-row justify-between items-center">
         <Text size="lg" thickness="bold">
           {titleCase(title)}
