@@ -13,7 +13,6 @@ import { View } from "react-native";
 import CardText from "../cards/card-text";
 import Divider from "../ui/divider/divider";
 import Select from "../ui/input/select";
-import TabBar from "../ui/tabs/tab-bar";
 import Text from "../ui/text/text";
 
 export interface DeckCardGalleryProps {
@@ -62,38 +61,35 @@ export default function DeckCardGallery({ deck }: DeckCardGalleryProps) {
   }, [boardCards, boardType, groupType]);
 
   return (
-    <View className="flex gap-4">
-      <Select
-        value={DeckCardGalleryGroupTypes.TYPE}
-        options={Object.keys(DeckCardGalleryGroupTypes).map((key) => {
-          return {
-            label: titleCase(key),
-            value: (DeckCardGalleryGroupTypes as any)[key],
-          };
-        })}
-        onChange={(type) => setGroupType(type)}
-      />
+    <View className="flex gap-4" style={{ zIndex: 10 }}>
+      <View className="flex flex-row gap-2" style={{ zIndex: 10 }}>
+        <Select
+          label="Grouping"
+          value={DeckCardGalleryGroupTypes.TYPE}
+          onChange={(type) => setGroupType(type)}
+          options={Object.keys(DeckCardGalleryGroupTypes).map((key) => {
+            return {
+              label: titleCase(key),
+              value: (DeckCardGalleryGroupTypes as any)[key],
+            };
+          })}
+        />
 
-      <View className="flex flex-row flex-wrap gap-4 w-full mt-8">
-        <TabBar
-          hideBorder
-          tabs={[
-            BoardTypes.MAIN,
-            BoardTypes.SIDE,
-            BoardTypes.MAYBE,
-            BoardTypes.ACQUIRE,
-          ].map((board) => ({
-            title: titleCase(board),
-            onClick: () => setBoardType(board),
-            children: (
-              <View className="block w-full mt-2 lg:columns-3 md:columns-2 columns-1">
-                {groupedCards?.map(({ title, cards }) => (
-                  <Column key={title} title={title} cards={cards} />
-                ))}
-              </View>
-            ),
+        <Select
+          label="Board"
+          value={boardType}
+          onChange={(board) => setBoardType(board)}
+          options={Object.values(BoardTypes).map((board) => ({
+            label: titleCase(board),
+            value: board,
           }))}
         />
+      </View>
+
+      <View className="block w-full mt-2 lg:columns-3 md:columns-2 columns-1">
+        {groupedCards?.map(({ title, cards }) => (
+          <Column key={title} title={title} cards={cards} />
+        ))}
       </View>
     </View>
   );
