@@ -116,7 +116,7 @@ export default function DeckChangeLog({ changes }: DeckChangeLogProps) {
 
                   <View
                     className={`${
-                      openIndex === timeIndex ? "max-h-[300px] mb-2" : "max-h-0"
+                      openIndex === timeIndex ? "max-h-[232px] mb-2" : "max-h-0"
                     } flex w-full cursor-default overflow-y-scroll transition-all duration-300`}
                   >
                     {timeChange.changes.map((change, changeIndex) => (
