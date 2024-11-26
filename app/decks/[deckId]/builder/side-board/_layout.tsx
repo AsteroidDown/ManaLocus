@@ -4,7 +4,8 @@ import Button from "@/components/ui/button/button";
 import { TabProps } from "@/components/ui/tabs/tab";
 import TabBar from "@/components/ui/tabs/tab-bar";
 import { Tooltip } from "@/components/ui/tooltip/tooltip";
-import BoardContext, { BoardType } from "@/contexts/cards/board.context";
+import { BoardType, BoardTypes } from "@/constants/boards";
+import BoardContext from "@/contexts/cards/board.context";
 import CardPreferencesContext from "@/contexts/cards/card-preferences.context";
 import StoredCardsContext from "@/contexts/cards/stored-cards.context";
 import { getLocalStorageStoredCards } from "@/functions/local-storage/card-local-storage";
@@ -26,7 +27,7 @@ export default function SideBoardLayout() {
   const { setStoredCards } = useContext(StoredCardsContext);
   const { setPreferences } = useContext(CardPreferencesContext);
 
-  const [board, setBoard] = React.useState("side" as BoardType);
+  const [board, setBoard] = React.useState(BoardTypes.SIDE as BoardType);
 
   const [open, setOpen] = React.useState(false);
 
