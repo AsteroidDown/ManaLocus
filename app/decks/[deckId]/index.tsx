@@ -6,7 +6,7 @@ import { BoardTypes } from "@/constants/boards";
 import DeckContext from "@/contexts/deck/deck.context";
 import UserContext from "@/contexts/user/user.context";
 import { setLocalStorageCards } from "@/functions/local-storage/card-local-storage";
-import { titleCase } from "@/functions/text-manipulation";
+import { currency, titleCase } from "@/functions/text-manipulation";
 import DeckService from "@/hooks/services/deck.service";
 import { DeckChange } from "@/models/deck/deck-change";
 import { faPen } from "@fortawesome/free-solid-svg-icons";
@@ -20,6 +20,10 @@ export default function DeckPage() {
 
   const [changes, setChanges] = React.useState(null as DeckChange | null);
 
+  const [mainCards, setMainCards] = React.useState(0);
+  const [sideCards, setSideCards] = React.useState(0);
+  const [totalValue, setTotalValue] = React.useState(0);
+
   useEffect(() => {
     if (!deck) return;
 
@@ -29,6 +33,14 @@ export default function DeckPage() {
     setLocalStorageCards([], BoardTypes.ACQUIRE);
 
     DeckService.getChanges(deck.id).then((changes) => setChanges(changes));
+  }, [deck]);
+
+  useEffect(() => {
+    if (!deck) return;
+
+    setMainCards(deck.main.reduce((acc, card) => acc + card.count, 0));
+    setSideCards(deck.side.reduce((acc, card) => acc + card.count, 0));
+    setTotalValue(deck.main.reduce((acc, card) => acc + card.price, 0));
   }, [deck]);
 
   if (!deck) return;
@@ -60,6 +72,16 @@ export default function DeckPage() {
 
           <Text size="lg" thickness="medium">
             By {deck.user?.name}
+          </Text>
+        </View>
+
+        <View className="absolute flex justify-center w-full h-full px-11 top-0 left-0">
+          <Text size="sm" className="mt-auto">
+            {currency(totalValue)}
+          </Text>
+
+          <Text size="sm" className="mb-4">
+            {mainCards} Cards{sideCards ? ` + ${sideCards} Card Sideboard` : ""}
           </Text>
         </View>
 

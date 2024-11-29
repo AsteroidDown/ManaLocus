@@ -86,7 +86,7 @@ export default function DeckCardGallery({ deck }: DeckCardGalleryProps) {
         />
       </View>
 
-      <View className="block w-full mt-2 lg:columns-3 md:columns-2 columns-1">
+      <View className="block w-full mt-2 lg:columns-3 md:columns-2 columns-1 gap-8">
         {groupedCards?.map(({ title, cards }) => (
           <Column key={title} title={title} cards={cards} />
         ))}
@@ -97,8 +97,8 @@ export default function DeckCardGallery({ deck }: DeckCardGalleryProps) {
 
 function Column({ title, cards }: { title: string; cards?: DeckCard[] }) {
   return (
-    <View className="w-full break-inside-avoid mb-4">
-      <View className="flex flex-row justify-between items-center">
+    <View className="w-full break-inside-avoid mb-6">
+      <View className="flex flex-row justify-between items-center px-2">
         <Text size="lg" thickness="bold">
           {titleCase(title)}
         </Text>
