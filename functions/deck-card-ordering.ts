@@ -35,9 +35,6 @@ export function getCardGroupOrder(
             },
           ]
         : []),
-      ...(groupedCards[MTGCardTypes.LAND]?.length
-        ? [{ title: "Land", cards: groupedCards[MTGCardTypes.LAND] }]
-        : []),
       ...(groupedCards[MTGCardTypes.PLANESWALKER]?.length
         ? [
             {
@@ -48,6 +45,9 @@ export function getCardGroupOrder(
         : []),
       ...(groupedCards[MTGCardTypes.BATTLE]?.length
         ? [{ title: "Battle", cards: groupedCards[MTGCardTypes.BATTLE] }]
+        : []),
+      ...(groupedCards[MTGCardTypes.LAND]?.length
+        ? [{ title: "Land", cards: groupedCards[MTGCardTypes.LAND] }]
         : []),
     ];
   } else if (groupType === DeckCardGalleryGroupTypes.RARITY) {
