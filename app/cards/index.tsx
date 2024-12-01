@@ -49,10 +49,7 @@ export default function CardsPage() {
 
   function importAllCards() {
     setLoading(true);
-    ScryfallService.getAllCards().then((cards) => {
-      console.log(cards);
-      setLoading(false);
-    });
+    ScryfallService.getAllCards().then(() => setLoading(false));
   }
 
   return (

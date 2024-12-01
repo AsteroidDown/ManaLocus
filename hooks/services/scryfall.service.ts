@@ -148,12 +148,8 @@ async function getAllCards() {
     `bulk-data/default-cards`
   ).catch((error) => console.error(error));
 
-  // const allCards = await API.get((response as any).download_uri);
-  console.log(response);
   await axios.get((response as any).download_uri).then((response2) => {
     const data = response2.data;
-
-    console.log("Response data:", data);
 
     API.post(`scryfall/`, {
       cards: data,
