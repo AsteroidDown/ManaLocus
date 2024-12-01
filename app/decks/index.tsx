@@ -34,7 +34,7 @@ export default function DecksPage() {
         />
 
         <View className="flex flex-row flex-wrap gap-4">
-          {decks.map((deck, index) => (
+          {decks?.map((deck, index) => (
             <Link key={deck.id + index} href={`decks/${deck.id}`}>
               <DeckCard deck={deck} />
             </Link>
