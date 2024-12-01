@@ -1,4 +1,5 @@
-import { Deck, DeckCard } from "@/models/deck/deck";
+import { Card } from "@/models/card/card";
+import { Deck } from "@/models/deck/deck";
 
 export function mapDatabaseDeck(data: any, withCards = false): Deck {
   const deck = withCards ? data.deck : data;
@@ -24,29 +25,60 @@ export function mapDatabaseDeck(data: any, withCards = false): Deck {
     featuredArtUrl: deck.featuredArtUrl,
     colors: deck.colors,
 
-    main: data.main?.map((card: any) => mapDatabaseCardToDeckCard(card)) ?? [],
-    side: data.side?.map((card: any) => mapDatabaseCardToDeckCard(card)) ?? [],
-    maybe:
-      data.maybe?.map((card: any) => mapDatabaseCardToDeckCard(card)) ?? [],
-    acquire:
-      data.acquire?.map((card: any) => mapDatabaseCardToDeckCard(card)) ?? [],
+    main: data.main.map((card: any) => mapDatabaseCardToCard(card)),
+    side: data.side.map((card: any) => mapDatabaseCardToCard(card)),
+    maybe: data.maybe.map((card: any) => mapDatabaseCardToCard(card)),
+    acquire: data.acquire.map((card: any) => mapDatabaseCardToCard(card)),
   };
 }
 
-function mapDatabaseCardToDeckCard(card: any): DeckCard {
+function mapDatabaseCardToCard(card: any): Card {
   return {
     scryfallId: card.scryfallId,
-    name: card.name,
-    setId: card.setId,
-    collectorNumber: card.collectorNumber,
     count: card.count,
+    set: card.setId,
+    setName: card.setName,
+    collectorNumber: card.collectorNumber,
+    releasedAt: card.released,
+    cardBackId: card.cardBackId,
+    artist: card.artist,
+
+    name: card.name,
+    colors: card.colors,
+    colorIdentity: card.colorIdentity,
     manaCost: card.manaCost,
-    cardType: card.cardType.toLowerCase(),
+    cmc: card.cmc,
     rarity: card.rarity,
-    frontImageUrl: card.frontImageUrl,
-    backImageUrl: card.backImageUrl,
-    price: card.price,
-    tcgPlayerUrl: card.tcgPlayerUrl,
-    cardMarketUrl: card.cardMarketUrl,
+    typeLine: card.typeLine,
+    power: card.power,
+    toughness: card.toughness,
+    loyalty: card.loyalty,
+    defense: card.defense,
+    producedMana: card.producedMana,
+    oracleText: card.oracleText,
+    flavorText: card.flavorText,
+
+    borderColor: card.borderColor,
+    frame: card.frame,
+    fullArt: card.fullArt,
+    frameEffects: card.frameEffects,
+    promo: card.promo,
+    finishes: card.finishes,
+    foil: card.foil,
+    nonfoil: card.nonfoil,
+    lang: card.lang,
+
+    imageURIs: card.imageURIs,
+    faces: card.faces,
+    prices: {
+      usd: card.prices?.usd ? Number(card.prices.usd) : null,
+      usdFoil: card.prices?.usdFoil ? Number(card.prices.usdFoil) : null,
+      usdEtched: card.prices?.usdEtched ? Number(card.prices.usdEtched) : null,
+      eur: card.prices?.eur ? Number(card.prices.eur) : null,
+      eurFoil: card.prices?.eurFoil ? Number(card.prices.eurFoil) : null,
+      tix: card.prices?.tix ? Number(card.prices.tix) : null,
+    },
+    priceUris: card.priceUris,
+    legalities: card.legalities,
   };
 }

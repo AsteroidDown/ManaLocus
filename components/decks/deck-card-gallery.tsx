@@ -1,12 +1,13 @@
 import { BoardTypes } from "@/constants/boards";
-import { sortDeckCardsAlphabetically } from "@/functions/card-sorting";
 import {
-  DeckCardGalleryGroupType,
-  DeckCardGalleryGroupTypes,
-  getCardGroupOrder,
-} from "@/functions/deck-card-ordering";
+  groupCardsByCost,
+  groupCardsByRarity,
+  groupCardsByType,
+} from "@/functions/card-grouping";
+import { sortCardsAlphabetically } from "@/functions/card-sorting";
 import { titleCase } from "@/functions/text-manipulation";
-import { Deck, DeckCard } from "@/models/deck/deck";
+import { Card } from "@/models/card/card";
+import { Deck } from "@/models/deck/deck";
 import { Link } from "expo-router";
 import React, { useEffect } from "react";
 import { View } from "react-native";
@@ -14,6 +15,14 @@ import CardText from "../cards/card-text";
 import Divider from "../ui/divider/divider";
 import Select from "../ui/input/select";
 import Text from "../ui/text/text";
+
+export type DeckCardGalleryGroupType = "type" | "rarity" | "cost";
+
+export enum DeckCardGalleryGroupTypes {
+  TYPE = "type",
+  RARITY = "rarity",
+  COST = "cost",
+}
 
 export interface DeckCardGalleryProps {
   deck: Deck;
@@ -26,21 +35,21 @@ export default function DeckCardGallery({ deck }: DeckCardGalleryProps) {
   );
 
   const [boardCards, setBoardCards] = React.useState(
-    {} as { [key: string]: DeckCard[] }
+    {} as { [key: string]: Card[] }
   );
 
   const [groupedCards, setGroupedCards] = React.useState(
-    [] as { title: string; cards: DeckCard[] }[]
+    [] as { title: string; cards: Card[] }[]
   );
 
   useEffect(() => {
     if (!deck) return;
 
     setBoardCards({
-      main: sortDeckCardsAlphabetically(deck.main),
-      side: sortDeckCardsAlphabetically(deck.side),
-      maybe: sortDeckCardsAlphabetically(deck.maybe),
-      acquire: sortDeckCardsAlphabetically(deck.acquire),
+      main: sortCardsAlphabetically(deck.main),
+      side: sortCardsAlphabetically(deck.side),
+      maybe: sortCardsAlphabetically(deck.maybe),
+      acquire: sortCardsAlphabetically(deck.acquire),
     });
 
     setBoardType(BoardTypes.MAIN);
@@ -49,15 +58,89 @@ export default function DeckCardGallery({ deck }: DeckCardGalleryProps) {
   useEffect(() => {
     if (!deck) return;
 
-    const groupedCards = boardCards[boardType]?.reduce((acc, card) => {
-      if (!acc[card[groupType]]) acc[card[groupType]] = [card];
-      else acc[card[groupType]].push(card);
+    if (groupType === DeckCardGalleryGroupTypes.RARITY) {
+      const rarityGroupedCards = groupCardsByRarity(deck[boardType]);
 
-      return acc;
-    }, {} as { [key: string]: DeckCard[] });
+      setGroupedCards([
+        ...(rarityGroupedCards.common?.length
+          ? [{ title: "Common", cards: rarityGroupedCards.common }]
+          : []),
+        ...(rarityGroupedCards.uncommon?.length
+          ? [{ title: "Uncommon", cards: rarityGroupedCards.uncommon }]
+          : []),
+        ...(rarityGroupedCards.rare?.length
+          ? [{ title: "Rare", cards: rarityGroupedCards.rare }]
+          : []),
+        ...(rarityGroupedCards.mythic?.length
+          ? [{ title: "Mythic", cards: rarityGroupedCards.mythic }]
+          : []),
+      ]);
+    } else if (groupType === DeckCardGalleryGroupTypes.COST) {
+      const costGroupedCards = groupCardsByCost(deck[boardType]);
 
-    if (!groupedCards) return;
-    setGroupedCards(getCardGroupOrder(groupedCards, groupType));
+      setGroupedCards([
+        ...(costGroupedCards.zero?.length
+          ? [{ title: "Zero", cards: costGroupedCards.zero }]
+          : []),
+        ...(costGroupedCards.one?.length
+          ? [{ title: "One", cards: costGroupedCards.one }]
+          : []),
+        ...(costGroupedCards.two?.length
+          ? [{ title: "Two", cards: costGroupedCards.two }]
+          : []),
+        ...(costGroupedCards.three?.length
+          ? [{ title: "Three", cards: costGroupedCards.three }]
+          : []),
+        ...(costGroupedCards.four?.length
+          ? [{ title: "Four", cards: costGroupedCards.four }]
+          : []),
+        ...(costGroupedCards.five?.length
+          ? [{ title: "Five", cards: costGroupedCards.five }]
+          : []),
+        ...(costGroupedCards.six?.length
+          ? [{ title: "Six", cards: costGroupedCards.six }]
+          : []),
+      ]);
+    } else {
+      const typeGroupedCards = groupCardsByType(deck[boardType]);
+
+      setGroupedCards([
+        ...(typeGroupedCards.creature?.length
+          ? [{ title: "Creature", cards: typeGroupedCards.creature }]
+          : []),
+        ...(typeGroupedCards.instant?.length
+          ? [{ title: "Instant", cards: typeGroupedCards.instant }]
+          : []),
+        ...(typeGroupedCards.sorcery?.length
+          ? [{ title: "Sorcery", cards: typeGroupedCards.sorcery }]
+          : []),
+        ...(typeGroupedCards.artifact?.length
+          ? [{ title: "Artifact", cards: typeGroupedCards.artifact }]
+          : []),
+        ...(typeGroupedCards.enchantment?.length
+          ? [
+              {
+                title: "Enchantment",
+                cards: typeGroupedCards.enchantment,
+              },
+            ]
+          : []),
+        ...(typeGroupedCards.planeswalker?.length
+          ? [
+              {
+                title: "Planeswalker",
+                cards: typeGroupedCards.planeswalker,
+              },
+            ]
+          : []),
+        ...(typeGroupedCards.battle?.length
+          ? [{ title: "Battle", cards: typeGroupedCards.battle }]
+          : []),
+        ...(typeGroupedCards.land?.length
+          ? [{ title: "Land", cards: typeGroupedCards.land }]
+          : []),
+      ]);
+    }
   }, [boardCards, boardType, groupType]);
 
   return (
@@ -95,7 +178,7 @@ export default function DeckCardGallery({ deck }: DeckCardGalleryProps) {
   );
 }
 
-function Column({ title, cards }: { title: string; cards?: DeckCard[] }) {
+function Column({ title, cards }: { title: string; cards?: Card[] }) {
   return (
     <View className="w-full break-inside-avoid mb-6">
       <View className="flex flex-row justify-between items-center px-2">
@@ -117,10 +200,10 @@ function Column({ title, cards }: { title: string; cards?: DeckCard[] }) {
   );
 }
 
-function DeckCardHeader({ card }: { card: DeckCard }) {
+function DeckCardHeader({ card }: { card: Card }) {
   return (
     <Link
-      href={`cards/${card.setId}/${card.collectorNumber}`}
+      href={`cards/${card.set}/${card.collectorNumber}`}
       className="flex flex-row gap-2 justify-between items-center px-2 py-0.5 rounded-full hover:bg-primary-200 transition-all duration-300"
     >
       <View className="flex-1 flex flex-row items-center gap-2">

@@ -40,7 +40,9 @@ export default function DeckPage() {
 
     setMainCards(deck.main.reduce((acc, card) => acc + card.count, 0));
     setSideCards(deck.side.reduce((acc, card) => acc + card.count, 0));
-    setTotalValue(deck.main.reduce((acc, card) => acc + card.price, 0));
+    setTotalValue(
+      deck.main.reduce((acc, card) => acc + (card.prices?.usd ?? 0), 0)
+    );
   }, [deck]);
 
   if (!deck) return;
