@@ -60,7 +60,8 @@ async function getCardById(cardId: string): Promise<Card> {
 
 async function getCardPrints(name: string): Promise<Card[]> {
   return (await findCards(`name:/^${name}$/ unique:prints game:paper`)).sort(
-    (a, b) => new Date(b.released).getTime() - new Date(a.released).getTime()
+    (a, b) =>
+      new Date(b.releasedAt).getTime() - new Date(a.releasedAt).getTime()
   );
 }
 

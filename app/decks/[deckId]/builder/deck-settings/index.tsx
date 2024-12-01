@@ -8,7 +8,7 @@ import { MTGColorSymbols } from "@/constants/mtg/mtg-colors";
 import { MTGFormat, MTGFormats } from "@/constants/mtg/mtg-format";
 import DeckContext from "@/contexts/deck/deck.context";
 import { getLocalStorageStoredCards } from "@/functions/local-storage/card-local-storage";
-import { mapCardToDeckCard } from "@/functions/mapping/card-mapping";
+import { mapCardsToDeckCard } from "@/functions/mapping/card-mapping";
 import { getDeckColors, sortColors } from "@/functions/mtg-colors/mtg-colors";
 import { titleCase } from "@/functions/text-manipulation";
 import DeckService from "@/hooks/services/deck.service";
@@ -42,7 +42,7 @@ export default function DeckSettingsPage() {
 
     const foundFeaturedCard = mainBoardCards.find(
       (card) =>
-        card.images?.artCrop === deck.featuredArtUrl ||
+        card.imageURIs?.artCrop === deck.featuredArtUrl ||
         card.faces?.front.imageUris?.artCrop === deck.featuredArtUrl
     );
     if (foundFeaturedCard) {
@@ -64,7 +64,7 @@ export default function DeckSettingsPage() {
 
     if (
       foundFeaturedCards.length === 1 &&
-      foundFeaturedCards[0].id !== featuredCard?.id
+      foundFeaturedCards[0].scryfallId !== featuredCard?.scryfallId
     ) {
       setFeaturedCardSearch(foundFeaturedCards[0].name);
       setFeaturedCard(foundFeaturedCards[0]);
@@ -87,19 +87,24 @@ export default function DeckSettingsPage() {
       format,
       colors: `{${deckColors.join("}{")}}`,
       featuredArtUrl:
-        featuredCard?.images?.artCrop ??
+        featuredCard?.imageURIs?.artCrop ??
         featuredCard?.faces?.front.imageUris?.artCrop,
 
-      main: mainBoard.map((card) => mapCardToDeckCard(card)),
-      side: getLocalStorageStoredCards("side").map((card) =>
-        mapCardToDeckCard(card)
-      ),
-      maybe: getLocalStorageStoredCards("maybe").map((card) =>
-        mapCardToDeckCard(card)
-      ),
-      acquire: getLocalStorageStoredCards("acquire").map((card) =>
-        mapCardToDeckCard(card)
-      ),
+      cards: [
+        ...mapCardsToDeckCard(mainBoard, BoardTypes.MAIN),
+        ...mapCardsToDeckCard(
+          getLocalStorageStoredCards(BoardTypes.SIDE),
+          BoardTypes.SIDE
+        ),
+        ...mapCardsToDeckCard(
+          getLocalStorageStoredCards(BoardTypes.MAYBE),
+          BoardTypes.MAYBE
+        ),
+        ...mapCardsToDeckCard(
+          getLocalStorageStoredCards(BoardTypes.ACQUIRE),
+          BoardTypes.ACQUIRE
+        ),
+      ],
     };
 
     DeckService.update(deck.id, dto);
@@ -117,7 +122,7 @@ export default function DeckSettingsPage() {
           {featuredCard && (
             <Image
               className="w-full h-full rounded-xl"
-              source={{ uri: featuredCard.images?.artCrop }}
+              source={{ uri: featuredCard.imageURIs?.artCrop }}
             />
           )}
         </View>

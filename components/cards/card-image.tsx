@@ -47,7 +47,7 @@ export default function CardImage({
     if (frontLoaded) {
       return (
         <Image
-          source={{ uri: card?.images?.png }}
+          source={{ uri: card?.imageURIs?.png }}
           style={[{ resizeMode: "contain" }]}
           className={`max-h-[350px] aspect-[2.5/3.5] rounded-xl h-full`}
         />
@@ -58,7 +58,7 @@ export default function CardImage({
 
     return (
       <Image
-        source={{ uri: card?.images?.png }}
+        source={{ uri: card?.imageURIs?.png }}
         style={[{ resizeMode: "contain" }]}
         className={`max-h-[350px] aspect-[2.5/3.5] rounded-xl ${
           frontLoading ? "!h-0" : "h-full"
@@ -77,7 +77,7 @@ export default function CardImage({
         }}
       />
     );
-  }, [card?.images?.png, onScreen, frontLoaded]);
+  }, [card?.imageURIs?.png, onScreen, frontLoaded]);
 
   const cardFrontImage = useMemo(() => {
     if (frontLoaded) {
