@@ -19,7 +19,7 @@ export default function CardList({ title, subtitle, cards }: CardListProps) {
       <View className="flex flex-row flex-wrap gap-2">
         {cards.map((card, index) => (
           <Link
-            key={card.id + index}
+            key={card.scryfallId + index}
             href={`cards/${setId}/${card.collectorNumber}`}
           >
             <CardImage card={card} />

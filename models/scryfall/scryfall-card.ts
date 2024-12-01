@@ -5,19 +5,19 @@ import { CardFrameEffect } from "../card/card";
 
 export interface ScryfallCard {
   id: string;
-  name: string;
   set: string;
   set_name: string;
-  released_at: string;
   collector_number: string;
-  border_color: string;
-  frame_effects: CardFrameEffect[];
-  promo: boolean;
+  released_at: string;
   card_back_id: string;
-  rarity: MTGRarity;
-  cmc: number;
+  artist?: string;
+
+  name: string;
+  colors: MTGColorSymbol[];
   color_identity: MTGColorSymbol[];
   mana_cost: string;
+  cmc: number;
+  rarity: MTGRarity;
   type_line: string;
   power?: string;
   toughness?: string;
@@ -26,8 +26,18 @@ export interface ScryfallCard {
   produced_mana: any[];
   oracle_text: string;
   flavor_text?: string;
+
+  border_color: string;
+  full_art: boolean;
+  frame: string;
+  frame_effects: CardFrameEffect[];
+  promo: boolean;
+  finishes: string[];
+  foil: boolean;
+  nonfoil: boolean;
+  lang: string;
+
   image_uris: ScryfallImageUris;
-  artist?: string;
   card_faces: ScryfallCardFace[];
   prices: ScryfallCardPrices;
   purchase_uris: ScryfallCardPriceUris;

@@ -3,21 +3,21 @@ import { MTGRarity } from "@/constants/mtg/mtg-rarity";
 import { MTGColorSymbol } from "../../constants/mtg/mtg-colors";
 
 export interface Card {
-  id: string;
-  name: string;
+  scryfallId: string;
   count: number;
   set: string;
   setName: string;
-  released: string;
-  borderColor: string;
-  frameEffects: string[];
-  promo: boolean;
   collectorNumber: string;
+  releasedAt: string;
   cardBackId: string;
-  rarity: MTGRarity;
-  cmc: number;
+  artist?: string;
+
+  name: string;
+  colors: MTGColorSymbol[];
   colorIdentity: MTGColorSymbol[];
   manaCost: string;
+  cmc: number;
+  rarity: MTGRarity;
   typeLine: string;
   power?: string;
   toughness?: string;
@@ -26,8 +26,18 @@ export interface Card {
   producedMana?: string[];
   oracleText?: string;
   flavorText?: string;
-  images?: CardImageUris;
-  artist?: string;
+
+  borderColor: string;
+  fullArt: boolean;
+  frame: string;
+  frameEffects: string[];
+  promo: boolean;
+  finishes: string[];
+  foil: boolean;
+  nonfoil: boolean;
+  lang: string;
+
+  imageURIs?: CardImageUris;
   faces: { front: CardFace; back: CardFace } | null;
   prices: CardPrices;
   priceUris: CardPriceUris;

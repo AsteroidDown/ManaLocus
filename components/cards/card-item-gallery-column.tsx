@@ -45,7 +45,7 @@ export default function CardItemGalleryColumn({
       <View className={`flex ${condensed ? "gap-1 mx-0" : "gap-2 mx-2"}`}>
         {cards.map((card, index) => (
           <CardItem
-            key={card.id + index}
+            key={card.scryfallId + index}
             card={card}
             condensed={condensed}
             hideImage={hideImages}

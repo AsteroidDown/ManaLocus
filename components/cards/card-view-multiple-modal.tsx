@@ -68,7 +68,7 @@ export default function CardViewMultipleModal({
       <Box className="flex flex-row justify-center flex-wrap gap-2 min-h-[350px] max-h-[80vh] w-fit min-w-[228px] max-w-[1000px] !px-0 overflow-x-auto">
         {cards?.map((card: Card, index: number) => (
           <Box
-            key={card.id + index}
+            key={card.scryfallId + index}
             className="flex gap-1 !bg-background-100 !p-2 max-w-[244px]"
           >
             <View className="flex flex-row gap-2 px-2">

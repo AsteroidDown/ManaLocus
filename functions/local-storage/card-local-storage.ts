@@ -35,7 +35,7 @@ export function saveLocalStorageCard(card: Card, count = 1, board?: BoardType) {
   }
 
   const storedCardIndex = storedCards.findIndex(
-    (storedCard) => storedCard.id === card.id
+    (storedCard) => storedCard.scryfallId === card.scryfallId
   );
 
   if (storedCardIndex >= 0) storedCards[storedCardIndex].count += count;
@@ -57,7 +57,7 @@ export function switchLocalStorageCardPrint(
   const storedCards = getLocalStorageStoredCards(board);
 
   const cardIndex = storedCards.findIndex(
-    (storedCard) => storedCard.id === card.id
+    (storedCard) => storedCard.scryfallId === card.scryfallId
   );
 
   if (cardIndex >= 0) {
@@ -86,7 +86,7 @@ export function addToLocalStorageCardCount(card: Card, board?: BoardType) {
   }
 
   const cardIndex = storedCards.findIndex(
-    (storedCard) => storedCard.id === card.id
+    (storedCard) => storedCard.scryfallId === card.scryfallId
   );
 
   if (cardIndex >= 0) {
@@ -105,7 +105,7 @@ export function removeFromLocalStorageCardCount(card: Card, board?: BoardType) {
   const storedCards = getLocalStorageStoredCards(board);
 
   const cardIndex = storedCards.findIndex(
-    (storedCard) => storedCard.id === card.id
+    (storedCard) => storedCard.scryfallId === card.scryfallId
   );
 
   if (cardIndex >= 0) {
@@ -129,7 +129,7 @@ export function removeLocalStorageCard(card: Card, board?: BoardType) {
   const storedCards = getLocalStorageStoredCards(board);
 
   const index = storedCards.findIndex(
-    (storedCard) => storedCard.id === card.id
+    (storedCard) => storedCard.scryfallId === card.scryfallId
   );
 
   if (index >= 0) {

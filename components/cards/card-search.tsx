@@ -126,7 +126,7 @@ export default function CardSearch({
             {searchedCards?.length > 0 && (
               <View className="flex flex-row gap-4 h-full">
                 {searchedCards.map((card, index) => (
-                  <View key={card.id + index}>
+                  <View key={card.scryfallId + index}>
                     {linkToCardPage ? (
                       <Link href={`cards/${card.set}/${card.collectorNumber}`}>
                         <CardImage card={card} onClick={() => setCard(card)} />

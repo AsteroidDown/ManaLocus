@@ -9,21 +9,21 @@ import {
 
 export function ScryfallToCard(scryfallCard: ScryfallCard): Card {
   return {
-    id: scryfallCard.id,
-    name: scryfallCard.name,
+    scryfallId: scryfallCard.id,
     count: 1,
     set: scryfallCard.set,
     setName: scryfallCard.set_name,
-    released: scryfallCard.released_at,
     collectorNumber: scryfallCard.collector_number,
-    borderColor: scryfallCard.border_color,
-    frameEffects: scryfallCard.frame_effects,
-    promo: scryfallCard.promo,
+    releasedAt: scryfallCard.released_at,
     cardBackId: scryfallCard.card_back_id,
-    cmc: scryfallCard.cmc,
-    rarity: scryfallCard.rarity,
+    artist: scryfallCard.artist,
+
+    name: scryfallCard.name,
+    colors: scryfallCard.colors,
     colorIdentity: scryfallCard.color_identity,
     manaCost: scryfallCard.mana_cost,
+    cmc: scryfallCard.cmc,
+    rarity: scryfallCard.rarity,
     typeLine: scryfallCard.type_line,
     power: scryfallCard.power,
     toughness: scryfallCard.toughness,
@@ -32,8 +32,18 @@ export function ScryfallToCard(scryfallCard: ScryfallCard): Card {
     producedMana: scryfallCard.produced_mana,
     oracleText: scryfallCard.oracle_text,
     flavorText: scryfallCard.flavor_text,
-    images: transferImageUris(scryfallCard.image_uris),
-    artist: scryfallCard.artist,
+
+    borderColor: scryfallCard.border_color,
+    fullArt: scryfallCard.full_art,
+    frame: scryfallCard.frame,
+    frameEffects: scryfallCard.frame_effects,
+    promo: scryfallCard.promo,
+    finishes: scryfallCard.finishes,
+    foil: scryfallCard.foil,
+    nonfoil: scryfallCard.nonfoil,
+    lang: scryfallCard.lang,
+
+    imageURIs: transferImageUris(scryfallCard.image_uris),
     legalities: scryfallCard.legalities,
     faces: scryfallCard.card_faces
       ? {

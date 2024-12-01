@@ -69,7 +69,7 @@ export default function CardPrints({
                 className={`flex gap-2 p-2 rounded-lg transition-all duration-300 ${
                   hoverIndex === index ? "bg-primary-300" : "bg-background-300"
                 }`}
-                key={print.id + index}
+                key={print.scryfallId + index}
                 onPointerEnter={() => setHoverIndex(index)}
                 onPointerLeave={() => setHoverIndex(null)}
                 onPress={() => {
@@ -80,7 +80,8 @@ export default function CardPrints({
                 <Image
                   className="h-56 w-40"
                   source={{
-                    uri: print.images?.png || print.faces?.front.imageUris.png,
+                    uri:
+                      print.imageURIs?.png || print.faces?.front.imageUris.png,
                   }}
                 />
 

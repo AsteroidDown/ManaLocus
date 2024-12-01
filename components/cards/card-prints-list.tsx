@@ -46,7 +46,7 @@ export default function CardPrintsList({ card }: CardPrintsListProps) {
       <ScrollView className="flex max-h-[264px] -mx-2">
         {cardPrints.map((print, index) => (
           <Link
-            key={print.id + index}
+            key={print.scryfallId + index}
             href={`cards/${print.set}/${print.collectorNumber}`}
             className={`flex flex-row gap-2 p-2 max-w-full border-b hover:bg-primary-300 transition-all duration-300 ${
               print.set === setId && print.collectorNumber === cardNumber
