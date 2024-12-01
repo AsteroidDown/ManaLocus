@@ -16,6 +16,7 @@ import { Set } from "../../models/card/set";
 
 export default function CardsPage() {
   const [selectSetsOpen, setSelectSetsOpen] = React.useState(false);
+  const [loading, setLoading] = React.useState(false);
 
   const [sets, setSets] = React.useState([] as Set[]);
   const [filteredSets, setFilteredSets] = React.useState([] as Set[]);
@@ -46,6 +47,14 @@ export default function CardsPage() {
     setSelectedSets([...selectedSets]);
   }
 
+  function importAllCards() {
+    setLoading(true);
+    ScryfallService.getAllCards().then((cards) => {
+      console.log(cards);
+      setLoading(false);
+    });
+  }
+
   return (
     <ScrollView>
       <View className="flex flex-1 gap-4 px-11 py-8 min-h-[100vh] bg-background-100">
@@ -53,6 +62,13 @@ export default function CardsPage() {
           title="Find Cards"
           subtitle="Search for cards or view full sets"
           className="!pb-0"
+          end={
+            <Button
+              text={loading ? "Loading" : "Import All Cards"}
+              onClick={importAllCards}
+              disabled={loading}
+            />
+          }
         />
 
         <CardSearch hideCardPreview linkToCardPage />
