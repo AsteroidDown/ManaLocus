@@ -3,7 +3,7 @@ import { titleCase } from "@/functions/text-manipulation";
 import { DeckCardChange, DeckChange } from "@/models/deck/deck-change";
 import moment from "moment";
 import React, { useEffect } from "react";
-import { Pressable, View } from "react-native";
+import { Pressable, View, ViewProps } from "react-native";
 import TabBar from "../ui/tabs/tab-bar";
 import Text from "../ui/text/text";
 
@@ -14,11 +14,14 @@ export interface DeckChangeTime {
   changes: DeckCardChange[];
 }
 
-export interface DeckChangeLogProps {
+export type DeckChangeLogProps = ViewProps & {
   changes: DeckChange;
-}
+};
 
-export default function DeckChangeLog({ changes }: DeckChangeLogProps) {
+export default function DeckChangeLog({
+  changes,
+  className,
+}: DeckChangeLogProps) {
   const [boardChanges, setBoardChanges] = React.useState(
     [] as DeckChangeTime[][]
   );
@@ -69,7 +72,7 @@ export default function DeckChangeLog({ changes }: DeckChangeLogProps) {
   }, [changes]);
 
   return (
-    <View className="flex">
+    <View className={`${className} flex`}>
       <Text size="lg" thickness="bold" className="mb-2">
         Change Log
       </Text>

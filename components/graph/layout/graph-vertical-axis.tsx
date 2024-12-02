@@ -29,7 +29,7 @@ export function GraphVerticalAxis({
         </Text>
       </View>
 
-      <View className="justify-between">
+      <View className="flex justify-between items-end">
         {ticks.map((tick, index) => (
           <Text
             noWrap

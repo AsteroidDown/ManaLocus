@@ -6,11 +6,12 @@ import { GraphPlot, SetData } from "./layout/graph-plot";
 import { GraphVerticalAxis } from "./layout/graph-vertical-axis";
 
 export type GraphProps = ViewProps & {
-  id: string;
-  sectionId: string;
+  id?: string;
+  sectionId?: string;
   title: string;
   titleStart?: ReactNode;
   titleEnd?: ReactNode;
+  readonly?: boolean;
   stacked?: boolean;
   horizontalTitle?: string;
   verticalTitle?: string;
@@ -23,6 +24,7 @@ export default function Graph({
   title,
   titleStart,
   titleEnd,
+  readonly,
   stacked,
   verticalTitle,
   horizontalTitle,
@@ -76,6 +78,7 @@ export default function Graph({
   return (
     <View className={`${className} flex flex-1 w-full h-full overflow-auto`}>
       <DashboardItemHeader
+        readonly={readonly}
         hideDivider
         className="mb-4"
         itemId={id}
@@ -87,7 +90,7 @@ export default function Graph({
 
       <View className="flex-1 flex flex-row">
         <GraphVerticalAxis
-          className="w-3 mr-3"
+          className="w-3 mr-5"
           title={verticalTitle}
           ceiling={ceiling}
           tickLength={verticalTickLength}

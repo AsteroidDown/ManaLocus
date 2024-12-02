@@ -11,13 +11,14 @@ import { TextInput, View, ViewProps } from "react-native";
 import Divider from "../ui/divider/divider";
 
 export type DashboardItemHeaderProps = ViewProps & {
-  itemId: string;
-  sectionId: string;
+  itemId?: string;
+  sectionId?: string;
 
   title: string;
   titleStart?: ReactNode;
   titleEnd?: ReactNode;
 
+  readonly?: boolean;
   hideDivider?: boolean;
 };
 
@@ -27,6 +28,7 @@ export default function DashboardItemHeader({
   title,
   titleStart,
   titleEnd,
+  readonly = false,
   hideDivider = false,
   className,
 }: DashboardItemHeaderProps) {
@@ -38,6 +40,8 @@ export default function DashboardItemHeader({
   const [itemTitle, setItemTitle] = React.useState("");
 
   function updateItemTitle() {
+    if (!itemId || !sectionId) return;
+
     if (!itemTitle) {
       setEditingItem(false);
       return;
@@ -58,7 +62,7 @@ export default function DashboardItemHeader({
         {titleStart && (
           <View
             className={`${
-              hovered ? "opacity-100" : "opacity-0"
+              hovered || readonly ? "opacity-100" : "opacity-0"
             } transition-all duration-500`}
           >
             {titleStart}
@@ -76,7 +80,7 @@ export default function DashboardItemHeader({
             </Text>
           )}
 
-          {editingItem && (
+          {editingItem && !readonly && (
             <TextInput
               placeholderTextColor="#8b8b8b"
               className="color-white outline-none text-xl font-bold mx-4 my-2"
@@ -95,7 +99,9 @@ export default function DashboardItemHeader({
             action="default"
             icon={editingItem ? faCheck : faPencil}
             className={`${
-              editingItem || hovered ? "opacity-100" : "opacity-0"
+              (editingItem || hovered) && !readonly
+                ? "opacity-100"
+                : "opacity-0"
             } transition-all duration-500`}
             onClick={() =>
               editingItem ? updateItemTitle() : setEditingItem(!editingItem)
