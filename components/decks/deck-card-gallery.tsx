@@ -284,7 +284,9 @@ function DeckCard({
   const navigation = useNavigation();
 
   const [open, setOpen] = React.useState(false);
-  const [hovered, setHovered] = React.useState(false);
+  const [hoveredIndex, setHoveredIndex] = React.useState(-1);
+
+  const cardCount = Array(card.count).fill(undefined);
 
   return (
     <>
@@ -304,18 +306,20 @@ function DeckCard({
         </Pressable>
       )}
 
-      {viewType === DeckCardGalleryViewTypes.CARD && (
-        <Pressable
-          onPress={() => setOpen(true)}
-          onPointerEnter={() => setHovered(true)}
-          onPointerLeave={() => setHovered(false)}
-          className={`${hovered ? "z-[100]" : "z-0"} ${
-            !last ? "max-h-8" : ""
-          } max-w-fit mx-auto`}
-        >
-          <CardImage card={card} />
-        </Pressable>
-      )}
+      {viewType === DeckCardGalleryViewTypes.CARD &&
+        cardCount.map((_, index) => (
+          <Pressable
+            key={index}
+            onPress={() => setOpen(true)}
+            onPointerEnter={() => setHoveredIndex(index)}
+            onPointerLeave={() => setHoveredIndex(-1)}
+            className={`${hoveredIndex === index ? "z-[100]" : "z-0"} ${
+              !(last && index === card.count - 1) ? "max-h-8" : ""
+            } max-w-fit mx-auto`}
+          >
+            <CardImage card={card} />
+          </Pressable>
+        ))}
 
       <View className="-mt-0.5">
         <Modal open={open} setOpen={setOpen}>

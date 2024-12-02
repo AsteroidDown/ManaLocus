@@ -63,21 +63,23 @@ export default function DeckPage() {
         <View className="absolute w-full h-full bg-gradient-to-b from-transparent to-black opacity-40" />
 
         <View className="absolute flex justify-center gap-1 w-full h-full px-11 top-0 left-0">
-          <Text
-            size="sm"
-            thickness="bold"
-            className={`px-2 py-1 bg-dark-200 bg-opacity-85 rounded-xl w-fit h-fit`}
-          >
-            {deck.format?.length ? titleCase(deck.format) : "TBD"}
-          </Text>
-
           <Text thickness="bold" className="!text-5xl">
             {deck.name}
           </Text>
 
-          <Text size="lg" thickness="medium">
-            By {deck.user?.name}
-          </Text>
+          <View className="flex flex-row gap-2 items-center">
+            <Text
+              size="sm"
+              thickness="bold"
+              className={`px-2 py-1 bg-dark-200 bg-opacity-85 rounded-xl w-fit h-fit`}
+            >
+              {deck.format?.length ? titleCase(deck.format) : "TBD"}
+            </Text>
+
+            <Text size="lg" thickness="medium">
+              By {deck.user?.name}
+            </Text>
+          </View>
         </View>
 
         <View className="absolute flex justify-center w-full h-full px-11 top-0 left-0">
