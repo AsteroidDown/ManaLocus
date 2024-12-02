@@ -1,3 +1,4 @@
+import { LostURL } from "@/constants/urls";
 import { titleCase } from "@/functions/text-manipulation";
 import { Deck } from "@/models/deck/deck";
 import React from "react";
@@ -22,7 +23,9 @@ export default function DeckCard({ deck, hideFormat }: DeckCardProps) {
       }`}
     >
       <Image
-        source={{ uri: deck.featuredArtUrl }}
+        source={{
+          uri: deck.featuredArtUrl?.length ? deck.featuredArtUrl : LostURL,
+        }}
         className="absolute w-full h-full"
       />
 
@@ -40,13 +43,15 @@ export default function DeckCard({ deck, hideFormat }: DeckCardProps) {
               thickness="bold"
               className={`px-2 py-1 bg-primary-200 bg-opacity-85 rounded-xl w-fit h-fit`}
             >
-              {titleCase(deck.format)}
+              {deck.format?.length ? titleCase(deck.format) : "TBD"}
             </Text>
           )}
 
-          <View className="px-1 py-0.5 bg-dark-100 bg-opacity-70 rounded-xl">
-            <CardText text={deck.colors} />
-          </View>
+          {deck.colors?.length > 0 && (
+            <View className="px-1 py-0.5 bg-dark-100 bg-opacity-70 rounded-xl">
+              <CardText text={deck.colors} />
+            </View>
+          )}
         </View>
 
         <View className="flex">
