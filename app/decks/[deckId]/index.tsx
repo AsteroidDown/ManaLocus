@@ -1,16 +1,23 @@
 import DeckCardGallery from "@/components/decks/deck-card-gallery";
 import DeckChangeLog from "@/components/decks/deck-change-log";
+import Graph from "@/components/graph/graph";
+import Box from "@/components/ui/box/box";
 import Button from "@/components/ui/button/button";
 import Text from "@/components/ui/text/text";
 import { BoardTypes } from "@/constants/boards";
 import { LostURL } from "@/constants/urls";
 import DeckContext from "@/contexts/deck/deck.context";
 import UserContext from "@/contexts/user/user.context";
+import { graphCardsByCost } from "@/functions/card-graphing";
 import { setLocalStorageCards } from "@/functions/local-storage/card-local-storage";
 import { currency, titleCase } from "@/functions/text-manipulation";
 import DeckService from "@/hooks/services/deck.service";
 import { DeckChange } from "@/models/deck/deck-change";
-import { faPen } from "@fortawesome/free-solid-svg-icons";
+import {
+  faChartSimple,
+  faDatabase,
+  faPen,
+} from "@fortawesome/free-solid-svg-icons";
 import { Link } from "expo-router";
 import React, { useContext, useEffect } from "react";
 import { Image, ScrollView, View } from "react-native";
@@ -19,6 +26,7 @@ export default function DeckPage() {
   const { user } = useContext(UserContext);
   const { deck } = useContext(DeckContext);
 
+  const [stacked, setStacked] = React.useState(true);
   const [changes, setChanges] = React.useState(null as DeckChange | null);
 
   const [mainCards, setMainCards] = React.useState(0);
@@ -106,10 +114,31 @@ export default function DeckPage() {
         )}
       </View>
 
-      <View className="flex flex-1 gap-4 px-11 py-8 min-h-[100vh] bg-background-100">
+      <View className="flex flex-1 gap-8 px-11 py-8 min-h-[100vh] bg-background-100">
         <DeckCardGallery deck={deck} />
 
-        {changes && <DeckChangeLog changes={changes} />}
+        <View className="flex flex-row gap-12">
+          <Box className="flex-1" shade={100}>
+            <Graph
+              readonly
+              title="Mana Curve"
+              className="flex-1"
+              stacked={stacked}
+              sets={graphCardsByCost(deck.main)}
+              titleStart={
+                <Button
+                  rounded
+                  type="clear"
+                  action="default"
+                  icon={stacked ? faDatabase : faChartSimple}
+                  onClick={() => setStacked(!stacked)}
+                />
+              }
+            />
+          </Box>
+
+          {changes && <DeckChangeLog className="flex-1" changes={changes} />}
+        </View>
       </View>
     </ScrollView>
   );
