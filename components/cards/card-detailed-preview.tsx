@@ -53,7 +53,11 @@ export default function CardDetailedPreview({
 
         {!hideLegalities && <Divider thick />}
 
-        {!hideLegalities && <CardLegalities card={card} />}
+        {!hideLegalities && (
+          <View className="mb-0">
+            <CardLegalities card={card} />
+          </View>
+        )}
       </Box>
     </Box>
   );
