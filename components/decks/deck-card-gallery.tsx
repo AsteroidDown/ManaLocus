@@ -57,7 +57,7 @@ export default function DeckCardGallery({ deck }: DeckCardGalleryProps) {
   const [sortType, setSortType] = React.useState(DeckCardGallerySortTypes.NAME);
   const [boardType, setBoardType] = React.useState(BoardTypes.MAIN);
   const [groupType, setGroupType] = React.useState(
-    "cardType" as DeckCardGalleryGroupType
+    DeckCardGalleryGroupTypes.TYPE
   );
 
   const [boardCards, setBoardCards] = React.useState(

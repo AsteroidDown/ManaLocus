@@ -3,6 +3,7 @@ import DeckChangeLog from "@/components/decks/deck-change-log";
 import Button from "@/components/ui/button/button";
 import Text from "@/components/ui/text/text";
 import { BoardTypes } from "@/constants/boards";
+import { LostURL } from "@/constants/urls";
 import DeckContext from "@/contexts/deck/deck.context";
 import UserContext from "@/contexts/user/user.context";
 import { setLocalStorageCards } from "@/functions/local-storage/card-local-storage";
@@ -51,7 +52,9 @@ export default function DeckPage() {
     <ScrollView>
       <View className="relative h-64">
         <Image
-          source={{ uri: deck.featuredArtUrl }}
+          source={{
+            uri: deck.featuredArtUrl?.length ? deck.featuredArtUrl : LostURL,
+          }}
           className="absolute h-[384px] w-[60%] top-0 right-0"
         />
 
@@ -65,7 +68,7 @@ export default function DeckPage() {
             thickness="bold"
             className={`px-2 py-1 bg-dark-200 bg-opacity-85 rounded-xl w-fit h-fit`}
           >
-            {titleCase(deck.format)}
+            {deck.format?.length ? titleCase(deck.format) : "TBD"}
           </Text>
 
           <Text thickness="bold" className="!text-5xl">
