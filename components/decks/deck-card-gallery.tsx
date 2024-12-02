@@ -4,17 +4,41 @@ import {
   groupCardsByRarity,
   groupCardsByType,
 } from "@/functions/card-grouping";
-import { sortCardsAlphabetically } from "@/functions/card-sorting";
+import {
+  sortCardsAlphabetically,
+  sortCardsByManaValue,
+  sortCardsByPrice,
+} from "@/functions/card-sorting";
 import { titleCase } from "@/functions/text-manipulation";
 import { Card } from "@/models/card/card";
 import { Deck } from "@/models/deck/deck";
-import { Link } from "expo-router";
+import { faList, faShop } from "@fortawesome/free-solid-svg-icons";
+import { useNavigation } from "expo-router";
 import React, { useEffect } from "react";
-import { View } from "react-native";
+import { Linking, Pressable, View } from "react-native";
+import CardDetailedPreview from "../cards/card-detailed-preview";
+import CardImage from "../cards/card-image";
 import CardText from "../cards/card-text";
+import Button from "../ui/button/button";
 import Divider from "../ui/divider/divider";
 import Select from "../ui/input/select";
+import Modal from "../ui/modal/modal";
 import Text from "../ui/text/text";
+
+export type DeckCardGalleryViewType = "list" | "card";
+
+export enum DeckCardGalleryViewTypes {
+  LIST = "list",
+  CARD = "card",
+}
+
+export type DeckCardGallerySortType = "name" | "mana-value" | "price";
+
+export enum DeckCardGallerySortTypes {
+  NAME = "name",
+  MANA_VALUE = "mana-value",
+  PRICE = "price",
+}
 
 export type DeckCardGalleryGroupType = "type" | "rarity" | "cost";
 
@@ -29,6 +53,8 @@ export interface DeckCardGalleryProps {
 }
 
 export default function DeckCardGallery({ deck }: DeckCardGalleryProps) {
+  const [viewType, setViewType] = React.useState(DeckCardGalleryViewTypes.LIST);
+  const [sortType, setSortType] = React.useState(DeckCardGallerySortTypes.NAME);
   const [boardType, setBoardType] = React.useState(BoardTypes.MAIN);
   const [groupType, setGroupType] = React.useState(
     "cardType" as DeckCardGalleryGroupType
@@ -58,8 +84,15 @@ export default function DeckCardGallery({ deck }: DeckCardGalleryProps) {
   useEffect(() => {
     if (!deck) return;
 
+    const sortedCards =
+      sortType === DeckCardGallerySortTypes.MANA_VALUE
+        ? sortCardsByManaValue(deck[boardType])
+        : sortType === DeckCardGallerySortTypes.PRICE
+        ? sortCardsByPrice(deck[boardType])
+        : sortCardsAlphabetically(deck[boardType]);
+
     if (groupType === DeckCardGalleryGroupTypes.RARITY) {
-      const rarityGroupedCards = groupCardsByRarity(deck[boardType]);
+      const rarityGroupedCards = groupCardsByRarity(sortedCards);
 
       setGroupedCards([
         ...(rarityGroupedCards.common?.length
@@ -76,7 +109,7 @@ export default function DeckCardGallery({ deck }: DeckCardGalleryProps) {
           : []),
       ]);
     } else if (groupType === DeckCardGalleryGroupTypes.COST) {
-      const costGroupedCards = groupCardsByCost(deck[boardType]);
+      const costGroupedCards = groupCardsByCost(sortedCards);
 
       setGroupedCards([
         ...(costGroupedCards.zero?.length
@@ -102,7 +135,7 @@ export default function DeckCardGallery({ deck }: DeckCardGalleryProps) {
           : []),
       ]);
     } else {
-      const typeGroupedCards = groupCardsByType(deck[boardType]);
+      const typeGroupedCards = groupCardsByType(sortedCards);
 
       setGroupedCards([
         ...(typeGroupedCards.creature?.length
@@ -141,44 +174,78 @@ export default function DeckCardGallery({ deck }: DeckCardGalleryProps) {
           : []),
       ]);
     }
-  }, [boardCards, boardType, groupType]);
+  }, [boardCards, sortType, groupType, boardType]);
 
   return (
     <View className="flex gap-4" style={{ zIndex: 10 }}>
-      <View className="flex flex-row gap-2" style={{ zIndex: 10 }}>
-        <Select
-          label="Grouping"
-          value={DeckCardGalleryGroupTypes.TYPE}
-          onChange={(type) => setGroupType(type)}
-          options={Object.keys(DeckCardGalleryGroupTypes).map((key) => {
-            return {
-              label: titleCase(key),
-              value: (DeckCardGalleryGroupTypes as any)[key],
-            };
-          })}
-        />
+      <View className="flex flex-row flex-wrap gap-2" style={{ zIndex: 10 }}>
+        <View className="flex-1 flex flex-row gap-2" style={{ zIndex: 10 }}>
+          <Select
+            label="View"
+            value={viewType}
+            onChange={(type) => setViewType(type)}
+            options={Object.keys(DeckCardGalleryViewTypes).map((key) => {
+              return {
+                label: titleCase(key),
+                value: (DeckCardGalleryViewTypes as any)[key],
+              };
+            })}
+          />
 
-        <Select
-          label="Board"
-          value={boardType}
-          onChange={(board) => setBoardType(board)}
-          options={Object.values(BoardTypes).map((board) => ({
-            label: titleCase(board),
-            value: board,
-          }))}
-        />
+          <Select
+            label="Sort"
+            value={sortType}
+            onChange={(type) => setSortType(type)}
+            options={Object.values(DeckCardGallerySortTypes).map((key) => ({
+              label: titleCase(key.replace("-", " ")),
+              value: key,
+            }))}
+          />
+        </View>
+
+        <View className="flex-1 flex flex-row gap-2" style={{ zIndex: 10 }}>
+          <Select
+            label="Grouping"
+            value={groupType}
+            onChange={(type) => setGroupType(type)}
+            options={Object.keys(DeckCardGalleryGroupTypes).map((key) => {
+              return {
+                label: titleCase(key),
+                value: (DeckCardGalleryGroupTypes as any)[key],
+              };
+            })}
+          />
+
+          <Select
+            label="Board"
+            value={boardType}
+            onChange={(board) => setBoardType(board)}
+            options={Object.values(BoardTypes).map((board) => ({
+              label: titleCase(board),
+              value: board,
+            }))}
+          />
+        </View>
       </View>
 
       <View className="block w-full mt-2 lg:columns-3 md:columns-2 columns-1 gap-8">
         {groupedCards?.map(({ title, cards }) => (
-          <Column key={title} title={title} cards={cards} />
+          <Column key={title} title={title} viewType={viewType} cards={cards} />
         ))}
       </View>
     </View>
   );
 }
 
-function Column({ title, cards }: { title: string; cards?: Card[] }) {
+function Column({
+  title,
+  cards,
+  viewType,
+}: {
+  title: string;
+  cards?: Card[];
+  viewType: DeckCardGalleryViewType;
+}) {
   return (
     <View className="w-full break-inside-avoid mb-6">
       <View className="flex flex-row justify-between items-center px-2">
@@ -193,27 +260,103 @@ function Column({ title, cards }: { title: string; cards?: Card[] }) {
 
       <View className="flex gap-0.5">
         {cards?.map((card, index) => (
-          <DeckCardHeader key={index} card={card} />
+          <DeckCard
+            key={index}
+            card={card}
+            last={index === cards.length - 1}
+            viewType={viewType}
+          />
         ))}
       </View>
     </View>
   );
 }
 
-function DeckCardHeader({ card }: { card: Card }) {
-  return (
-    <Link
-      href={`cards/${card.set}/${card.collectorNumber}`}
-      className="flex flex-row gap-2 justify-between items-center px-2 py-0.5 rounded-full hover:bg-primary-200 transition-all duration-300"
-    >
-      <View className="flex-1 flex flex-row items-center gap-2">
-        <Text>{card.count}</Text>
-        <Text truncate thickness="medium">
-          {card.name}
-        </Text>
-      </View>
+function DeckCard({
+  card,
+  last,
+  viewType,
+}: {
+  card: Card;
+  last: boolean;
+  viewType: DeckCardGalleryViewType;
+}) {
+  const navigation = useNavigation();
 
-      <CardText text={card.manaCost} />
-    </Link>
+  const [open, setOpen] = React.useState(false);
+  const [hovered, setHovered] = React.useState(false);
+
+  return (
+    <>
+      {viewType === DeckCardGalleryViewTypes.LIST && (
+        <Pressable
+          className="flex flex-row gap-2 justify-between items-center px-2 py-0.5 rounded-full hover:bg-primary-200 transition-all duration-300"
+          onPress={() => setOpen(true)}
+        >
+          <View className="flex-1 flex flex-row items-center gap-2">
+            <Text>{card.count}</Text>
+            <Text truncate thickness="medium">
+              {card.name}
+            </Text>
+          </View>
+
+          <CardText text={card.manaCost} />
+        </Pressable>
+      )}
+
+      {viewType === DeckCardGalleryViewTypes.CARD && (
+        <Pressable
+          onPress={() => setOpen(true)}
+          onPointerEnter={() => setHovered(true)}
+          onPointerLeave={() => setHovered(false)}
+          className={`${hovered ? "z-[100]" : "z-0"} ${
+            !last ? "max-h-8" : ""
+          } max-w-fit mx-auto`}
+        >
+          <CardImage card={card} />
+        </Pressable>
+      )}
+
+      <View className="-mt-0.5">
+        <Modal open={open} setOpen={setOpen}>
+          <CardDetailedPreview card={card} className="!p-0">
+            <View className="flex flex-row gap-2">
+              <Button
+                size="sm"
+                action="info"
+                className="flex-1"
+                icon={faShop}
+                text={`$${card.prices?.usd}`}
+                onClick={async () =>
+                  card.priceUris?.tcgplayer &&
+                  (await Linking.openURL(card.priceUris.tcgplayer))
+                }
+              />
+
+              <Button
+                size="sm"
+                action="info"
+                className="flex-1"
+                icon={faShop}
+                text={`€${card.prices?.eur}`}
+                onClick={async () =>
+                  card.priceUris?.cardmarket &&
+                  (await Linking.openURL(card.priceUris.cardmarket))
+                }
+              />
+            </View>
+
+            <Button
+              text="More Details"
+              className="flex-1 w-full"
+              icon={faList}
+              // onClick={() =>
+              //   navigation.navigate(`cards/${card.set}/${card.collectorNumber}`)
+              // }
+            />
+          </CardDetailedPreview>
+        </Modal>
+      </View>
+    </>
   );
 }
