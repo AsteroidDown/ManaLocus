@@ -42,10 +42,8 @@ export default function Select({
       (option) => option.label.toLowerCase() === search.toLowerCase()
     );
 
-    if (foundOption) {
-      setFilteredOptions(options);
-      setSearch(foundOption.label);
-    } else {
+    if (foundOption) selectOption(foundOption);
+    else {
       const filteredOptions = options.filter((option) =>
         option.label.toLowerCase().includes(search.toLowerCase())
       );
