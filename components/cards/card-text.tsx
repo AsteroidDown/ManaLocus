@@ -8,6 +8,8 @@ export interface CardTextProps {
 }
 
 export default function CardText({ text, flavor }: CardTextProps) {
+  if (!text) return;
+
   const lines = text.split("\n").map((line) => {
     let add = true;
     let value: string | undefined = undefined;

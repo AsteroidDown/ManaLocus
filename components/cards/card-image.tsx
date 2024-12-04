@@ -119,7 +119,7 @@ export default function CardImage({
     if (backLoaded) {
       return (
         <Image
-          source={{ uri: card?.faces?.back.imageUris?.png }}
+          source={{ uri: card?.faces?.back?.imageUris?.png }}
           style={[{ resizeMode: "contain" }]}
           className={`max-h-[350px] aspect-[2.5/3.5] rounded-xl h-full`}
         />
@@ -130,7 +130,7 @@ export default function CardImage({
 
     return (
       <Image
-        source={{ uri: card?.faces?.back.imageUris?.png }}
+        source={{ uri: card?.faces?.back?.imageUris?.png }}
         style={[{ resizeMode: "contain" }]}
         className={`max-h-[350px] aspect-[2.5/3.5] rounded-xl ${
           backLoading ? "!h-0" : "h-full"
@@ -149,7 +149,7 @@ export default function CardImage({
         }}
       />
     );
-  }, [card?.faces?.back.imageUris?.png, onScreen, backLoaded]);
+  }, [card?.faces?.back?.imageUris?.png, onScreen, backLoaded]);
 
   useEffect(() => setShowFront(true), [card]);
 
@@ -167,14 +167,14 @@ export default function CardImage({
       onFocus={() => (focusable ? setFocused(true) : null)}
     >
       <View ref={ref} className={baseClasses}>
-        {card && !card.faces?.back.imageUris.png && (
+        {card && !card.faces?.back?.imageUris?.png && (
           <>
             {frontLoading && imagePlaceHolder}
             {cardImage}
           </>
         )}
 
-        {card && card.faces?.back.imageUris.png && (
+        {card && card.faces?.back?.imageUris?.png && (
           <View className="bg-transparent w-full h-full">
             <View
               className="relative w-full h-full transition-all duration-700"

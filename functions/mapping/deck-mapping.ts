@@ -83,7 +83,42 @@ function mapDatabaseCardToCard(card: any): Card {
     lang: card.lang,
 
     imageURIs: card.imageURIs,
-    faces: card.faces,
+    faces: card.faces?.length
+      ? {
+          front: {
+            name: card.faces[0].name,
+            manaCost: card.faces[0]?.mana_cost,
+            typeLine: card.faces[0].type_line,
+            power: card.faces[0]?.power,
+            toughness: card.faces[0]?.toughness,
+            loyalty: card.faces[0]?.loyalty,
+            defense: card.faces[0]?.defense,
+            oracleText: card.faces[0].oracle_text,
+            flavorText: card.faces[0].flavor_text,
+            imageUris: card.faces[0].image_uris,
+            artist: card.faces[0].artist,
+            frameEffects: card.faces[0].frame_effects
+              ? JSON.parse(card.faces[0].frame_effects.replace(/'/g, '"'))
+              : [],
+          },
+          back: {
+            name: card.faces[1].name,
+            manaCost: card.faces[1]?.mana_cost,
+            typeLine: card.faces[1].type_line,
+            power: card.faces[1].power,
+            toughness: card.faces[1].toughness,
+            loyalty: card.faces[1]?.loyalty,
+            defense: card.faces[1]?.defense,
+            oracleText: card.faces[1].oracle_text,
+            flavorText: card.faces[1].flavor_text,
+            imageUris: card.faces[1].image_uris,
+            artist: card.faces[1].artist,
+            frameEffects: card.faces[1].frame_effects
+              ? JSON.parse(card.faces[1].frame_effects.replace(/'/g, '"'))
+              : [],
+          },
+        }
+      : null,
     prices: {
       usd: card.prices?.usd ? Number(card.prices.usd) : null,
       usdFoil: card.prices?.usdFoil ? Number(card.prices.usdFoil) : null,
