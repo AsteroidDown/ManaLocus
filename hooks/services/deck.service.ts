@@ -1,18 +1,20 @@
 import { mapDatabaseDeck } from "@/functions/mapping/deck-mapping";
-import { Deck, DeckDTO } from "@/models/deck/deck";
+import { Deck } from "@/models/deck/deck";
 import { DeckChange } from "@/models/deck/deck-change";
+import { DeckFiltersDTO } from "@/models/deck/dtos/deck-filters.dto";
+import { DeckDTO } from "@/models/deck/dtos/deck.dto";
 import API from "../api-methods/api-methods";
 
-async function getPublic() {
-  return await API.get(`decks/public`)
+async function getMany(filters: DeckFiltersDTO) {
+  return await API.get(`decks/`, { ...filters })
     .then((decks) => decks.map((deck: any) => mapDatabaseDeck(deck)))
     .catch((error) =>
-      console.error(`Error retrieving public decks.\nError: ${error}`)
+      console.error(`Error retrieving decks.\nError: ${error}`)
     );
 }
 
-async function get(deckId: string, publicDecks?: boolean): Promise<Deck> {
-  return await API.get(`decks/${publicDecks ? "public/" : ""}`, { id: deckId })
+async function get(deckId: string): Promise<Deck> {
+  return await API.get(`decks/${deckId}`)
     .then((data) => {
       return mapDatabaseDeck(data, true) as any;
     })
@@ -24,11 +26,8 @@ async function get(deckId: string, publicDecks?: boolean): Promise<Deck> {
 }
 
 async function getByUser(userId: string, includePrivate?: boolean) {
-  return await API.get(`decks/`, {
-    params: {
-      userId,
-      includePrivate: includePrivate ? "true" : "false",
-    },
+  return await API.get(`user-decks/${userId}`, {
+    includePrivate: includePrivate ? "true" : "false",
   })
     .then((decks) => decks.map((deck: any) => mapDatabaseDeck(deck)))
     .catch((error) =>
@@ -55,7 +54,7 @@ async function create(data: DeckDTO) {
 }
 
 async function update(deckId: string, data: DeckDTO) {
-  return await API.patch(`decks/`, { id: deckId, ...data }, true).catch(
+  return await API.patch(`decks/${deckId}/`, { ...data }, true).catch(
     (error) => {
       console.error(
         `Error updating deck with id: (${deckId}).\nError: ${error}`
@@ -72,7 +71,7 @@ async function remove(deckId: string) {
 
 const DeckService = {
   get,
-  getPublic,
+  getMany,
   getByUser,
   getChanges,
   create,

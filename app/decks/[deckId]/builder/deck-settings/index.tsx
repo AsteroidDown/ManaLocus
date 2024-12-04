@@ -13,7 +13,7 @@ import { getDeckColors, sortColors } from "@/functions/mtg-colors/mtg-colors";
 import { titleCase } from "@/functions/text-manipulation";
 import DeckService from "@/hooks/services/deck.service";
 import { Card } from "@/models/card/card";
-import { DeckDTO } from "@/models/deck/deck";
+import { DeckDTO } from "@/models/deck/dtos/deck.dto";
 import React, { useContext, useEffect } from "react";
 import { Image, View } from "react-native";
 

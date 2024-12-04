@@ -34,16 +34,3 @@ export interface DeckCard {
   count: number;
   board: BoardType;
 }
-
-export interface DeckDTO {
-  name?: string;
-  description?: string;
-
-  private?: boolean;
-  format?: MTGFormat;
-
-  colors?: string;
-  featuredArtUrl?: string;
-
-  cards?: DeckCard[];
-}
