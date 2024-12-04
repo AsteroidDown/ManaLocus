@@ -1,8 +1,10 @@
 import DeckCardGallery from "@/components/decks/deck-card-gallery";
 import DeckChangeLog from "@/components/decks/deck-change-log";
+import DeckExampleHand from "@/components/decks/deck-example-hand";
 import Graph from "@/components/graph/graph";
 import Box from "@/components/ui/box/box";
 import Button from "@/components/ui/button/button";
+import Divider from "@/components/ui/divider/divider";
 import Text from "@/components/ui/text/text";
 import { BoardTypes } from "@/constants/boards";
 import { LostURL } from "@/constants/urls";
@@ -117,6 +119,8 @@ export default function DeckPage() {
       <View className="flex flex-1 gap-8 px-11 py-8 min-h-[100vh] bg-background-100">
         <DeckCardGallery deck={deck} />
 
+        <Divider thick className="!border-background-200" />
+
         <View className="flex flex-row gap-12">
           <Box className="flex-1" shade={100}>
             <Graph
@@ -139,6 +143,8 @@ export default function DeckPage() {
 
           {changes && <DeckChangeLog className="flex-1" changes={changes} />}
         </View>
+
+        <DeckExampleHand deck={deck} />
       </View>
     </ScrollView>
   );
