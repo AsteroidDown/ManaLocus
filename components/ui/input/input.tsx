@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { TextInput, View } from "react-native";
 import Text from "../text/text";
 
@@ -21,8 +21,25 @@ export default function Input({
   value,
   onChange,
 }: InputProps) {
+  const [text, setText] = React.useState(value ?? "");
+
   const [hovered, setHovered] = React.useState(false);
   const [focused, setFocused] = React.useState(false);
+
+  const [initial, setInitial] = React.useState(true);
+
+  useEffect(() => {
+    const delayDebounceFn = setTimeout(() => {
+      if (!text && value && initial) {
+        setText(value);
+        setInitial(false);
+      }
+
+      onChange(text);
+    }, 300);
+
+    return () => clearTimeout(delayDebounceFn);
+  }, [value, text]);
 
   return (
     <View
@@ -38,7 +55,7 @@ export default function Input({
 
       <View className="flex-1 flex flex-row gap-2">
         <TextInput
-          value={value}
+          value={text}
           multiline={multiline}
           placeholder={placeholder}
           tabIndex={disabled ? -1 : 0}
@@ -53,7 +70,7 @@ export default function Input({
           } ${disabled ? "!border-background-100" : ""} ${
             multiline ? "min-h-24" : "h-10"
           } flex-1 px-3 py-2 color-white rounded-lg text-base border-2 border-background-200 focus:border-primary-300 outline-none transition-all`}
-          onChangeText={onChange}
+          onChangeText={setText}
           onFocus={() => setFocused(true)}
           onBlur={() => setFocused(false)}
         />
