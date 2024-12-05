@@ -4,10 +4,13 @@ import {
 } from "@/functions/card-sorting";
 import { Card } from "@/models/card/card";
 import { Deck } from "@/models/deck/deck";
+import { faList, faShop } from "@fortawesome/free-solid-svg-icons";
 import React, { useEffect } from "react";
-import { View } from "react-native";
+import { Linking, View } from "react-native";
+import CardDetailedPreview from "../cards/card-detailed-preview";
 import CardImage from "../cards/card-image";
 import Button from "../ui/button/button";
+import Modal from "../ui/modal/modal";
 import Text from "../ui/text/text";
 
 export interface DeckTestHandProps {
@@ -90,14 +93,60 @@ export default function DeckExampleHand({ deck }: DeckTestHandProps) {
       <View className="flex flex-row justify-center">
         <View style={{ maxWidth }} className="flex flex-row w-full">
           {handCards.map((card, index) => (
-            <View
-              key={index}
-              className="flex-1 flex flex-row justify-center hover:z-10 z-0"
-            >
-              <CardImage card={card} />
-            </View>
+            <HandCard key={index} card={card} />
           ))}
         </View>
+      </View>
+    </View>
+  );
+}
+
+export function HandCard({ card }: { card: Card }) {
+  const [open, setOpen] = React.useState(false);
+
+  return (
+    <View className="flex-1 flex flex-row justify-center hover:z-10 z-0">
+      <CardImage card={card} onClick={() => setOpen(true)} />
+
+      <View className="-mt-0.5">
+        <Modal open={open} setOpen={setOpen}>
+          <CardDetailedPreview card={card} className="!p-0">
+            <View className="flex flex-row gap-2">
+              <Button
+                size="sm"
+                action="info"
+                className="flex-1"
+                icon={faShop}
+                text={`$${card.prices?.usd}`}
+                onClick={async () =>
+                  card.priceUris?.tcgplayer &&
+                  (await Linking.openURL(card.priceUris.tcgplayer))
+                }
+              />
+
+              <Button
+                size="sm"
+                action="info"
+                className="flex-1"
+                icon={faShop}
+                text={`€${card.prices?.eur}`}
+                onClick={async () =>
+                  card.priceUris?.cardmarket &&
+                  (await Linking.openURL(card.priceUris.cardmarket))
+                }
+              />
+            </View>
+
+            <Button
+              text="More Details"
+              className="flex-1 w-full"
+              icon={faList}
+              // onClick={() =>
+              //   navigation.navigate(`cards/${card.set}/${card.collectorNumber}`)
+              // }
+            />
+          </CardDetailedPreview>
+        </Modal>
       </View>
     </View>
   );
