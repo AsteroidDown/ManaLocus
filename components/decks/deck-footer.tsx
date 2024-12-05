@@ -20,7 +20,10 @@ export default function DeckFooter({ deck }: { deck: Deck }) {
     setMainCards(deck.main.reduce((acc, card) => acc + card.count, 0));
     setSideCards(deck.side.reduce((acc, card) => acc + card.count, 0));
     setTotalValue(
-      deck.main.reduce((acc, card) => acc + (card.prices?.usd ?? 0), 0)
+      deck.main.reduce(
+        (acc, card) => acc + (card.prices?.usd ?? 0) * card.count,
+        0
+      )
     );
   }, [deck]);
 
