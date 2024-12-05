@@ -14,11 +14,12 @@ import {
   setLocalStorageCards,
 } from "@/functions/local-storage/card-local-storage";
 import ScryfallService from "@/hooks/services/scryfall.service";
-import { CardIdentifier } from "@/models/card/card";
+import { Card, CardIdentifier } from "@/models/card/card";
 import {
   faCheck,
   faFileArrowDown,
   faFileArrowUp,
+  faFilter,
   faInfoCircle,
   faRotate,
 } from "@fortawesome/free-solid-svg-icons";
@@ -36,14 +37,24 @@ import Modal from "../ui/modal/modal";
 export interface CardImportExportModalProps {
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+
+  exportOnly?: boolean;
+  exportCards?: Card[];
+  exportSideboard?: Card[];
 }
 
 export default function CardImportExportModal({
   open,
   setOpen,
+
+  exportOnly = false,
+  exportCards,
+  exportSideboard,
 }: CardImportExportModalProps) {
   const { board } = useContext(BoardContext);
   const { setStoredCards } = useContext(StoredCardsContext);
+
+  const [filtersOpen, setFiltersOpen] = React.useState(false);
 
   const [colorSort, setColorSort] = React.useState(false);
   const [manaValueSort, setManaValueSort] = React.useState(
@@ -85,11 +96,16 @@ export default function CardImportExportModal({
 
   function getCardsForExport() {
     let decklist = filterCards(
-      sortCards(getLocalStorageStoredCards(board), {
-        alphabeticalSort,
-        manaValueSort,
-        colorSort,
-      }),
+      sortCards(
+        exportOnly && exportCards?.length
+          ? exportCards
+          : getLocalStorageStoredCards(board),
+        {
+          alphabeticalSort,
+          manaValueSort,
+          colorSort,
+        }
+      ),
       {
         colorFilter,
         typeFilter,
@@ -104,12 +120,21 @@ export default function CardImportExportModal({
       )
       .join("\n");
 
-    if (board === BoardTypes.SIDE || board === BoardTypes.MAIN) {
-      const sideBoardCards = sortCards(getLocalStorageStoredCards("side"), {
-        alphabeticalSort,
-        manaValueSort,
-        colorSort,
-      });
+    if (
+      board === BoardTypes.SIDE ||
+      board === BoardTypes.MAIN ||
+      (exportOnly && exportSideboard?.length)
+    ) {
+      const sideBoardCards = sortCards(
+        exportOnly && exportSideboard?.length
+          ? exportSideboard
+          : getLocalStorageStoredCards("side"),
+        {
+          alphabeticalSort,
+          manaValueSort,
+          colorSort,
+        }
+      );
 
       if (sideBoardCards.length > 0) {
         decklist = "Deck\n" + decklist + "\n\nSideboard";
@@ -243,81 +268,98 @@ export default function CardImportExportModal({
   return (
     <Modal open={open} setOpen={setOpen}>
       <View className="flex gap-4 max-w-2xl max-h-[80vh]">
-        <Text size="xl" thickness="bold">
-          Import/Export Cards
-        </Text>
-
-        <View className="flex-1 flex gap-3 overflow-y-auto">
-          <View className="flex gap-2 ">
-            <Text size="md" thickness="bold">
-              Colors to Include
-            </Text>
-
-            <Divider thick />
-
-            <ColorFilter
-              flat
-              excludeMono
-              colorFilters={colorFilter}
-              setColorFilters={setColorFilter}
-            />
-          </View>
-
-          <View className="flex gap-2 ">
-            <Text size="md" thickness="bold">
-              Types to Filter By
-            </Text>
-
-            <Divider thick />
-
-            <TypeFilter
-              flat
-              typeFilters={typeFilter}
-              setTypeFilters={setTypeFilter}
-            />
-          </View>
-
-          <View className="flex gap-2 ">
-            <Text size="md" thickness="bold">
-              Rarities to Filter By
-            </Text>
-
-            <Divider thick />
-
-            <RarityFilter
-              flat
-              rarityFilters={rarityFilter}
-              setRarityFilters={setRarityFilter}
-            />
-          </View>
-
-          <Text size="md" thickness="bold">
-            Sort By
+        <View className="flex flex-row justify-between gap-2">
+          <Text size="xl" thickness="bold">
+            {!exportOnly && "Import/"}Export Cards
           </Text>
 
-          <Divider thick />
+          <Button
+            rounded
+            icon={faFilter}
+            type={filtersOpen ? "outlined" : "clear"}
+            onClick={() => setFiltersOpen(!filtersOpen)}
+          />
+        </View>
 
-          <View className="flex flex-row gap-2 items-center">
-            <SortingFilter
-              className="flex-1"
-              title="Mana Value"
-              sortDirection={manaValueSort}
-              setSortDirection={setManaValueSort}
-            />
+        <View className="flex-1 flex gap-3 -mt-2 overflow-y-auto">
+          <View
+            className={`${
+              filtersOpen ? "max-h-[1000px]" : "max-h-0 -mt-3"
+            } flex gap-3 overflow-hidden transition-all duration-300`}
+          >
+            <View className="flex gap-2 ">
+              <Text size="md" thickness="bold">
+                Colors to Include
+              </Text>
 
-            <SortingFilter
-              className="flex-1"
-              title="Name"
-              sortDirection={alphabeticalSort}
-              setSortDirection={setAlphabeticalSort}
-            />
+              <Divider thick />
 
-            <Chip
-              className="flex-1"
-              text="Color"
-              type={colorSort ? "default" : "outlined"}
-              onClick={() => setColorSort(!colorSort)}
-            />
+              <ColorFilter
+                flat
+                excludeMono
+                colorFilters={colorFilter}
+                setColorFilters={setColorFilter}
+              />
+            </View>
+
+            <View className="flex gap-2 ">
+              <Text size="md" thickness="bold">
+                Types to Filter By
+              </Text>
+
+              <Divider thick />
+
+              <TypeFilter
+                flat
+                typeFilters={typeFilter}
+                setTypeFilters={setTypeFilter}
+              />
+            </View>
+
+            <View className="flex gap-2 ">
+              <Text size="md" thickness="bold">
+                Rarities to Filter By
+              </Text>
+
+              <Divider thick />
+
+              <RarityFilter
+                flat
+                rarityFilters={rarityFilter}
+                setRarityFilters={setRarityFilter}
+              />
+            </View>
+
+            <View className="flex gap-2 ">
+              <Text size="md" thickness="bold">
+                Sort By
+              </Text>
+
+              <Divider thick />
+
+              <View className="flex flex-row gap-2 items-center">
+                <SortingFilter
+                  className="flex-1"
+                  title="Mana Value"
+                  sortDirection={manaValueSort}
+                  setSortDirection={setManaValueSort}
+                />
+
+                <SortingFilter
+                  className="flex-1"
+                  title="Name"
+                  sortDirection={alphabeticalSort}
+                  setSortDirection={setAlphabeticalSort}
+                />
+
+                <Chip
+                  className="flex-1"
+                  text="Color"
+                  type={colorSort ? "default" : "outlined"}
+                  onClick={() => setColorSort(!colorSort)}
+                />
+              </View>
+            </View>
           </View>
 
           <View className="bg-background-100 p-4 rounded-xl overflow-hidden">
@@ -336,34 +378,36 @@ export default function CardImportExportModal({
         </View>
 
         <View className="flex flex-row flex-wrap justify-center gap-3">
-          <Button
-            rounded
-            type="outlined"
-            className="flex-1 min-w-[250px]"
-            disabled={disabled}
-            action={success ? "success" : error ? "danger" : "primary"}
-            icon={
-              disabled
-                ? faRotate
-                : success
-                ? faCheck
-                : error
-                ? faInfoCircle
-                : faFileArrowDown
-            }
-            text={
-              disabled
-                ? "Importing..."
-                : success
-                ? "Cards Imported!"
-                : error
-                ? "Error Importing Cards!"
-                : "Import from Clipboard"
-            }
-            onClick={async () =>
-              getCardsFromImport(await navigator.clipboard.readText())
-            }
-          />
+          {!exportOnly && (
+            <Button
+              rounded
+              type="outlined"
+              className="flex-1 min-w-[250px]"
+              disabled={disabled}
+              action={success ? "success" : error ? "danger" : "primary"}
+              icon={
+                disabled
+                  ? faRotate
+                  : success
+                  ? faCheck
+                  : error
+                  ? faInfoCircle
+                  : faFileArrowDown
+              }
+              text={
+                disabled
+                  ? "Importing..."
+                  : success
+                  ? "Cards Imported!"
+                  : error
+                  ? "Error Importing Cards!"
+                  : "Import from Clipboard"
+              }
+              onClick={async () =>
+                getCardsFromImport(await navigator.clipboard.readText())
+              }
+            />
+          )}
 
           <Button
             rounded
