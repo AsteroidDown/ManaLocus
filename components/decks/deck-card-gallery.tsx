@@ -12,12 +12,17 @@ import {
 import { titleCase } from "@/functions/text-manipulation";
 import { Card } from "@/models/card/card";
 import { Deck } from "@/models/deck/deck";
-import { faList, faShop } from "@fortawesome/free-solid-svg-icons";
+import {
+  faFileArrowDown,
+  faList,
+  faShop,
+} from "@fortawesome/free-solid-svg-icons";
 import { useNavigation } from "expo-router";
 import React, { useEffect } from "react";
 import { Linking, Pressable, View } from "react-native";
 import CardDetailedPreview from "../cards/card-detailed-preview";
 import CardImage from "../cards/card-image";
+import CardImportExportModal from "../cards/card-import-export-modal";
 import CardText from "../cards/card-text";
 import Button from "../ui/button/button";
 import Divider from "../ui/divider/divider";
@@ -53,6 +58,8 @@ export interface DeckCardGalleryProps {
 }
 
 export default function DeckCardGallery({ deck }: DeckCardGalleryProps) {
+  const [importOpen, setImportOpen] = React.useState(false);
+
   const [viewType, setViewType] = React.useState(DeckCardGalleryViewTypes.LIST);
   const [sortType, setSortType] = React.useState(DeckCardGallerySortTypes.NAME);
   const [boardType, setBoardType] = React.useState(BoardTypes.MAIN);
@@ -178,7 +185,35 @@ export default function DeckCardGallery({ deck }: DeckCardGalleryProps) {
 
   return (
     <View className="flex gap-4" style={{ zIndex: 10 }}>
-      <View className="flex flex-row flex-wrap gap-2" style={{ zIndex: 10 }}>
+      <View className="flex flex-row gap-2">
+        <Button
+          rounded
+          type="clear"
+          icon={faFileArrowDown}
+          onClick={() => setImportOpen(true)}
+        />
+
+        <CardImportExportModal
+          exportOnly
+          open={importOpen}
+          setOpen={setImportOpen}
+          exportCards={
+            boardType === BoardTypes.MAIN || boardType === BoardTypes.SIDE
+              ? boardCards[BoardTypes.MAIN]
+              : boardCards[boardType]
+          }
+          exportSideboard={
+            boardType === BoardTypes.MAIN || boardType === BoardTypes.SIDE
+              ? boardCards[BoardTypes.SIDE]
+              : []
+          }
+        />
+      </View>
+
+      <View
+        className="flex-1 flex flex-row flex-wrap gap-2"
+        style={{ zIndex: 10 }}
+      >
         <View className="flex-1 flex flex-row gap-2" style={{ zIndex: 10 }}>
           <Select
             label="View"
