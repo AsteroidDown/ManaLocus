@@ -42,7 +42,7 @@ export default function TabLayout() {
 
     setDashboard(getLocalStorageDashboard());
 
-    DeckService.get(deck.id, true).then((deck) => {
+    DeckService.get(deck.id).then((deck) => {
       ScryfallService.getCardsFromCollection(
         deck.main.reduce((acc, card) => {
           const identifiers = [];

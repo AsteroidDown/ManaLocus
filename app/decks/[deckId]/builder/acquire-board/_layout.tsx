@@ -8,6 +8,7 @@ import { BoardType, BoardTypes } from "@/constants/boards";
 import BoardContext from "@/contexts/cards/board.context";
 import CardPreferencesContext from "@/contexts/cards/card-preferences.context";
 import StoredCardsContext from "@/contexts/cards/stored-cards.context";
+import DeckContext from "@/contexts/deck/deck.context";
 import { getLocalStorageStoredCards } from "@/functions/local-storage/card-local-storage";
 import {
   getLocalStoragePreferences,
@@ -24,6 +25,10 @@ import React, { useContext, useEffect } from "react";
 import { ScrollView, View } from "react-native";
 
 export default function AcquireBoardLayout() {
+  const { deck } = useContext(DeckContext);
+
+  if (!deck) return;
+
   const { setStoredCards } = useContext(StoredCardsContext);
   const { setPreferences } = useContext(CardPreferencesContext);
 
@@ -37,15 +42,19 @@ export default function AcquireBoardLayout() {
   const tabs: TabProps[] = [
     {
       title: "Mana Value",
-      link: "builder/acquire-board",
+      link: `decks/${deck.id}/builder/acquire-board`,
       name: "cost",
     },
     {
       title: "Color",
-      link: "builder/acquire-board/color",
+      link: `decks/${deck.id}/builder/acquire-board/color`,
       name: "color",
     },
-    { title: "Type", link: "builder/acquire-board/type", name: "type" },
+    {
+      title: "Type",
+      link: `decks/${deck.id}/builder/acquire-board/type`,
+      name: "type",
+    },
   ];
 
   useEffect(() => {

@@ -8,6 +8,7 @@ import { BoardType, BoardTypes } from "@/constants/boards";
 import BoardContext from "@/contexts/cards/board.context";
 import CardPreferencesContext from "@/contexts/cards/card-preferences.context";
 import StoredCardsContext from "@/contexts/cards/stored-cards.context";
+import DeckContext from "@/contexts/deck/deck.context";
 import { getLocalStorageStoredCards } from "@/functions/local-storage/card-local-storage";
 import {
   getLocalStoragePreferences,
@@ -24,6 +25,10 @@ import React, { useContext, useEffect } from "react";
 import { ScrollView, View } from "react-native";
 
 export default function CardsLayout() {
+  const { deck } = useContext(DeckContext);
+
+  if (!deck) return;
+
   const { setStoredCards } = useContext(StoredCardsContext);
   const { setPreferences } = useContext(CardPreferencesContext);
 
@@ -35,9 +40,21 @@ export default function CardsLayout() {
   const [condensed, setCondensed] = React.useState(false);
 
   const tabs: TabProps[] = [
-    { title: "Mana Value", link: "builder/main-board", name: "cost" },
-    { title: "Color", link: "builder/main-board/color", name: "color" },
-    { title: "Type", link: "builder/main-board/type", name: "type" },
+    {
+      title: "Mana Value",
+      link: `decks/${deck.id}/builder/main-board`,
+      name: "cost",
+    },
+    {
+      title: "Color",
+      link: `decks/${deck.id}/builder/main-board/color`,
+      name: "color",
+    },
+    {
+      title: "Type",
+      link: `decks/${deck.id}/builder/main-board/type`,
+      name: "type",
+    },
   ];
 
   useEffect(() => {
