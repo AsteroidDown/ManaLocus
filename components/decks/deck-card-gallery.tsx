@@ -337,7 +337,15 @@ function DeckCard({
             </Text>
           </View>
 
-          <CardText text={card.manaCost} />
+          <CardText
+            text={
+              card.faces
+                ? card.faces.front.manaCost && card.faces.back.manaCost
+                  ? `${card.faces.front.manaCost} // ${card.faces.back.manaCost}`
+                  : card.faces.front.manaCost || card.faces.back.manaCost
+                : card.manaCost
+            }
+          />
         </Pressable>
       )}
 
