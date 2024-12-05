@@ -29,7 +29,7 @@ export default function Login() {
   return (
     <SafeAreaView className="flex-1 flex w-full h-full bg-dark-100">
       <ScrollView>
-        <View className="flex-1 flex gap-4 w-full min-h-[100vh] px-11 py-8 bg-background-100">
+        <View className="flex-1 flex gap-4 w-full min-h-[100vh] px-16 py-8 bg-background-100">
           <View className="flex flex-row justify-between">
             <Text size="2xl" thickness="medium">
               {user?.name}

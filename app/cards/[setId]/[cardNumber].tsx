@@ -26,7 +26,7 @@ export default function SetPage() {
 
   return (
     <ScrollView>
-      <View className="flex flex-1 gap-4 px-11 py-8 min-h-[100vh] bg-background-100">
+      <View className="flex flex-1 gap-4 px-16 py-8 min-h-[100vh] bg-background-100">
         <View className="flex items-center bg-background-100 pt-6">
           <View className="flex flex-row flex-wrap gap-4 max-w-full">
             <CardDetailedPreview
