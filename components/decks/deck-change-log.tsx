@@ -1,5 +1,7 @@
 import { BoardType, BoardTypes } from "@/constants/boards";
 import { titleCase } from "@/functions/text-manipulation";
+import DeckService from "@/hooks/services/deck.service";
+import { Deck } from "@/models/deck/deck";
 import { DeckCardChange, DeckChange } from "@/models/deck/deck-change";
 import moment from "moment";
 import React, { useEffect } from "react";
@@ -15,13 +17,12 @@ export interface DeckChangeTime {
 }
 
 export type DeckChangeLogProps = ViewProps & {
-  changes: DeckChange;
+  deck: Deck;
 };
 
-export default function DeckChangeLog({
-  changes,
-  className,
-}: DeckChangeLogProps) {
+export default function DeckChangeLog({ deck, className }: DeckChangeLogProps) {
+  const [changes, setChanges] = React.useState(null as DeckChange | null);
+
   const [boardChanges, setBoardChanges] = React.useState(
     [] as DeckChangeTime[][]
   );
@@ -29,7 +30,13 @@ export default function DeckChangeLog({
   const [openIndex, setOpenIndex] = React.useState(-1);
 
   useEffect(() => {
-    if (!changes) return;
+    if (!deck) return;
+
+    DeckService.getChanges(deck.id).then((changes) => setChanges(changes));
+  }, [deck]);
+
+  useEffect(() => {
+    if (!deck || !changes) return;
 
     setBoardChanges(
       [
