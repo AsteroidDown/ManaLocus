@@ -1,4 +1,7 @@
-import { sortCardsByManaValue } from "@/functions/card-sorting";
+import {
+  sortCardsAlphabetically,
+  sortCardsByManaValue,
+} from "@/functions/card-sorting";
 import { Card } from "@/models/card/card";
 import { Deck } from "@/models/deck/deck";
 import React, { useEffect } from "react";
@@ -47,7 +50,7 @@ export default function DeckExampleHand({ deck }: DeckTestHandProps) {
       deckCards.splice(randomNumber, 1);
     }
 
-    setHandCards(sortCardsByManaValue(handCards));
+    setHandCards(sortCardsByManaValue(sortCardsAlphabetically(handCards)));
     setDeckCards(deckCards);
   }
 
