@@ -28,7 +28,7 @@ export default function DeckFooter({ deck }: { deck: Deck }) {
   }, [deck]);
 
   return (
-    <View className="sticky bottom-0 flex flex-row gap-4 justify-between items-center px-16 py-4 max-h-14 bg-primary-200">
+    <View className="sticky bottom-0 flex flex-row gap-4 justify-between items-center px-16 py-4 max-h-14 bg-gradient-to-b from-primary-200 to-primary-100 shadow-[0_0_16px] shadow-background-100">
       <View className="flex flex-row items-center gap-2">
         <Text size="sm">
           {mainCards} Card Mainboard
