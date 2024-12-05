@@ -1,7 +1,4 @@
-import {
-  sortCardsAlphabetically,
-  sortCardsByManaValue,
-} from "@/functions/card-sorting";
+import { sortCardsByManaValue } from "@/functions/card-sorting";
 import { Card } from "@/models/card/card";
 import { Deck } from "@/models/deck/deck";
 import React, { useEffect } from "react";
@@ -17,59 +14,52 @@ export interface DeckTestHandProps {
 export default function DeckExampleHand({ deck }: DeckTestHandProps) {
   const [maxWidth, setMaxWidth] = React.useState(0);
 
-  const [selectedNumbers, setSelectedNumbers] = React.useState([] as number[]);
-  const [selectedCards, setSelectedCards] = React.useState([] as Card[]);
-
-  const cards = deck.main.reduce((acc, card) => {
-    for (let i = 0; i < card.count; i++) acc.push(card);
-    return acc;
-  }, [] as Card[]);
+  const [cards, setCards] = React.useState([] as Card[]);
+  let [deckCards, setDeckCards] = React.useState([] as Card[]);
+  let [handCards, setHandCards] = React.useState([] as Card[]);
 
   useEffect(() => {
     if (!deck) return;
 
-    drawHand();
+    const mainCards = deck.main.reduce((acc, card) => {
+      for (let i = 0; i < card.count; i++) acc.push(card);
+      return acc;
+    }, [] as Card[]);
+
+    setCards(mainCards);
+    setDeckCards(mainCards);
   }, [deck]);
 
+  useEffect(() => {
+    if (!cards?.length) return;
+
+    drawHand();
+  }, [cards]);
+
   function drawHand() {
-    if (cards.length < 7) return;
+    deckCards = [...cards];
+    handCards = [];
 
-    const hand = Array(7).fill(-1);
+    for (let i = 0; i < 7; i++) {
+      const randomNumber = Math.floor(Math.random() * deckCards.length);
 
-    const handNumbers = hand.map(() => {
-      let randomNumber = Math.floor(Math.random() * cards.length);
+      handCards.push(deckCards[randomNumber]);
+      deckCards.splice(randomNumber, 1);
+    }
 
-      while (hand.includes(randomNumber)) {
-        randomNumber = Math.floor(Math.random() * cards.length);
-      }
-
-      return randomNumber;
-    });
-
-    setSelectedNumbers(handNumbers);
-
-    setSelectedCards(
-      sortCardsByManaValue(
-        sortCardsAlphabetically(
-          handNumbers.map((selectedCard) => cards[selectedCard])
-        )
-      )
-    );
+    setHandCards(sortCardsByManaValue(handCards));
+    setDeckCards(deckCards);
   }
 
   function drawCard() {
-    if (!selectedNumbers.length || selectedNumbers.length === cards.length) {
-      return;
-    }
+    const randomNumber = Math.floor(Math.random() * deckCards.length);
 
-    let randomNumber = Math.floor(Math.random() * cards.length);
+    setDeckCards(deckCards);
+    setHandCards([...handCards, deckCards[randomNumber]]);
 
-    while (selectedNumbers.includes(randomNumber)) {
-      randomNumber = Math.floor(Math.random() * cards.length);
-    }
+    deckCards.splice(randomNumber, 1);
 
-    setSelectedNumbers([...selectedNumbers, randomNumber]);
-    setSelectedCards([...selectedCards, cards[randomNumber]]);
+    console.log("Deck:" + deckCards.length, "Hand:" + handCards.length);
   }
 
   return (
@@ -89,14 +79,14 @@ export default function DeckExampleHand({ deck }: DeckTestHandProps) {
           <Button
             text="Draw Card"
             onClick={drawCard}
-            disabled={selectedNumbers.length === cards.length}
+            disabled={!deckCards.length}
           />
         </View>
       </View>
 
       <View className="flex flex-row justify-center">
         <View style={{ maxWidth }} className="flex flex-row w-full">
-          {selectedCards.map((card, index) => (
+          {handCards.map((card, index) => (
             <View
               key={index}
               className="flex-1 flex flex-row justify-center hover:z-10 z-0"
