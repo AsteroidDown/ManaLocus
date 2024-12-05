@@ -65,7 +65,7 @@ export default function Login() {
                 placeholder="Username or Email"
                 disabled={!login}
                 value={username}
-                onChange={(change) => setUsername(change)}
+                onChange={setUsername}
               />
 
               <Input
@@ -74,7 +74,7 @@ export default function Login() {
                 placeholder="3n7eR Y0ur P4ssw0rd"
                 disabled={!login}
                 value={password}
-                onChange={(change) => setPassword(change)}
+                onChange={setPassword}
               />
 
               <Button
@@ -91,7 +91,7 @@ export default function Login() {
                 placeholder="Make it unique!"
                 value={username}
                 disabled={login}
-                onChange={(change) => setUsername(change)}
+                onChange={setUsername}
               />
 
               <Input
@@ -99,7 +99,7 @@ export default function Login() {
                 placeholder="you@example.com"
                 value={email}
                 disabled={login}
-                onChange={(change) => setEmail(change)}
+                onChange={setEmail}
               />
 
               <Input
@@ -108,7 +108,7 @@ export default function Login() {
                 placeholder="3n7eR Y0ur P4ssw0rd"
                 value={password}
                 disabled={login}
-                onChange={(change) => setPassword(change)}
+                onChange={setPassword}
               />
 
               <Input
@@ -117,7 +117,7 @@ export default function Login() {
                 placeholder="D0 1t Ag4in"
                 value={confirmPassword}
                 disabled={login}
-                onChange={(change) => setConfirmPassword(change)}
+                onChange={setConfirmPassword}
               />
 
               <Button
