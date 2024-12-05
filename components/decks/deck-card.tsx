@@ -19,7 +19,9 @@ export default function DeckCard({ deck, hideFormat }: DeckCardProps) {
       onPointerEnter={() => setHovered(true)}
       onPointerLeave={() => setHovered(false)}
       className={`relative rounded-xl overflow-hidden transition-all duration-300 border-2 focus:border-primary-300 border-transparent outline-none ${
-        hovered ? "w-[296px] h-[200px] -m-1" : "w-72 h-48"
+        hovered
+          ? "w-[296px] h-[200px] -m-1 !border-primary-300 shadow-[0_0_16px] shadow-primary-300"
+          : "w-72 h-48"
       }`}
     >
       <Image
