@@ -1,4 +1,4 @@
-import { currency } from "@/functions/text-manipulation";
+import { currency, titleCase } from "@/functions/text-manipulation";
 import { Deck } from "@/models/deck/deck";
 import { faFileArrowDown } from "@fortawesome/free-solid-svg-icons";
 import React, { useEffect } from "react";
@@ -30,14 +30,18 @@ export default function DeckFooter({ deck }: { deck: Deck }) {
   return (
     <View className="sticky bottom-0 flex flex-row gap-4 justify-between items-center px-16 py-4 max-h-14 bg-gradient-to-b from-primary-200 to-primary-100 shadow-[0_0_16px] shadow-background-100">
       <View className="flex flex-row items-center gap-2">
-        <Text size="sm">
+        <Text thickness="bold">{titleCase(deck.format)}</Text>
+
+        <View className="h-5 border-r rounded-lg border-white" />
+
+        <Text>
           {mainCards} Card Mainboard
           {sideCards ? ` + ${sideCards} Card Sideboard` : ""}
         </Text>
 
-        <View className="h-full border-r-2 border-white" />
+        <View className="h-5 border-r rounded-lg border-white" />
 
-        <Text size="sm">{currency(totalValue)}</Text>
+        <Text>{currency(totalValue)}</Text>
       </View>
 
       <View className="flex flex-row gap-2">
