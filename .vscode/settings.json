@@ -8,6 +8,7 @@
     "Mainboard",
     "minigame",
     "mtgo",
+    "mythics",
     "nativewind",
     "nonfoil",
     "oathbreaker",
@@ -20,6 +21,7 @@
     "spellbook",
     "standardbrawl",
     "tailwindcss",
-    "tcgplayer"
+    "tcgplayer",
+    "uncommons"
   ]
 }

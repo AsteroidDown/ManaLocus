@@ -12,7 +12,7 @@ export default function BuilderLayout() {
 
   useEffect(() => {
     if (typeof deckId === "string") {
-      DeckService.get(deckId, true).then((deck) => setDeck(deck));
+      DeckService.get(deckId).then((deck) => setDeck(deck));
     }
   }, [deckId]);
 
@@ -23,6 +23,7 @@ export default function BuilderLayout() {
       <Stack screenOptions={{ headerShown: false }}>
         <Stack.Screen name="index" options={{ headerShown: false }} />
         <Stack.Screen name="builder" options={{ headerShown: false }} />
+        <Stack.Screen name="packs" options={{ headerShown: false }} />
       </Stack>
     </DeckContext.Provider>
   );
