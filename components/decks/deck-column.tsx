@@ -20,12 +20,16 @@ export interface DeckColumnProps {
   title: string;
   cards?: Card[];
   viewType: DeckCardGalleryViewType;
+
+  hideCount?: boolean;
 }
 
 export default function DeckColumn({
   title,
   cards,
   viewType,
+
+  hideCount,
 }: DeckColumnProps) {
   return (
     <View className="w-full break-inside-avoid mb-6">
@@ -46,6 +50,7 @@ export default function DeckColumn({
             card={card}
             last={index === cards.length - 1}
             viewType={viewType}
+            hideCount={hideCount}
           />
         ))}
       </View>
@@ -53,15 +58,21 @@ export default function DeckColumn({
   );
 }
 
+interface DeckCardProps {
+  card: Card;
+  last: boolean;
+  viewType: DeckCardGalleryViewType;
+
+  hideCount?: boolean;
+}
+
 function DeckCard({
   card,
   last,
   viewType,
-}: {
-  card: Card;
-  last: boolean;
-  viewType: DeckCardGalleryViewType;
-}) {
+
+  hideCount,
+}: DeckCardProps) {
   const navigation = useNavigation();
 
   const [open, setOpen] = React.useState(false);
@@ -77,7 +88,8 @@ function DeckCard({
           onPress={() => setOpen(true)}
         >
           <View className="flex-1 flex flex-row items-center gap-2">
-            <Text>{card.count}</Text>
+            {!hideCount && <Text>{card.count}</Text>}
+
             <Text truncate thickness="medium">
               {card.name}
             </Text>
