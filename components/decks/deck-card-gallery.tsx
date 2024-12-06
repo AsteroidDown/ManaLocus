@@ -15,7 +15,7 @@ import { Deck } from "@/models/deck/deck";
 import { faList, faShop } from "@fortawesome/free-solid-svg-icons";
 import { useNavigation } from "expo-router";
 import React, { useEffect } from "react";
-import { Linking, Pressable, View } from "react-native";
+import { Linking, Pressable, View, ViewProps } from "react-native";
 import CardDetailedPreview from "../cards/card-detailed-preview";
 import CardImage from "../cards/card-image";
 import CardText from "../cards/card-text";
@@ -48,11 +48,14 @@ export enum DeckCardGalleryGroupTypes {
   COST = "cost",
 }
 
-export interface DeckCardGalleryProps {
+export type DeckCardGalleryProps = ViewProps & {
   deck: Deck;
-}
+};
 
-export default function DeckCardGallery({ deck }: DeckCardGalleryProps) {
+export default function DeckCardGallery({
+  deck,
+  className,
+}: DeckCardGalleryProps) {
   const [viewType, setViewType] = React.useState(DeckCardGalleryViewTypes.LIST);
   const [sortType, setSortType] = React.useState(DeckCardGallerySortTypes.NAME);
   const [boardType, setBoardType] = React.useState(BoardTypes.MAIN);
@@ -177,7 +180,7 @@ export default function DeckCardGallery({ deck }: DeckCardGalleryProps) {
   }, [boardCards, sortType, groupType, boardType]);
 
   return (
-    <View className="flex gap-4" style={{ zIndex: 10 }}>
+    <View className={`${className} flex gap-4`} style={{ zIndex: 10 }}>
       <View
         className="flex-1 flex flex-row flex-wrap gap-2"
         style={{ zIndex: 10 }}
