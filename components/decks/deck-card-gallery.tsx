@@ -131,7 +131,7 @@ export default function DeckCardGallery({ deck }: DeckCardGalleryProps) {
           ? [{ title: "Five", cards: costGroupedCards.five }]
           : []),
         ...(costGroupedCards.six?.length
-          ? [{ title: "Six", cards: costGroupedCards.six }]
+          ? [{ title: "Six +", cards: costGroupedCards.six }]
           : []),
       ]);
     } else {
