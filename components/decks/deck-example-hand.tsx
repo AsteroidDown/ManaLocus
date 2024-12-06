@@ -70,7 +70,7 @@ export default function DeckExampleHand({ deck }: DeckTestHandProps) {
 
   return (
     <View
-      className="flex-1 flex gap-2"
+      className="flex gap-2"
       onLayout={(event) =>
         setMaxWidth((event.nativeEvent.layout.width || 0) - 224)
       }
