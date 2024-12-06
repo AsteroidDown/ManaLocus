@@ -74,7 +74,7 @@ export default function Select({
   return (
     <View
       style={{ elevation: 10, zIndex: 10 }}
-      className="flex-1 flex gap-2 max-h-fit z-[-1]"
+      className="flex-1 flex gap-2 max-h-fit min-w-fit z-[-1]"
       onPointerEnter={() => setHovered(true)}
       onPointerLeave={() => setHovered(false)}
     >
@@ -87,7 +87,7 @@ export default function Select({
       <View
         className={`${
           open ? "overflow-visible" : "overflow-hidden"
-        } max-h-[40px] min-h-[40px] relative flex-1`}
+        } max-h-[40px] min-h-[40px] min-w-fit relative flex-1`}
       >
         <View
           className={`${
@@ -98,7 +98,7 @@ export default function Select({
               : "border-background-200"
           } ${disabled ? "!border-background-100" : ""} ${
             open ? "!rounded-b-none" : ""
-          } flex-1 flex flex-row items-center gap-2 px-3 py-2 rounded-lg min-h-10 border-2 transition-all`}
+          } flex-1 flex flex-row items-center gap-2 min-w-fit px-3 py-2 rounded-lg min-h-10 border-2 transition-all`}
         >
           <TextInput
             value={search}

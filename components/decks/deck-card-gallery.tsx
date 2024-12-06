@@ -177,7 +177,10 @@ export default function DeckCardGallery({
         className="flex-1 flex flex-row flex-wrap gap-2"
         style={{ zIndex: 10 }}
       >
-        <View className="flex-1 flex flex-row gap-2" style={{ zIndex: 10 }}>
+        <View
+          className="flex-1 flex flex-row gap-2 min-w-fit"
+          style={{ zIndex: 10 }}
+        >
           <Select
             label="View"
             value={viewType}
@@ -201,7 +204,10 @@ export default function DeckCardGallery({
           />
         </View>
 
-        <View className="flex-1 flex flex-row gap-2" style={{ zIndex: 10 }}>
+        <View
+          className="flex-1 flex flex-row gap-2 min-w-fit"
+          style={{ zIndex: 10 }}
+        >
           <Select
             label="Grouping"
             value={groupType}
