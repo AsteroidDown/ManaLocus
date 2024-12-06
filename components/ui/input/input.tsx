@@ -43,7 +43,7 @@ export default function Input({
 
   return (
     <View
-      className="flex-1 flex gap-2 max-h-fit z-[-1]"
+      className="flex-1 flex gap-2 max-h-fit z-[-1] min-w-fit"
       onPointerEnter={() => setHovered(true)}
       onPointerLeave={() => setHovered(false)}
     >
@@ -53,7 +53,7 @@ export default function Input({
         </Text>
       )}
 
-      <View className="flex-1 flex flex-row gap-2">
+      <View className="flex-1 flex flex-row gap-2 min-w-fit">
         <TextInput
           value={text}
           multiline={multiline}

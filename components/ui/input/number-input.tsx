@@ -12,7 +12,7 @@ export interface NumberInputProps {
   secured?: boolean;
 
   value?: number;
-  onChange: React.Dispatch<React.SetStateAction<number>>;
+  onChange: React.Dispatch<React.SetStateAction<number | undefined>>;
 }
 
 export default function NumberInput({
@@ -47,7 +47,7 @@ export default function NumberInput({
 
   return (
     <View
-      className="flex-1 flex gap-2 max-h-fit z-[-1]"
+      className="flex-1 flex gap-2 max-h-fit z-[-1] min-w-fit"
       onPointerEnter={() => setHovered(true)}
       onPointerLeave={() => setHovered(false)}
     >
@@ -66,7 +66,7 @@ export default function NumberInput({
             : "border-background-200"
         } ${
           disabled ? "!border-background-100" : ""
-        } flex-1 flex flex-row justify-between items-center gap-2 min-h-fit border-2 rounded-lg border-background-200 overflow-hidden`}
+        } flex-1 flex flex-row justify-between items-center gap-2 min-h-fit min-w-fit border-2 rounded-lg border-background-200 overflow-hidden`}
       >
         <TextInput
           value={text}
