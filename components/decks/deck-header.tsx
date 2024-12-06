@@ -13,7 +13,7 @@ export default function DeckHeader({ deck }: { deck: Deck }) {
   const { user } = useContext(UserContext);
 
   return (
-    <View className="relative h-64">
+    <View className="relative h-64 overflow-hidden">
       <Image
         source={{
           uri: deck.featuredArtUrl?.length ? deck.featuredArtUrl : LostURL,
