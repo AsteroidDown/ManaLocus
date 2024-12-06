@@ -34,11 +34,17 @@ import DashboardSectionOptionsMenu from "./dashboard-section-options-menu";
 export type DashboardSectionProps = ViewProps & {
   sectionId: string;
   cards: Card[];
+
+  readonly?: boolean;
+  loadedSection?: DashboardSection;
 };
 
 export default function DashboardSectionView({
   sectionId,
   cards,
+
+  readonly = false,
+  loadedSection,
 }: DashboardSectionProps) {
   const { dashboard, setDashboard } = useContext(DashboardContext);
 
@@ -52,7 +58,9 @@ export default function DashboardSectionView({
   useEffect(
     () =>
       setSection(
-        dashboard?.sections.find((section) => section.id === sectionId) || null
+        loadedSection ??
+          (dashboard?.sections.find((section) => section.id === sectionId) ||
+            null)
       ),
     [dashboard, sectionId]
   );

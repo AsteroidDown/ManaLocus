@@ -1,4 +1,5 @@
 import { MTGFormat } from "@/constants/mtg/mtg-format";
+import { DashboardSection } from "@/models/dashboard/dashboard";
 import { DeckCard } from "../deck";
 
 export interface DeckDTO {
@@ -12,4 +13,6 @@ export interface DeckDTO {
   featuredArtUrl?: string;
 
   cards?: DeckCard[];
+
+  dashboard?: DashboardSection[];
 }

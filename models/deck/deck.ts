@@ -1,6 +1,7 @@
 import { BoardType } from "@/constants/boards";
 import { MTGFormat } from "@/constants/mtg/mtg-format";
 import { Card } from "../card/card";
+import { Dashboard } from "../dashboard/dashboard";
 import { User } from "../user/user";
 
 export interface Deck {
@@ -25,6 +26,8 @@ export interface Deck {
   side: Card[];
   maybe: Card[];
   acquire: Card[];
+
+  dashboard?: Dashboard;
 }
 
 export interface DeckCard {

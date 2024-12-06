@@ -8,6 +8,7 @@ import { MTGColorSymbols } from "@/constants/mtg/mtg-colors";
 import { MTGFormat, MTGFormats } from "@/constants/mtg/mtg-format";
 import DeckContext from "@/contexts/deck/deck.context";
 import { getLocalStorageStoredCards } from "@/functions/local-storage/card-local-storage";
+import { getLocalStorageDashboard } from "@/functions/local-storage/dashboard-local-storage";
 import { mapCardsToDeckCard } from "@/functions/mapping/card-mapping";
 import { getDeckColors, sortColors } from "@/functions/mtg-colors/mtg-colors";
 import { titleCase } from "@/functions/text-manipulation";
@@ -105,6 +106,8 @@ export default function DeckSettingsPage() {
           BoardTypes.ACQUIRE
         ),
       ],
+
+      dashboard: getLocalStorageDashboard()?.sections || [],
     };
 
     DeckService.update(deck.id, dto);
