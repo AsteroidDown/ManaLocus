@@ -259,7 +259,7 @@ function Column({
           {titleCase(title)}
         </Text>
 
-        <Text>{cards?.length}</Text>
+        <Text>{cards?.reduce((acc, card) => acc + card.count, 0)}</Text>
       </View>
 
       <Divider thick className="!border-background-200 my-1" />
