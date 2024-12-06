@@ -17,10 +17,14 @@ import DashboardSectionOptionsMenu from "./dashboard-section-options-menu";
 
 export type DashboardSectionHeaderProps = ViewProps & {
   section: DashboardSection;
+
+  readonly?: boolean;
 };
 
 export default function DashboardSectionHeader({
   section,
+
+  readonly = false,
 }: DashboardSectionHeaderProps) {
   const { setDashboard } = useContext(DashboardContext);
 
@@ -68,38 +72,44 @@ export default function DashboardSectionHeader({
           />
         )}
 
-        <Button
-          rounded
-          type="clear"
-          action="default"
-          icon={editingSection ? faCheck : faPencil}
-          className={`${
-            editingSection || sectionTitleHovered ? "opacity-100" : "opacity-0"
-          } transition-all duration-500`}
-          onClick={() =>
-            editingSection
-              ? updateSectionTitle()
-              : setEditingSection(!editingSection)
-          }
-        />
+        {!readonly && (
+          <Button
+            rounded
+            type="clear"
+            action="default"
+            icon={editingSection ? faCheck : faPencil}
+            className={`${
+              editingSection || sectionTitleHovered
+                ? "opacity-100"
+                : "opacity-0"
+            } transition-all duration-500`}
+            onClick={() =>
+              editingSection
+                ? updateSectionTitle()
+                : setEditingSection(!editingSection)
+            }
+          />
+        )}
       </View>
 
-      <View className="flex gap-2 items-center max-w-10 max-h-10">
-        <Button
-          rounded
-          type="clear"
-          action="default"
-          icon={faEllipsisV}
-          onClick={() => setAddItemOpen(true)}
-        ></Button>
+      {!readonly && (
+        <View className="flex gap-2 items-center max-w-10 max-h-10">
+          <Button
+            rounded
+            type="clear"
+            action="default"
+            icon={faEllipsisV}
+            onClick={() => setAddItemOpen(true)}
+          />
 
-        <DashboardSectionOptionsMenu
-          xOffset={-120}
-          section={section}
-          addItemOpen={addItemOpen}
-          setAddItemOpen={setAddItemOpen}
-        />
-      </View>
+          <DashboardSectionOptionsMenu
+            xOffset={-120}
+            section={section}
+            addItemOpen={addItemOpen}
+            setAddItemOpen={setAddItemOpen}
+          />
+        </View>
+      )}
     </View>
   );
 }

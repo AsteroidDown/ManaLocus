@@ -64,8 +64,6 @@ export default function DeckExampleHand({ deck }: DeckTestHandProps) {
     setHandCards([...handCards, deckCards[randomNumber]]);
 
     deckCards.splice(randomNumber, 1);
-
-    console.log("Deck:" + deckCards.length, "Hand:" + handCards.length);
   }
 
   return (

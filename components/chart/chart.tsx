@@ -25,6 +25,7 @@ export type ChartProps = ViewProps & {
   type: ChartType;
   filters: CardFilters;
   smallTitles?: boolean;
+  readonly?: boolean;
 };
 
 export default function Chart({
@@ -37,6 +38,7 @@ export default function Chart({
   type,
   filters,
   smallTitles = false,
+  readonly = false,
 }: ChartProps) {
   let sortedCards = sortCardsByManaValue(sortCardsAlphabetically(cards));
 
@@ -57,6 +59,7 @@ export default function Chart({
           title={title}
           titleEnd={titleEnd}
           titleStart={titleStart}
+          readonly={readonly}
         />
 
         <CostChartLayout

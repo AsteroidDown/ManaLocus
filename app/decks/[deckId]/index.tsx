@@ -33,8 +33,6 @@ export default function DeckPage() {
 
   if (!deck) return;
 
-  console.log(deck);
-
   return (
     <ScrollView className="bg-background-100">
       <DeckHeader deck={deck} />
