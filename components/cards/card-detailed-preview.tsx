@@ -1,6 +1,7 @@
 import { Card } from "@/models/card/card";
 import React from "react";
 import { View, ViewProps } from "react-native";
+import Box from "../ui/box/box";
 import Divider from "../ui/divider/divider";
 import CardImage from "./card-image";
 import { CardInfo } from "./card-info";
@@ -52,8 +53,6 @@ export default function CardDetailedPreview({
           <View className="flex gap-3">
             <CardInfo link={link} card={card} face={card.faces.front} />
 
-            <Divider thick className="my-3" />
-
             <CardInfo link={link} card={card} face={card.faces.back} />
           </View>
         )}
@@ -61,9 +60,9 @@ export default function CardDetailedPreview({
         {!hideLegalities && <Divider thick />}
 
         {!hideLegalities && (
-          <View className="mb-0">
+          <Box className="mb-0" shade={300}>
             <CardLegalities card={card} />
-          </View>
+          </Box>
         )}
       </View>
     </View>
