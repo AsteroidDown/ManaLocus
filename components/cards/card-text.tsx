@@ -58,10 +58,8 @@ export default function CardText({ text, flavor }: CardTextProps) {
         const italic = section.substring(italicStart, italicEnd + 1);
         const afterItalic = section.substring(italicEnd + 1);
 
-        acc.push(italic);
         acc.push(beforeItalic);
         acc.push(italic);
-
         acc.push(afterItalic);
       }
 
