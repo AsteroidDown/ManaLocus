@@ -1,6 +1,7 @@
 import CardDetailedPreview from "@/components/cards/card-detailed-preview";
 import { CardLegalities } from "@/components/cards/card-legalities";
 import CardPrintsList from "@/components/cards/card-prints-list";
+import CardRulings from "@/components/cards/card-rulings";
 import DecksWithCard from "@/components/decks/decks-with-card";
 import Box from "@/components/ui/box/box";
 import Text from "@/components/ui/text/text";
@@ -29,12 +30,16 @@ export default function SetPage() {
     <ScrollView>
       <View className="flex flex-1 gap-4 px-16 py-8 min-h-[100vh] bg-background-100">
         <View className="flex flex-row flex-wrap justify-center gap-4 max-w-full pt-6">
-          <CardDetailedPreview
-            fullHeight
-            hideLegalities
-            card={card}
-            className="max-h-fit !bg-transparent !p-0"
-          />
+          <View className="flex flex-col gap-2 max-w-min">
+            <CardDetailedPreview
+              fullHeight
+              hideLegalities
+              card={card}
+              className="max-h-fit lg:min-w-max min-w-fit !bg-transparent !p-0"
+            />
+
+            <CardRulings card={card} />
+          </View>
 
           <View className="flex gap-4">
             <View className="flex flex-col gap-2">
