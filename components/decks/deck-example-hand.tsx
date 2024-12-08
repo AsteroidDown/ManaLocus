@@ -108,7 +108,12 @@ export function HandCard({ card }: { card: Card }) {
 
       <View className="-mt-0.5">
         <Modal open={open} setOpen={setOpen}>
-          <CardDetailedPreview card={card} className="!p-0">
+          <CardDetailedPreview
+            link
+            onLinkPress={() => setOpen(false)}
+            card={card}
+            className="!p-0"
+          >
             <View className="flex flex-row gap-2">
               <Button
                 size="sm"
