@@ -30,10 +30,10 @@ export default function CardPrintsList({ card }: CardPrintsListProps) {
         <Text thickness="semi">Print</Text>
 
         <View className="flex flex-row gap-2 ml-auto">
-          <Text size="sm" className="w-14">
+          <Text size="sm" className="w-16">
             Number
           </Text>
-          <Text size="sm" className="w-14">
+          <Text size="sm" className="w-12">
             Price
           </Text>
         </View>
@@ -59,11 +59,11 @@ export default function CardPrintsList({ card }: CardPrintsListProps) {
             </Text>
 
             <View className="flex flex-row gap-2 ml-auto">
-              <Text size="sm" className="w-14">
+              <Text size="sm" className="w-16">
                 {print.collectorNumber}
               </Text>
 
-              <Text size="sm" className="w-14 text-right">
+              <Text size="sm" className="w-12">
                 {currency(print.prices?.usd)}
               </Text>
             </View>
