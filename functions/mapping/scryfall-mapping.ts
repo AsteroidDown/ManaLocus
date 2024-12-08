@@ -1,11 +1,11 @@
 import { MTGSetType } from "@/constants/mtg/mtg-set-types";
 import { ScryfallSet } from "@/models/scryfall/scryfall-set";
-import { Card, CardImageUris } from "../models/card/card";
-import { Set } from "../models/card/set";
+import { Card, CardImageUris } from "../../models/card/card";
+import { Set } from "../../models/card/set";
 import {
   ScryfallCard,
   ScryfallImageUris,
-} from "../models/scryfall/scryfall-card";
+} from "../../models/scryfall/scryfall-card";
 
 export function ScryfallToCard(scryfallCard: ScryfallCard): Card {
   return {
