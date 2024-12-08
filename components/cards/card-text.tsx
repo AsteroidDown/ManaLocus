@@ -11,12 +11,16 @@ export default function CardText({ text, flavor }: CardTextProps) {
   if (!text) return;
 
   const lines = text.split("\n").map((line) => {
-    let add = true;
+    let loyalty: "add" | "remove" | undefined = undefined;
     let value: string | undefined = undefined;
 
-    if (line[0] === "+" || line[0] === "−") {
-      add = line[0] === "+";
-      value = line.split(":")?.[0]?.substring(1);
+    if (line[0] === "+" || line[0] === "−" || line.substring(0, 2) === "0:") {
+      loyalty =
+        line[0] === "+" ? "add" : line[0] === "−" ? "remove" : undefined;
+      value = line
+        .split(":")?.[0]
+        ?.substring(loyalty ? 1 : 0)
+        .trim();
       line = line.substring(line.indexOf(":") + 1);
     }
 
@@ -37,7 +41,7 @@ export default function CardText({ text, flavor }: CardTextProps) {
     }, [] as string[]);
 
     const sections = symbolSections.reduce((acc, section) => {
-      if (!section.includes("(")) {
+      if (!(section.includes("(") || section.includes(")"))) {
         acc.push(section);
         return acc;
       }
@@ -45,18 +49,26 @@ export default function CardText({ text, flavor }: CardTextProps) {
       const italicStart = section.indexOf("(");
       const italicEnd = section.indexOf(")");
 
-      const beforeItalic = section.substring(0, italicStart);
-      const italic = section.substring(italicStart, italicEnd + 1);
-      const afterItalic = section.substring(italicEnd + 1);
+      if (italicEnd === -1) {
+        acc.push(" " + section.substring(italicStart));
+      } else if (italicStart === -1) {
+        acc.push(section.substring(0, italicEnd + 1));
+      } else {
+        const beforeItalic = section.substring(0, italicStart);
+        const italic = section.substring(italicStart, italicEnd + 1);
+        const afterItalic = section.substring(italicEnd + 1);
 
-      acc.push(beforeItalic);
-      acc.push(italic);
-      acc.push(afterItalic);
+        acc.push(italic);
+        acc.push(beforeItalic);
+        acc.push(italic);
+
+        acc.push(afterItalic);
+      }
 
       return acc;
     }, [] as string[]);
 
-    return { add, value, sections };
+    return { loyalty, value, sections };
   });
 
   return (
@@ -69,14 +81,25 @@ export default function CardText({ text, flavor }: CardTextProps) {
                 thickness="bold"
                 className="px-2 py-0.5 bg-background-100 rounded"
               >
-                {line.add ? "+" : "-"} {line.value}
+                {line.loyalty === "add"
+                  ? "+"
+                  : line.loyalty === "remove"
+                  ? "-"
+                  : ""}
+                {line.value}
               </Text>
             )}
 
             {line.sections.map((section, index) => (
               <Text
                 key={section + index}
-                className={section[section.length - 1] === ")" ? "italic" : ""}
+                className={
+                  section[0] === "(" ||
+                  section[1] === "(" ||
+                  section[section.length - 1] === ")"
+                    ? "italic"
+                    : ""
+                }
               >
                 {section[0] === "{" && (
                   <Image
