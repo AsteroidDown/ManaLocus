@@ -1,5 +1,10 @@
-import { ScryfallToCard, ScryfallToSet } from "@/functions/scryfall";
+import { MapRulings } from "@/functions/mapping/ruling-mapping";
+import {
+  ScryfallToCard,
+  ScryfallToSet,
+} from "@/functions/mapping/scryfall-mapping";
 import { Card, CardIdentifier } from "@/models/card/card";
+import { Ruling } from "@/models/card/ruling";
 import { Set } from "@/models/card/set";
 import { ScryfallCard } from "@/models/scryfall/scryfall-card";
 import { ScryfallCatalog } from "@/models/scryfall/scryfall-catalog";
@@ -65,6 +70,14 @@ async function getCardPrints(name: string): Promise<Card[]> {
     (a, b) =>
       new Date(b.releasedAt).getTime() - new Date(a.releasedAt).getTime()
   );
+}
+
+async function getCardRulings(id: string): Promise<Ruling[]> {
+  const rulings = await ScryfallAPI.get(`cards/${id}/rulings`).catch((error) =>
+    console.error(error)
+  );
+
+  return MapRulings(rulings.data);
 }
 
 async function getCardsFromCollection(cardsIdentifiers: CardIdentifier[]) {
@@ -166,6 +179,7 @@ const ScryfallService = {
   getCardById,
   getCardByNumber,
   getCardPrints,
+  getCardRulings,
   getCardsFromCollection,
   getRandomCard,
   getSets,
