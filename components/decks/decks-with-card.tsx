@@ -18,7 +18,7 @@ export default function DecksWithCard({ card }: DecksWithCardProps) {
   useEffect(() => {
     if (!card) return;
 
-    DeckService.getMany({ scryfallIds: [card.scryfallId] }).then((decks) =>
+    DeckService.getMany({ cardNames: [card.name] }).then((decks) =>
       setDecks(decks)
     );
   }, [card]);

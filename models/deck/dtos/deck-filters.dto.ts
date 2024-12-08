@@ -4,5 +4,5 @@ export interface DeckFiltersDTO {
   search?: string | null;
   deckFormat?: MTGFormat | null;
 
-  scryfallIds?: string[] | null;
+  cardNames?: string[] | null;
 }
