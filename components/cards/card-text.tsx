@@ -1,13 +1,15 @@
 import Text from "@/components/ui/text/text";
 import { SymbolMap } from "@/constants/mtg/mtg-symbols";
+import { Size } from "@/constants/ui/sizes";
 import { Image, View } from "react-native";
 
 export interface CardTextProps {
   text: string;
   flavor?: string;
+  size?: Size;
 }
 
-export default function CardText({ text, flavor }: CardTextProps) {
+export default function CardText({ text, flavor, size = "md" }: CardTextProps) {
   if (!text) return;
 
   const lines = text.split("\n").map((line) => {
@@ -101,7 +103,7 @@ export default function CardText({ text, flavor }: CardTextProps) {
               >
                 {section[0] === "{" && (
                   <Image
-                    className="h-4 w-4 -mb-[3px] mx-px"
+                    className={`${getImageSize(size)} mx-px`}
                     source={{ uri: SymbolMap.get(section) }}
                   />
                 )}
@@ -120,4 +122,13 @@ export default function CardText({ text, flavor }: CardTextProps) {
       )}
     </View>
   );
+}
+
+function getImageSize(size: Size) {
+  if (size === "xs") return "h-2 w-2";
+  else if (size === "sm") return "h-3 w-3 -mb-[2px]";
+  else if (size === "md") return "h-4 w-4 -mb-[3px]";
+  else if (size === "lg") return "h-6 w-6 -mb-[5px]";
+  else if (size === "xl") return "h-8 w-8 -mb-[13px]";
+  else return "h-10 w-10 -mb-[23px]";
 }
