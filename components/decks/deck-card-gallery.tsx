@@ -63,6 +63,8 @@ export default function DeckCardGallery({
     [] as { title: string; cards: Card[] }[]
   );
 
+  const [shouldWrap, setShouldWrap] = React.useState(false);
+
   useEffect(() => {
     if (!deck) return;
 
@@ -171,6 +173,17 @@ export default function DeckCardGallery({
     }
   }, [boardCards, sortType, groupType, boardType]);
 
+  useEffect(() => {
+    const first = groupedCards[0]?.cards.length;
+    const sum = groupedCards.reduce(
+      (acc, group) => acc + group.cards.length,
+      0
+    );
+
+    if (first > sum - first) setShouldWrap(true);
+    else setShouldWrap(false);
+  }, [groupedCards]);
+
   return (
     <View className={`${className} flex gap-4`} style={{ zIndex: 10 }}>
       <View
@@ -233,11 +246,12 @@ export default function DeckCardGallery({
       </View>
 
       <View className="block w-full mt-2 lg:columns-3 md:columns-2 columns-1 gap-8">
-        {groupedCards?.map(({ title, cards }) => (
+        {groupedCards?.map(({ title, cards }, index) => (
           <DeckColumn
             key={title}
             title={title}
             viewType={viewType}
+            shouldWrap={shouldWrap && index === groupedCards.length - 1}
             cards={cards}
           />
         ))}

@@ -22,6 +22,7 @@ export interface DeckColumnProps {
   viewType: DeckCardGalleryViewType;
 
   hideCount?: boolean;
+  shouldWrap?: boolean;
 }
 
 export default function DeckColumn({
@@ -30,9 +31,14 @@ export default function DeckColumn({
   viewType,
 
   hideCount,
+  shouldWrap,
 }: DeckColumnProps) {
   return (
-    <View className="w-full break-inside-avoid mb-6">
+    <View
+      className={`${
+        shouldWrap ? "break-before-column" : ""
+      } w-full break-inside-avoid mb-6`}
+    >
       <View className="flex flex-row justify-between items-center px-2">
         <Text size="lg" thickness="bold">
           {titleCase(title)}
