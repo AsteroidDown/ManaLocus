@@ -83,12 +83,13 @@ export function CardInfo({ card, face, link, onLinkPress }: CardInfoProps) {
           </Text>
 
           <Text size="lg">
-            {face?.power || card.power
-              ? `${face?.power || card.power} / ${
-                  face?.toughness || card.toughness
-                }`
-              : (face?.loyalty || card.loyalty) ??
-                (face?.defense || card.defense)}
+            {face
+              ? face.power
+                ? `${face.power} / ${face.toughness}`
+                : face.loyalty || face.defense
+              : card.power
+              ? `${card.power} / ${card.toughness}`
+              : card.loyalty || card.defense}
           </Text>
         </View>
 
