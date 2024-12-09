@@ -5,9 +5,10 @@ import { Ruling } from "@/models/card/ruling";
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import moment from "moment";
 import React from "react";
-import { View } from "react-native";
+import { Pressable, View } from "react-native";
 import Box from "../ui/box/box";
 import Button from "../ui/button/button";
+import Divider from "../ui/divider/divider";
 import Text from "../ui/text/text";
 import CardText from "./card-text";
 
@@ -32,7 +33,10 @@ export default function CardRulings({ card }: CardRulingsProps) {
 
   return (
     <View className="flex gap-2">
-      <View className="flex flex-row justify-between items-center gap-2">
+      <Pressable
+        className="flex flex-row justify-between items-center gap-2"
+        onPress={() => setOpen(!open)}
+      >
         <Text size="lg" thickness="bold">
           Rulings
         </Text>
@@ -47,11 +51,13 @@ export default function CardRulings({ card }: CardRulingsProps) {
           } transition-all duration-300`}
           onClick={() => setOpen(!open)}
         />
-      </View>
+      </Pressable>
+
+      <Divider thick className="!border-background-200" />
 
       <View
         className={`${
-          open ? "max-h-[256px]" : "max-h-0"
+          open ? "max-h-[500px]" : "max-h-0"
         } flex gap-2 max-w-full rounded-lg overflow-y-scroll transition-all duration-300`}
       >
         {rulings?.map((ruling, index) => (
@@ -60,7 +66,7 @@ export default function CardRulings({ card }: CardRulingsProps) {
 
             <View className="flex flex-row justify-between items-center gap-2">
               <Text size="sm" thickness="semi">
-                From:{" "}
+                Source:{" "}
                 {ruling.source === "wotc"
                   ? "Wizards of the Coast"
                   : titleCase(ruling.source)}
