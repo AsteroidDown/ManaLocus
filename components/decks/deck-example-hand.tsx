@@ -102,6 +102,8 @@ export default function DeckExampleHand({ deck }: DeckTestHandProps) {
 export function HandCard({ card }: { card: Card }) {
   const [open, setOpen] = React.useState(false);
 
+  if (!card) return null;
+
   return (
     <View className="flex-1 flex flex-row justify-center hover:z-10 z-0">
       <CardImage card={card} onClick={() => setOpen(true)} />
