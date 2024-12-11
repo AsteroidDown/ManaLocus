@@ -1,10 +1,10 @@
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
-import { Pressable, TextInput, View } from "react-native";
+import { Pressable, TextInput, View, ViewProps } from "react-native";
 import Text from "../text/text";
 
-export interface InputProps {
+export type InputProps = ViewProps & {
   options: { label: string; value: any }[];
 
   label?: string;
@@ -13,7 +13,7 @@ export interface InputProps {
 
   value?: any;
   onChange: React.Dispatch<React.SetStateAction<any>>;
-}
+};
 
 export default function Select({
   options,
@@ -22,6 +22,7 @@ export default function Select({
   disabled,
   value,
   onChange,
+  className,
 }: InputProps) {
   const [hovered, setHovered] = React.useState(false);
   const [focused, setFocused] = React.useState(false);
@@ -74,7 +75,7 @@ export default function Select({
   return (
     <View
       style={{ elevation: 10, zIndex: 10 }}
-      className="flex-1 flex gap-2 max-h-fit min-w-fit z-[-1]"
+      className={`${className} flex-1 flex gap-2 max-h-fit min-w-fit z-[-1]`}
       onPointerEnter={() => setHovered(true)}
       onPointerLeave={() => setHovered(false)}
     >
@@ -148,7 +149,7 @@ export default function Select({
         >
           {filteredOptions.map((option, index) => (
             <Pressable
-              key={index}
+              key={index + option.label}
               tabIndex={disabled || !open ? -1 : 0}
               onPress={() => selectOption(option)}
             >
