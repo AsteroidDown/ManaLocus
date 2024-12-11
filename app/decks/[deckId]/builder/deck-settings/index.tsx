@@ -6,7 +6,9 @@ import Text from "@/components/ui/text/text";
 import { BoardTypes } from "@/constants/boards";
 import { MTGColorSymbols } from "@/constants/mtg/mtg-colors";
 import { MTGFormat, MTGFormats } from "@/constants/mtg/mtg-format";
+import { MTGCardTypes } from "@/constants/mtg/mtg-types";
 import DeckContext from "@/contexts/deck/deck.context";
+import { getCardType } from "@/functions/card-information";
 import { getLocalStorageStoredCards } from "@/functions/local-storage/card-local-storage";
 import { getLocalStorageDashboard } from "@/functions/local-storage/dashboard-local-storage";
 import { mapCardsToDeckCard } from "@/functions/mapping/card-mapping";
@@ -19,7 +21,7 @@ import React, { useContext, useEffect } from "react";
 import { Image, View } from "react-native";
 
 export default function DeckSettingsPage() {
-  const { deck } = useContext(DeckContext);
+  const { deck, setDeck } = useContext(DeckContext);
 
   const [name, setName] = React.useState("");
   const [privateView, setPrivateView] = React.useState(false);
@@ -27,9 +29,12 @@ export default function DeckSettingsPage() {
   const [format, setFormat] = React.useState(
     undefined as MTGFormat | undefined
   );
+  const [commander, setCommander] = React.useState(null as Card | null);
 
   const [featuredCardSearch, setFeaturedCardSearch] = React.useState("");
   const [featuredCard, setFeaturedCard] = React.useState(null as Card | null);
+
+  const [commanderOptions, setCommanderOptions] = React.useState([] as Card[]);
 
   const mainBoardCards = getLocalStorageStoredCards(BoardTypes.MAIN);
 
@@ -50,6 +55,15 @@ export default function DeckSettingsPage() {
       setFeaturedCard(foundFeaturedCard);
       setFeaturedCardSearch(foundFeaturedCard.name);
     }
+
+    if (deck.commander) setCommander(deck.commander);
+    setCommanderOptions(
+      mainBoardCards.filter(
+        (card) =>
+          card.typeLine.toLowerCase().includes("legendary") &&
+          getCardType(card) === MTGCardTypes.CREATURE
+      )
+    );
   }, [deck]);
 
   useEffect(() => {
@@ -71,6 +85,16 @@ export default function DeckSettingsPage() {
       setFeaturedCard(foundFeaturedCards[0]);
     }
   }, [featuredCardSearch]);
+
+  useEffect(() => {
+    if (!deck || !commander) return;
+
+    if (deck.commander?.scryfallId !== commander.scryfallId) {
+      setDeck({ ...deck, commander });
+    }
+
+    console.log(commander);
+  }, [commander]);
 
   function saveDeck() {
     if (!deck) return;
@@ -108,6 +132,8 @@ export default function DeckSettingsPage() {
       ],
 
       dashboard: getLocalStorageDashboard()?.sections || [],
+
+      commanderId: commander?.scryfallId,
     };
 
     DeckService.update(deck.id, dto);
@@ -165,23 +191,40 @@ export default function DeckSettingsPage() {
             </View>
           </View>
 
-          <View className="flex flex-row gap-4">
+          <View className="flex flex-row flex-wrap gap-4">
             <Input
               label="Featured Card"
               value={featuredCardSearch}
               onChange={setFeaturedCardSearch}
             />
 
-            <Select
-              label="Format"
-              placeholder="Format"
-              value={format}
-              onChange={setFormat}
-              options={Object.values(MTGFormats).map((format) => ({
-                label: titleCase(format),
-                value: format,
-              }))}
-            />
+            <View className="flex-1 flex flex-row min-w-min">
+              <Select
+                label="Format"
+                placeholder="Format"
+                value={format}
+                onChange={setFormat}
+                squareRight={format === MTGFormats.COMMANDER}
+                options={Object.values(MTGFormats).map((format) => ({
+                  label: titleCase(format),
+                  value: format,
+                }))}
+              />
+
+              {format === MTGFormats.COMMANDER && (
+                <Select
+                  squareLeft
+                  label="Commander"
+                  value={commander}
+                  property="scryfallId"
+                  options={commanderOptions.map((option) => ({
+                    label: option.name,
+                    value: option,
+                  }))}
+                  onChange={(change) => setCommander(change)}
+                />
+              )}
+            </View>
           </View>
         </View>
       </View>

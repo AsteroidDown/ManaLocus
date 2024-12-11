@@ -28,6 +28,8 @@ export interface Deck {
   acquire: Card[];
 
   dashboard?: Dashboard;
+
+  commander?: Card;
 }
 
 export interface DeckCard {

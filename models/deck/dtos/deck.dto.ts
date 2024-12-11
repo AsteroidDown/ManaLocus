@@ -15,4 +15,6 @@ export interface DeckDTO {
   cards?: DeckCard[];
 
   dashboard?: DashboardSection[];
+
+  commanderId?: string;
 }

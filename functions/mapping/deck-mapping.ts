@@ -39,6 +39,10 @@ export function mapDatabaseDeck(data: any, withCards = false): Deck {
       : [],
 
     dashboard: { sections: data.dashboard?.sections },
+
+    commander: deck?.commander
+      ? mapDatabaseCardToCard(deck.commander)
+      : undefined,
   };
 }
 
