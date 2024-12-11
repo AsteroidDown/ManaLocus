@@ -22,6 +22,7 @@ export default function Input({
   onChange,
 }: InputProps) {
   const [text, setText] = React.useState(value ?? "");
+  const [debouncedText, setDebouncedText] = React.useState(text);
 
   const [hovered, setHovered] = React.useState(false);
   const [focused, setFocused] = React.useState(false);
@@ -35,11 +36,13 @@ export default function Input({
         setInitial(false);
       }
 
-      onChange(text);
+      setDebouncedText(text);
     }, 300);
 
     return () => clearTimeout(delayDebounceFn);
   }, [value, text]);
+
+  useEffect(() => onChange(debouncedText), [debouncedText]);
 
   return (
     <View
