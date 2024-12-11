@@ -4,6 +4,7 @@ import { titleCase } from "@/functions/text-manipulation";
 import { Deck } from "@/models/deck/deck";
 import { faPen } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "expo-router";
+import moment from "moment";
 import { useContext } from "react";
 import { Image, View } from "react-native";
 import Button from "../ui/button/button";
@@ -13,13 +14,15 @@ export default function DeckHeader({ deck }: { deck: Deck }) {
   const { user } = useContext(UserContext);
 
   return (
-    <View className="relative h-64 overflow-hidden">
-      <Image
-        source={{
-          uri: deck.featuredArtUrl?.length ? deck.featuredArtUrl : LostURL,
-        }}
-        className="absolute h-[384px] w-[60%] top-0 right-0"
-      />
+    <View className="relative h-72 overflow-hidden">
+      <View className="absolute flex h-full w-[60%] top-0 right-0 overflow-hidden">
+        <Image
+          className="absolute top-0 left-0 w-full aspect-[626/457]"
+          source={{
+            uri: deck.featuredArtUrl?.length ? deck.featuredArtUrl : LostURL,
+          }}
+        />
+      </View>
 
       <View className="absolute w-full h-full bg-gradient-to-r from-primary-300 from-[41%] to-transparent to-75%" />
 
@@ -40,6 +43,12 @@ export default function DeckHeader({ deck }: { deck: Deck }) {
 
         <Text size="lg" thickness="medium">
           By {deck.user?.name}
+        </Text>
+      </View>
+
+      <View className="absolute bottom-4 left-16">
+        <Text size="sm" thickness="semi" className="!text-gray-300">
+          Last Updated: {moment(deck.updated).format("MMM D, YYYY")}
         </Text>
       </View>
 
