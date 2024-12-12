@@ -63,13 +63,25 @@ export default function DeckCardGallery({
     [] as { title: string; cards: Card[] }[]
   );
 
+  const [commander, setCommander] = React.useState(null as Card | null);
+
   const [shouldWrap, setShouldWrap] = React.useState(false);
 
   useEffect(() => {
     if (!deck) return;
 
+    const mainCards = deck.commander
+      ? deck.main.filter(
+          (card) => card.scryfallId !== deck.commander?.scryfallId
+        )
+      : deck.main;
+
+    if (deck.commander) {
+      setCommander(deck.commander);
+    }
+
     setBoardCards({
-      main: sortCardsAlphabetically(deck.main),
+      main: sortCardsAlphabetically(mainCards),
       side: sortCardsAlphabetically(deck.side),
       maybe: sortCardsAlphabetically(deck.maybe),
       acquire: sortCardsAlphabetically(deck.acquire),
@@ -83,15 +95,16 @@ export default function DeckCardGallery({
 
     const sortedCards =
       sortType === DeckCardGallerySortTypes.MANA_VALUE
-        ? sortCardsByManaValue(deck[boardType])
+        ? sortCardsByManaValue(boardCards[boardType])
         : sortType === DeckCardGallerySortTypes.PRICE
-        ? sortCardsByPrice(deck[boardType])
-        : sortCardsAlphabetically(deck[boardType]);
+        ? sortCardsByPrice(boardCards[boardType])
+        : sortCardsAlphabetically(boardCards[boardType]);
 
     if (groupType === DeckCardGalleryGroupTypes.RARITY) {
       const rarityGroupedCards = groupCardsByRarity(sortedCards);
 
       setGroupedCards([
+        ...(commander ? [{ title: "Commander", cards: [commander] }] : []),
         ...(rarityGroupedCards.common?.length
           ? [{ title: "Common", cards: rarityGroupedCards.common }]
           : []),
@@ -109,6 +122,8 @@ export default function DeckCardGallery({
       const costGroupedCards = groupCardsByCost(sortedCards);
 
       setGroupedCards([
+        ...(commander ? [{ title: "Commander", cards: [commander] }] : []),
+
         ...(costGroupedCards.zero?.length
           ? [{ title: "Zero", cards: costGroupedCards.zero }]
           : []),
@@ -135,6 +150,7 @@ export default function DeckCardGallery({
       const typeGroupedCards = groupCardsByType(sortedCards);
 
       setGroupedCards([
+        ...(commander ? [{ title: "Commander", cards: [commander] }] : []),
         ...(typeGroupedCards.creature?.length
           ? [{ title: "Creature", cards: typeGroupedCards.creature }]
           : []),

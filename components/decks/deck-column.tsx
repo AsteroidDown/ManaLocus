@@ -1,7 +1,6 @@
 import { titleCase } from "@/functions/text-manipulation";
 import { Card } from "@/models/card/card";
-import { faList, faShop } from "@fortawesome/free-solid-svg-icons";
-import { useNavigation } from "expo-router";
+import { faShop } from "@fortawesome/free-solid-svg-icons";
 import React from "react";
 import { Linking, Pressable, View } from "react-native";
 import CardDetailedPreview from "../cards/card-detailed-preview";
@@ -22,6 +21,7 @@ export interface DeckColumnProps {
   viewType: DeckCardGalleryViewType;
 
   hideCount?: boolean;
+  commander?: boolean;
   shouldWrap?: boolean;
 }
 
@@ -31,6 +31,7 @@ export default function DeckColumn({
   viewType,
 
   hideCount,
+  commander,
   shouldWrap,
 }: DeckColumnProps) {
   return (
@@ -57,6 +58,7 @@ export default function DeckColumn({
             last={index === cards.length - 1}
             viewType={viewType}
             hideCount={hideCount}
+            commander={commander}
           />
         ))}
       </View>
@@ -68,19 +70,17 @@ interface DeckCardProps {
   card: Card;
   last: boolean;
   viewType: DeckCardGalleryViewType;
-
   hideCount?: boolean;
+  commander?: boolean;
 }
 
 function DeckCard({
   card,
   last,
   viewType,
-
   hideCount,
+  commander,
 }: DeckCardProps) {
-  const navigation = useNavigation();
-
   const [open, setOpen] = React.useState(false);
   const [hoveredIndex, setHoveredIndex] = React.useState(-1);
 
@@ -90,26 +90,32 @@ function DeckCard({
     <>
       {viewType === DeckCardGalleryViewTypes.LIST && (
         <Pressable
-          className="flex flex-row gap-2 justify-between items-center px-2 py-0.5 rounded-full hover:bg-primary-200 transition-all duration-300"
+          className="flex hover:bg-primary-200 rounded-xl overflow-hidden transition-all duration-300"
           onPress={() => setOpen(true)}
         >
-          <View className="flex-1 flex flex-row items-center gap-2">
-            {!hideCount && <Text>{card.count}</Text>}
+          <View className="flex flex-row gap-2 justify-between items-center px-2 py-0.5">
+            <View className="flex-1 flex flex-row items-center gap-2">
+              {!hideCount && <Text>{card.count}</Text>}
 
-            <Text truncate thickness="medium">
-              {card.name}
-            </Text>
+              <Text truncate thickness="medium">
+                {card.name}
+              </Text>
+            </View>
+
+            <CardText
+              text={
+                card.faces
+                  ? card.faces.front.manaCost && card.faces.back.manaCost
+                    ? `${card.faces.front.manaCost} // ${card.faces.back.manaCost}`
+                    : card.faces.front.manaCost || card.faces.back.manaCost
+                  : card.manaCost
+              }
+            />
           </View>
 
-          <CardText
-            text={
-              card.faces
-                ? card.faces.front.manaCost && card.faces.back.manaCost
-                  ? `${card.faces.front.manaCost} // ${card.faces.back.manaCost}`
-                  : card.faces.front.manaCost || card.faces.back.manaCost
-                : card.manaCost
-            }
-          />
+          <View className="flex flex-row justify-center pt-2 bg-background-100">
+            <CardImage card={card} />
+          </View>
         </Pressable>
       )}
 
@@ -134,15 +140,14 @@ function DeckCard({
             link
             onLinkPress={() => setOpen(false)}
             card={card}
-            className="!p-0"
           >
             <View className="flex flex-row gap-2">
               <Button
-                size="sm"
+                size="xs"
                 action="info"
                 className="flex-1"
                 icon={faShop}
-                text={`$${card.prices?.usd}`}
+                text={`$${card.prices?.usd || "0.00"}`}
                 onClick={async () =>
                   card.priceUris?.tcgplayer &&
                   (await Linking.openURL(card.priceUris.tcgplayer))
@@ -150,26 +155,17 @@ function DeckCard({
               />
 
               <Button
-                size="sm"
+                size="xs"
                 action="info"
                 className="flex-1"
                 icon={faShop}
-                text={`€${card.prices?.eur}`}
+                text={`€${card.prices?.eur || "0.00"}`}
                 onClick={async () =>
                   card.priceUris?.cardmarket &&
                   (await Linking.openURL(card.priceUris.cardmarket))
                 }
               />
             </View>
-
-            <Button
-              text="More Details"
-              className="flex-1 w-full"
-              icon={faList}
-              // onClick={() =>
-              //   navigation.navigate(`cards/${card.set}/${card.collectorNumber}`)
-              // }
-            />
           </CardDetailedPreview>
         </Modal>
       </View>
