@@ -23,6 +23,9 @@ import { Image, View } from "react-native";
 export default function DeckSettingsPage() {
   const { deck, setDeck } = useContext(DeckContext);
 
+  const [saving, setSaving] = React.useState(false);
+  const [saved, setSaved] = React.useState(false);
+
   const [name, setName] = React.useState("");
   const [privateView, setPrivateView] = React.useState(false);
   const [description, setDescription] = React.useState("");
@@ -97,6 +100,8 @@ export default function DeckSettingsPage() {
   function saveDeck() {
     if (!deck) return;
 
+    setSaving(true);
+
     const mainBoard = getLocalStorageStoredCards(BoardTypes.MAIN);
     const colorsInDeck = sortColors(getDeckColors(mainBoard));
     const deckColors = colorsInDeck?.length
@@ -134,14 +139,28 @@ export default function DeckSettingsPage() {
       commanderId: commander?.scryfallId,
     };
 
-    DeckService.update(deck.id, dto);
+    DeckService.update(deck.id, dto).then(() => {
+      setSaved(true);
+      setSaving(false);
+
+      setTimeout(() => {
+        setSaved(false);
+      }, 2000);
+    });
   }
 
   return (
     <View className="flex gap-4">
       <BoxHeader
         title="Deck Settings"
-        end={<Button text="Save" onClick={() => saveDeck()} />}
+        end={
+          <Button
+            disabled={saving}
+            action={saved ? "success" : "primary"}
+            text={saving ? "Saving..." : saved ? "Saved!" : "Save"}
+            onClick={() => saveDeck()}
+          />
+        }
       />
 
       <View className="flex flex-row gap-6">
