@@ -261,7 +261,13 @@ export default function DeckCardGallery({
         </View>
       </View>
 
-      <View className="block w-full mt-2 lg:columns-3 md:columns-2 columns-1 gap-8">
+      <View
+        className={`${
+          groupedCards.length > 2
+            ? "lg:columns-3 md:columns-2 columns-1"
+            : "columns-1"
+        } block w-full mt-2 gap-8`}
+      >
         {groupedCards?.map(({ title, cards }, index) => (
           <DeckColumn
             key={title}
