@@ -92,8 +92,6 @@ export default function DeckSettingsPage() {
     if (deck.commander?.scryfallId !== commander.scryfallId) {
       setDeck({ ...deck, commander });
     }
-
-    console.log(commander);
   }, [commander]);
 
   function saveDeck() {
