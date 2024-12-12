@@ -6,7 +6,7 @@ import UserContext from "@/contexts/user/user.context";
 import DeckService from "@/hooks/services/deck.service";
 import UserService from "@/hooks/services/user.service";
 import { Deck } from "@/models/deck/deck";
-import { Link } from "expo-router";
+import { Link, router } from "expo-router";
 import React, { useContext, useEffect } from "react";
 import { ScrollView, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -23,7 +23,10 @@ export default function Login() {
   }, [user]);
 
   function logout() {
-    UserService.logout().then(() => setUser(null));
+    UserService.logout().then(() => {
+      setUser(null);
+      router.push("../..");
+    });
   }
 
   return (

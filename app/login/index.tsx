@@ -2,6 +2,7 @@ import Button from "@/components/ui/button/button";
 import Input from "@/components/ui/input/input";
 import UserContext from "@/contexts/user/user.context";
 import UserService from "@/hooks/services/user.service";
+import { router } from "expo-router";
 import React, { useContext } from "react";
 import { ScrollView, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -18,14 +19,20 @@ export default function Login() {
 
   function loginUser() {
     UserService.login(username, password).then((user) => {
-      if (user) setUser(user);
+      if (user) {
+        setUser(user);
+        router.push("../decks");
+      }
     });
   }
 
   function registerUser() {
     UserService.register(username, password, email).then(() => {
       UserService.login(username, password).then((user) => {
-        if (user) setUser(user);
+        if (user) {
+          setUser(user);
+          router.push(`../users/${user.id}`);
+        }
       });
     });
   }
