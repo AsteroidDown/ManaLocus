@@ -55,19 +55,25 @@ export function sortCards(cards: Card[], filters: CardFilters) {
 }
 
 export function sortCardsByCollectorNumber(cards: Card[]) {
-  return cards.sort(
-    (a, b) => Number(a.collectorNumber) - Number(b.collectorNumber)
+  return (
+    cards?.sort(
+      (a, b) => Number(a.collectorNumber) - Number(b.collectorNumber)
+    ) || []
   );
 }
 
 export function sortCardsAlphabetically(cards: Card[], ascending = true) {
-  return cards.sort((a, b) =>
-    ascending ? a.name.localeCompare(b.name) : b.name.localeCompare(a.name)
+  return (
+    cards?.sort((a, b) =>
+      ascending ? a.name.localeCompare(b.name) : b.name.localeCompare(a.name)
+    ) || []
   );
 }
 
 export function sortCardsByManaValue(cards: Card[], ascending = true) {
-  return cards.sort((a, b) => (ascending ? a.cmc - b.cmc : b.cmc - a.cmc));
+  return (
+    cards?.sort((a, b) => (ascending ? a.cmc - b.cmc : b.cmc - a.cmc)) || []
+  );
 }
 
 export function sortCardsByPrice(
