@@ -1,11 +1,13 @@
 import Text from "@/components/ui/text/text";
 import { BoardTypes } from "@/constants/boards";
 import { MTGColor } from "@/constants/mtg/mtg-colors";
+import { MTGFormats } from "@/constants/mtg/mtg-format";
 import { MTGRarity } from "@/constants/mtg/mtg-rarity";
 import { MTGCardType } from "@/constants/mtg/mtg-types";
 import { SortDirection } from "@/constants/sorting";
 import BoardContext from "@/contexts/cards/board.context";
 import StoredCardsContext from "@/contexts/cards/stored-cards.context";
+import DeckContext from "@/contexts/deck/deck.context";
 import { filterCards } from "@/functions/card-filtering";
 import { sortCards } from "@/functions/card-sorting";
 import {
@@ -51,6 +53,7 @@ export default function CardImportExportModal({
   exportCards,
   exportSideboard,
 }: CardImportExportModalProps) {
+  const { deck, setDeck } = useContext(DeckContext);
   const { board } = useContext(BoardContext);
   const { setStoredCards } = useContext(StoredCardsContext);
 
@@ -154,24 +157,111 @@ export default function CardImportExportModal({
   function getCardsFromImport(importText: string) {
     setDisabled(true);
 
-    const cardIdentifiers: CardIdentifier[] = [];
-    const sideBoardCardIdentifiers: CardIdentifier[] = [];
+    const deckName = importText.includes("About\nName ")
+      ? importText.split("About\nName ")[1].split("\n")[0]
+      : undefined;
+    if (deck && deckName) {
+      deck.name = deckName;
+      setDeck({ ...deck });
+    }
+    const commanderText = importText.includes("Commander\n")
+      ? importText.split("Commander\n")[1].split("\n")[0]
+      : undefined;
 
-    let sideboard = false;
+    const deckText = importText.includes("Deck\n")
+      ? importText.split("Deck\n")[1]
+      : importText;
+
+    const sideboardText = importText.includes("Sideboard\n")
+      ? importText.split("Sideboard\n")[1]
+      : undefined;
+
+    const { cardIdentifiers, errorFound } =
+      getCardIdentifiersFromText(deckText);
+    const {
+      cardIdentifiers: sideBoardCardIdentifiers,
+      errorFound: errorFoundSideboard,
+    } = sideboardText
+      ? getCardIdentifiersFromText(sideboardText)
+      : { cardIdentifiers: [], errorFound: false };
+    const {
+      cardIdentifiers: commanderIdentifiers,
+      errorFound: errorFoundCommander,
+    } = commanderText
+      ? getCardIdentifiersFromText(commanderText)
+      : { cardIdentifiers: [], errorFound: false };
+
+    if (errorFound || errorFoundSideboard || errorFoundCommander) {
+      setTimeout(() => setError(false), 3000);
+      return;
+    } else {
+      ScryfallService.getCardsFromCollection(cardIdentifiers).then(
+        (newCards) => {
+          setLocalStorageCards(
+            [],
+            sideBoardCardIdentifiers.length ? BoardTypes.MAIN : board
+          );
+          newCards.forEach((card) =>
+            saveLocalStorageCard(
+              card,
+              1,
+              sideBoardCardIdentifiers.length ? BoardTypes.MAIN : board
+            )
+          );
+
+          if (sideBoardCardIdentifiers.length) {
+            ScryfallService.getCardsFromCollection(
+              sideBoardCardIdentifiers
+            ).then((newSideBoardCards) => {
+              setLocalStorageCards([], BoardTypes.SIDE);
+              newSideBoardCards.forEach((card) =>
+                saveLocalStorageCard(card, 1, BoardTypes.SIDE)
+              );
+              setStoredCards(newSideBoardCards);
+            });
+          }
+
+          if (commanderIdentifiers.length) {
+            ScryfallService.getCardsFromCollection(commanderIdentifiers).then(
+              (commanderCards) => {
+                commanderCards.forEach((card) => {
+                  saveLocalStorageCard(card, 1, BoardTypes.MAIN);
+                  newCards.push(card);
+                });
+
+                if (deck) {
+                  deck.format = MTGFormats.COMMANDER;
+                  deck.commander = commanderCards[0];
+                  deck.featuredArtUrl =
+                    commanderCards[0].imageURIs?.artCrop || "";
+                  setDeck({ ...deck });
+                }
+              }
+            );
+          }
+
+          setStoredCards(newCards);
+          setDisabled(false);
+          setSuccess(true);
+          setTimeout(() => setSuccess(false), 3000);
+        }
+      );
+    }
+  }
+
+  function getCardIdentifiersFromText(text: string) {
+    const cardIdentifiers: CardIdentifier[] = [];
     let errorFound = false;
 
-    importText.split("\n").forEach((card) => {
+    text.split("\n").forEach((card) => {
       if (errorFound) return;
 
       const cardInfo = card.split(" // ")[0].split(" ");
       const infoLength = cardInfo.length;
 
-      const cardCount = Number(cardInfo?.[0]);
+      const cardCount = Number(cardInfo?.[0].replace(/[^0-9]/g, ""));
       if (!cardCount) {
         if (cardInfo?.[0].toLowerCase() === "") return;
-
-        if (cardInfo?.[0].toLowerCase() === "deck") return;
-        else if (cardInfo?.[0].toLowerCase() === "sideboard") sideboard = true;
         else {
           errorFound = true;
           setError(true);
@@ -195,74 +285,29 @@ export default function CardImportExportModal({
         }
 
         for (let i = 0; i < cardCount; i++) {
-          sideboard
-            ? sideBoardCardIdentifiers.push({
-                set: cardSet,
-                collector_number: identifier,
-              })
-            : cardIdentifiers.push({
-                set: cardSet.toLowerCase(),
-                collector_number: identifier,
-              });
+          cardIdentifiers.push({
+            set: cardSet.toLowerCase(),
+            collector_number: identifier,
+          });
         }
       } else if (identifier?.split("-")?.length === 5) {
         for (let i = 0; i < cardCount; i++) {
-          sideboard
-            ? sideBoardCardIdentifiers.push({ id: identifier })
-            : cardIdentifiers.push({
-                id: identifier,
-              });
+          cardIdentifiers.push({
+            id: identifier,
+          });
         }
       } else {
         cardInfo.shift();
 
         for (let i = 0; i < cardCount; i++) {
-          sideboard
-            ? sideBoardCardIdentifiers.push({ name: cardInfo.join(" ") })
-            : cardIdentifiers.push({
-                name: cardInfo.join(" "),
-              });
+          cardIdentifiers.push({
+            name: cardInfo.join(" "),
+          });
         }
       }
     });
 
-    if (errorFound) {
-      setTimeout(() => setError(false), 3000);
-      return;
-    } else {
-      ScryfallService.getCardsFromCollection(cardIdentifiers).then(
-        (newCards) => {
-          setLocalStorageCards(
-            [],
-            sideBoardCardIdentifiers.length ? BoardTypes.MAIN : board
-          );
-          newCards.forEach((card) =>
-            saveLocalStorageCard(
-              card,
-              1,
-              sideBoardCardIdentifiers.length ? BoardTypes.MAIN : board
-            )
-          );
-          setStoredCards(newCards);
-
-          if (sideboard && sideBoardCardIdentifiers.length) {
-            ScryfallService.getCardsFromCollection(
-              sideBoardCardIdentifiers
-            ).then((newSideBoardCards) => {
-              setLocalStorageCards([], "side");
-              newSideBoardCards.forEach((card) =>
-                saveLocalStorageCard(card, 1, "side")
-              );
-              setStoredCards(newSideBoardCards);
-            });
-          }
-
-          setDisabled(false);
-          setSuccess(true);
-          setTimeout(() => setSuccess(false), 3000);
-        }
-      );
-    }
+    return { cardIdentifiers, errorFound };
   }
 
   return (
