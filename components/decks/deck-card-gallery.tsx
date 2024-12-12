@@ -267,6 +267,7 @@ export default function DeckCardGallery({
             key={title}
             title={title}
             viewType={viewType}
+            commander={title === "Commander"}
             shouldWrap={shouldWrap && index === groupedCards.length - 1}
             cards={cards}
           />

@@ -113,9 +113,11 @@ function DeckCard({
             />
           </View>
 
-          <View className="flex flex-row justify-center pt-2 bg-background-100">
-            <CardImage card={card} />
-          </View>
+          {commander && (
+            <View className="flex flex-row justify-center pt-2 bg-background-100">
+              <CardImage card={card} />
+            </View>
+          )}
         </Pressable>
       )}
 
