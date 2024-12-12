@@ -38,7 +38,9 @@ export function mapDatabaseDeck(data: any, withCards = false): Deck {
       ? data.acquire.map((card: any) => mapDatabaseCardToCard(card))
       : [],
 
-    dashboard: { sections: data.dashboard?.sections },
+    dashboard: data.dashboard?.sections
+      ? { sections: data.dashboard?.sections }
+      : undefined,
 
     commander: deck?.commander
       ? mapDatabaseCardToCard(deck.commander)
