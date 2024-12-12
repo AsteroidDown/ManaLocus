@@ -44,7 +44,7 @@ export default function Select({
       setSearch(
         options.find((option) =>
           property
-            ? option.value[property] === value[property]
+            ? option.value?.[property] === value?.[property]
             : option.value === value
         )?.label ?? ""
       ),
