@@ -3,6 +3,7 @@ import BoxHeader from "@/components/ui/box/box-header";
 import Button from "@/components/ui/button/button";
 import UserContext from "@/contexts/user/user.context";
 import DeckService from "@/hooks/services/deck.service";
+import { router } from "expo-router";
 import React, { useContext } from "react";
 import { ScrollView, View } from "react-native";
 
@@ -12,7 +13,9 @@ export default function DecksPage() {
   function createDeck() {
     if (!user) return;
 
-    DeckService.create({});
+    DeckService.create({}).then((response) =>
+      router.push(`decks/${response.deckId}/builder/main-board`)
+    );
   }
 
   return (
