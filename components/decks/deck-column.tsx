@@ -90,7 +90,11 @@ function DeckCard({
     <>
       {viewType === DeckCardGalleryViewTypes.LIST && (
         <Pressable
-          className="flex hover:bg-primary-200 rounded-xl overflow-hidden transition-all duration-300"
+          className={`${
+            commander
+              ? "border-2 hover:border-primary-200 border-transparent"
+              : ""
+          } flex hover:bg-primary-200 rounded-xl overflow-hidden transition-all duration-300`}
           onPress={() => setOpen(true)}
         >
           <View className="flex flex-row gap-2 justify-between items-center px-2 py-0.5">
