@@ -10,8 +10,8 @@ export interface DeckFiltersDTO {
 export type DeckSortType = "created" | "-created" | "updated" | "-updated";
 
 export enum DeckSortTypes {
-  CREATED = "created",
-  CREATED_REVERSE = "-created",
-  UPDATED = "updated",
-  UPDATED_REVERSE = "-updated",
+  CREATED = "-created",
+  CREATED_REVERSE = "created",
+  UPDATED = "-updated",
+  UPDATED_REVERSE = "updated",
 }
