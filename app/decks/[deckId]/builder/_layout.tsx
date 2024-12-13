@@ -8,7 +8,6 @@ import {
   getLocalStorageStoredCards,
   saveLocalStorageCard,
 } from "@/functions/local-storage/card-local-storage";
-import { getLocalStorageDashboard } from "@/functions/local-storage/dashboard-local-storage";
 import DeckService from "@/hooks/services/deck.service";
 import ScryfallService from "@/hooks/services/scryfall.service";
 import { Card, CardIdentifier } from "@/models/card/card";
@@ -40,7 +39,8 @@ export default function TabLayout() {
     if (!deck) return;
     if (getLocalStorageStoredCards(BoardTypes.MAIN)?.length) return;
 
-    setDashboard(getLocalStorageDashboard());
+    if (deck.dashboard) setDashboard(deck.dashboard);
+    else setDashboard(null);
 
     DeckService.get(deck.id).then((deck) => {
       ScryfallService.getCardsFromCollection(
@@ -71,7 +71,7 @@ export default function TabLayout() {
           return acc;
         }, [] as CardIdentifier[])
       ).then((cards) =>
-        cards.forEach((card) => saveLocalStorageCard(card, 1, "side"))
+        cards.forEach((card) => saveLocalStorageCard(card, 1, BoardTypes.SIDE))
       );
 
       ScryfallService.getCardsFromCollection(
@@ -86,7 +86,7 @@ export default function TabLayout() {
           return acc;
         }, [] as CardIdentifier[])
       ).then((cards) =>
-        cards.forEach((card) => saveLocalStorageCard(card, 1, "maybe"))
+        cards.forEach((card) => saveLocalStorageCard(card, 1, BoardTypes.MAYBE))
       );
 
       ScryfallService.getCardsFromCollection(
@@ -101,7 +101,9 @@ export default function TabLayout() {
           return acc;
         }, [] as CardIdentifier[])
       ).then((cards) =>
-        cards.forEach((card) => saveLocalStorageCard(card, 1, "acquire"))
+        cards.forEach((card) =>
+          saveLocalStorageCard(card, 1, BoardTypes.ACQUIRE)
+        )
       );
     });
   }, [deck]);

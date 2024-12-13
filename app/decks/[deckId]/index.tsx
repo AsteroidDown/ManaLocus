@@ -13,6 +13,7 @@ import { BoardTypes } from "@/constants/boards";
 import DeckContext from "@/contexts/deck/deck.context";
 import { graphCardsByCost } from "@/functions/card-graphing";
 import { setLocalStorageCards } from "@/functions/local-storage/card-local-storage";
+import { setLocalStorageDashboard } from "@/functions/local-storage/dashboard-local-storage";
 import { faChartSimple, faDatabase } from "@fortawesome/free-solid-svg-icons";
 import React, { useContext, useEffect } from "react";
 import { ScrollView, View } from "react-native";
@@ -29,6 +30,7 @@ export default function DeckPage() {
     setLocalStorageCards([], BoardTypes.SIDE);
     setLocalStorageCards([], BoardTypes.MAYBE);
     setLocalStorageCards([], BoardTypes.ACQUIRE);
+    setLocalStorageDashboard({ sections: [] });
   }, [deck]);
 
   if (!deck) return;
