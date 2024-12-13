@@ -1,7 +1,9 @@
+import { MTGFormat, MTGFormats } from "@/constants/mtg/mtg-format";
+import { MTGLegalities } from "@/constants/mtg/mtg-legality";
 import { titleCase } from "@/functions/text-manipulation";
 import { Card } from "@/models/card/card";
 import { faShop } from "@fortawesome/free-solid-svg-icons";
-import React from "react";
+import React, { useEffect } from "react";
 import { Linking, Pressable, View } from "react-native";
 import CardDetailedPreview from "../cards/card-detailed-preview";
 import CardImage from "../cards/card-image";
@@ -18,6 +20,7 @@ import {
 export interface DeckColumnProps {
   title: string;
   cards?: Card[];
+  format?: MTGFormat;
   viewType: DeckCardGalleryViewType;
 
   hideCount?: boolean;
@@ -28,6 +31,7 @@ export interface DeckColumnProps {
 export default function DeckColumn({
   title,
   cards,
+  format,
   viewType,
 
   hideCount,
@@ -56,6 +60,7 @@ export default function DeckColumn({
             key={index}
             card={card}
             last={index === cards.length - 1}
+            format={format}
             viewType={viewType}
             hideCount={hideCount}
             commander={commander}
@@ -69,6 +74,7 @@ export default function DeckColumn({
 interface DeckCardProps {
   card: Card;
   last: boolean;
+  format?: MTGFormat;
   viewType: DeckCardGalleryViewType;
   hideCount?: boolean;
   commander?: boolean;
@@ -77,6 +83,7 @@ interface DeckCardProps {
 function DeckCard({
   card,
   last,
+  format,
   viewType,
   hideCount,
   commander,
@@ -84,7 +91,23 @@ function DeckCard({
   const [open, setOpen] = React.useState(false);
   const [hoveredIndex, setHoveredIndex] = React.useState(-1);
 
+  const [banned, setBanned] = React.useState(false);
+  const [restricted, setRestricted] = React.useState(false);
+
   const cardCount = Array(card.count).fill(undefined);
+
+  useEffect(() => {
+    if (!format || format === MTGFormats.CUBE) return;
+
+    if (
+      card.legalities[format] === MTGLegalities.BANNED ||
+      card.legalities[format] === MTGLegalities.NOT_LEGAL
+    ) {
+      setBanned(true);
+    } else if (card.legalities[format] === MTGLegalities.RESTRICTED) {
+      setRestricted(true);
+    }
+  }, [card]);
 
   return (
     <>
@@ -99,9 +122,31 @@ function DeckCard({
         >
           <View className="flex flex-row gap-2 justify-between items-center px-2 py-0.5">
             <View className="flex-1 flex flex-row items-center gap-2">
-              {!hideCount && <Text>{card.count}</Text>}
+              {!hideCount && (
+                <Text
+                  className={`${
+                    banned
+                      ? "!text-red-500"
+                      : restricted
+                      ? "!text-orange-500"
+                      : ""
+                  }`}
+                >
+                  {card.count}
+                </Text>
+              )}
 
-              <Text truncate thickness="medium">
+              <Text
+                truncate
+                thickness="medium"
+                className={`${
+                  banned
+                    ? "!text-red-500"
+                    : restricted
+                    ? "!text-orange-500"
+                    : ""
+                }`}
+              >
                 {card.name}
               </Text>
             </View>
