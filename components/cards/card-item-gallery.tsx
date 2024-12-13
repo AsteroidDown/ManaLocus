@@ -366,17 +366,9 @@ export default function CardItemGallery({
               hideImages={hideImages}
               cards={cardsSortedByType.enchantment}
             />
-            <CardItemGalleryColumn
-              title="Land"
-              itemsExpanded={itemsExpanded}
-              setItemExpanded={setItemsExpanded}
-              condensed={condensed}
-              hideImages={hideImages}
-              cards={cardsSortedByType.land}
-            />
             {cardsSortedByType.planeswalker?.length > 0 && (
               <CardItemGalleryColumn
-                title="Colorless"
+                title="Planeswalker"
                 itemsExpanded={itemsExpanded}
                 setItemExpanded={setItemsExpanded}
                 condensed={condensed}
@@ -394,6 +386,14 @@ export default function CardItemGallery({
                 cards={cardsSortedByType.battle}
               />
             )}
+            <CardItemGalleryColumn
+              title="Land"
+              itemsExpanded={itemsExpanded}
+              setItemExpanded={setItemsExpanded}
+              condensed={condensed}
+              hideImages={hideImages}
+              cards={cardsSortedByType.land}
+            />
           </View>
         )}
       </View>
