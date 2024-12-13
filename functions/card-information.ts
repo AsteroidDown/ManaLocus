@@ -15,7 +15,7 @@ export function getCardManaCost(card: Card) {
 
 export function getCardType(card: Card): MTGCardType {
   const cardTypeFromTypeLine = (card.typeLine ?? card.faces?.front.typeLine)
-    .split("-")[0]
+    .split("—")[0]
     .toLowerCase();
 
   if (cardTypeFromTypeLine.includes(MTGCardTypes.CREATURE)) {
