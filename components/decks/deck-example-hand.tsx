@@ -28,6 +28,10 @@ export default function DeckExampleHand({ deck }: DeckTestHandProps) {
     if (!deck) return;
 
     const mainCards = deck.main.reduce((acc, card) => {
+      if (deck.commander && card.scryfallId === deck.commander.scryfallId) {
+        return acc;
+      }
+
       for (let i = 0; i < card.count; i++) acc.push(card);
       return acc;
     }, [] as Card[]);
