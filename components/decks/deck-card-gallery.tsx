@@ -36,12 +36,12 @@ export enum DeckCardGallerySortTypes {
   PRICE = "price",
 }
 
-export type DeckCardGalleryGroupType = "type" | "rarity" | "cost";
+export type DeckCardGalleryGroupType = "type" | "rarity" | "mana-value";
 
 export enum DeckCardGalleryGroupTypes {
   TYPE = "type",
   RARITY = "rarity",
-  COST = "cost",
+  MANA_VALUE = "mana-value",
 }
 
 export type DeckCardGalleryProps = ViewProps & {
@@ -104,12 +104,14 @@ export default function DeckCardGallery({
   useEffect(() => {
     if (!deck) return;
 
+    const ascending = sortDirection === SortTypes.ASC;
+
     const sortedCards =
       sortType === DeckCardGallerySortTypes.MANA_VALUE
-        ? sortCardsByManaValue(boardCards[boardType])
+        ? sortCardsByManaValue(boardCards[boardType], ascending)
         : sortType === DeckCardGallerySortTypes.PRICE
-        ? sortCardsByPrice(boardCards[boardType])
-        : sortCardsAlphabetically(boardCards[boardType]);
+        ? sortCardsByPrice(boardCards[boardType], ascending)
+        : sortCardsAlphabetically(boardCards[boardType], ascending);
 
     if (groupType === DeckCardGalleryGroupTypes.RARITY) {
       const rarityGroupedCards = groupCardsByRarity(sortedCards);
@@ -129,7 +131,7 @@ export default function DeckCardGallery({
           ? [{ title: "Mythic", cards: rarityGroupedCards.mythic }]
           : []),
       ]);
-    } else if (groupType === DeckCardGalleryGroupTypes.COST) {
+    } else if (groupType === DeckCardGalleryGroupTypes.MANA_VALUE) {
       const costGroupedCards = groupCardsByCost(sortedCards);
 
       setGroupedCards([
@@ -198,7 +200,7 @@ export default function DeckCardGallery({
           : []),
       ]);
     }
-  }, [boardCards, sortType, groupType, boardType]);
+  }, [boardCards, sortType, sortDirection, groupType, boardType]);
 
   useEffect(() => {
     const first = groupedCards[0]?.cards.length;
@@ -219,7 +221,10 @@ export default function DeckCardGallery({
   return (
     <View className={`${className} flex gap-4`}>
       <View className="flex gap-2" style={{ zIndex: 10 }}>
-        <View className="flex-1 flex flex-row flex-wrap gap-2">
+        <View
+          className="flex-1 flex flex-row flex-wrap gap-2"
+          style={{ zIndex: 11 }}
+        >
           <Select
             label="View"
             value={viewType}
@@ -240,7 +245,7 @@ export default function DeckCardGallery({
             onChange={(type) => setGroupType(type)}
             options={Object.keys(DeckCardGalleryGroupTypes).map((key) => {
               return {
-                label: titleCase(key),
+                label: titleCase(key.replace("_", " ")),
                 value: (DeckCardGalleryGroupTypes as any)[key],
               };
             })}
