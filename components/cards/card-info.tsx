@@ -39,13 +39,7 @@ export function CardInfo({ card, face, link, onLinkPress }: CardInfoProps) {
       <View className="flex flex-row justify-between items-center gap-2">
         {link ? (
           <Link href={`/cards/${card.set}/${card.collectorNumber}`}>
-            <Pressable
-              tabIndex={-1}
-              onPress={() => {
-                console.log("Pressed");
-                onLinkPress?.();
-              }}
-            >
+            <Pressable tabIndex={-1} onPress={() => onLinkPress?.()}>
               <Text size="2xl" thickness="bold" className="!text-primary-200">
                 {face?.name || card.name}
               </Text>
