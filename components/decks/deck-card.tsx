@@ -1,6 +1,8 @@
 import { LostURL } from "@/constants/urls";
 import { titleCase } from "@/functions/text-manipulation";
 import { Deck } from "@/models/deck/deck";
+import { faHeart } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import { Image, Pressable, View } from "react-native";
 import CardText from "../cards/card-text";
@@ -61,13 +63,23 @@ export default function DeckCard({ deck, hideFormat }: DeckCardProps) {
             {deck.name}
           </Text>
 
-          <Text
-            size="xs"
-            thickness="medium"
-            className={`mt-auto mb-1 transition-all duration-300`}
-          >
-            By {deck.user?.name}
-          </Text>
+          <View className="flex flex-row justify-between items-center gap-2">
+            <Text size="xs" thickness="medium">
+              By {deck.user?.name}
+            </Text>
+
+            <View className="flex flex-row items-center gap-1">
+              <FontAwesomeIcon
+                size="xs"
+                icon={faHeart}
+                className="text-white"
+              />
+
+              <Text size="xs" thickness="medium">
+                {deck.favorites}
+              </Text>
+            </View>
+          </View>
         </View>
       </View>
     </Pressable>

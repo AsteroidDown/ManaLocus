@@ -14,12 +14,19 @@ import DeckContext from "@/contexts/deck/deck.context";
 import { graphCardsByCost } from "@/functions/card-graphing";
 import { setLocalStorageCards } from "@/functions/local-storage/card-local-storage";
 import { setLocalStorageDashboard } from "@/functions/local-storage/dashboard-local-storage";
-import { faChartSimple, faDatabase } from "@fortawesome/free-solid-svg-icons";
+import DeckService from "@/hooks/services/deck.service";
+import {
+  faChartSimple,
+  faDatabase,
+  faHeart,
+} from "@fortawesome/free-solid-svg-icons";
 import React, { useContext, useEffect } from "react";
 import { ScrollView, View } from "react-native";
 
 export default function DeckPage() {
-  const { deck } = useContext(DeckContext);
+  const { deck, setDeck } = useContext(DeckContext);
+
+  const [deckFavorited, setDeckFavorited] = React.useState(false);
 
   const [stacked, setStacked] = React.useState(true);
 
@@ -31,9 +38,35 @@ export default function DeckPage() {
     setLocalStorageCards([], BoardTypes.MAYBE);
     setLocalStorageCards([], BoardTypes.ACQUIRE);
     setLocalStorageDashboard({ sections: [] });
+
+    DeckService.getDeckFavorited(deck.id).then((favorited) =>
+      setDeckFavorited(favorited)
+    );
   }, [deck]);
 
   if (!deck) return;
+
+  function addFavorite() {
+    if (!deck) return;
+
+    DeckService.addFavorite(deck.id).then((response) => {
+      if (response) {
+        setDeckFavorited(true);
+        setDeck({ ...deck, favorites: deck.favorites + 1 });
+      }
+    });
+  }
+
+  function removeFavorite() {
+    if (!deck) return;
+
+    DeckService.removeFavorite(deck.id).then((response) => {
+      if (response) {
+        setDeckFavorited(false);
+        setDeck({ ...deck, favorites: deck.favorites - 1 });
+      }
+    });
+  }
 
   return (
     <ScrollView className="bg-background-100">
@@ -68,7 +101,17 @@ export default function DeckPage() {
               ),
             },
           ]}
-        />
+        >
+          <View className="flex flex-row gap-2">
+            <Button
+              rounded
+              text={deck.favorites + ""}
+              type="clear"
+              icon={faHeart}
+              onClick={() => (deckFavorited ? removeFavorite() : addFavorite())}
+            />
+          </View>
+        </TabBar>
 
         <Divider thick className="!border-background-200" />
 

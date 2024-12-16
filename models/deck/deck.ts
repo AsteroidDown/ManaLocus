@@ -15,6 +15,7 @@ export interface Deck {
 
   name: string;
   description?: string;
+  favorites: number;
 
   private: boolean;
   format: MTGFormat;

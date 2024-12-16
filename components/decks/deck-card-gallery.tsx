@@ -219,7 +219,7 @@ export default function DeckCardGallery({
   return (
     <View className={`${className} flex gap-4`}>
       <View className="flex gap-2" style={{ zIndex: 10 }}>
-        <View className="flex-1 flex flex-row flex-wrap gap-2 mr-auto">
+        <View className="flex-1 flex flex-row flex-wrap gap-2">
           <Select
             label="View"
             value={viewType}
