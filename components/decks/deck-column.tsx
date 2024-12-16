@@ -1,6 +1,6 @@
 import { MTGFormat, MTGFormats } from "@/constants/mtg/mtg-format";
 import { MTGLegalities } from "@/constants/mtg/mtg-legality";
-import { titleCase } from "@/functions/text-manipulation";
+import { currency, titleCase } from "@/functions/text-manipulation";
 import { Card } from "@/models/card/card";
 import { faShop } from "@fortawesome/free-solid-svg-icons";
 import React, { useEffect } from "react";
@@ -23,6 +23,8 @@ export interface DeckColumnProps {
   format?: MTGFormat;
   viewType: DeckCardGalleryViewType;
 
+  showPrice?: boolean;
+  showManaValue?: boolean;
   hideCount?: boolean;
   commander?: boolean;
   shouldWrap?: boolean;
@@ -34,6 +36,8 @@ export default function DeckColumn({
   format,
   viewType,
 
+  showPrice,
+  showManaValue,
   hideCount,
   commander,
   shouldWrap,
@@ -62,6 +66,8 @@ export default function DeckColumn({
             last={index === cards.length - 1}
             format={format}
             viewType={viewType}
+            showPrice={showPrice}
+            showManaValue={showManaValue}
             hideCount={hideCount}
             commander={commander}
           />
@@ -76,6 +82,9 @@ interface DeckCardProps {
   last: boolean;
   format?: MTGFormat;
   viewType: DeckCardGalleryViewType;
+
+  showPrice?: boolean;
+  showManaValue?: boolean;
   hideCount?: boolean;
   commander?: boolean;
 }
@@ -85,6 +94,8 @@ function DeckCard({
   last,
   format,
   viewType,
+  showPrice,
+  showManaValue,
   hideCount,
   commander,
 }: DeckCardProps) {
@@ -151,15 +162,23 @@ function DeckCard({
               </Text>
             </View>
 
-            <CardText
-              text={
-                card.faces
-                  ? card.faces.front.manaCost && card.faces.back.manaCost
-                    ? `${card.faces.front.manaCost} // ${card.faces.back.manaCost}`
-                    : card.faces.front.manaCost || card.faces.back.manaCost
-                  : card.manaCost
-              }
-            />
+            {showManaValue && (
+              <CardText
+                text={
+                  card.faces
+                    ? card.faces.front.manaCost && card.faces.back.manaCost
+                      ? `${card.faces.front.manaCost} // ${card.faces.back.manaCost}`
+                      : card.faces.front.manaCost || card.faces.back.manaCost
+                    : card.manaCost
+                }
+              />
+            )}
+
+            {showPrice && (
+              <Text className="w-14 text-right">
+                {currency(card.prices?.usd)}
+              </Text>
+            )}
           </View>
 
           {commander && (

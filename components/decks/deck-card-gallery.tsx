@@ -1,4 +1,5 @@
 import { BoardTypes } from "@/constants/boards";
+import { SortTypes } from "@/constants/sorting";
 import {
   groupCardsByCost,
   groupCardsByRarity,
@@ -12,8 +13,11 @@ import {
 import { titleCase } from "@/functions/text-manipulation";
 import { Card } from "@/models/card/card";
 import { Deck } from "@/models/deck/deck";
+import { faFilter } from "@fortawesome/free-solid-svg-icons";
 import React, { useEffect } from "react";
 import { View, ViewProps } from "react-native";
+import Button from "../ui/button/button";
+import Checkbox from "../ui/checkbox/checkbox";
 import Select from "../ui/input/select";
 import DeckColumn from "./deck-column";
 
@@ -50,10 +54,17 @@ export default function DeckCardGallery({
 }: DeckCardGalleryProps) {
   const [viewType, setViewType] = React.useState(DeckCardGalleryViewTypes.LIST);
   const [sortType, setSortType] = React.useState(DeckCardGallerySortTypes.NAME);
+  const [sortDirection, setSortDirection] = React.useState(SortTypes.ASC);
   const [boardType, setBoardType] = React.useState(BoardTypes.MAIN);
   const [groupType, setGroupType] = React.useState(
     DeckCardGalleryGroupTypes.TYPE
   );
+
+  const [filtersOpen, setFiltersOpen] = React.useState(false);
+  const [overflow, setOverflow] = React.useState(false);
+
+  const [showManaValue, setShowManaValue] = React.useState(true);
+  const [showPrice, setShowPrice] = React.useState(false);
 
   const [boardCards, setBoardCards] = React.useState(
     {} as { [key: string]: Card[] }
@@ -200,19 +211,19 @@ export default function DeckCardGallery({
     else setShouldWrap(false);
   }, [groupedCards]);
 
+  useEffect(() => {
+    if (filtersOpen) setTimeout(() => setOverflow(true), 300);
+    else setOverflow(false);
+  }, [filtersOpen]);
+
   return (
-    <View className={`${className} flex gap-4`} style={{ zIndex: 10 }}>
-      <View
-        className="flex-1 flex flex-row flex-wrap gap-2"
-        style={{ zIndex: 10 }}
-      >
-        <View
-          className="flex-1 flex flex-row gap-2 min-w-fit"
-          style={{ zIndex: 10 }}
-        >
+    <View className={`${className} flex gap-4`}>
+      <View className="flex gap-2" style={{ zIndex: 10 }}>
+        <View className="flex-1 flex flex-row flex-wrap gap-2 mr-auto">
           <Select
             label="View"
             value={viewType}
+            className="max-w-min"
             onChange={(type) => setViewType(type)}
             options={Object.keys(DeckCardGalleryViewTypes).map((key) => {
               return {
@@ -223,23 +234,9 @@ export default function DeckCardGallery({
           />
 
           <Select
-            label="Sort"
-            value={sortType}
-            onChange={(type) => setSortType(type)}
-            options={Object.values(DeckCardGallerySortTypes).map((key) => ({
-              label: titleCase(key.replace("-", " ")),
-              value: key,
-            }))}
-          />
-        </View>
-
-        <View
-          className="flex-1 flex flex-row gap-2 min-w-fit"
-          style={{ zIndex: 10 }}
-        >
-          <Select
             label="Grouping"
             value={groupType}
+            className="max-w-min"
             onChange={(type) => setGroupType(type)}
             options={Object.keys(DeckCardGalleryGroupTypes).map((key) => {
               return {
@@ -252,12 +249,64 @@ export default function DeckCardGallery({
           <Select
             label="Board"
             value={boardType}
+            className="max-w-min"
             onChange={(board) => setBoardType(board)}
             options={Object.values(BoardTypes).map((board) => ({
               label: titleCase(board),
               value: board,
             }))}
           />
+
+          <Button
+            icon={faFilter}
+            className="self-end"
+            type={filtersOpen ? "default" : "outlined"}
+            onClick={() => setFiltersOpen(!filtersOpen)}
+          />
+        </View>
+
+        <View
+          className={`${filtersOpen ? "max-h-[1000px]" : "max-h-0"} ${
+            !overflow ? "overflow-hidden" : ""
+          } flex flex-row mr-auto transition-all duration-300`}
+        >
+          <Select
+            squareRight
+            label="Sort"
+            value={sortType}
+            className="max-w-min"
+            onChange={(type) => setSortType(type)}
+            options={Object.values(DeckCardGallerySortTypes).map((key) => ({
+              label: titleCase(key.replace("-", " ")),
+              value: key,
+            }))}
+          />
+
+          <Select
+            squareLeft
+            label="Direction"
+            value={sortDirection}
+            className="mr-4 max-w-min"
+            onChange={(direction) => setSortDirection(direction)}
+            options={[
+              { label: "Ascending", value: SortTypes.ASC },
+              { label: "Descending", value: SortTypes.DESC },
+            ]}
+          />
+
+          <View className="flex flex-row gap-4 self-end mb-2">
+            <Checkbox
+              label="Price"
+              checked={showPrice}
+              onChange={setShowPrice}
+            />
+
+            <Checkbox
+              label="Mana Value"
+              checked={showManaValue}
+              onChange={setShowManaValue}
+            />
+          </View>
         </View>
       </View>
 
@@ -274,6 +323,8 @@ export default function DeckCardGallery({
             title={title}
             format={deck.format}
             viewType={viewType}
+            showPrice={showPrice}
+            showManaValue={showManaValue}
             commander={title === "Commander"}
             shouldWrap={shouldWrap && index === groupedCards.length - 1}
             cards={cards}
