@@ -42,6 +42,16 @@ export default function DeckColumn({
   commander,
   shouldWrap,
 }: DeckColumnProps) {
+  const [count, setCount] = React.useState(0);
+  const [price, setPrice] = React.useState(0);
+
+  React.useEffect(() => {
+    setCount(cards?.reduce((acc, card) => acc + card.count, 0) || 0);
+    setPrice(
+      cards?.reduce((acc, card) => acc + (card.prices?.usd || 0), 0) || 0
+    );
+  }, [cards]);
+
   return (
     <View
       className={`${
@@ -53,7 +63,13 @@ export default function DeckColumn({
           {titleCase(title)}
         </Text>
 
-        <Text>{cards?.reduce((acc, card) => acc + card.count, 0)}</Text>
+        <View className="flex flex-row gap-2">
+          <Text>{count}</Text>
+
+          {showPrice && (
+            <Text className="w-14 text-right">{currency(price)}</Text>
+          )}
+        </View>
       </View>
 
       <Divider thick className="!border-background-200 my-1" />
