@@ -146,7 +146,7 @@ function getButtonBaseColor(
   type: ButtonType,
   disabled: boolean
 ) {
-  if (type === "clear") return "";
+  if (type === "clear") return "border-2 border-transparent";
   else if (type === "outlined") {
     if (disabled) return "border-2 bg-dark-300 bg-opacity-30";
 
