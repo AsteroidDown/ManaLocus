@@ -4,7 +4,7 @@ import { MTGColor } from "@/constants/mtg/mtg-colors";
 import { MTGFormats } from "@/constants/mtg/mtg-format";
 import { MTGRarity } from "@/constants/mtg/mtg-rarity";
 import { MTGCardType } from "@/constants/mtg/mtg-types";
-import { SortDirection } from "@/constants/sorting";
+import { SortType } from "@/constants/sorting";
 import BoardContext from "@/contexts/cards/board.context";
 import StoredCardsContext from "@/contexts/cards/stored-cards.context";
 import DeckContext from "@/contexts/deck/deck.context";
@@ -60,11 +60,9 @@ export default function CardImportExportModal({
   const [filtersOpen, setFiltersOpen] = React.useState(false);
 
   const [colorSort, setColorSort] = React.useState(false);
-  const [manaValueSort, setManaValueSort] = React.useState(
-    null as SortDirection
-  );
+  const [manaValueSort, setManaValueSort] = React.useState(null as SortType);
   const [alphabeticalSort, setAlphabeticalSort] = React.useState(
-    null as SortDirection
+    null as SortType
   );
 
   const [colorFilter, setColorFilter] = React.useState(

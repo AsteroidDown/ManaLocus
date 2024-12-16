@@ -1,3 +1,4 @@
+import { SortTypes } from "@/constants/sorting";
 import { Card } from "@/models/card/card";
 import { CardFilters } from "@/models/sorted-cards/sorted-cards";
 import { groupCardsByColor } from "./card-grouping";
@@ -16,9 +17,9 @@ export function sortCards(cards: Card[], filters: CardFilters) {
 
   if (filters.alphabeticalSort) {
     sortedCards =
-      filters.alphabeticalSort === "ASC"
+      filters.alphabeticalSort === SortTypes.ASC
         ? sortCardsAlphabetically(cards)
-        : filters.alphabeticalSort === "DESC"
+        : filters.alphabeticalSort === SortTypes.DESC
         ? sortCardsAlphabetically(cards, false)
         : cards;
   }
@@ -27,9 +28,9 @@ export function sortCards(cards: Card[], filters: CardFilters) {
     const cardsToSort: Card[] = sortedCards?.length ? sortedCards : cards;
 
     sortedCards =
-      filters.priceSort === "ASC"
+      filters.priceSort === SortTypes.ASC
         ? sortCardsByPrice(cardsToSort)
-        : filters.priceSort === "DESC"
+        : filters.priceSort === SortTypes.DESC
         ? sortCardsByPrice(cardsToSort, false)
         : cardsToSort;
   }
@@ -38,9 +39,9 @@ export function sortCards(cards: Card[], filters: CardFilters) {
     const cardsToSort: Card[] = sortedCards?.length ? sortedCards : cards;
 
     sortedCards =
-      filters.manaValueSort === "ASC"
+      filters.manaValueSort === SortTypes.ASC
         ? sortCardsByManaValue(cardsToSort)
-        : filters.manaValueSort === "DESC"
+        : filters.manaValueSort === SortTypes.DESC
         ? sortCardsByManaValue(cardsToSort, false)
         : cardsToSort;
   }

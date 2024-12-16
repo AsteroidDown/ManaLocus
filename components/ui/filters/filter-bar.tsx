@@ -3,7 +3,7 @@ import Text from "@/components/ui/text/text";
 import { MTGColor } from "@/constants/mtg/mtg-colors";
 import { MTGRarity } from "@/constants/mtg/mtg-rarity";
 import { MTGCardType } from "@/constants/mtg/mtg-types";
-import { SortDirection } from "@/constants/sorting";
+import { SortType } from "@/constants/sorting";
 import CardPreferencesContext from "@/contexts/cards/card-preferences.context";
 import {
   getLocalStoragePreferences,
@@ -45,12 +45,10 @@ export default function FilterBar({ clear, type, setFilters }: FilterBarProps) {
     undefined as MTGRarity[] | undefined
   );
 
-  const [priceSort, setPriceSort] = React.useState(null as SortDirection);
-  const [manaValueSort, setManaValueSort] = React.useState(
-    null as SortDirection
-  );
+  const [priceSort, setPriceSort] = React.useState(null as SortType);
+  const [manaValueSort, setManaValueSort] = React.useState(null as SortType);
   const [alphabeticalSort, setAlphabeticalSort] = React.useState(
-    null as SortDirection
+    null as SortType
   );
 
   useEffect(() => {
