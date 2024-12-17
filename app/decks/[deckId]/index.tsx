@@ -4,6 +4,7 @@ import DeckChangeLog from "@/components/decks/deck-change-log";
 import DeckExampleHand from "@/components/decks/deck-example-hand";
 import DeckFooter from "@/components/decks/deck-footer";
 import DeckHeader from "@/components/decks/deck-header";
+import DeckTokens from "@/components/decks/deck-tokens";
 import Graph from "@/components/graph/graph";
 import Box from "@/components/ui/box/box";
 import Button from "@/components/ui/button/button";
@@ -141,6 +142,8 @@ export default function DeckPage() {
         <Divider thick className="!border-background-200" />
 
         <DeckExampleHand deck={deck} />
+
+        <DeckTokens deck={deck} />
       </View>
 
       <DeckFooter deck={deck} />
