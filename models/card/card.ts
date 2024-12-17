@@ -42,6 +42,7 @@ export interface Card {
   prices: CardPrices;
   priceUris: CardPriceUris;
   legalities: CardLegalities;
+  allParts: CardPart[];
 }
 
 export type CardBorderColor = "black" | "borderless";
@@ -117,6 +118,20 @@ export interface CardLegalities {
   oldschool: MTGLegality;
   premodern: MTGLegality;
   pred: MTGLegality;
+}
+
+export interface CardPart {
+  component: string;
+  id: string;
+  name: string;
+  object: string;
+  typeLine: string;
+  uri: string;
+}
+
+export enum CardPartTypes {
+  COMBO_PIECE = "combo_piece",
+  TOKEN = "token",
 }
 
 export type CardIdentifier =

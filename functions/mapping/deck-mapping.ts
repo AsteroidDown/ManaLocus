@@ -1,4 +1,4 @@
-import { Card } from "@/models/card/card";
+import { Card, CardPart } from "@/models/card/card";
 import { Deck } from "@/models/deck/deck";
 
 export function mapDatabaseDeck(data: any, withCards = false): Deck {
@@ -138,5 +138,19 @@ function mapDatabaseCardToCard(card: any): Card {
     },
     priceUris: card.priceUris,
     legalities: card.legalities,
+    allParts: card.allParts
+      ? card.allParts.map((part: any) => mapDatabaseCardPart(part))
+      : [],
+  };
+}
+
+function mapDatabaseCardPart(part: any): CardPart {
+  return {
+    component: part.component,
+    id: part.id,
+    name: part.name,
+    object: part.object,
+    typeLine: part.type_line,
+    uri: part.uri,
   };
 }
