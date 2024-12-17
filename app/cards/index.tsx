@@ -140,6 +140,7 @@ export default function CardsPage() {
                 <View className="flex flex-row items-center gap-4">
                   <Image
                     source={{ uri: set.iconSvgUri }}
+                    style={[{ resizeMode: "contain" }]}
                     className="h-6 w-6 fill-white invert-[1]"
                   />
 
