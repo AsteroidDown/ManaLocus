@@ -7,11 +7,19 @@ export interface DeckFiltersDTO {
   sort?: DeckSortType | null;
 }
 
-export type DeckSortType = "created" | "-created" | "updated" | "-updated";
+export type DeckSortType =
+  | "created"
+  | "-created"
+  | "updated"
+  | "-updated"
+  | "favorites"
+  | "-favorites";
 
 export enum DeckSortTypes {
   CREATED = "-created",
   CREATED_REVERSE = "created",
   UPDATED = "-updated",
   UPDATED_REVERSE = "updated",
+  FAVORITES = "-favorites",
+  FAVORITES_REVERSE = "favorites",
 }

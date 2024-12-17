@@ -96,6 +96,11 @@ export default function DeckGallery() {
                 label: "Updated (Old to New)",
                 value: DeckSortTypes.UPDATED_REVERSE,
               },
+              { label: "Favorites", value: DeckSortTypes.FAVORITES },
+              {
+                label: "Favorites (Descending)",
+                value: DeckSortTypes.FAVORITES_REVERSE,
+              },
             ]}
           />
         </View>
