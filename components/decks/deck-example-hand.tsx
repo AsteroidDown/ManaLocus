@@ -150,9 +150,6 @@ export function HandCard({ card }: { card: Card }) {
               text="More Details"
               className="flex-1 w-full"
               icon={faList}
-              // onClick={() =>
-              //   navigation.navigate(`cards/${card.set}/${card.collectorNumber}`)
-              // }
             />
           </CardDetailedPreview>
         </Modal>
