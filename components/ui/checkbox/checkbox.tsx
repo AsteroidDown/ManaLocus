@@ -16,7 +16,7 @@ export default function Checkbox({ label, checked, onChange }: CheckboxProps) {
 
   return (
     <Pressable
-      className="flex-1 flex flex-row items-center gap-2 max-h-fit z-[-1] min-w-fit"
+      className="flex-1 flex flex-row items-center gap-2 max-h-fit z-[-1] min-w-fit outline-none"
       onPointerEnter={() => setHovered(true)}
       onPointerLeave={() => setHovered(false)}
       onPress={() => onChange?.(!checked)}
