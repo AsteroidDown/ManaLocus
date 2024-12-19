@@ -104,7 +104,7 @@ export default function DeckColumn({
         </Text>
 
         <View className="flex flex-row gap-2">
-          <Text>{count}</Text>
+          {!commander && <Text>{count}</Text>}
 
           {showPrice && (
             <Text className="w-14 text-right">{currency(price)}</Text>
@@ -142,7 +142,7 @@ export default function DeckColumn({
                   <Text thickness="semi">{titleCase(group.title)}</Text>
 
                   <View className="flex flex-row gap-2">
-                    <Text>{group.count}</Text>
+                    {!commander && <Text>{count}</Text>}
 
                     {showPrice && (
                       <Text className="w-14 text-right">
