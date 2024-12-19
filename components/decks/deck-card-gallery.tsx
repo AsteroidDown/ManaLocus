@@ -1,6 +1,7 @@
 import { BoardTypes } from "@/constants/boards";
 import { SortTypes } from "@/constants/sorting";
 import {
+  groupCardsByColor,
   groupCardsByCost,
   groupCardsByRarity,
   groupCardsByType,
@@ -36,12 +37,17 @@ export enum DeckCardGallerySortTypes {
   PRICE = "price",
 }
 
-export type DeckCardGalleryGroupType = "type" | "rarity" | "mana-value";
+export type DeckCardGalleryGroupType =
+  | "type"
+  | "color"
+  | "mana-value"
+  | "rarity";
 
 export enum DeckCardGalleryGroupTypes {
   TYPE = "type",
-  RARITY = "rarity",
+  COLOR = "color",
   MANA_VALUE = "mana-value",
+  RARITY = "rarity",
 }
 
 export type DeckCardGalleryProps = ViewProps & {
@@ -129,6 +135,37 @@ export default function DeckCardGallery({
           : []),
         ...(rarityGroupedCards.mythic?.length
           ? [{ title: "Mythic", cards: rarityGroupedCards.mythic }]
+          : []),
+      ]);
+    } else if (groupType === DeckCardGalleryGroupTypes.COLOR) {
+      const colorGroupedCards = groupCardsByColor(sortedCards);
+
+      setGroupedCards([
+        ...(commander ? [{ title: "Commander", cards: [commander] }] : []),
+
+        ...(colorGroupedCards.white?.length
+          ? [{ title: "White", cards: colorGroupedCards.white }]
+          : []),
+        ...(colorGroupedCards.blue?.length
+          ? [{ title: "Blue", cards: colorGroupedCards.blue }]
+          : []),
+        ...(colorGroupedCards.black?.length
+          ? [{ title: "Black", cards: colorGroupedCards.black }]
+          : []),
+        ...(colorGroupedCards.red?.length
+          ? [{ title: "Red", cards: colorGroupedCards.red }]
+          : []),
+        ...(colorGroupedCards.green?.length
+          ? [{ title: "Green", cards: colorGroupedCards.green }]
+          : []),
+        ...(colorGroupedCards.gold?.length
+          ? [{ title: "Gold", cards: colorGroupedCards.gold }]
+          : []),
+        ...(colorGroupedCards.colorless?.length
+          ? [{ title: "Colorless", cards: colorGroupedCards.colorless }]
+          : []),
+        ...(colorGroupedCards.land?.length
+          ? [{ title: "Land", cards: colorGroupedCards.land }]
           : []),
       ]);
     } else if (groupType === DeckCardGalleryGroupTypes.MANA_VALUE) {
