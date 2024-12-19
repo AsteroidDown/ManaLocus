@@ -18,6 +18,13 @@ import {
   DeckCardGalleryViewTypes,
 } from "./deck-card-gallery";
 
+export interface DeckColumnCardGrouping {
+  title: string;
+  cards: Card[];
+  count: number;
+  price: number;
+}
+
 export interface DeckColumnProps {
   title: string;
   cards?: Card[];
@@ -49,7 +56,7 @@ export default function DeckColumn({
   const [price, setPrice] = React.useState(0);
 
   const [cardGroupings, setCardGroupings] = React.useState(
-    [] as { title: string; cards: Card[] }[] | null
+    [] as DeckColumnCardGrouping[] | null
   );
 
   React.useEffect(() => {
@@ -62,13 +69,23 @@ export default function DeckColumn({
   React.useEffect(() => {
     if (!cards?.length || !groupMulticolored) return;
 
-    const cardGroupings = [] as { title: string; cards: Card[] }[];
+    const cardGroupings = [] as DeckColumnCardGrouping[];
     const groupedCards = groupCardsByColorMulti(cards);
 
     Object.keys(groupedCards).forEach((key: string) => {
       cardGroupings.push({
         title: titleCase(key),
         cards: (groupedCards as any)[key],
+        count:
+          (groupedCards as any)[key]?.reduce(
+            (acc: number, card: Card) => (acc += card.count),
+            0
+          ) || 0,
+        price:
+          (groupedCards as any)[key]?.reduce(
+            (acc: number, card: Card) => (acc += card.prices?.usd || 0),
+            0
+          ) || 0,
       });
     });
 
@@ -117,25 +134,49 @@ export default function DeckColumn({
       )}
 
       {groupMulticolored && (cardGroupings?.length || 0) > 0 && (
-        <View className="flex gap-0.5">
-          {cardGroupings?.map(({ title, cards }, index) => (
-            <View key={index + title} className="mt-1">
-              <Text thickness="medium">{title}</Text>
+        <View className="flex gap-1">
+          {cardGroupings?.map((group, index) => (
+            <View key={index + group.title} className="mt-1">
+              {group.title !== title && (
+                <View className="flex flex-row justify-between items-center px-2">
+                  <Text thickness="semi">{titleCase(group.title)}</Text>
 
-              {cards.map((card, cardIndex) => (
-                <DeckCard
-                  key={card.scryfallId + cardIndex}
-                  card={card}
-                  last={index === cardGroupings.length - 1}
-                  format={format}
-                  viewType={viewType}
-                  showPrice={showPrice}
-                  showManaValue={showManaValue}
-                  groupMulticolored={groupMulticolored}
-                  hideCount={hideCount}
-                  commander={commander}
-                />
-              ))}
+                  <View className="flex flex-row gap-2">
+                    <Text>{group.count}</Text>
+
+                    {showPrice && (
+                      <Text className="w-14 text-right">
+                        {currency(group.price)}
+                      </Text>
+                    )}
+                  </View>
+                </View>
+              )}
+
+              {group.title !== title && (
+                <Divider className="!border-background-200 my-1" />
+              )}
+
+              <View
+                className={`${
+                  group.title === title ? "-mt-1" : ""
+                } flex gap-0.5`}
+              >
+                {group.cards.map((card, cardIndex) => (
+                  <DeckCard
+                    key={card.scryfallId + cardIndex}
+                    card={card}
+                    last={index === cardGroupings.length - 1}
+                    format={format}
+                    viewType={viewType}
+                    showPrice={showPrice}
+                    showManaValue={showManaValue}
+                    groupMulticolored={groupMulticolored}
+                    hideCount={hideCount}
+                    commander={commander}
+                  />
+                ))}
+              </View>
             </View>
           ))}
         </View>
