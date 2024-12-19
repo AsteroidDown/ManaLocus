@@ -1,16 +1,23 @@
 {
   "cSpell.words": [
+    "azorius",
     "borderless",
     "cardhoarder",
     "cardmarket",
     "deckfavorite",
     "decklist",
+    "esper",
     "extendedart",
+    "grixis",
+    "jeskai",
+    "jund",
     "Mainboard",
+    "mardu",
     "minigame",
     "mtgo",
     "mythics",
     "nativewind",
+    "naya",
     "nonfoil",
     "oathbreaker",
     "oldschool",
@@ -21,8 +28,11 @@
     "Scryfall",
     "spellbook",
     "standardbrawl",
+    "sultai",
     "tailwindcss",
     "tcgplayer",
-    "uncommons"
+    "temur",
+    "uncommons",
+    "wubrg"
   ]
 }

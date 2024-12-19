@@ -17,6 +17,48 @@ export interface CardsSortedByColor {
   land: Card[];
 }
 
+export interface CardsSortedByColorMulti {
+  white?: Card[];
+  blue?: Card[];
+  black?: Card[];
+  red?: Card[];
+  green?: Card[];
+
+  azorius?: Card[];
+  dimir?: Card[];
+  rakdos?: Card[];
+  gruul?: Card[];
+  selesnya?: Card[];
+
+  orzhov?: Card[];
+  golgari?: Card[];
+  simic?: Card[];
+  izzet?: Card[];
+  boros?: Card[];
+
+  esper?: Card[];
+  grixis?: Card[];
+  jund?: Card[];
+  naya?: Card[];
+  bant?: Card[];
+
+  jeskai?: Card[];
+  sultai?: Card[];
+  mardu?: Card[];
+  temur?: Card[];
+  abzan?: Card[];
+
+  yore?: Card[]; // No green
+  glint?: Card[]; // No white
+  dune?: Card[]; // No blue
+  ink?: Card[]; // No black
+  witch?: Card[]; // No red
+
+  wubrg?: Card[];
+
+  colorless?: Card[];
+}
+
 export interface CardsSortedByCost {
   zero: Card[];
   one: Card[];

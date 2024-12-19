@@ -4,6 +4,7 @@ import { MTGCardTypes } from "@/constants/mtg/mtg-types";
 import { Card } from "@/models/card/card";
 import {
   CardsSortedByColor,
+  CardsSortedByColorMulti,
   CardsSortedByCost,
   CardsSortedByRarity,
   CardsSortedByType,
@@ -55,6 +56,256 @@ export function groupCardsByColor(cards: Card[]): CardsSortedByColor {
   });
 
   return groupedCards;
+}
+
+export function groupCardsByColorMulti(cards: Card[]): CardsSortedByColorMulti {
+  const groupedCards: CardsSortedByColorMulti = {};
+
+  cards.forEach((card) => {
+    // Colorless
+    if (!card.colorIdentity.length) {
+      groupedCards?.["colorless"]
+        ? groupedCards["colorless"].push(card)
+        : (groupedCards["colorless"] = [card]);
+
+      // Single Color
+    } else if (card.colorIdentity.length === 1) {
+      if (card.colorIdentity[0] === MTGColorSymbols.WHITE) {
+        groupedCards?.["white"]
+          ? groupedCards["white"].push(card)
+          : (groupedCards["white"] = [card]);
+      } else if (card.colorIdentity[0] === MTGColorSymbols.BLUE) {
+        groupedCards?.["blue"]
+          ? groupedCards["blue"].push(card)
+          : (groupedCards["blue"] = [card]);
+      } else if (card.colorIdentity[0] === MTGColorSymbols.BLACK) {
+        groupedCards?.["black"]
+          ? groupedCards["black"].push(card)
+          : (groupedCards["black"] = [card]);
+      } else if (card.colorIdentity[0] === MTGColorSymbols.RED) {
+        groupedCards?.["red"]
+          ? groupedCards["red"].push(card)
+          : (groupedCards["red"] = [card]);
+      } else if (card.colorIdentity[0] === MTGColorSymbols.GREEN) {
+        groupedCards?.["green"]
+          ? groupedCards["green"].push(card)
+          : (groupedCards["green"] = [card]);
+      }
+
+      // Two Color
+    } else if (card.colorIdentity.length === 2) {
+      if (card.colorIdentity.includes(MTGColorSymbols.WHITE)) {
+        // Azorius
+        if (card.colorIdentity.includes(MTGColorSymbols.BLUE)) {
+          groupedCards?.["azorius"]
+            ? groupedCards["azorius"].push(card)
+            : (groupedCards["azorius"] = [card]);
+
+          // Orzhov
+        } else if (card.colorIdentity.includes(MTGColorSymbols.BLACK)) {
+          groupedCards?.["orzhov"]
+            ? groupedCards["orzhov"].push(card)
+            : (groupedCards["orzhov"] = [card]);
+
+          // Boros
+        } else if (card.colorIdentity.includes(MTGColorSymbols.RED)) {
+          groupedCards?.["boros"]
+            ? groupedCards["boros"].push(card)
+            : (groupedCards["boros"] = [card]);
+
+          // Selesnya
+        } else {
+          groupedCards?.["selesnya"]
+            ? groupedCards["selesnya"].push(card)
+            : (groupedCards["selesnya"] = [card]);
+        }
+      } else if (card.colorIdentity.includes(MTGColorSymbols.BLUE)) {
+        // Dimir
+        if (card.colorIdentity.includes(MTGColorSymbols.BLACK)) {
+          groupedCards?.["dimir"]
+            ? groupedCards["dimir"].push(card)
+            : (groupedCards["dimir"] = [card]);
+
+          // Izzet
+        } else if (card.colorIdentity.includes(MTGColorSymbols.RED)) {
+          groupedCards?.["izzet"]
+            ? groupedCards["izzet"].push(card)
+            : (groupedCards["izzet"] = [card]);
+
+          // Simic
+        } else {
+          groupedCards?.["simic"]
+            ? groupedCards["simic"].push(card)
+            : (groupedCards["simic"] = [card]);
+        }
+      } else if (card.colorIdentity.includes(MTGColorSymbols.BLACK)) {
+        // Rakdos
+        if (card.colorIdentity.includes(MTGColorSymbols.RED)) {
+          groupedCards?.["rakdos"]
+            ? groupedCards["rakdos"].push(card)
+            : (groupedCards["rakdos"] = [card]);
+
+          // Golgari
+        } else {
+          groupedCards?.["golgari"]
+            ? groupedCards["golgari"].push(card)
+            : (groupedCards["golgari"] = [card]);
+        }
+      } else {
+        // Gruul
+        groupedCards?.["gruul"]
+          ? groupedCards["gruul"].push(card)
+          : (groupedCards["gruul"] = [card]);
+      }
+
+      // Three Color
+    } else if (card.colorIdentity.length === 3) {
+      if (card.colorIdentity.includes(MTGColorSymbols.WHITE)) {
+        if (card.colorIdentity.includes(MTGColorSymbols.BLUE)) {
+          // Esper
+          if (card.colorIdentity.includes(MTGColorSymbols.BLACK)) {
+            groupedCards?.["esper"]
+              ? groupedCards["esper"].push(card)
+              : (groupedCards["esper"] = [card]);
+
+            // Jeskai
+          } else if (card.colorIdentity.includes(MTGColorSymbols.RED)) {
+            groupedCards?.["jeskai"]
+              ? groupedCards["jeskai"].push(card)
+              : (groupedCards["jeskai"] = [card]);
+
+            // Bant
+          } else {
+            groupedCards?.["bant"]
+              ? groupedCards["bant"].push(card)
+              : (groupedCards["bant"] = [card]);
+          }
+        } else if (card.colorIdentity.includes(MTGColorSymbols.BLACK)) {
+          // Mardu
+          if (card.colorIdentity.includes(MTGColorSymbols.RED)) {
+            groupedCards?.["mardu"]
+              ? groupedCards["mardu"].push(card)
+              : (groupedCards["mardu"] = [card]);
+
+            // Abzan
+          } else {
+            groupedCards?.["abzan"]
+              ? groupedCards["abzan"].push(card)
+              : (groupedCards["abzan"] = [card]);
+          }
+
+          // Naya
+        } else {
+          groupedCards?.["naya"]
+            ? groupedCards["naya"].push(card)
+            : (groupedCards["naya"] = [card]);
+        }
+      } else if (card.colorIdentity.includes(MTGColorSymbols.BLUE)) {
+        if (card.colorIdentity.includes(MTGColorSymbols.BLACK)) {
+          // Grixis
+          if (card.colorIdentity.includes(MTGColorSymbols.RED)) {
+            groupedCards?.["grixis"]
+              ? groupedCards["grixis"].push(card)
+              : (groupedCards["grixis"] = [card]);
+
+            // Sultai
+          } else {
+            groupedCards?.["sultai"]
+              ? groupedCards["sultai"].push(card)
+              : (groupedCards["sultai"] = [card]);
+          }
+
+          // Temur
+        } else {
+          groupedCards?.["temur"]
+            ? groupedCards["temur"].push(card)
+            : (groupedCards["temur"] = [card]);
+        }
+
+        // Jund
+      } else {
+        groupedCards?.["jund"]
+          ? groupedCards["jund"].push(card)
+          : (groupedCards["jund"] = [card]);
+      }
+
+      // Four Color
+    } else if (card.colorIdentity.length === 4) {
+      if (!card.colorIdentity.includes(MTGColorSymbols.WHITE)) {
+        groupedCards?.["glint"]
+          ? groupedCards["glint"].push(card)
+          : (groupedCards["glint"] = [card]);
+      } else if (!card.colorIdentity.includes(MTGColorSymbols.BLUE)) {
+        groupedCards?.["dune"]
+          ? groupedCards["dune"].push(card)
+          : (groupedCards["dune"] = [card]);
+      } else if (!card.colorIdentity.includes(MTGColorSymbols.BLACK)) {
+        groupedCards?.["ink"]
+          ? groupedCards["ink"].push(card)
+          : (groupedCards["ink"] = [card]);
+      } else if (!card.colorIdentity.includes(MTGColorSymbols.RED)) {
+        groupedCards?.["witch"]
+          ? groupedCards["witch"].push(card)
+          : (groupedCards["witch"] = [card]);
+      } else {
+        groupedCards?.["yore"]
+          ? groupedCards["yore"].push(card)
+          : (groupedCards["yore"] = [card]);
+      }
+    } else {
+      groupedCards?.["wubrg"]
+        ? groupedCards["wubrg"].push(card)
+        : (groupedCards["wubrg"] = [card]);
+    }
+  });
+
+  return getGroupedCardsMultiInOrder(groupedCards);
+}
+
+export function getGroupedCardsMultiInOrder(
+  cards: CardsSortedByColorMulti
+): CardsSortedByColorMulti {
+  return {
+    ...(cards?.white?.length ? { white: cards.white } : {}),
+    ...(cards?.blue?.length ? { blue: cards.blue } : {}),
+    ...(cards?.black?.length ? { black: cards.black } : {}),
+    ...(cards?.red?.length ? { red: cards.red } : {}),
+    ...(cards?.green?.length ? { green: cards.green } : {}),
+
+    ...(cards?.azorius?.length ? { azorius: cards.azorius } : {}),
+    ...(cards?.dimir?.length ? { dimir: cards.dimir } : {}),
+    ...(cards?.rakdos?.length ? { rakdos: cards.rakdos } : {}),
+    ...(cards?.gruul?.length ? { gruul: cards.gruul } : {}),
+    ...(cards?.selesnya?.length ? { selesnya: cards.selesnya } : {}),
+
+    ...(cards?.orzhov?.length ? { orzhov: cards.orzhov } : {}),
+    ...(cards?.golgari?.length ? { golgari: cards.golgari } : {}),
+    ...(cards?.simic?.length ? { simic: cards.simic } : {}),
+    ...(cards?.izzet?.length ? { izzet: cards.izzet } : {}),
+    ...(cards?.boros?.length ? { boros: cards.boros } : {}),
+
+    ...(cards?.esper?.length ? { esper: cards.esper } : {}),
+    ...(cards?.grixis?.length ? { grixis: cards.grixis } : {}),
+    ...(cards?.jund?.length ? { jund: cards.jund } : {}),
+    ...(cards?.naya?.length ? { naya: cards.naya } : {}),
+    ...(cards?.bant?.length ? { bant: cards.bant } : {}),
+
+    ...(cards?.jeskai?.length ? { jeskai: cards.jeskai } : {}),
+    ...(cards?.sultai?.length ? { sultai: cards.sultai } : {}),
+    ...(cards?.mardu?.length ? { mardu: cards.mardu } : {}),
+    ...(cards?.temur?.length ? { temur: cards.temur } : {}),
+    ...(cards?.abzan?.length ? { abzan: cards.abzan } : {}),
+
+    ...(cards?.yore?.length ? { yore: cards.yore } : {}),
+    ...(cards?.glint?.length ? { glint: cards.glint } : {}),
+    ...(cards?.dune?.length ? { dune: cards.dune } : {}),
+    ...(cards?.ink?.length ? { ink: cards.ink } : {}),
+    ...(cards?.witch?.length ? { witch: cards.witch } : {}),
+
+    ...(cards?.wubrg?.length ? { wubrg: cards.wubrg } : {}),
+
+    ...(cards?.colorless?.length ? { colorless: cards.colorless } : {}),
+  };
 }
 
 export function groupCardsByCost(cards: Card[]): CardsSortedByCost {
