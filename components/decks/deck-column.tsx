@@ -149,7 +149,7 @@ function DeckCard({
         >
           <View className="flex flex-row gap-2 justify-between items-center px-2 py-0.5">
             <View className="flex-1 flex flex-row items-center gap-2">
-              {!hideCount && (
+              {!hideCount && !commander && (
                 <Text
                   className={`${
                     banned
