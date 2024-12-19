@@ -20,6 +20,7 @@ import { View, ViewProps } from "react-native";
 import Button from "../ui/button/button";
 import Checkbox from "../ui/checkbox/checkbox";
 import Select from "../ui/input/select";
+import Text from "../ui/text/text";
 import DeckColumn from "./deck-column";
 
 export type DeckCardGalleryViewType = "list" | "card";
@@ -337,24 +338,30 @@ export default function DeckCardGallery({
             ]}
           />
 
-          <View className="flex flex-row gap-4 self-end mb-2">
-            <Checkbox
-              label="Price"
-              checked={showPrice}
-              onChange={setShowPrice}
-            />
+          <View className="flex-1 flex gap-2 max-h-fit min-w-fit">
+            <Text size="md" thickness="bold">
+              Column Options
+            </Text>
 
-            <Checkbox
-              label="Mana Value"
-              checked={showManaValue}
-              onChange={setShowManaValue}
-            />
+            <View className="flex flex-row gap-4 my-2">
+              <Checkbox
+                label="Price"
+                checked={showPrice}
+                onChange={setShowPrice}
+              />
 
-            <Checkbox
-              label="Separate by Color"
-              checked={groupMulticolored}
-              onChange={setGroupMulticolored}
-            />
+              <Checkbox
+                label="Mana Value"
+                checked={showManaValue}
+                onChange={setShowManaValue}
+              />
+
+              <Checkbox
+                label="Separate by Color"
+                checked={groupMulticolored}
+                onChange={setGroupMulticolored}
+              />
+            </View>
           </View>
         </View>
       </View>
