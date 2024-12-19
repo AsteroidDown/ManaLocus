@@ -69,7 +69,10 @@ export default function DeckTokens({ deck }: DeckTokensProps) {
   return (
     <View className="relative flex gap-2">
       <View className="sticky top-0 flex gap-2 bg-background-100 z-10">
-        <View className="flex flex-row justify-between items-center gap-4">
+        <Pressable
+          className="flex flex-row justify-between items-center gap-4"
+          onPress={() => setOpen(!open)}
+        >
           <Text size="lg" thickness="bold">
             Tokens
           </Text>
@@ -84,7 +87,7 @@ export default function DeckTokens({ deck }: DeckTokensProps) {
             } transition-all duration-300`}
             onClick={() => setOpen(!open)}
           />
-        </View>
+        </Pressable>
 
         <Divider thick className="!border-background-200 mb-2" />
       </View>
