@@ -137,7 +137,7 @@ export default function DeckColumn({
         <View className="flex gap-1">
           {cardGroupings?.map((group, index) => (
             <View key={index + group.title} className="mt-1">
-              {group.title !== title && (
+              {!commander && group.title !== title && (
                 <View className="flex flex-row justify-between items-center px-2">
                   <Text thickness="semi">{titleCase(group.title)}</Text>
 
@@ -153,7 +153,7 @@ export default function DeckColumn({
                 </View>
               )}
 
-              {group.title !== title && (
+              {!commander && group.title !== title && (
                 <Divider className="!border-background-200 my-1" />
               )}
 
