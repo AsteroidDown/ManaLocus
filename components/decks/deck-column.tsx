@@ -1,5 +1,6 @@
 import { MTGFormat, MTGFormats } from "@/constants/mtg/mtg-format";
 import { MTGLegalities } from "@/constants/mtg/mtg-legality";
+import { groupCardsByColorMulti } from "@/functions/card-grouping";
 import { currency, titleCase } from "@/functions/text-manipulation";
 import { Card } from "@/models/card/card";
 import { faShop } from "@fortawesome/free-solid-svg-icons";
@@ -25,6 +26,7 @@ export interface DeckColumnProps {
 
   showPrice?: boolean;
   showManaValue?: boolean;
+  groupMulticolored?: boolean;
   hideCount?: boolean;
   commander?: boolean;
   shouldWrap?: boolean;
@@ -38,6 +40,7 @@ export default function DeckColumn({
 
   showPrice,
   showManaValue,
+  groupMulticolored,
   hideCount,
   commander,
   shouldWrap,
@@ -45,12 +48,32 @@ export default function DeckColumn({
   const [count, setCount] = React.useState(0);
   const [price, setPrice] = React.useState(0);
 
+  const [cardGroupings, setCardGroupings] = React.useState(
+    [] as { title: string; cards: Card[] }[] | null
+  );
+
   React.useEffect(() => {
     setCount(cards?.reduce((acc, card) => acc + card.count, 0) || 0);
     setPrice(
       cards?.reduce((acc, card) => acc + (card.prices?.usd || 0), 0) || 0
     );
   }, [cards]);
+
+  React.useEffect(() => {
+    if (!cards?.length || !groupMulticolored) return;
+
+    const cardGroupings = [] as { title: string; cards: Card[] }[];
+    const groupedCards = groupCardsByColorMulti(cards);
+
+    Object.keys(groupedCards).forEach((key: string) => {
+      cardGroupings.push({
+        title: titleCase(key),
+        cards: (groupedCards as any)[key],
+      });
+    });
+
+    setCardGroupings(cardGroupings);
+  }, [cards, groupMulticolored]);
 
   return (
     <View
@@ -74,21 +97,49 @@ export default function DeckColumn({
 
       <Divider thick className="!border-background-200 my-1" />
 
-      <View className="flex gap-0.5">
-        {cards?.map((card, index) => (
-          <DeckCard
-            key={index}
-            card={card}
-            last={index === cards.length - 1}
-            format={format}
-            viewType={viewType}
-            showPrice={showPrice}
-            showManaValue={showManaValue}
-            hideCount={hideCount}
-            commander={commander}
-          />
-        ))}
-      </View>
+      {!groupMulticolored && (
+        <View className="flex gap-0.5">
+          {cards?.map((card, index) => (
+            <DeckCard
+              key={index}
+              card={card}
+              last={index === cards.length - 1}
+              format={format}
+              viewType={viewType}
+              showPrice={showPrice}
+              showManaValue={showManaValue}
+              groupMulticolored={groupMulticolored}
+              hideCount={hideCount}
+              commander={commander}
+            />
+          ))}
+        </View>
+      )}
+
+      {groupMulticolored && (cardGroupings?.length || 0) > 0 && (
+        <View className="flex gap-0.5">
+          {cardGroupings?.map(({ title, cards }, index) => (
+            <View key={index + title} className="mt-1">
+              <Text thickness="medium">{title}</Text>
+
+              {cards.map((card, cardIndex) => (
+                <DeckCard
+                  key={card.scryfallId + cardIndex}
+                  card={card}
+                  last={index === cardGroupings.length - 1}
+                  format={format}
+                  viewType={viewType}
+                  showPrice={showPrice}
+                  showManaValue={showManaValue}
+                  groupMulticolored={groupMulticolored}
+                  hideCount={hideCount}
+                  commander={commander}
+                />
+              ))}
+            </View>
+          ))}
+        </View>
+      )}
     </View>
   );
 }
@@ -101,6 +152,7 @@ interface DeckCardProps {
 
   showPrice?: boolean;
   showManaValue?: boolean;
+  groupMulticolored?: boolean;
   hideCount?: boolean;
   commander?: boolean;
 }
@@ -112,6 +164,7 @@ function DeckCard({
   viewType,
   showPrice,
   showManaValue,
+  groupMulticolored,
   hideCount,
   commander,
 }: DeckCardProps) {

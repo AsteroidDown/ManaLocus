@@ -71,6 +71,7 @@ export default function DeckCardGallery({
 
   const [showManaValue, setShowManaValue] = React.useState(true);
   const [showPrice, setShowPrice] = React.useState(false);
+  const [groupMulticolored, setGroupMulticolored] = React.useState(false);
 
   const [boardCards, setBoardCards] = React.useState(
     {} as { [key: string]: Card[] }
@@ -348,6 +349,12 @@ export default function DeckCardGallery({
               checked={showManaValue}
               onChange={setShowManaValue}
             />
+
+            <Checkbox
+              label="Separate by Color"
+              checked={groupMulticolored}
+              onChange={setGroupMulticolored}
+            />
           </View>
         </View>
       </View>
@@ -367,6 +374,7 @@ export default function DeckCardGallery({
             viewType={viewType}
             showPrice={showPrice}
             showManaValue={showManaValue}
+            groupMulticolored={groupMulticolored}
             commander={title === "Commander"}
             shouldWrap={shouldWrap && index === groupedCards.length - 1}
             cards={cards}
