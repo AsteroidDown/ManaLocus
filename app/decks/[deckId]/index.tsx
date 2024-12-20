@@ -19,6 +19,7 @@ import DeckService from "@/hooks/services/deck.service";
 import {
   faChartSimple,
   faDatabase,
+  faEye,
   faHeart,
 } from "@fortawesome/free-solid-svg-icons";
 import React, { useContext, useEffect } from "react";
@@ -28,6 +29,7 @@ export default function DeckPage() {
   const { deck, setDeck } = useContext(DeckContext);
 
   const [deckFavorited, setDeckFavorited] = React.useState(false);
+  const [deckViewed, setDeckViewed] = React.useState(null as boolean | null);
 
   const [stacked, setStacked] = React.useState(true);
 
@@ -43,9 +45,22 @@ export default function DeckPage() {
     DeckService.getDeckFavorited(deck.id).then((favorited) =>
       setDeckFavorited(favorited)
     );
+
+    DeckService.getDeckViewed(deck.id).then((viewed) => setDeckViewed(viewed));
   }, [deck]);
 
   if (!deck) return;
+
+  useEffect(() => {
+    if (deckViewed === null || deckViewed) return;
+    console.log("deckViewed", deckViewed);
+
+    DeckService.addView(deck.id).then((response) => {
+      if (response) {
+        setDeck({ ...deck, views: deck.views + 1 });
+      }
+    });
+  }, [deckViewed]);
 
   function addFavorite() {
     if (!deck) return;
@@ -103,12 +118,14 @@ export default function DeckPage() {
             },
           ]}
         >
-          <View className="flex flex-row gap-2">
+          <View className="flex flex-row">
+            <Button rounded text={deck.views + ""} type="clear" icon={faEye} />
+
             <Button
               rounded
-              text={deck.favorites + ""}
               type="clear"
               icon={faHeart}
+              text={deck.favorites + ""}
               onClick={() => (deckFavorited ? removeFavorite() : addFavorite())}
             />
           </View>

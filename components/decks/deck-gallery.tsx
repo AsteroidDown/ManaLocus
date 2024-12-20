@@ -98,8 +98,13 @@ export default function DeckGallery() {
               },
               { label: "Favorites", value: DeckSortTypes.FAVORITES },
               {
-                label: "Favorites (Descending)",
+                label: "Favorites (Ascending)",
                 value: DeckSortTypes.FAVORITES_REVERSE,
+              },
+              { label: "Views", value: DeckSortTypes.VIEWS },
+              {
+                label: "Views (Ascending)",
+                value: DeckSortTypes.VIEWS_REVERSE,
               },
             ]}
           />

@@ -13,7 +13,9 @@ export type DeckSortType =
   | "updated"
   | "-updated"
   | "favorites"
-  | "-favorites";
+  | "-favorites"
+  | "views"
+  | "-views";
 
 export enum DeckSortTypes {
   CREATED = "-created",
@@ -22,4 +24,6 @@ export enum DeckSortTypes {
   UPDATED_REVERSE = "updated",
   FAVORITES = "-favorites",
   FAVORITES_REVERSE = "favorites",
+  VIEWS = "-views",
+  VIEWS_REVERSE = "views",
 }
