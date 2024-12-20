@@ -19,6 +19,7 @@ export function mapDatabaseDeck(data: any, withCards = false): Deck {
     name: deck.name,
     description: deck.description,
     favorites: data.favorites || 0,
+    views: data.views || 0,
 
     private: deck.private,
     format: deck.format,
