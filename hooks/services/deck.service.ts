@@ -51,6 +51,12 @@ async function getDeckFavorited(deckId: string): Promise<boolean> {
   );
 }
 
+async function getDeckViewed(deckId: string): Promise<boolean> {
+  return await API.get(`decks/${deckId}/views/`).then(
+    (response) => !!response?.viewed
+  );
+}
+
 async function create(data: DeckDTO) {
   return await API.post(`decks/`, { ...data }, true).catch((error) => {
     console.error(
@@ -91,17 +97,27 @@ async function removeFavorite(deckId: string) {
   });
 }
 
+async function addView(deckId: string) {
+  return await API.post(`decks/${deckId}/views/`).catch((error) => {
+    console.error(
+      `Error adding view to deck with id: (${deckId}) to favorites.\nError: ${error}`
+    );
+  });
+}
+
 const DeckService = {
   get,
   getMany,
   getByUser,
   getChanges,
   getDeckFavorited,
+  getDeckViewed,
   create,
   update,
   remove,
   addFavorite,
   removeFavorite,
+  addView,
 };
 
 export default DeckService;
