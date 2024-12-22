@@ -38,13 +38,11 @@ import CardPrints from "./card-prints";
 
 export interface CardItemProps {
   card: Card;
-  condensed?: boolean;
   hideImage?: boolean;
 }
 
 export default function CardItem({
   card,
-  condensed = false,
   hideImage = false,
   itemsExpanded,
   setItemsExpanded,
@@ -87,20 +85,10 @@ export default function CardItem({
           setExpanded(!expanded);
         }}
         className={`flex gap-2 rounded-2xl overflow-hidden transition-all duration-300 outline-none ${
-          expanded
-            ? "max-h-[1000px] "
-            : condensed
-            ? "max-h-[24px]"
-            : "max-h-[36px]"
-        } ${
-          expanded
-            ? "bg-background-300"
-            : condensed
-            ? "bg-none"
-            : "bg-background-300"
-        }`}
+          expanded ? "max-h-[1000px] " : "max-h-[24px]"
+        } ${expanded ? "bg-background-300" : "bg-none"}`}
       >
-        <CardItemHeader card={card} condensed={condensed} focused={focused} />
+        <CardItemHeader card={card} focused={focused} />
 
         {expanded && (
           <>
@@ -140,11 +128,7 @@ export default function CardItem({
         </Modal>
       )}
 
-      <View
-        className={`relative w-full h-0 z-10 max-w-full ${
-          !condensed ? "-my-1" : ""
-        }`}
-      >
+      <View className={`relative w-full h-0 z-10 max-w-full`}>
         <View
           className={`absolute top-0 left-0 flex gap-2 w-full !bg-background-100 rounded-xl overflow-hidden transition-all duration-300 z-10 ${
             hovered && !expanded ? "max-h-[412px]" : "max-h-0"
@@ -187,23 +171,15 @@ export default function CardItem({
 
 export function CardItemHeader({
   card,
-  condensed,
   focused,
 }: CardItemProps & { focused: boolean }) {
   const [hovered, setHovered] = React.useState(false);
 
   return (
     <View
-      className={`flex flex-row gap-1 justify-between items-center transition-all ${
-        condensed ? "px-2 max-h-[24px] h-[24px]" : "px-4 max-h-[36px] h-[36px]"
+      className={`flex flex-row justify-between gap-1 px-2 max-h-[24px] h-[24px] items-center transition-all
       } ${focused ? "bg-primary-300" : ""}
-        ${
-          hovered
-            ? "bg-primary-300"
-            : condensed
-            ? "bg-none"
-            : "bg-background-300"
-        }`}
+        ${hovered ? "bg-primary-300" : "bg-none"}`}
       onPointerEnter={() => setHovered(true)}
       onPointerLeave={() => setHovered(false)}
     >

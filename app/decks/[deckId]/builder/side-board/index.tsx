@@ -8,7 +8,6 @@ export default function CardsByCostPage() {
   return (
     <CardItemGallery
       type="cost"
-      condensed={preferences.cardsCondensed || false}
       hideImages={preferences.hideCardImages || false}
       groupMulticolored={preferences.groupMulticolored || false}
     />

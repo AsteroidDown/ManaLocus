@@ -17,7 +17,6 @@ export interface CardItemGalleryColumnCardGrouping {
 export interface CardItemGalleryColumnProps {
   title: string;
   cards: Card[];
-  condensed?: boolean;
   hideImages?: boolean;
   groupMulticolored?: boolean;
   itemsExpanded?: number;
@@ -27,7 +26,6 @@ export interface CardItemGalleryColumnProps {
 export default function CardItemGalleryColumn({
   title,
   cards,
-  condensed = false,
   hideImages = false,
   groupMulticolored = false,
   itemsExpanded,
@@ -78,12 +76,11 @@ export default function CardItemGalleryColumn({
       <Divider thick />
 
       {!groupMulticolored && (
-        <View className={`flex ${condensed ? "gap-1 mx-0" : "gap-2 mx-2"}`}>
+        <View className={`flex gap-[3px]`}>
           {cards.map((card, index) => (
             <CardItem
               key={card.scryfallId + index}
               card={card}
-              condensed={condensed}
               hideImage={hideImages}
               itemsExpanded={itemsExpanded}
               setItemsExpanded={setItemExpanded}
@@ -93,7 +90,7 @@ export default function CardItemGalleryColumn({
       )}
 
       {groupMulticolored && (cardGroupings?.length || 0) > 0 && (
-        <View className="flex gap-1">
+        <View className="flex gap-[3px]">
           {cardGroupings?.map((group, index) => (
             <View key={index + group.title} className="mt-1">
               {group.title !== title && (
@@ -117,7 +114,6 @@ export default function CardItemGalleryColumn({
                   <CardItem
                     key={card.scryfallId + cardIndex}
                     card={card}
-                    condensed={condensed}
                     hideImage={hideImages}
                     itemsExpanded={itemsExpanded}
                     setItemsExpanded={setItemExpanded}

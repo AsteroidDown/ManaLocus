@@ -41,14 +41,12 @@ import CardSaveAsGraphModal from "./card-save-as-graph-modal";
 export interface CardItemGalleryProps {
   type: CardFilterSortType;
 
-  condensed: boolean;
   groupMulticolored: boolean;
   hideImages: boolean;
 }
 
 export default function CardItemGallery({
   type = "cost",
-  condensed,
   groupMulticolored,
   hideImages,
 }: CardItemGalleryProps) {
@@ -187,7 +185,6 @@ export default function CardItemGallery({
             {cardsSortedByCost.zero?.length > 0 && (
               <CardItemGalleryColumn
                 title="0 Cost"
-                condensed={condensed}
                 hideImages={hideImages}
                 itemsExpanded={itemsExpanded}
                 setItemExpanded={setItemsExpanded}
@@ -197,7 +194,6 @@ export default function CardItemGallery({
             )}
             <CardItemGalleryColumn
               title="1 Cost"
-              condensed={condensed}
               hideImages={hideImages}
               itemsExpanded={itemsExpanded}
               setItemExpanded={setItemsExpanded}
@@ -206,7 +202,6 @@ export default function CardItemGallery({
             />
             <CardItemGalleryColumn
               title="2 Cost"
-              condensed={condensed}
               hideImages={hideImages}
               itemsExpanded={itemsExpanded}
               setItemExpanded={setItemsExpanded}
@@ -215,7 +210,6 @@ export default function CardItemGallery({
             />
             <CardItemGalleryColumn
               title="3 Cost"
-              condensed={condensed}
               hideImages={hideImages}
               itemsExpanded={itemsExpanded}
               setItemExpanded={setItemsExpanded}
@@ -224,7 +218,6 @@ export default function CardItemGallery({
             />
             <CardItemGalleryColumn
               title="4 Cost"
-              condensed={condensed}
               hideImages={hideImages}
               itemsExpanded={itemsExpanded}
               setItemExpanded={setItemsExpanded}
@@ -233,7 +226,6 @@ export default function CardItemGallery({
             />
             <CardItemGalleryColumn
               title="5 Cost"
-              condensed={condensed}
               hideImages={hideImages}
               itemsExpanded={itemsExpanded}
               setItemExpanded={setItemsExpanded}
@@ -243,7 +235,6 @@ export default function CardItemGallery({
             {cardsSortedByCost.six?.length > 0 && (
               <CardItemGalleryColumn
                 title="6+ Cost"
-                condensed={condensed}
                 hideImages={hideImages}
                 itemsExpanded={itemsExpanded}
                 setItemExpanded={setItemsExpanded}
@@ -254,7 +245,6 @@ export default function CardItemGallery({
             {cardsSortedByCost.land?.length > 0 && (
               <CardItemGalleryColumn
                 title="Lands"
-                condensed={condensed}
                 hideImages={hideImages}
                 itemsExpanded={itemsExpanded}
                 setItemExpanded={setItemsExpanded}
@@ -269,7 +259,6 @@ export default function CardItemGallery({
           <View className="flex flex-row gap-4 w-full min-h-[500px]">
             <CardItemGalleryColumn
               title="White"
-              condensed={condensed}
               hideImages={hideImages}
               itemsExpanded={itemsExpanded}
               setItemExpanded={setItemsExpanded}
@@ -278,7 +267,6 @@ export default function CardItemGallery({
             />
             <CardItemGalleryColumn
               title="Blue"
-              condensed={condensed}
               hideImages={hideImages}
               itemsExpanded={itemsExpanded}
               setItemExpanded={setItemsExpanded}
@@ -287,7 +275,6 @@ export default function CardItemGallery({
             />
             <CardItemGalleryColumn
               title="Black"
-              condensed={condensed}
               hideImages={hideImages}
               itemsExpanded={itemsExpanded}
               setItemExpanded={setItemsExpanded}
@@ -296,7 +283,6 @@ export default function CardItemGallery({
             />
             <CardItemGalleryColumn
               title="Red"
-              condensed={condensed}
               hideImages={hideImages}
               itemsExpanded={itemsExpanded}
               setItemExpanded={setItemsExpanded}
@@ -305,7 +291,6 @@ export default function CardItemGallery({
             />
             <CardItemGalleryColumn
               title="Green"
-              condensed={condensed}
               hideImages={hideImages}
               itemsExpanded={itemsExpanded}
               setItemExpanded={setItemsExpanded}
@@ -314,7 +299,6 @@ export default function CardItemGallery({
             />
             <CardItemGalleryColumn
               title="Gold"
-              condensed={condensed}
               hideImages={hideImages}
               itemsExpanded={itemsExpanded}
               setItemExpanded={setItemsExpanded}
@@ -323,7 +307,6 @@ export default function CardItemGallery({
             />
             <CardItemGalleryColumn
               title="Colorless"
-              condensed={condensed}
               hideImages={hideImages}
               itemsExpanded={itemsExpanded}
               setItemExpanded={setItemsExpanded}
@@ -332,7 +315,6 @@ export default function CardItemGallery({
             />
             <CardItemGalleryColumn
               title="Land"
-              condensed={condensed}
               hideImages={hideImages}
               itemsExpanded={itemsExpanded}
               setItemExpanded={setItemsExpanded}
@@ -346,7 +328,6 @@ export default function CardItemGallery({
           <View className="flex flex-row gap-4 w-full min-h-[500px]">
             <CardItemGalleryColumn
               title="Creature"
-              condensed={condensed}
               hideImages={hideImages}
               itemsExpanded={itemsExpanded}
               setItemExpanded={setItemsExpanded}
@@ -355,7 +336,6 @@ export default function CardItemGallery({
             />
             <CardItemGalleryColumn
               title="Instant"
-              condensed={condensed}
               hideImages={hideImages}
               itemsExpanded={itemsExpanded}
               setItemExpanded={setItemsExpanded}
@@ -364,7 +344,6 @@ export default function CardItemGallery({
             />
             <CardItemGalleryColumn
               title="Sorcery"
-              condensed={condensed}
               hideImages={hideImages}
               itemsExpanded={itemsExpanded}
               setItemExpanded={setItemsExpanded}
@@ -373,7 +352,6 @@ export default function CardItemGallery({
             />
             <CardItemGalleryColumn
               title="Artifact"
-              condensed={condensed}
               hideImages={hideImages}
               itemsExpanded={itemsExpanded}
               setItemExpanded={setItemsExpanded}
@@ -382,7 +360,6 @@ export default function CardItemGallery({
             />
             <CardItemGalleryColumn
               title="Enchantment"
-              condensed={condensed}
               hideImages={hideImages}
               itemsExpanded={itemsExpanded}
               setItemExpanded={setItemsExpanded}
@@ -392,7 +369,6 @@ export default function CardItemGallery({
             {cardsSortedByType.planeswalker?.length > 0 && (
               <CardItemGalleryColumn
                 title="Planeswalker"
-                condensed={condensed}
                 hideImages={hideImages}
                 itemsExpanded={itemsExpanded}
                 setItemExpanded={setItemsExpanded}
@@ -403,7 +379,6 @@ export default function CardItemGallery({
             {cardsSortedByType.battle?.length > 0 && (
               <CardItemGalleryColumn
                 title="Battle"
-                condensed={condensed}
                 hideImages={hideImages}
                 itemsExpanded={itemsExpanded}
                 setItemExpanded={setItemsExpanded}
@@ -413,7 +388,6 @@ export default function CardItemGallery({
             )}
             <CardItemGalleryColumn
               title="Land"
-              condensed={condensed}
               hideImages={hideImages}
               itemsExpanded={itemsExpanded}
               setItemExpanded={setItemsExpanded}

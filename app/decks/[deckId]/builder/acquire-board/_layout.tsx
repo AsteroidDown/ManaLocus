@@ -16,8 +16,6 @@ import {
 } from "@/functions/local-storage/preferences-local-storage";
 import {
   faBars,
-  faCompress,
-  faExpand,
   faEye,
   faEyeSlash,
   faFileArrowDown,
@@ -37,7 +35,6 @@ export default function AcquireBoardLayout() {
 
   const [open, setOpen] = React.useState(false);
 
-  const [condensed, setCondensed] = React.useState(false);
   const [groupMulticolored, setGroupMulticolored] = React.useState(false);
   const [hideImages, setHideImages] = React.useState(false);
 
@@ -65,27 +62,12 @@ export default function AcquireBoardLayout() {
     const storedPreferences = getLocalStoragePreferences();
     if (storedPreferences) setPreferences(storedPreferences);
 
-    if (storedPreferences?.cardsCondensed) setCondensed(true);
-    else setCondensed(false);
-
     if (storedPreferences?.groupMulticolored) setGroupMulticolored(true);
     else setGroupMulticolored(false);
 
     if (storedPreferences?.hideCardImages) setHideImages(true);
     else setHideImages(false);
   }, []);
-
-  function condenseCards() {
-    setCondensed(true);
-    setLocalStoragePreferences({ cardsCondensed: true });
-    setPreferences(getLocalStoragePreferences() || {});
-  }
-
-  function expandCards() {
-    setCondensed(false);
-    setLocalStoragePreferences({ cardsCondensed: false });
-    setPreferences(getLocalStoragePreferences() || {});
-  }
 
   function groupMulticoloredCards() {
     setGroupMulticolored(true);
@@ -125,19 +107,6 @@ export default function AcquireBoardLayout() {
                 icon={faFileArrowDown}
                 onClick={() => setOpen(!open)}
               />
-
-              <Tooltip
-                title={
-                  hideImages ? "Expand Card Gallery" : "Condense Card Gallery"
-                }
-              >
-                <Button
-                  rounded
-                  type={condensed ? "outlined" : "clear"}
-                  icon={condensed ? faCompress : faExpand}
-                  onClick={() => (condensed ? expandCards() : condenseCards())}
-                />
-              </Tooltip>
 
               <Tooltip title="Group Multicolored Cards">
                 <Button

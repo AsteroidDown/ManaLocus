@@ -19,7 +19,6 @@ export function setLocalStoragePreferences(preferences: Preferences) {
       "preferences",
       JSON.stringify({
         filters: preferences.filters || [],
-        cardsCondensed: preferences.cardsCondensed || false,
         groupMulticolored: preferences.groupMulticolored || false,
         hideCardImages: preferences.hideCardImages || false,
       })
@@ -40,9 +39,6 @@ export function setLocalStoragePreferences(preferences: Preferences) {
     }
   }
 
-  if (preferences.cardsCondensed !== undefined) {
-    storedPreferences.cardsCondensed = preferences.cardsCondensed;
-  }
   if (preferences.groupMulticolored !== undefined) {
     storedPreferences.groupMulticolored = preferences.groupMulticolored;
   }
