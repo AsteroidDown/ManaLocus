@@ -101,9 +101,7 @@ export default function CardItemGalleryColumn({
                 </View>
               )}
 
-              {group.title !== title && (
-                <Divider className="!border-background-200 my-1" />
-              )}
+              {group.title !== title && <Divider className="my-1" />}
 
               <View
                 className={`${
