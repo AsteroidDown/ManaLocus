@@ -2,6 +2,8 @@ import Box from "@/components/ui/box/box";
 import BoxHeader from "@/components/ui/box/box-header";
 import FilterBar from "@/components/ui/filters/filter-bar";
 import { BoardTypes } from "@/constants/boards";
+import { MTGColors } from "@/constants/mtg/mtg-colors";
+import { MTGCardTypes } from "@/constants/mtg/mtg-types";
 import BoardContext from "@/contexts/cards/board.context";
 import StoredCardsContext from "@/contexts/cards/stored-cards.context";
 import { filterCards } from "@/functions/card-filtering";
@@ -257,115 +259,48 @@ export default function CardItemGallery({
 
         {type === "color" && cardsSortedByColor.white && (
           <View className="flex flex-row gap-4 w-full min-h-[500px]">
-            <CardItemGalleryColumn
-              title="White"
-              hideImages={hideImages}
-              itemsExpanded={itemsExpanded}
-              setItemExpanded={setItemsExpanded}
-              groupMulticolored={groupMulticolored}
-              cards={cardsSortedByColor.white}
-            />
-            <CardItemGalleryColumn
-              title="Blue"
-              hideImages={hideImages}
-              itemsExpanded={itemsExpanded}
-              setItemExpanded={setItemsExpanded}
-              groupMulticolored={groupMulticolored}
-              cards={cardsSortedByColor.blue}
-            />
-            <CardItemGalleryColumn
-              title="Black"
-              hideImages={hideImages}
-              itemsExpanded={itemsExpanded}
-              setItemExpanded={setItemsExpanded}
-              groupMulticolored={groupMulticolored}
-              cards={cardsSortedByColor.black}
-            />
-            <CardItemGalleryColumn
-              title="Red"
-              hideImages={hideImages}
-              itemsExpanded={itemsExpanded}
-              setItemExpanded={setItemsExpanded}
-              groupMulticolored={groupMulticolored}
-              cards={cardsSortedByColor.red}
-            />
-            <CardItemGalleryColumn
-              title="Green"
-              hideImages={hideImages}
-              itemsExpanded={itemsExpanded}
-              setItemExpanded={setItemsExpanded}
-              groupMulticolored={groupMulticolored}
-              cards={cardsSortedByColor.green}
-            />
-            <CardItemGalleryColumn
-              title="Gold"
-              hideImages={hideImages}
-              itemsExpanded={itemsExpanded}
-              setItemExpanded={setItemsExpanded}
-              groupMulticolored={groupMulticolored}
-              cards={cardsSortedByColor.gold}
-            />
-            <CardItemGalleryColumn
-              title="Colorless"
-              hideImages={hideImages}
-              itemsExpanded={itemsExpanded}
-              setItemExpanded={setItemsExpanded}
-              groupMulticolored={groupMulticolored}
-              cards={cardsSortedByColor.colorless}
-            />
-            <CardItemGalleryColumn
-              title="Land"
-              hideImages={hideImages}
-              itemsExpanded={itemsExpanded}
-              setItemExpanded={setItemsExpanded}
-              groupMulticolored={groupMulticolored}
-              cards={cardsSortedByColor.land}
-            />
+            {[
+              MTGColors.WHITE,
+              MTGColors.BLUE,
+              MTGColors.BLACK,
+              MTGColors.RED,
+              MTGColors.GREEN,
+              MTGColors.GOLD,
+              MTGColors.COLORLESS,
+              MTGColors.LAND,
+            ].map((color, index) => (
+              <CardItemGalleryColumn
+                key={index}
+                title={titleCase(color)}
+                hideImages={hideImages}
+                itemsExpanded={itemsExpanded}
+                setItemExpanded={setItemsExpanded}
+                groupMulticolored={groupMulticolored}
+                cards={cardsSortedByColor[color]}
+              />
+            ))}
           </View>
         )}
 
         {type === "type" && cardsSortedByType.creature && (
           <View className="flex flex-row gap-4 w-full min-h-[500px]">
-            <CardItemGalleryColumn
-              title="Creature"
-              hideImages={hideImages}
-              itemsExpanded={itemsExpanded}
-              setItemExpanded={setItemsExpanded}
-              groupMulticolored={groupMulticolored}
-              cards={cardsSortedByType.creature}
-            />
-            <CardItemGalleryColumn
-              title="Instant"
-              hideImages={hideImages}
-              itemsExpanded={itemsExpanded}
-              setItemExpanded={setItemsExpanded}
-              groupMulticolored={groupMulticolored}
-              cards={cardsSortedByType.instant}
-            />
-            <CardItemGalleryColumn
-              title="Sorcery"
-              hideImages={hideImages}
-              itemsExpanded={itemsExpanded}
-              setItemExpanded={setItemsExpanded}
-              groupMulticolored={groupMulticolored}
-              cards={cardsSortedByType.sorcery}
-            />
-            <CardItemGalleryColumn
-              title="Artifact"
-              hideImages={hideImages}
-              itemsExpanded={itemsExpanded}
-              setItemExpanded={setItemsExpanded}
-              groupMulticolored={groupMulticolored}
-              cards={cardsSortedByType.artifact}
-            />
-            <CardItemGalleryColumn
-              title="Enchantment"
-              hideImages={hideImages}
-              itemsExpanded={itemsExpanded}
-              setItemExpanded={setItemsExpanded}
-              groupMulticolored={groupMulticolored}
-              cards={cardsSortedByType.enchantment}
-            />
+            {[
+              MTGCardTypes.CREATURE,
+              MTGCardTypes.INSTANT,
+              MTGCardTypes.SORCERY,
+              MTGCardTypes.ARTIFACT,
+              MTGCardTypes.ENCHANTMENT,
+            ].map((type, index) => (
+              <CardItemGalleryColumn
+                key={index}
+                title={titleCase(type)}
+                hideImages={hideImages}
+                itemsExpanded={itemsExpanded}
+                setItemExpanded={setItemsExpanded}
+                groupMulticolored={groupMulticolored}
+                cards={cardsSortedByType[type]}
+              />
+            ))}
             {cardsSortedByType.planeswalker?.length > 0 && (
               <CardItemGalleryColumn
                 title="Planeswalker"
