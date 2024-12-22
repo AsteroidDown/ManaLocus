@@ -9,6 +9,7 @@ export default function CardsByCostPage() {
       type="cost"
       condensed={preferences.cardsCondensed || false}
       hideImages={preferences.hideCardImages || false}
+      groupMulticolored={preferences.groupMulticolored || false}
     />
   );
 }

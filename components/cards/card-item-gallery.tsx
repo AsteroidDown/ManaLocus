@@ -42,12 +42,14 @@ export interface CardItemGalleryProps {
   type: CardFilterSortType;
 
   condensed: boolean;
+  groupMulticolored: boolean;
   hideImages: boolean;
 }
 
 export default function CardItemGallery({
   type = "cost",
   condensed,
+  groupMulticolored,
   hideImages,
 }: CardItemGalleryProps) {
   const { board } = useContext(BoardContext);
@@ -185,70 +187,78 @@ export default function CardItemGallery({
             {cardsSortedByCost.zero?.length > 0 && (
               <CardItemGalleryColumn
                 title="0 Cost"
-                itemsExpanded={itemsExpanded}
-                setItemExpanded={setItemsExpanded}
                 condensed={condensed}
                 hideImages={hideImages}
+                itemsExpanded={itemsExpanded}
+                setItemExpanded={setItemsExpanded}
+                groupMulticolored={groupMulticolored}
                 cards={cardsSortedByCost.zero}
               />
             )}
             <CardItemGalleryColumn
               title="1 Cost"
-              itemsExpanded={itemsExpanded}
-              setItemExpanded={setItemsExpanded}
               condensed={condensed}
               hideImages={hideImages}
+              itemsExpanded={itemsExpanded}
+              setItemExpanded={setItemsExpanded}
+              groupMulticolored={groupMulticolored}
               cards={cardsSortedByCost.one}
             />
             <CardItemGalleryColumn
               title="2 Cost"
-              itemsExpanded={itemsExpanded}
-              setItemExpanded={setItemsExpanded}
               condensed={condensed}
               hideImages={hideImages}
+              itemsExpanded={itemsExpanded}
+              setItemExpanded={setItemsExpanded}
+              groupMulticolored={groupMulticolored}
               cards={cardsSortedByCost.two}
             />
             <CardItemGalleryColumn
               title="3 Cost"
-              itemsExpanded={itemsExpanded}
-              setItemExpanded={setItemsExpanded}
               condensed={condensed}
               hideImages={hideImages}
+              itemsExpanded={itemsExpanded}
+              setItemExpanded={setItemsExpanded}
+              groupMulticolored={groupMulticolored}
               cards={cardsSortedByCost.three}
             />
             <CardItemGalleryColumn
               title="4 Cost"
-              itemsExpanded={itemsExpanded}
-              setItemExpanded={setItemsExpanded}
               condensed={condensed}
               hideImages={hideImages}
+              itemsExpanded={itemsExpanded}
+              setItemExpanded={setItemsExpanded}
+              groupMulticolored={groupMulticolored}
               cards={cardsSortedByCost.four}
             />
             <CardItemGalleryColumn
               title="5 Cost"
-              itemsExpanded={itemsExpanded}
-              setItemExpanded={setItemsExpanded}
               condensed={condensed}
               hideImages={hideImages}
+              itemsExpanded={itemsExpanded}
+              setItemExpanded={setItemsExpanded}
+              groupMulticolored={groupMulticolored}
               cards={cardsSortedByCost.five}
             />
             {cardsSortedByCost.six?.length > 0 && (
               <CardItemGalleryColumn
                 title="6+ Cost"
-                itemsExpanded={itemsExpanded}
-                setItemExpanded={setItemsExpanded}
                 condensed={condensed}
                 hideImages={hideImages}
+                itemsExpanded={itemsExpanded}
+                setItemExpanded={setItemsExpanded}
+                groupMulticolored={groupMulticolored}
                 cards={cardsSortedByCost.six}
               />
             )}
             {cardsSortedByCost.land?.length > 0 && (
               <CardItemGalleryColumn
                 title="Lands"
-                itemsExpanded={itemsExpanded}
-                setItemExpanded={setItemsExpanded}
                 condensed={condensed}
                 hideImages={hideImages}
+                itemsExpanded={itemsExpanded}
+                setItemExpanded={setItemsExpanded}
+                groupMulticolored={groupMulticolored}
                 cards={cardsSortedByCost.land}
               />
             )}
@@ -259,66 +269,74 @@ export default function CardItemGallery({
           <View className="flex flex-row gap-4 w-full min-h-[500px]">
             <CardItemGalleryColumn
               title="White"
-              itemsExpanded={itemsExpanded}
-              setItemExpanded={setItemsExpanded}
               condensed={condensed}
               hideImages={hideImages}
+              itemsExpanded={itemsExpanded}
+              setItemExpanded={setItemsExpanded}
+              groupMulticolored={groupMulticolored}
               cards={cardsSortedByColor.white}
             />
             <CardItemGalleryColumn
               title="Blue"
-              itemsExpanded={itemsExpanded}
-              setItemExpanded={setItemsExpanded}
               condensed={condensed}
               hideImages={hideImages}
+              itemsExpanded={itemsExpanded}
+              setItemExpanded={setItemsExpanded}
+              groupMulticolored={groupMulticolored}
               cards={cardsSortedByColor.blue}
             />
             <CardItemGalleryColumn
               title="Black"
-              itemsExpanded={itemsExpanded}
-              setItemExpanded={setItemsExpanded}
               condensed={condensed}
               hideImages={hideImages}
+              itemsExpanded={itemsExpanded}
+              setItemExpanded={setItemsExpanded}
+              groupMulticolored={groupMulticolored}
               cards={cardsSortedByColor.black}
             />
             <CardItemGalleryColumn
               title="Red"
-              itemsExpanded={itemsExpanded}
-              setItemExpanded={setItemsExpanded}
               condensed={condensed}
               hideImages={hideImages}
+              itemsExpanded={itemsExpanded}
+              setItemExpanded={setItemsExpanded}
+              groupMulticolored={groupMulticolored}
               cards={cardsSortedByColor.red}
             />
             <CardItemGalleryColumn
               title="Green"
-              itemsExpanded={itemsExpanded}
-              setItemExpanded={setItemsExpanded}
               condensed={condensed}
               hideImages={hideImages}
+              itemsExpanded={itemsExpanded}
+              setItemExpanded={setItemsExpanded}
+              groupMulticolored={groupMulticolored}
               cards={cardsSortedByColor.green}
             />
             <CardItemGalleryColumn
               title="Gold"
-              itemsExpanded={itemsExpanded}
-              setItemExpanded={setItemsExpanded}
               condensed={condensed}
               hideImages={hideImages}
+              itemsExpanded={itemsExpanded}
+              setItemExpanded={setItemsExpanded}
+              groupMulticolored={groupMulticolored}
               cards={cardsSortedByColor.gold}
             />
             <CardItemGalleryColumn
               title="Colorless"
-              itemsExpanded={itemsExpanded}
-              setItemExpanded={setItemsExpanded}
               condensed={condensed}
               hideImages={hideImages}
+              itemsExpanded={itemsExpanded}
+              setItemExpanded={setItemsExpanded}
+              groupMulticolored={groupMulticolored}
               cards={cardsSortedByColor.colorless}
             />
             <CardItemGalleryColumn
               title="Land"
-              itemsExpanded={itemsExpanded}
-              setItemExpanded={setItemsExpanded}
               condensed={condensed}
               hideImages={hideImages}
+              itemsExpanded={itemsExpanded}
+              setItemExpanded={setItemsExpanded}
+              groupMulticolored={groupMulticolored}
               cards={cardsSortedByColor.land}
             />
           </View>
@@ -328,70 +346,78 @@ export default function CardItemGallery({
           <View className="flex flex-row gap-4 w-full min-h-[500px]">
             <CardItemGalleryColumn
               title="Creature"
-              itemsExpanded={itemsExpanded}
-              setItemExpanded={setItemsExpanded}
               condensed={condensed}
               hideImages={hideImages}
+              itemsExpanded={itemsExpanded}
+              setItemExpanded={setItemsExpanded}
+              groupMulticolored={groupMulticolored}
               cards={cardsSortedByType.creature}
             />
             <CardItemGalleryColumn
               title="Instant"
-              itemsExpanded={itemsExpanded}
-              setItemExpanded={setItemsExpanded}
               condensed={condensed}
               hideImages={hideImages}
+              itemsExpanded={itemsExpanded}
+              setItemExpanded={setItemsExpanded}
+              groupMulticolored={groupMulticolored}
               cards={cardsSortedByType.instant}
             />
             <CardItemGalleryColumn
               title="Sorcery"
-              itemsExpanded={itemsExpanded}
-              setItemExpanded={setItemsExpanded}
               condensed={condensed}
               hideImages={hideImages}
+              itemsExpanded={itemsExpanded}
+              setItemExpanded={setItemsExpanded}
+              groupMulticolored={groupMulticolored}
               cards={cardsSortedByType.sorcery}
             />
             <CardItemGalleryColumn
               title="Artifact"
-              itemsExpanded={itemsExpanded}
-              setItemExpanded={setItemsExpanded}
               condensed={condensed}
               hideImages={hideImages}
+              itemsExpanded={itemsExpanded}
+              setItemExpanded={setItemsExpanded}
+              groupMulticolored={groupMulticolored}
               cards={cardsSortedByType.artifact}
             />
             <CardItemGalleryColumn
               title="Enchantment"
-              itemsExpanded={itemsExpanded}
-              setItemExpanded={setItemsExpanded}
               condensed={condensed}
               hideImages={hideImages}
+              itemsExpanded={itemsExpanded}
+              setItemExpanded={setItemsExpanded}
+              groupMulticolored={groupMulticolored}
               cards={cardsSortedByType.enchantment}
             />
             {cardsSortedByType.planeswalker?.length > 0 && (
               <CardItemGalleryColumn
                 title="Planeswalker"
-                itemsExpanded={itemsExpanded}
-                setItemExpanded={setItemsExpanded}
                 condensed={condensed}
                 hideImages={hideImages}
+                itemsExpanded={itemsExpanded}
+                setItemExpanded={setItemsExpanded}
+                groupMulticolored={groupMulticolored}
                 cards={cardsSortedByType.planeswalker}
               />
             )}
             {cardsSortedByType.battle?.length > 0 && (
               <CardItemGalleryColumn
                 title="Battle"
-                itemsExpanded={itemsExpanded}
-                setItemExpanded={setItemsExpanded}
                 condensed={condensed}
                 hideImages={hideImages}
+                itemsExpanded={itemsExpanded}
+                setItemExpanded={setItemsExpanded}
+                groupMulticolored={groupMulticolored}
                 cards={cardsSortedByType.battle}
               />
             )}
             <CardItemGalleryColumn
               title="Land"
-              itemsExpanded={itemsExpanded}
-              setItemExpanded={setItemsExpanded}
               condensed={condensed}
               hideImages={hideImages}
+              itemsExpanded={itemsExpanded}
+              setItemExpanded={setItemsExpanded}
+              groupMulticolored={groupMulticolored}
               cards={cardsSortedByType.land}
             />
           </View>

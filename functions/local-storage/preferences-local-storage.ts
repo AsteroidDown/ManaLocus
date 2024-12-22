@@ -20,6 +20,7 @@ export function setLocalStoragePreferences(preferences: Preferences) {
       JSON.stringify({
         filters: preferences.filters || [],
         cardsCondensed: preferences.cardsCondensed || false,
+        groupMulticolored: preferences.groupMulticolored || false,
         hideCardImages: preferences.hideCardImages || false,
       })
     );
@@ -38,8 +39,12 @@ export function setLocalStoragePreferences(preferences: Preferences) {
       storedPreferences.filters.rarityFilter = preferences.filters.rarityFilter;
     }
   }
+
   if (preferences.cardsCondensed !== undefined) {
     storedPreferences.cardsCondensed = preferences.cardsCondensed;
+  }
+  if (preferences.groupMulticolored !== undefined) {
+    storedPreferences.groupMulticolored = preferences.groupMulticolored;
   }
   if (preferences.hideCardImages !== undefined) {
     storedPreferences.hideCardImages = preferences.hideCardImages;

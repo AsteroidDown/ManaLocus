@@ -10,6 +10,7 @@ export default function CardsByTypePage() {
       type="type"
       condensed={preferences.cardsCondensed || false}
       hideImages={preferences.hideCardImages || false}
+      groupMulticolored={preferences.groupMulticolored || false}
     />
   );
 }

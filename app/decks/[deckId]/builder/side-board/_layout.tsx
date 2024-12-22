@@ -15,6 +15,7 @@ import {
   setLocalStoragePreferences,
 } from "@/functions/local-storage/preferences-local-storage";
 import {
+  faBars,
   faCompress,
   faExpand,
   faEye,
@@ -36,8 +37,9 @@ export default function SideBoardLayout() {
 
   const [open, setOpen] = React.useState(false);
 
-  const [hideImages, setHideImages] = React.useState(false);
   const [condensed, setCondensed] = React.useState(false);
+  const [groupMulticolored, setGroupMulticolored] = React.useState(false);
+  const [hideImages, setHideImages] = React.useState(false);
 
   const tabs: TabProps[] = [
     {
@@ -66,6 +68,9 @@ export default function SideBoardLayout() {
     if (storedPreferences?.cardsCondensed) setCondensed(true);
     else setCondensed(false);
 
+    if (storedPreferences?.groupMulticolored) setGroupMulticolored(true);
+    else setGroupMulticolored(false);
+
     if (storedPreferences?.hideCardImages) setHideImages(true);
     else setHideImages(false);
   }, []);
@@ -79,6 +84,18 @@ export default function SideBoardLayout() {
   function expandCards() {
     setCondensed(false);
     setLocalStoragePreferences({ cardsCondensed: false });
+    setPreferences(getLocalStoragePreferences() || {});
+  }
+
+  function groupMulticoloredCards() {
+    setGroupMulticolored(true);
+    setLocalStoragePreferences({ groupMulticolored: true });
+    setPreferences(getLocalStoragePreferences() || {});
+  }
+
+  function ungroupMulticoloredCards() {
+    setGroupMulticolored(false);
+    setLocalStoragePreferences({ groupMulticolored: false });
     setPreferences(getLocalStoragePreferences() || {});
   }
 
@@ -119,6 +136,19 @@ export default function SideBoardLayout() {
                   type={condensed ? "outlined" : "clear"}
                   icon={condensed ? faCompress : faExpand}
                   onClick={() => (condensed ? expandCards() : condenseCards())}
+                />
+              </Tooltip>
+
+              <Tooltip title="Group Multicolored Cards">
+                <Button
+                  rounded
+                  icon={faBars}
+                  type={`${groupMulticolored ? "outlined" : "clear"}`}
+                  onClick={() =>
+                    groupMulticolored
+                      ? ungroupMulticoloredCards()
+                      : groupMulticoloredCards()
+                  }
                 />
               </Tooltip>
 
