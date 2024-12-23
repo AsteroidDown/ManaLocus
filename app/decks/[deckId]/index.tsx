@@ -90,20 +90,16 @@ export default function DeckPage() {
 
       <View className="flex flex-1 gap-8 px-16 py-8 border-t-2 border-background-200 bg-background-100">
         <TabBar
+          hideBorder
           tabs={[
             {
               title: "Deck",
-              children: (
-                <DeckCardGallery
-                  className="py-8 border-t-2 border-background-200"
-                  deck={deck}
-                />
-              ),
+              children: <DeckCardGallery className="py-8" deck={deck} />,
             },
             {
               title: "Dashboard",
               children: (
-                <View className="flex-1 flex flex-row flex-wrap gap-6 justify-center items-center mb-8 border-t-2 border-background-200">
+                <View className="flex-1 flex flex-row flex-wrap gap-6 justify-center items-center mb-8">
                   {deck.dashboard?.sections.map((section, index) => (
                     <DashboardSectionView
                       readonly
