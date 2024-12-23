@@ -8,6 +8,7 @@ import {
   CardsSortedByCost,
   CardsSortedByRarity,
   CardsSortedByType,
+  CardsSortedCustom,
 } from "@/models/sorted-cards/sorted-cards";
 import { getCardType } from "./card-information";
 
@@ -424,6 +425,25 @@ export function groupCardsByRarity(cards: Card[]): CardsSortedByRarity {
         groupedCards.mythic.push(card);
         return;
     }
+  });
+
+  return groupedCards;
+}
+
+export function groupCardsCustom(cards: Card[]): CardsSortedCustom {
+  const groupedCards: CardsSortedCustom = {};
+
+  const groups: string[] = [];
+
+  cards.forEach((card) => {
+    if (!card.group) {
+      groupedCards?.["Unsorted"]
+        ? groupedCards["Unsorted"].push(card)
+        : (groupedCards["Unsorted"] = [card]);
+    } else if (!groups.includes(card.group)) {
+      groups.push(card.group);
+      groupedCards[card.group] = [card];
+    } else groupedCards[card.group].push(card);
   });
 
   return groupedCards;

@@ -5,6 +5,7 @@ import { MTGColorSymbol } from "../../constants/mtg/mtg-colors";
 export interface Card {
   scryfallId: string;
   count: number;
+  group?: string;
   set: string;
   setName: string;
   collectorNumber: string;
