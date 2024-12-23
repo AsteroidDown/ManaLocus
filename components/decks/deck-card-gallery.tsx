@@ -5,6 +5,7 @@ import {
   groupCardsByCost,
   groupCardsByRarity,
   groupCardsByType,
+  groupCardsCustom,
 } from "@/functions/card-grouping";
 import {
   sortCardsAlphabetically,
@@ -49,6 +50,7 @@ export enum DeckCardGalleryGroupTypes {
   COLOR = "color",
   MANA_VALUE = "mana-value",
   RARITY = "rarity",
+  CUSTOM = "custom",
 }
 
 export type DeckCardGalleryProps = ViewProps & {
@@ -196,6 +198,63 @@ export default function DeckCardGallery({
           : []),
         ...(costGroupedCards.six?.length
           ? [{ title: "Six +", cards: costGroupedCards.six }]
+          : []),
+      ]);
+    } else if (groupType === DeckCardGalleryGroupTypes.CUSTOM) {
+      const customGroupedCards = groupCardsCustom(sortedCards);
+
+      const groups = Object.keys(customGroupedCards).map((group) => ({
+        title: titleCase(group),
+        cards: customGroupedCards[group],
+      }));
+
+      const customGroups = groups.filter((group) => group.title !== "Unsorted");
+      const unsorted = groups.find((group) => group.title === "Unsorted");
+
+      const typeGroupedCards = unsorted
+        ? groupCardsByType(unsorted.cards)
+        : ({} as any);
+
+      setGroupedCards([
+        ...(commander ? [{ title: "Commander", cards: [commander] }] : []),
+        ...customGroups,
+        ...(typeGroupedCards
+          ? [
+              ...(typeGroupedCards.creature?.length
+                ? [{ title: "Creature", cards: typeGroupedCards.creature }]
+                : []),
+              ...(typeGroupedCards.instant?.length
+                ? [{ title: "Instant", cards: typeGroupedCards.instant }]
+                : []),
+              ...(typeGroupedCards.sorcery?.length
+                ? [{ title: "Sorcery", cards: typeGroupedCards.sorcery }]
+                : []),
+              ...(typeGroupedCards.artifact?.length
+                ? [{ title: "Artifact", cards: typeGroupedCards.artifact }]
+                : []),
+              ...(typeGroupedCards.enchantment?.length
+                ? [
+                    {
+                      title: "Enchantment",
+                      cards: typeGroupedCards.enchantment,
+                    },
+                  ]
+                : []),
+              ...(typeGroupedCards.planeswalker?.length
+                ? [
+                    {
+                      title: "Planeswalker",
+                      cards: typeGroupedCards.planeswalker,
+                    },
+                  ]
+                : []),
+              ...(typeGroupedCards.battle?.length
+                ? [{ title: "Battle", cards: typeGroupedCards.battle }]
+                : []),
+              ...(typeGroupedCards.land?.length
+                ? [{ title: "Land", cards: typeGroupedCards.land }]
+                : []),
+            ]
           : []),
       ]);
     } else {
