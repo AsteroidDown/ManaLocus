@@ -100,7 +100,7 @@ export default function CardItemGalleryColumn({
                 <View className="flex flex-row justify-between items-center px-2">
                   <Text thickness="semi">{titleCase(group.title)}</Text>
 
-                  {<Text>{group.count}</Text>}
+                  <Text>{group.count}</Text>
                 </View>
               )}
 

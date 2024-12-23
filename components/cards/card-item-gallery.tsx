@@ -6,6 +6,7 @@ import { MTGColors } from "@/constants/mtg/mtg-colors";
 import { MTGCardTypes } from "@/constants/mtg/mtg-types";
 import BoardContext from "@/contexts/cards/board.context";
 import StoredCardsContext from "@/contexts/cards/stored-cards.context";
+import DeckContext from "@/contexts/deck/deck.context";
 import { filterCards } from "@/functions/card-filtering";
 import {
   groupCardsByColor,
@@ -56,6 +57,7 @@ export default function CardItemGallery({
   groupMulticolored,
   hideImages,
 }: CardItemGalleryProps) {
+  const { deck } = useContext(DeckContext);
   const { board } = useContext(BoardContext);
   const { storedCards } = useContext(StoredCardsContext);
 
@@ -109,7 +111,13 @@ export default function CardItemGallery({
       sortedCards = sortCardsByManaValue(sortCardsAlphabetically(cards));
     }
 
-    const filteredCards = filterCards(sortedCards, filters);
+    let filteredCards = filterCards(sortedCards, filters);
+
+    if (deck?.commander) {
+      filteredCards = filteredCards.filter(
+        (card) => card.scryfallId !== deck.commander?.scryfallId
+      );
+    }
 
     setCardCount(getCountOfCards(filteredCards));
     setCardsValue(getTotalValueOfCards(filteredCards));
@@ -143,9 +151,11 @@ export default function CardItemGallery({
             (type === "cost" ? "Mana Value" : titleCase(type))
           }
           startIcon={faChartSimple}
-          subtitle={`${cardCount} Card${
+          subtitle={`${cardCount + (deck?.commander ? 1 : 0)} Card${
             cardCount !== 1 ? "s" : ""
-          } | Total Value: $${cardsValue.toFixed(2)}`}
+          } | Total Value: $${(
+            cardsValue + (deck?.commander ? deck.commander.prices?.usd || 0 : 0)
+          ).toFixed(2)}`}
           end={
             <View className="flex flex-row gap-2">
               <FilterBar type={type} setFilters={setFilters} />
@@ -204,6 +214,17 @@ export default function CardItemGallery({
         <View className="overflow-x-scroll overflow-y-hidden">
           {type === "cost" && (
             <View className="flex flex-row gap-4 w-full min-h-[500px]">
+              {deck?.commander && (
+                <CardItemGalleryColumn
+                  title="Commander"
+                  hideImages={hideImages}
+                  itemsExpanded={itemsExpanded}
+                  setItemExpanded={setItemsExpanded}
+                  groupMulticolored={groupMulticolored}
+                  cards={[deck.commander]}
+                />
+              )}
+
               {cardsSortedByCost.zero?.length > 0 && (
                 <CardItemGalleryColumn
                   title="0 Cost"
@@ -279,6 +300,17 @@ export default function CardItemGallery({
 
           {type === "color" && (
             <View className="flex flex-row gap-4 w-full min-h-[500px]">
+              {deck?.commander && (
+                <CardItemGalleryColumn
+                  title="Commander"
+                  hideImages={hideImages}
+                  itemsExpanded={itemsExpanded}
+                  setItemExpanded={setItemsExpanded}
+                  groupMulticolored={groupMulticolored}
+                  cards={[deck.commander]}
+                />
+              )}
+
               {[
                 MTGColors.WHITE,
                 MTGColors.BLUE,
@@ -304,6 +336,17 @@ export default function CardItemGallery({
 
           {type === "type" && (
             <View className="flex flex-row gap-4 w-full min-h-[500px]">
+              {deck?.commander && (
+                <CardItemGalleryColumn
+                  title="Commander"
+                  hideImages={hideImages}
+                  itemsExpanded={itemsExpanded}
+                  setItemExpanded={setItemsExpanded}
+                  groupMulticolored={groupMulticolored}
+                  cards={[deck.commander]}
+                />
+              )}
+
               {[
                 MTGCardTypes.CREATURE,
                 MTGCardTypes.INSTANT,
@@ -354,6 +397,17 @@ export default function CardItemGallery({
 
           {type === "custom" && (
             <View className="flex flex-row gap-4 w-full min-h-[500px]">
+              {deck?.commander && (
+                <CardItemGalleryColumn
+                  title="Commander"
+                  hideImages={hideImages}
+                  itemsExpanded={itemsExpanded}
+                  setItemExpanded={setItemsExpanded}
+                  groupMulticolored={groupMulticolored}
+                  cards={[deck.commander]}
+                />
+              )}
+
               {groupOptions.map((group, index) => (
                 <CardItemGalleryColumn
                   key={index}

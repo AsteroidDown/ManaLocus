@@ -53,7 +53,7 @@ export function mapDatabaseDeck(data: any, withCards = false): Deck {
 function mapDatabaseCardToCard(card: any): Card {
   return {
     scryfallId: card.scryfallId,
-    count: card.count,
+    count: card.count || 1,
     group: card?.group,
     set: card.set,
     setName: card.setName,
