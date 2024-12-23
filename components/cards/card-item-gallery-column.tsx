@@ -77,7 +77,7 @@ export default function CardItemGalleryColumn({
 
       {!groupMulticolored && (
         <View className={`flex gap-[3px]`}>
-          {cards.map((card, index) => (
+          {cards?.map((card, index) => (
             <CardItem
               key={card.scryfallId + index}
               card={card}

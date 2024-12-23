@@ -14,5 +14,5 @@ export function getTotalValueOfCards(cards: Card[], euro: boolean = false) {
 }
 
 export function getCountOfCards(cards: Card[]) {
-  return cards.reduce((acc, card) => acc + card.count, 0);
+  return cards?.reduce((acc, card) => acc + card.count, 0) || 0;
 }
