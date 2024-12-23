@@ -285,18 +285,20 @@ export function CardItemFooter({
 
   return (
     <View className="flex gap-2">
-      <Pressable
-        className="flex mx-2 bg-background-100 rounded-lg z-10"
-        tabIndex={-1}
-      >
-        <Select
-          value={card.group}
-          placeholder="Group"
-          options={groupOptions}
-          maxHeight="!max-h-[128px]"
-          onChange={(group) => setCardGroup(group)}
-        />
-      </Pressable>
+      {groups?.length > 0 && (
+        <Pressable
+          className="flex mx-2 bg-background-100 rounded-lg z-10"
+          tabIndex={-1}
+        >
+          <Select
+            value={card.group}
+            placeholder="Group"
+            options={groupOptions}
+            maxHeight="!max-h-[128px]"
+            onChange={(group) => setCardGroup(group)}
+          />
+        </Pressable>
+      )}
 
       <View className="flex flex-row justify-center items-center gap-2 px-2">
         {setItemsExpanded && (

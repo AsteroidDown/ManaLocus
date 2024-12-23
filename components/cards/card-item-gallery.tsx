@@ -135,7 +135,7 @@ export default function CardItemGallery({
   }, [cardsSortedCustom]);
 
   return (
-    <View className="bg-background-100">
+    <View className="bg-background-100 pb-4">
       <Box className="!rounded-tl-none flex gap-2 px-0 overflow-hidden">
         <BoxHeader
           title={
