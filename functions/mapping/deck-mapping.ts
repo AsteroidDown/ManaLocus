@@ -54,6 +54,7 @@ function mapDatabaseCardToCard(card: any): Card {
   return {
     scryfallId: card.scryfallId,
     count: card.count,
+    group: card?.group,
     set: card.set,
     setName: card.setName,
     collectorNumber: card.collectorNumber,

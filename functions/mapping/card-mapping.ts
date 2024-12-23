@@ -10,6 +10,7 @@ export function mapCardsToDeckCard(
     scryfallId: card.scryfallId,
     name: card.name,
     count: card.count,
+    group: card.group,
     board,
   }));
 }
