@@ -17,6 +17,7 @@ export interface CardItemGalleryColumnCardGrouping {
 export interface CardItemGalleryColumnProps {
   title: string;
   cards: Card[];
+  groups?: string[];
   hideImages?: boolean;
   groupMulticolored?: boolean;
   itemsExpanded?: number;
@@ -26,6 +27,7 @@ export interface CardItemGalleryColumnProps {
 export default function CardItemGalleryColumn({
   title,
   cards,
+  groups,
   hideImages = false,
   groupMulticolored = false,
   itemsExpanded,
@@ -81,6 +83,7 @@ export default function CardItemGalleryColumn({
             <CardItem
               key={card.scryfallId + index}
               card={card}
+              groups={groups}
               hideImage={hideImages}
               itemsExpanded={itemsExpanded}
               setItemsExpanded={setItemExpanded}
@@ -112,6 +115,7 @@ export default function CardItemGalleryColumn({
                   <CardItem
                     key={card.scryfallId + cardIndex}
                     card={card}
+                    groups={groups}
                     hideImage={hideImages}
                     itemsExpanded={itemsExpanded}
                     setItemsExpanded={setItemExpanded}

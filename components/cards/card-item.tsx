@@ -13,7 +13,9 @@ import {
   removeLocalStorageCard,
   saveLocalStorageCard,
   switchLocalStorageCardPrint,
+  updateLocalStorageCardGroup,
 } from "@/functions/local-storage/card-local-storage";
+import { titleCase } from "@/functions/text-manipulation";
 import { Card } from "@/models/card/card";
 import {
   faCircleInfo,
@@ -31,6 +33,7 @@ import React, { useContext, useEffect } from "react";
 import { Linking, Pressable, View } from "react-native";
 import Box from "../ui/box/box";
 import Dropdown from "../ui/dropdown/dropdown";
+import Select, { SelectOption } from "../ui/input/select";
 import CardCost from "./card-cost";
 import CardDetailedPreview from "./card-detailed-preview";
 import CardImage from "./card-image";
@@ -38,11 +41,13 @@ import CardPrints from "./card-prints";
 
 export interface CardItemProps {
   card: Card;
+  groups?: string[];
   hideImage?: boolean;
 }
 
 export default function CardItem({
   card,
+  groups,
   hideImage = false,
   itemsExpanded,
   setItemsExpanded,
@@ -110,6 +115,7 @@ export default function CardItem({
 
             <CardItemFooter
               card={card}
+              groups={groups}
               expanded={expanded}
               modalOpen={modalOpen}
               setModalOpen={setModalOpen}
@@ -123,7 +129,7 @@ export default function CardItem({
       {expanded && (
         <Modal transparent open={modalOpen} setOpen={setModalOpen}>
           <CardDetailedPreview card={card}>
-            <CardItemFooter card={card} />
+            <CardItemFooter card={card} groups={groups} />
           </CardDetailedPreview>
         </Modal>
       )}
@@ -209,6 +215,7 @@ export function CardItemHeader({
 
 export function CardItemFooter({
   card,
+  groups,
   expanded,
   modalOpen,
   setModalOpen,
@@ -219,6 +226,9 @@ export function CardItemFooter({
   const { setStoredCards } = useContext(StoredCardsContext);
 
   const [print, setPrint] = React.useState(undefined as Card | undefined);
+
+  const [groupOptions, setGroupOptions] = React.useState([] as SelectOption[]);
+
   const [moveOpen, setMoveOpen] = React.useState(false);
 
   const sideboardCount = getLocalStorageStoredCards(BoardTypes.SIDE).reduce(
@@ -231,6 +241,19 @@ export function CardItemFooter({
 
     switchPrint(print);
   }, [print]);
+
+  useEffect(() => {
+    if (!groups?.length) return;
+
+    setGroupOptions(
+      groups.map((group: string) => ({ label: titleCase(group), value: group }))
+    );
+  }, [groups]);
+
+  function setCardGroup(group: string) {
+    updateLocalStorageCardGroup(card, group, board);
+    setStoredCards(getLocalStorageStoredCards(board));
+  }
 
   function addToCount() {
     addToLocalStorageCardCount(card, board);
@@ -262,6 +285,19 @@ export function CardItemFooter({
 
   return (
     <View className="flex gap-2">
+      <Pressable
+        className="flex mx-2 bg-background-100 rounded-lg z-10"
+        tabIndex={-1}
+      >
+        <Select
+          value={card.group}
+          placeholder="Group"
+          options={groupOptions}
+          maxHeight="!max-h-[128px]"
+          onChange={(group) => setCardGroup(group)}
+        />
+      </Pressable>
+
       <View className="flex flex-row justify-center items-center gap-2 px-2">
         {setItemsExpanded && (
           <Button
@@ -270,7 +306,7 @@ export function CardItemFooter({
             tabbable={expanded}
             icon={faCircleInfo}
             onClick={() => setModalOpen(!modalOpen)}
-          ></Button>
+          />
         )}
 
         <CardPrints
@@ -287,60 +323,62 @@ export function CardItemFooter({
           tabbable={expanded}
           icon={faRightFromBracket}
           onClick={() => setMoveOpen(true)}
-        ></Button>
+        />
 
-        <Dropdown xOffset={-32} expanded={moveOpen} setExpanded={setMoveOpen}>
-          <Box className="flex justify-start items-start !p-0 border-2 border-primary-300 !bg-background-100 !bg-opacity-90 overflow-hidden">
-            {board !== BoardTypes.MAIN && (
-              <Button
-                start
-                square
-                type="clear"
-                text="Main"
-                className="w-full"
-                icon={faList}
-                onClick={() => moveCard(BoardTypes.MAIN)}
-              />
-            )}
+        <View className="-mx-1">
+          <Dropdown xOffset={-32} expanded={moveOpen} setExpanded={setMoveOpen}>
+            <Box className="flex justify-start items-start !p-0 border-2 border-primary-300 !bg-background-100 !bg-opacity-90 overflow-hidden">
+              {board !== BoardTypes.MAIN && (
+                <Button
+                  start
+                  square
+                  type="clear"
+                  text="Main"
+                  className="w-full"
+                  icon={faList}
+                  onClick={() => moveCard(BoardTypes.MAIN)}
+                />
+              )}
 
-            {board !== BoardTypes.SIDE && (
-              <Button
-                start
-                square
-                type="clear"
-                text="Side"
-                className="w-full"
-                icon={faClipboardList}
-                disabled={sideboardCount >= SideBoardLimit}
-                onClick={() => moveCard(BoardTypes.SIDE)}
-              />
-            )}
+              {board !== BoardTypes.SIDE && (
+                <Button
+                  start
+                  square
+                  type="clear"
+                  text="Side"
+                  className="w-full"
+                  icon={faClipboardList}
+                  disabled={sideboardCount >= SideBoardLimit}
+                  onClick={() => moveCard(BoardTypes.SIDE)}
+                />
+              )}
 
-            {board !== BoardTypes.MAYBE && (
-              <Button
-                start
-                square
-                type="clear"
-                text="Maybe"
-                className="w-full"
-                icon={faClipboardQuestion}
-                onClick={() => moveCard(BoardTypes.MAYBE)}
-              />
-            )}
+              {board !== BoardTypes.MAYBE && (
+                <Button
+                  start
+                  square
+                  type="clear"
+                  text="Maybe"
+                  className="w-full"
+                  icon={faClipboardQuestion}
+                  onClick={() => moveCard(BoardTypes.MAYBE)}
+                />
+              )}
 
-            {board !== BoardTypes.ACQUIRE && (
-              <Button
-                start
-                square
-                type="clear"
-                text="Acquire"
-                className="w-full"
-                icon={faListCheck}
-                onClick={() => moveCard(BoardTypes.ACQUIRE)}
-              />
-            )}
-          </Box>
-        </Dropdown>
+              {board !== BoardTypes.ACQUIRE && (
+                <Button
+                  start
+                  square
+                  type="clear"
+                  text="Acquire"
+                  className="w-full"
+                  icon={faListCheck}
+                  onClick={() => moveCard(BoardTypes.ACQUIRE)}
+                />
+              )}
+            </Box>
+          </Dropdown>
+        </View>
 
         <Button
           action="danger"
