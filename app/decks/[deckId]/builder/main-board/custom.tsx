@@ -1,0 +1,15 @@
+import CardItemGallery from "@/components/cards/card-item-gallery";
+import CardPreferencesContext from "@/contexts/cards/card-preferences.context";
+import React, { useContext } from "react";
+
+export default function CardsCustomPage() {
+  const { preferences } = useContext(CardPreferencesContext);
+
+  return (
+    <CardItemGallery
+      type="custom"
+      hideImages={preferences.hideCardImages || false}
+      groupMulticolored={preferences.groupMulticolored || false}
+    />
+  );
+}

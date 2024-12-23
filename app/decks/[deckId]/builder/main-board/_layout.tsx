@@ -54,6 +54,11 @@ export default function CardsLayout() {
       link: `decks/${deck.id}/builder/main-board/type`,
       name: "type",
     },
+    {
+      title: "Custom",
+      link: `decks/${deck.id}/builder/main-board/custom`,
+      name: "custom",
+    },
   ];
 
   useEffect(() => {
