@@ -5,9 +5,14 @@ import Text from "../text/text";
 export interface InputProps {
   label?: string;
   placeholder?: string;
+
   disabled?: boolean;
   secured?: boolean;
   multiline?: boolean;
+
+  squareLeft?: boolean;
+  squareRight?: boolean;
+
   value?: string;
   onChange: React.Dispatch<React.SetStateAction<string>>;
 }
@@ -15,9 +20,14 @@ export interface InputProps {
 export default function Input({
   label,
   placeholder,
+
   disabled,
   secured,
   multiline,
+
+  squareLeft,
+  squareRight,
+
   value,
   onChange,
 }: InputProps) {
@@ -72,6 +82,8 @@ export default function Input({
               : "border-background-200"
           } ${disabled ? "!border-background-100" : ""} ${
             multiline ? "min-h-24" : "h-10"
+          } ${squareLeft ? "rounded-l-none" : ""} ${
+            squareRight ? "rounded-r-none" : ""
           } flex-1 px-3 py-2 color-white rounded-lg text-base border-2 border-background-200 focus:border-primary-300 outline-none transition-all`}
           onChangeText={setText}
           onFocus={() => setFocused(true)}
