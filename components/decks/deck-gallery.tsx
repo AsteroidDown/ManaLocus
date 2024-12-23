@@ -7,6 +7,7 @@ import { titleCase } from "@/functions/text-manipulation";
 import DeckService from "@/hooks/services/deck.service";
 import { Deck } from "@/models/deck/deck";
 import {
+  DeckFiltersDTO,
   DeckSortType,
   DeckSortTypes,
 } from "@/models/deck/dtos/deck-filters.dto";
@@ -16,7 +17,11 @@ import React, { useContext, useEffect } from "react";
 import { View } from "react-native";
 import DeckCard from "./deck-card";
 
-export default function DeckGallery() {
+export interface DeckGalleryProps {
+  userId?: string;
+}
+
+export default function DeckGallery({ userId }: DeckGalleryProps) {
   const { user } = useContext(UserContext);
 
   const [decks, setDecks] = React.useState([] as Deck[]);
@@ -29,11 +34,18 @@ export default function DeckGallery() {
   const [sort, setSort] = React.useState(DeckSortTypes.CREATED as DeckSortType);
 
   useEffect(() => {
-    DeckService.getMany({
+    const filters: DeckFiltersDTO = {
       ...(search && { search }),
       ...(format && { deckFormat: format }),
       ...(sort && { sort }),
-    }).then((decks) => setDecks(decks));
+      ...(userId && { includePrivate: "true" }),
+    };
+
+    if (userId) {
+      DeckService.getByUser(userId, filters).then((decks) => setDecks(decks));
+    } else {
+      DeckService.getMany(filters).then((decks) => setDecks(decks));
+    }
   }, [user, format, search, sort]);
 
   useEffect(() => {
@@ -113,7 +125,10 @@ export default function DeckGallery() {
 
       <View className="flex flex-row flex-wrap gap-4 z-[10]">
         {decks?.map((deck, index) => (
-          <Link key={deck.id + deck.name + index} href={`decks/${deck.id}`}>
+          <Link
+            key={deck.id + deck.name + index}
+            href={`${userId ? "../" : ""}decks/${deck.id}`}
+          >
             <DeckCard deck={deck} />
           </Link>
         ))}

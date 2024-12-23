@@ -5,6 +5,7 @@ export interface DeckFiltersDTO {
   deckFormat?: MTGFormat | null;
   cardNames?: string[] | null;
   sort?: DeckSortType | null;
+  includePrivate?: string | null;
 }
 
 export type DeckSortType =

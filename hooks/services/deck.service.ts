@@ -25,9 +25,9 @@ async function get(deckId: string): Promise<Deck> {
     });
 }
 
-async function getByUser(userId: string, includePrivate?: boolean) {
+async function getByUser(userId: string, filters?: DeckFiltersDTO) {
   return await API.get(`user-decks/${userId}`, {
-    includePrivate: includePrivate ? "true" : "false",
+    ...filters,
   })
     .then((decks) => decks.map((deck: any) => mapDatabaseDeck(deck)))
     .catch((error) =>
