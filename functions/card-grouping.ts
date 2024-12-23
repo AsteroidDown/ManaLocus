@@ -436,7 +436,7 @@ export function groupCardsCustom(cards: Card[]): CardsSortedCustom {
   const groups: string[] = [];
 
   cards.forEach((card) => {
-    if (!card.group) {
+    if (!card.group || card.group.toLowerCase() === "unsorted") {
       groupedCards?.["Unsorted"]
         ? groupedCards["Unsorted"].push(card)
         : (groupedCards["Unsorted"] = [card]);
