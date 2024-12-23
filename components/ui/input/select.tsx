@@ -4,8 +4,13 @@ import React from "react";
 import { Pressable, TextInput, View, ViewProps } from "react-native";
 import Text from "../text/text";
 
+export interface SelectOption {
+  label: string;
+  value: any;
+}
+
 export type InputProps = ViewProps & {
-  options: { label: string; value: any }[];
+  options: SelectOption[];
 
   label?: string;
   placeholder?: string;
@@ -14,6 +19,7 @@ export type InputProps = ViewProps & {
 
   squareLeft?: boolean;
   squareRight?: boolean;
+  maxHeight?: string;
 
   value?: any;
   onChange: React.Dispatch<React.SetStateAction<any>>;
@@ -21,14 +27,19 @@ export type InputProps = ViewProps & {
 
 export default function Select({
   options,
+
   label,
   placeholder,
   disabled,
   property,
+
   squareLeft,
   squareRight,
+  maxHeight,
+
   value,
   onChange,
+
   className,
 }: InputProps) {
   const [hovered, setHovered] = React.useState(false);
@@ -114,7 +125,7 @@ export default function Select({
             open ? "!rounded-b-none" : ""
           } ${squareLeft ? "!rounded-l-none" : ""} ${
             squareRight ? "!rounded-r-none" : ""
-          } flex-1 flex flex-row items-center gap-2 min-w-fit px-3 py-2 rounded-lg min-h-10 border-2 transition-all`}
+          } flex-1 flex flex-row items-center min-w-fit min-h-10 px-3 py-2 rounded-lg border-2 overflow-hidden transition-all`}
         >
           <TextInput
             value={search}
@@ -150,7 +161,7 @@ export default function Select({
           style={{ elevation: 100, zIndex: 100 }}
           className={`${
             open
-              ? "max-h-[500px] border-2 top-[38px]"
+              ? (maxHeight ?? "max-h-[500px]") + " border-2 top-[38px]"
               : "max-h-0 border-0 top-[40px]"
           } ${
             focused || open
