@@ -104,7 +104,7 @@ export default function CardsLayout() {
         <View className="flex gap-4 px-6 py-4 w-full h-[100vh] pb-4">
           <CardSearch />
 
-          <TabBar tabs={tabs}>
+          <TabBar tabs={tabs} className="z-[-1]">
             <View className="flex flex-row gap-2 mx-4">
               <Button
                 rounded
