@@ -16,7 +16,7 @@ export function getLocalStorageStoredCards(board: BoardType = BoardTypes.MAIN) {
 
 export function setLocalStorageCards(cards: Card[], board?: BoardType) {
   localStorage.setItem(
-    "cubeCards" + titleCase(board),
+    "builderCards" + titleCase(board),
     JSON.stringify(cards.map((card) => JSON.stringify(card)))
   );
 }
@@ -64,6 +64,29 @@ export function switchLocalStorageCardPrint(
     const storedCard = storedCards[cardIndex];
     print.count = storedCard.count;
     storedCards[cardIndex] = print;
+
+    localStorage.setItem(
+      "cubeCards" + titleCase(board),
+      JSON.stringify(
+        storedCards.map((storedCard) => JSON.stringify(storedCard))
+      )
+    );
+  }
+}
+
+export function updateLocalStorageCardGroup(
+  card: Card,
+  group: string,
+  board?: BoardType
+) {
+  const storedCards = getLocalStorageStoredCards(board);
+
+  const cardIndex = storedCards.findIndex(
+    (storedCard) => storedCard.scryfallId === card.scryfallId
+  );
+
+  if (cardIndex >= 0) {
+    storedCards[cardIndex].group = group;
 
     localStorage.setItem(
       "cubeCards" + titleCase(board),
