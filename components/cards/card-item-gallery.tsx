@@ -33,11 +33,13 @@ import {
 import {
   faChartSimple,
   faDownLeftAndUpRightToCenter,
+  faPlus,
   faTable,
 } from "@fortawesome/free-solid-svg-icons";
 import React, { useContext, useEffect } from "react";
 import { View } from "react-native";
 import Button from "../ui/button/button";
+import Input from "../ui/input/input";
 import CardItemGalleryColumn from "./card-item-gallery-column";
 import CardSaveAsChartModal from "./card-save-as-chart-modal";
 import CardSaveAsGraphModal from "./card-save-as-graph-modal";
@@ -63,6 +65,9 @@ export default function CardItemGallery({
   const [saveAsChartOpen, setSaveAsChartOpen] = React.useState(false);
 
   const [cards, setCards] = React.useState([] as Card[]);
+
+  const [group, setGroup] = React.useState("");
+  const [groupOptions, setGroupOptions] = React.useState([] as string[]);
 
   const [cardCount, setCardCount] = React.useState(0);
   const [cardsValue, setCardsValue] = React.useState(0);
@@ -122,6 +127,12 @@ export default function CardItemGallery({
       setCardsSortedCustom(groupCardsCustom(filteredCards));
     }
   }, [cards, filters]);
+
+  useEffect(() => {
+    if (!cardsSortedCustom) return;
+
+    setGroupOptions(Object.keys(cardsSortedCustom));
+  }, [cardsSortedCustom]);
 
   return (
     <View className="bg-background-100">
@@ -343,9 +354,10 @@ export default function CardItemGallery({
 
           {type === "custom" && (
             <View className="flex flex-row gap-4 w-full min-h-[500px]">
-              {Object.keys(cardsSortedCustom).map((group, index) => (
+              {groupOptions.map((group, index) => (
                 <CardItemGalleryColumn
                   key={index}
+                  groups={groupOptions}
                   title={titleCase(group)}
                   hideImages={hideImages}
                   itemsExpanded={itemsExpanded}
@@ -354,6 +366,31 @@ export default function CardItemGallery({
                   cards={cardsSortedCustom[group]}
                 />
               ))}
+
+              <View className="flex flex-row mt-2 max-h-[88px] bg-background-300 bg-opacity-30 rounded-xl">
+                <View className="flex flex-row px-4 py-2">
+                  <Input
+                    squareRight
+                    label="Create Group"
+                    placeholder="Group"
+                    value={group}
+                    onChange={setGroup}
+                  />
+
+                  <Button
+                    squareLeft
+                    icon={faPlus}
+                    type="outlined"
+                    className="self-end"
+                    disabled={!group || groupOptions.includes(group)}
+                    onClick={() => {
+                      if (!group || groupOptions.includes(group)) return;
+
+                      setGroupOptions([...groupOptions, group]);
+                    }}
+                  />
+                </View>
+              </View>
             </View>
           )}
         </View>
