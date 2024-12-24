@@ -19,9 +19,13 @@ import DeckCard from "./deck-card";
 
 export interface DeckGalleryProps {
   userId?: string;
+  favorites?: boolean;
 }
 
-export default function DeckGallery({ userId }: DeckGalleryProps) {
+export default function DeckGallery({
+  userId,
+  favorites = false,
+}: DeckGalleryProps) {
   const { user } = useContext(UserContext);
 
   const [decks, setDecks] = React.useState([] as Deck[]);
@@ -35,14 +39,20 @@ export default function DeckGallery({ userId }: DeckGalleryProps) {
 
   useEffect(() => {
     const filters: DeckFiltersDTO = {
+      ...(sort && { sort }),
       ...(search && { search }),
       ...(format && { deckFormat: format }),
-      ...(sort && { sort }),
       ...(userId && { includePrivate: "true" }),
     };
 
     if (userId) {
-      DeckService.getByUser(userId, filters).then((decks) => setDecks(decks));
+      if (favorites) {
+        DeckService.getUserFavorites(userId, filters).then((decks) =>
+          setDecks(decks)
+        );
+      } else {
+        DeckService.getByUser(userId, filters).then((decks) => setDecks(decks));
+      }
     } else {
       DeckService.getMany(filters).then((decks) => setDecks(decks));
     }

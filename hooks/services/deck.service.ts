@@ -37,6 +37,18 @@ async function getByUser(userId: string, filters?: DeckFiltersDTO) {
     );
 }
 
+async function getUserFavorites(userId: string, filters?: DeckFiltersDTO) {
+  return await API.get(`user-decks/${userId}/favorites`, {
+    ...filters,
+  })
+    .then((decks) => decks.map((deck: any) => mapDatabaseDeck(deck)))
+    .catch((error) =>
+      console.error(
+        `Error retrieving decks for user: (${userId}).\nError: ${error}`
+      )
+    );
+}
+
 async function getChanges(deckId: string): Promise<DeckChange> {
   return await API.get(`decks/${deckId}/changes`).catch((error) =>
     console.error(
@@ -109,6 +121,7 @@ const DeckService = {
   get,
   getMany,
   getByUser,
+  getUserFavorites,
   getChanges,
   getDeckFavorited,
   getDeckViewed,
