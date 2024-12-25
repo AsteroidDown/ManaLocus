@@ -109,12 +109,12 @@ export default function CardSearch({
 
         <Box
           className={`flex-[2] z-[-1] transition-all duration-300 ${
-            hideCardPreview || !searchedCards?.length
+            hideCardPreview && !searchedCards?.length
               ? "max-h-0 !p-0"
               : "min-h-[350px] h-full"
           }`}
         >
-          <View className="overflow-x-auto overflow-y-hidden h-full">
+          <View className="h-full rounded-xl overflow-x-auto overflow-y-hidden">
             {!searchedCards?.length && (
               <View className="flex flex-row flex-1 gap-4">
                 {searchedCardsPlaceholder.map((_, index) => (
