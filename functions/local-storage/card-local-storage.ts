@@ -8,7 +8,7 @@ export function getLocalStorageStoredCards(board: BoardType = BoardTypes.MAIN) {
   if (Platform.OS === "ios") return [];
 
   const storedCards: string[] = JSON.parse(
-    localStorage.getItem("cubeCards" + titleCase(board)) || "[]"
+    localStorage.getItem("builderCards" + titleCase(board)) || "[]"
   );
 
   return storedCards.map((savedCard) => JSON.parse(savedCard) as Card);
@@ -44,7 +44,7 @@ export function saveLocalStorageCard(card: Card, count = 1, board?: BoardType) {
   const newCards = JSON.stringify([
     ...storedCards.map((storedCard) => JSON.stringify(storedCard)),
   ]);
-  localStorage.setItem("cubeCards" + titleCase(board), newCards);
+  localStorage.setItem("builderCards" + titleCase(board), newCards);
 
   return storedCards;
 }
@@ -66,7 +66,7 @@ export function switchLocalStorageCardPrint(
     storedCards[cardIndex] = print;
 
     localStorage.setItem(
-      "cubeCards" + titleCase(board),
+      "builderCards" + titleCase(board),
       JSON.stringify(
         storedCards.map((storedCard) => JSON.stringify(storedCard))
       )
@@ -89,7 +89,7 @@ export function updateLocalStorageCardGroup(
     storedCards[cardIndex].group = group;
 
     localStorage.setItem(
-      "cubeCards" + titleCase(board),
+      "builderCards" + titleCase(board),
       JSON.stringify(
         storedCards.map((storedCard) => JSON.stringify(storedCard))
       )
@@ -116,7 +116,7 @@ export function addToLocalStorageCardCount(card: Card, board?: BoardType) {
     storedCards[cardIndex].count += 1;
 
     localStorage.setItem(
-      "cubeCards" + titleCase(board),
+      "builderCards" + titleCase(board),
       JSON.stringify(
         storedCards.map((storedCard) => JSON.stringify(storedCard))
       )
@@ -137,7 +137,7 @@ export function removeFromLocalStorageCardCount(card: Card, board?: BoardType) {
     if (storedCards[cardIndex].count <= 0) removeLocalStorageCard(card);
     else {
       localStorage.setItem(
-        "cubeCards" + titleCase(board),
+        "builderCards" + titleCase(board),
         JSON.stringify(
           storedCards.map((storedCard) => JSON.stringify(storedCard))
         )
@@ -158,7 +158,7 @@ export function removeLocalStorageCard(card: Card, board?: BoardType) {
   if (index >= 0) {
     storedCards.splice(index, 1);
     localStorage.setItem(
-      "cubeCards" + titleCase(board),
+      "builderCards" + titleCase(board),
       JSON.stringify(
         storedCards.map((storedCard) => JSON.stringify(storedCard))
       )
