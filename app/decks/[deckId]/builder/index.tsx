@@ -26,71 +26,81 @@ export default function App() {
     setCards(getLocalStorageStoredCards());
   }, [storedCards]);
 
-  if (!dashboard?.sections && !getLocalStorageDashboard()?.sections?.length) {
-    setLocalStorageDashboard({ sections: [] });
+  useEffect(() => {
+    if (
+      !dashboard?.sections?.length &&
+      !getLocalStorageDashboard()?.sections?.length
+    ) {
+      setLocalStorageDashboard({ sections: [] });
 
-    const sectionId = addLocalStorageDashboardSection("General");
-    if (!sectionId) return;
+      const sectionId = addLocalStorageDashboardSection("General");
+      if (!sectionId) return;
 
-    const allColorFilter: MTGColor[] = [
-      MTGColors.WHITE,
-      MTGColors.BLUE,
-      MTGColors.BLACK,
-      MTGColors.RED,
-      MTGColors.GREEN,
-      MTGColors.GOLD,
-      MTGColors.COLORLESS,
-    ];
+      const allColorFilter: MTGColor[] = [
+        MTGColors.WHITE,
+        MTGColors.BLUE,
+        MTGColors.BLACK,
+        MTGColors.RED,
+        MTGColors.GREEN,
+        MTGColors.GOLD,
+        MTGColors.COLORLESS,
+      ];
 
-    addLocalStorageDashboardItem(sectionId, {
-      title: "Cards by Mana Value",
-      sortType: "cost",
-      itemType: "graph",
-      stacked: true,
-      size: "md",
-      filters: {},
-    });
-    addLocalStorageDashboardItem(sectionId, {
-      title: "Cards by Color",
-      sortType: "color",
-      itemType: "graph",
-      stacked: true,
-      size: "md",
-      filters: {},
-    });
-    addLocalStorageDashboardItem(sectionId, {
-      title: "Cards by Mana Value",
-      sortType: "cost",
-      itemType: "chart",
-      smallTitles: true,
-      size: "sm",
-      filters: { colorFilter: allColorFilter },
-    });
-    addLocalStorageDashboardItem(sectionId, {
-      title: "Cards by Rarity",
-      sortType: "rarity",
-      itemType: "chart",
-      smallTitles: true,
-      size: "sm",
-      filters: { colorFilter: allColorFilter },
-    });
-    addLocalStorageDashboardItem(sectionId, {
-      title: "Cards by Type",
-      sortType: "type",
-      itemType: "chart",
-      smallTitles: true,
-      size: "sm",
-      filters: { colorFilter: allColorFilter },
-    });
-    addLocalStorageDashboardItem(sectionId, {
-      title: "Cards by Type",
-      sortType: "type",
-      itemType: "graph",
-      stacked: true,
-      size: "lg",
-      filters: {},
-    });
-  }
+      addLocalStorageDashboardItem(sectionId, {
+        title: "Cards by Mana Value",
+        sortType: "cost",
+        itemType: "graph",
+        stacked: true,
+        size: "md",
+        filters: {},
+      });
+      addLocalStorageDashboardItem(sectionId, {
+        title: "Cards by Color",
+        sortType: "color",
+        itemType: "graph",
+        stacked: true,
+        size: "md",
+        filters: {},
+      });
+      addLocalStorageDashboardItem(sectionId, {
+        title: "Cards by Mana Value",
+        sortType: "cost",
+        itemType: "chart",
+        smallTitles: true,
+        size: "sm",
+        filters: { colorFilter: allColorFilter },
+      });
+      addLocalStorageDashboardItem(sectionId, {
+        title: "Cards by Rarity",
+        sortType: "rarity",
+        itemType: "chart",
+        smallTitles: true,
+        size: "sm",
+        filters: { colorFilter: allColorFilter },
+      });
+      addLocalStorageDashboardItem(sectionId, {
+        title: "Cards by Type",
+        sortType: "type",
+        itemType: "chart",
+        smallTitles: true,
+        size: "sm",
+        filters: { colorFilter: allColorFilter },
+      });
+      addLocalStorageDashboardItem(sectionId, {
+        title: "Cards by Type",
+        sortType: "type",
+        itemType: "graph",
+        stacked: true,
+        size: "lg",
+        filters: {},
+      });
+    } else if (
+      !dashboard?.sections?.length &&
+      getLocalStorageDashboard()?.sections?.length
+    ) {
+      setDashboard(getLocalStorageDashboard());
+    }
+  }, [dashboard]);
 
   function addSection() {
     addLocalStorageDashboardSection("New Section");

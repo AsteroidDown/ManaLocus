@@ -4,10 +4,13 @@ import CardPreferencesContext from "@/contexts/cards/card-preferences.context";
 import StoredCardsContext from "@/contexts/cards/stored-cards.context";
 import DashboardContext from "@/contexts/dashboard/dashboard.context";
 import DeckContext from "@/contexts/deck/deck.context";
+import UserContext from "@/contexts/user/user.context";
 import {
   getLocalStorageStoredCards,
   saveLocalStorageCard,
+  setLocalStorageCards,
 } from "@/functions/local-storage/card-local-storage";
+import { setLocalStorageDashboard } from "@/functions/local-storage/dashboard-local-storage";
 import DeckService from "@/hooks/services/deck.service";
 import { Card } from "@/models/card/card";
 import { Dashboard } from "@/models/dashboard/dashboard";
@@ -27,6 +30,7 @@ import { View } from "react-native";
 
 export default function TabLayout() {
   const { deck } = useContext(DeckContext);
+  const { user } = useContext(UserContext);
 
   const [storedCards, setStoredCards] = React.useState([] as Card[]);
 
@@ -35,11 +39,24 @@ export default function TabLayout() {
   const [preferences, setPreferences] = React.useState({} as Preferences);
 
   useEffect(() => {
-    if (!deck) return;
-    if (getLocalStorageStoredCards(BoardTypes.MAIN)?.length) return;
+    if (
+      !deck ||
+      deck.userId !== user?.id ||
+      getLocalStorageStoredCards(BoardTypes.MAIN)?.length
+    ) {
+      return;
+    }
 
-    if (deck.dashboard) setDashboard(deck.dashboard);
-    else setDashboard(null);
+    setLocalStorageCards([], BoardTypes.MAIN);
+    setLocalStorageCards([], BoardTypes.SIDE);
+    setLocalStorageCards([], BoardTypes.MAYBE);
+    setLocalStorageCards([], BoardTypes.ACQUIRE);
+    setLocalStorageDashboard({ sections: [] });
+
+    if (deck.dashboard) {
+      setDashboard(deck.dashboard);
+      setLocalStorageDashboard(deck.dashboard);
+    } else setDashboard(null);
 
     DeckService.get(deck.id).then((deck) => {
       deck.main.forEach((card) =>
