@@ -6,6 +6,9 @@ export interface InputProps {
   label?: string;
   placeholder?: string;
 
+  error?: boolean;
+  errorMessage?: string;
+
   disabled?: boolean;
   secured?: boolean;
   multiline?: boolean;
@@ -20,6 +23,9 @@ export interface InputProps {
 export default function Input({
   label,
   placeholder,
+
+  error,
+  errorMessage,
 
   disabled,
   secured,
@@ -66,29 +72,39 @@ export default function Input({
         </Text>
       )}
 
-      <View className="flex-1 flex flex-row gap-2 min-w-fit">
-        <TextInput
-          value={text}
-          multiline={multiline}
-          placeholder={placeholder}
-          tabIndex={disabled ? -1 : 0}
-          secureTextEntry={secured}
-          placeholderTextColor="#8b8b8b"
-          className={`${
-            focused
-              ? "border-primary-300"
-              : hovered
-              ? "border-primary-200"
-              : "border-background-200"
-          } ${disabled ? "!border-background-100" : ""} ${
-            multiline ? "min-h-24" : "h-10"
-          } ${squareLeft ? "rounded-l-none" : ""} ${
-            squareRight ? "rounded-r-none" : ""
-          } flex-1 px-3 py-2 color-white rounded-lg text-base border-2 border-background-200 focus:border-primary-300 outline-none transition-all`}
-          onChangeText={setText}
-          onFocus={() => setFocused(true)}
-          onBlur={() => setFocused(false)}
-        />
+      <TextInput
+        value={text}
+        multiline={multiline}
+        placeholder={placeholder}
+        tabIndex={disabled ? -1 : 0}
+        secureTextEntry={secured}
+        placeholderTextColor="#8b8b8b"
+        className={`${
+          error
+            ? "!border-danger-100"
+            : focused
+            ? "border-primary-300"
+            : hovered
+            ? "border-primary-200"
+            : "border-background-200"
+        } ${disabled ? "!border-background-100" : ""} ${
+          multiline ? "min-h-24" : "h-10"
+        } ${squareLeft ? "rounded-l-none" : ""} ${
+          squareRight ? "rounded-r-none" : ""
+        } flex-1 px-3 py-2 color-white rounded-lg text-base border-2 border-background-200 focus:border-primary-300 outline-none transition-all`}
+        onChangeText={setText}
+        onFocus={() => setFocused(true)}
+        onBlur={() => setFocused(false)}
+      />
+
+      <View
+        className={`${
+          error ? "max-h-10" : "max-h-0"
+        } overflow-hidden transition-all duration-300`}
+      >
+        <Text size="sm" action="danger">
+          {errorMessage}
+        </Text>
       </View>
     </View>
   );
