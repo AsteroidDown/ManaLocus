@@ -27,6 +27,7 @@ export default function RootLayout() {
               borderBottomWidth: 0,
               backgroundColor: "black",
             },
+            headerLeft: () => null,
             headerRight: () => <Login />,
           }}
         >
