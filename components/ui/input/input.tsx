@@ -39,6 +39,7 @@ export default function Input({
 }: InputProps) {
   const [text, setText] = React.useState(value ?? "");
   const [debouncedText, setDebouncedText] = React.useState(text);
+  const [prevDebouncedText, setPrevDebouncedText] = React.useState(text);
 
   const [hovered, setHovered] = React.useState(false);
   const [focused, setFocused] = React.useState(false);
@@ -58,7 +59,10 @@ export default function Input({
     return () => clearTimeout(delayDebounceFn);
   }, [value, text]);
 
-  useEffect(() => onChange(debouncedText), [debouncedText]);
+  useEffect(() => {
+    if (text !== prevDebouncedText) onChange(debouncedText);
+    setPrevDebouncedText(debouncedText);
+  }, [debouncedText]);
 
   return (
     <View
@@ -99,7 +103,7 @@ export default function Input({
 
       <View
         className={`${
-          error ? "max-h-10" : "max-h-0"
+          error ? "max-h-10" : "max-h-0 -mt-2"
         } overflow-hidden transition-all duration-300`}
       >
         <Text size="sm" action="danger">
