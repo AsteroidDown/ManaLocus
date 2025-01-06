@@ -42,7 +42,7 @@ export default function DeckHeader({ deck }: { deck: Deck }) {
         </Text>
 
         <Text size="lg" thickness="medium">
-          By {deck.user?.name}
+          By <Link href={`/users/${deck.userId}`}>{deck.user?.name}</Link>
         </Text>
       </View>
 
