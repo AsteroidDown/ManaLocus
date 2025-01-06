@@ -2,7 +2,9 @@ import Button from "@/components/ui/button/button";
 import CollapsableSection from "@/components/ui/collapsable-section/collapsable-section";
 import Input from "@/components/ui/input/input";
 import { EmailMask } from "@/constants/masks/text-masks";
+import UserPageContext from "@/contexts/user/user-page.context";
 import UserContext from "@/contexts/user/user.context";
+import { router } from "expo-router";
 import React, { useContext, useEffect } from "react";
 import { SafeAreaView, View } from "react-native";
 
@@ -15,6 +17,12 @@ interface PasswordErrors {
 
 export default function UserSettingsPage() {
   const { user } = useContext(UserContext);
+  const { userPageUser } = useContext(UserPageContext);
+
+  if (user?.id !== userPageUser?.id) {
+    router.push(`users/${userPageUser?.id}`);
+    return null;
+  }
 
   const [preferencesOpen, setPreferencesOpen] = React.useState(false);
   const [emailOpen, setEmailOpen] = React.useState(false);

@@ -2,6 +2,7 @@ import Button from "@/components/ui/button/button";
 import Input from "@/components/ui/input/input";
 import Select from "@/components/ui/input/select";
 import { MTGFormats } from "@/constants/mtg/mtg-format";
+import UserPageContext from "@/contexts/user/user-page.context";
 import UserContext from "@/contexts/user/user.context";
 import { titleCase } from "@/functions/text-manipulation";
 import DeckService from "@/hooks/services/deck.service";
@@ -27,6 +28,7 @@ export default function DeckGallery({
   favorites = false,
 }: DeckGalleryProps) {
   const { user } = useContext(UserContext);
+  const { userPageUser } = useContext(UserPageContext);
 
   const [decks, setDecks] = React.useState([] as Deck[]);
 
@@ -42,7 +44,7 @@ export default function DeckGallery({
       ...(sort && { sort }),
       ...(search && { search }),
       ...(format && { deckFormat: format }),
-      ...(userId && { includePrivate: "true" }),
+      ...(user?.id === userPageUser?.id && { includePrivate: "true" }),
     };
 
     if (userId) {
@@ -50,9 +52,8 @@ export default function DeckGallery({
         DeckService.getUserFavorites(userId, filters).then((decks) =>
           setDecks(decks)
         );
-      } else {
+      } else
         DeckService.getByUser(userId, filters).then((decks) => setDecks(decks));
-      }
     } else {
       DeckService.getMany(filters).then((decks) => setDecks(decks));
     }

@@ -1,6 +1,17 @@
 import { User } from "@/models/user/user";
 import API from "../api-methods/api-methods";
 
+async function get(userId: string): Promise<User> {
+  return await API.get(`users/${userId}`).then(
+    (response) =>
+      ({
+        id: response.id,
+        name: response.username,
+        email: response.email,
+      } as User)
+  );
+}
+
 async function getCurrentUser(): Promise<User | null> {
   if (!localStorage.getItem("user-access")) return null;
 
@@ -61,6 +72,7 @@ async function logout() {
 }
 
 const UserService = {
+  get,
   getCurrentUser,
   register,
   login,
