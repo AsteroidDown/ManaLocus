@@ -18,6 +18,8 @@ export default function Login() {
   const [confirmPassword, setConfirmPassword] = React.useState("");
 
   function loginUser() {
+    if (!username || !password) return;
+
     UserService.login(username, password).then((user) => {
       if (user) {
         setUser(user);
@@ -73,6 +75,7 @@ export default function Login() {
                 disabled={!login}
                 value={username}
                 onChange={setUsername}
+                enterAction={() => loginUser()}
               />
 
               <Input
@@ -82,6 +85,7 @@ export default function Login() {
                 disabled={!login}
                 value={password}
                 onChange={setPassword}
+                enterAction={() => loginUser()}
               />
 
               <Button
