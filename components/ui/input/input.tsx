@@ -18,6 +18,7 @@ export interface InputProps {
 
   value?: string;
   onChange: React.Dispatch<React.SetStateAction<string>>;
+  enterAction?: () => void;
 }
 
 export default function Input({
@@ -36,6 +37,7 @@ export default function Input({
 
   value,
   onChange,
+  enterAction,
 }: InputProps) {
   const [text, setText] = React.useState(value ?? "");
   const [debouncedText, setDebouncedText] = React.useState(text);
@@ -99,6 +101,11 @@ export default function Input({
         onChangeText={setText}
         onFocus={() => setFocused(true)}
         onBlur={() => setFocused(false)}
+        onKeyPress={(e) => {
+          if (e.nativeEvent.key === "Enter") {
+            enterAction?.();
+          }
+        }}
       />
 
       <View
