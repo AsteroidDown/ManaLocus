@@ -2,16 +2,21 @@ import { LostURL } from "@/constants/urls";
 import UserContext from "@/contexts/user/user.context";
 import { titleCase } from "@/functions/text-manipulation";
 import { Deck } from "@/models/deck/deck";
-import { faPen } from "@fortawesome/free-solid-svg-icons";
+import { faEllipsisV, faPen, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "expo-router";
 import moment from "moment";
-import { useContext } from "react";
+import React, { useContext } from "react";
 import { Image, View } from "react-native";
 import Button from "../ui/button/button";
+import Dropdown from "../ui/dropdown/dropdown";
 import Text from "../ui/text/text";
+import DeckDeleteModal from "./deck-delete-modal";
 
 export default function DeckHeader({ deck }: { deck: Deck }) {
   const { user } = useContext(UserContext);
+
+  const [optionsExpanded, setOptionsExpanded] = React.useState(false);
+  const [deleteModalOpen, setDeleteModalOpen] = React.useState(false);
 
   return (
     <View className="relative h-72 overflow-hidden">
@@ -53,15 +58,39 @@ export default function DeckHeader({ deck }: { deck: Deck }) {
       </View>
 
       {user?.id === deck.userId && (
-        <View className="absolute top-4 right-6 shadow-lg">
+        <View className="absolute top-4 right-6 flex flex-row gap-2 shadow-lg">
           <Link href={`${deck.id}/builder/main-board`}>
-            <Button
-              text="Edit"
-              icon={faPen}
-              action="primary"
-              className="w-full"
-            />
+            <Button text="Edit" icon={faPen} className="w-full" />
           </Link>
+
+          <Button icon={faEllipsisV} onClick={() => setOptionsExpanded(true)}>
+            <View className="-mx-1">
+              <Dropdown
+                xOffset={-100}
+                expanded={optionsExpanded}
+                setExpanded={setOptionsExpanded}
+                className={`mt-5 !max-w-[360px] border-2 border-primary-300 bg-background-100 rounded-2xl overflow-hidden`}
+              >
+                <Button
+                  square
+                  type="clear"
+                  text="Delete"
+                  className="w-full"
+                  icon={faTrash}
+                  onClick={() => {
+                    setDeleteModalOpen(true);
+                    setOptionsExpanded(false);
+                  }}
+                />
+              </Dropdown>
+
+              <DeckDeleteModal
+                deck={deck}
+                open={deleteModalOpen}
+                setOpen={setDeleteModalOpen}
+              />
+            </View>
+          </Button>
         </View>
       )}
     </View>
