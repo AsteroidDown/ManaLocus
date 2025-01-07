@@ -9,6 +9,7 @@ export interface InputProps {
   error?: boolean;
   errorMessage?: string;
 
+  lightBorder?: boolean;
   disabled?: boolean;
   secured?: boolean;
   multiline?: boolean;
@@ -28,6 +29,7 @@ export default function Input({
   error,
   errorMessage,
 
+  lightBorder,
   disabled,
   secured,
   multiline,
@@ -87,17 +89,19 @@ export default function Input({
         placeholderTextColor="#8b8b8b"
         className={`${
           error
-            ? "!border-danger-100"
+            ? "border-danger-100"
             : focused
             ? "border-primary-300"
             : hovered
             ? "border-primary-200"
+            : lightBorder
+            ? "border-background-300"
             : "border-background-200"
         } ${disabled ? "!border-background-100" : ""} ${
           multiline ? "min-h-24" : "h-10"
         } ${squareLeft ? "rounded-l-none" : ""} ${
           squareRight ? "rounded-r-none" : ""
-        } flex-1 px-3 py-2 color-white rounded-lg text-base border-2 border-background-200 focus:border-primary-300 outline-none transition-all`}
+        } flex-1 px-3 py-2 color-white rounded-lg text-base border-2  outline-none transition-all`}
         onChangeText={setText}
         onFocus={() => setFocused(true)}
         onBlur={() => setFocused(false)}
