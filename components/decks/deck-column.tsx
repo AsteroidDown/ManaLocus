@@ -9,6 +9,7 @@ import { Linking, Pressable, View } from "react-native";
 import CardDetailedPreview from "../cards/card-detailed-preview";
 import CardImage from "../cards/card-image";
 import CardText from "../cards/card-text";
+import CardViewMultipleModal from "../cards/card-view-multiple-modal";
 import Button from "../ui/button/button";
 import Divider from "../ui/divider/divider";
 import Modal from "../ui/modal/modal";
@@ -55,6 +56,8 @@ export default function DeckColumn({
   const [count, setCount] = React.useState(0);
   const [price, setPrice] = React.useState(0);
 
+  const [cardPreviewModalOpen, setCardPreviewModalOpen] = React.useState(false);
+
   const [cardGroupings, setCardGroupings] = React.useState(
     [] as DeckColumnCardGrouping[] | null
   );
@@ -98,7 +101,10 @@ export default function DeckColumn({
         shouldWrap ? "break-before-column" : ""
       } w-full break-inside-avoid mb-6`}
     >
-      <View className="flex flex-row justify-between items-center px-2">
+      <Pressable
+        className="flex flex-row justify-between items-center px-2"
+        onPress={() => setCardPreviewModalOpen(true)}
+      >
         <Text size="lg" thickness="bold">
           {titleCase(title)}
         </Text>
@@ -110,7 +116,7 @@ export default function DeckColumn({
             <Text className="w-14 text-right">{currency(price)}</Text>
           )}
         </View>
-      </View>
+      </Pressable>
 
       <Divider thick className="!border-background-200 my-1" />
 
@@ -181,6 +187,13 @@ export default function DeckColumn({
           ))}
         </View>
       )}
+
+      <CardViewMultipleModal
+        title={title}
+        cards={cards || []}
+        open={cardPreviewModalOpen}
+        setOpen={setCardPreviewModalOpen}
+      />
     </View>
   );
 }
