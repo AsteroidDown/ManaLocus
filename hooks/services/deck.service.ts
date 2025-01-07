@@ -88,7 +88,7 @@ async function update(deckId: string, data: DeckDTO) {
 }
 
 async function remove(deckId: string) {
-  return await API.delete(`decks/${deckId}`, true).catch((error) => {
+  return await API.delete(`decks/${deckId}/`, true).catch((error) => {
     console.error(`Error removing deck with id: (${deckId}).\nError: ${error}`);
   });
 }
