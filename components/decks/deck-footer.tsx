@@ -1,14 +1,16 @@
 import { groupCardsByType } from "@/functions/card-grouping";
 import { currency, titleCase } from "@/functions/text-manipulation";
 import { Deck } from "@/models/deck/deck";
-import { faFileArrowDown } from "@fortawesome/free-solid-svg-icons";
+import { faCopy, faFileArrowDown } from "@fortawesome/free-solid-svg-icons";
 import React, { useEffect } from "react";
 import { Image, View } from "react-native";
 import CardImportExportModal from "../cards/card-import-export-modal";
 import Button from "../ui/button/button";
 import Text from "../ui/text/text";
+import DeckDuplicateModal from "./deck-duplicate-modal";
 
 export default function DeckFooter({ deck }: { deck: Deck }) {
+  const [copyOpen, setCopyOpen] = React.useState(false);
   const [importOpen, setImportOpen] = React.useState(false);
 
   const [mainCards, setMainCards] = React.useState(0);
@@ -172,13 +174,31 @@ export default function DeckFooter({ deck }: { deck: Deck }) {
 
         <View className="h-5 border-r rounded-lg border-white -mr-2 ml-1" />
 
-        <Button
-          rounded
-          type="clear"
-          action="default"
-          icon={faFileArrowDown}
-          onClick={() => setImportOpen(true)}
-        />
+        <View className="flex flex-row">
+          <Button
+            rounded
+            type="clear"
+            action="default"
+            icon={faCopy}
+            onClick={() => setCopyOpen(true)}
+          />
+
+          <Button
+            rounded
+            type="clear"
+            action="default"
+            icon={faFileArrowDown}
+            onClick={() => setImportOpen(true)}
+          />
+        </View>
+
+        <View className="-mx-2">
+          <DeckDuplicateModal
+            deck={deck}
+            open={copyOpen}
+            setOpen={setCopyOpen}
+          />
+        </View>
 
         <View className="-mx-2">
           <CardImportExportModal
