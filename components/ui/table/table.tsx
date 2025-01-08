@@ -22,7 +22,7 @@ export default function Table({ data, columns, rowClick }: TableProps) {
   const [hoveredIndex, setHoveredIndex] = React.useState(-1);
 
   return (
-    <View className="flex flex-row px-2 overflow-x-auto">
+    <View className="flex flex-row overflow-x-auto">
       {columns.map((column, index) => (
         <View
           key={index}
