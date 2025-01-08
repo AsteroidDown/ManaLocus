@@ -12,10 +12,18 @@ import {
   DeckSortType,
   DeckSortTypes,
 } from "@/models/deck/dtos/deck-filters.dto";
-import { faFilter } from "@fortawesome/free-solid-svg-icons";
-import { Link } from "expo-router";
+import {
+  faBorderAll,
+  faFilter,
+  faList,
+} from "@fortawesome/free-solid-svg-icons";
+import { Link, router } from "expo-router";
+import moment from "moment";
 import React, { useContext, useEffect } from "react";
 import { View } from "react-native";
+import CardText from "../cards/card-text";
+import Table from "../ui/table/table";
+import Text from "../ui/text/text";
 import DeckCard from "./deck-card";
 
 export interface DeckGalleryProps {
@@ -32,6 +40,7 @@ export default function DeckGallery({
 
   const [decks, setDecks] = React.useState([] as Deck[]);
 
+  const [listView, setListView] = React.useState(false);
   const [filtersOpen, setFiltersOpen] = React.useState(false);
   const [overflow, setOverflow] = React.useState(false);
 
@@ -72,6 +81,13 @@ export default function DeckGallery({
           placeholder="Search for a deck or card"
           value={search}
           onChange={setSearch}
+        />
+
+        <Button
+          type="outlined"
+          className="max-w-12 self-end"
+          icon={listView ? faBorderAll : faList}
+          onClick={() => setListView(!listView)}
         />
 
         <Button
@@ -134,16 +150,66 @@ export default function DeckGallery({
         </View>
       </View>
 
-      <View className="flex flex-row flex-wrap gap-4 z-[10]">
-        {decks?.map((deck, index) => (
-          <Link
-            key={deck.id + deck.name + index}
-            href={`${userId ? "../" : ""}decks/${deck.id}`}
-          >
-            <DeckCard deck={deck} />
-          </Link>
-        ))}
-      </View>
+      {!listView && (
+        <View className="flex flex-row flex-wrap gap-4 z-[10]">
+          {decks?.map((deck, index) => (
+            <Link
+              key={deck.id + deck.name + index}
+              href={`${userId ? "../" : ""}decks/${deck.id}`}
+            >
+              <DeckCard deck={deck} />
+            </Link>
+          ))}
+        </View>
+      )}
+
+      {listView && (
+        <Table
+          data={decks}
+          rowClick={(deck) => router.push(`decks/${deck.id}`)}
+          columns={[
+            {
+              title: "Name",
+              row: decks?.map((deck) => <Text>{deck.name}</Text>),
+            },
+            {
+              fit: true,
+              center: true,
+              row: decks?.map((deck) => (
+                <View className="max-w-fit py-0.5 px-1 bg-background-200 rounded-full overflow-hidden">
+                  <CardText text={deck.colors} />
+                </View>
+              )),
+            },
+            {
+              title: "Format",
+              row: decks?.map((deck) => <Text>{titleCase(deck.format)}</Text>),
+            },
+            {
+              title: "Creator",
+              row: decks?.map((deck) => <Text>{deck.user?.name}</Text>),
+            },
+            {
+              title: "Created",
+              row: decks?.map((deck) => (
+                <Text>{moment(deck.created).format("MMM D, YYYY")}</Text>
+              )),
+            },
+            {
+              fit: true,
+              center: true,
+              title: "Favorites",
+              row: decks?.map((deck) => <Text>{deck.favorites}</Text>),
+            },
+            {
+              fit: true,
+              center: true,
+              title: "Views",
+              row: decks?.map((deck) => <Text>{deck.views}</Text>),
+            },
+          ]}
+        />
+      )}
     </View>
   );
 }
