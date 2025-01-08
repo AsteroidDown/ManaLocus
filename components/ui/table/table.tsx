@@ -8,7 +8,7 @@ interface TableColumn {
   fit?: boolean;
   center?: boolean;
 
-  row: any[];
+  row: (arg: any) => React.ReactNode;
 }
 
 export interface TableProps {
@@ -35,7 +35,7 @@ export default function Table({ data, columns, rowClick }: TableProps) {
           </View>
 
           <View className="flex">
-            {column.row.map((cell, rowIndex) => (
+            {data.map((rowData, rowIndex) => (
               <Pressable
                 key={rowIndex}
                 onPress={() => rowClick?.(data[rowIndex])}
@@ -49,7 +49,7 @@ export default function Table({ data, columns, rowClick }: TableProps) {
                     : ""
                 }`}
               >
-                {cell}
+                {column.row(rowData)}
               </Pressable>
             ))}
           </View>

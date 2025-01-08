@@ -170,48 +170,48 @@ export default function DeckGallery({
           columns={[
             {
               title: "Name",
-              row: decks?.map((deck) => <Text>{deck.name}</Text>),
+              row: (deck) => <Text>{deck.name}</Text>,
             },
             {
               fit: true,
               center: true,
-              row: decks?.map((deck) => (
+              row: (deck) => (
                 <View className="max-w-fit py-0.5 px-1 bg-background-200 rounded-full overflow-hidden">
                   <CardText text={deck.colors} />
                 </View>
-              )),
+              ),
             },
             {
               title: "Format",
-              row: decks?.map((deck) => <Text>{titleCase(deck.format)}</Text>),
+              row: (deck) => <Text>{titleCase(deck.format)}</Text>,
             },
             {
               title: "Creator",
-              row: decks?.map((deck) => <Text>{deck.user?.name}</Text>),
+              row: (deck) => <Text>{deck.user?.name}</Text>,
             },
             {
               title: "Created",
-              row: decks?.map((deck) => (
+              row: (deck) => (
                 <Text>{moment(deck.created).format("MMM D, YYYY")}</Text>
-              )),
+              ),
             },
             {
               title: "Modified",
-              row: decks?.map((deck) => (
+              row: (deck) => (
                 <Text>{moment(deck.updated).format("MMM D, YYYY")}</Text>
-              )),
+              ),
             },
             {
               fit: true,
               center: true,
               title: "Favorites",
-              row: decks?.map((deck) => <Text>{deck.favorites}</Text>),
+              row: (deck) => <Text>{deck.favorites}</Text>,
             },
             {
               fit: true,
               center: true,
               title: "Views",
-              row: decks?.map((deck) => <Text>{deck.views}</Text>),
+              row: (deck) => <Text>{deck.views}</Text>,
             },
           ]}
         />
