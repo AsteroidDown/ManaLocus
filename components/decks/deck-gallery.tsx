@@ -196,6 +196,12 @@ export default function DeckGallery({
               )),
             },
             {
+              title: "Modified",
+              row: decks?.map((deck) => (
+                <Text>{moment(deck.updated).format("MMM D, YYYY")}</Text>
+              )),
+            },
+            {
               fit: true,
               center: true,
               title: "Favorites",
