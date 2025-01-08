@@ -22,7 +22,7 @@ import moment from "moment";
 import React, { useContext, useEffect } from "react";
 import { View } from "react-native";
 import CardText from "../cards/card-text";
-import Table from "../ui/table/table";
+import Table, { TableColumn } from "../ui/table/table";
 import Text from "../ui/text/text";
 import DeckCard from "./deck-card";
 
@@ -167,53 +167,55 @@ export default function DeckGallery({
         <Table
           data={decks}
           rowClick={(deck) => router.push(`decks/${deck.id}`)}
-          columns={[
-            {
-              title: "Name",
-              row: (deck) => <Text>{deck.name}</Text>,
-            },
-            {
-              fit: true,
-              center: true,
-              row: (deck) => (
-                <View className="max-w-fit py-0.5 px-1 bg-background-200 rounded-full overflow-hidden">
-                  <CardText text={deck.colors} />
-                </View>
-              ),
-            },
-            {
-              title: "Format",
-              row: (deck) => <Text>{titleCase(deck.format)}</Text>,
-            },
-            {
-              title: "Creator",
-              row: (deck) => <Text>{deck.user?.name}</Text>,
-            },
-            {
-              title: "Created",
-              row: (deck) => (
-                <Text>{moment(deck.created).format("MMM D, YYYY")}</Text>
-              ),
-            },
-            {
-              title: "Modified",
-              row: (deck) => (
-                <Text>{moment(deck.updated).format("MMM D, YYYY")}</Text>
-              ),
-            },
-            {
-              fit: true,
-              center: true,
-              title: "Favorites",
-              row: (deck) => <Text>{deck.favorites}</Text>,
-            },
-            {
-              fit: true,
-              center: true,
-              title: "Views",
-              row: (deck) => <Text>{deck.views}</Text>,
-            },
-          ]}
+          columns={
+            [
+              {
+                title: "Name",
+                row: (deck) => <Text>{deck.name}</Text>,
+              },
+              {
+                fit: true,
+                center: true,
+                row: (deck) => (
+                  <View className="max-w-fit py-0.5 px-1 bg-background-200 rounded-full overflow-hidden">
+                    <CardText text={deck.colors} />
+                  </View>
+                ),
+              },
+              {
+                title: "Format",
+                row: (deck) => <Text>{titleCase(deck.format)}</Text>,
+              },
+              {
+                title: "Creator",
+                row: (deck) => <Text>{deck.user?.name}</Text>,
+              },
+              {
+                title: "Created",
+                row: (deck) => (
+                  <Text>{moment(deck.created).format("MMM D, YYYY")}</Text>
+                ),
+              },
+              {
+                title: "Modified",
+                row: (deck) => (
+                  <Text>{moment(deck.updated).format("MMM D, YYYY")}</Text>
+                ),
+              },
+              {
+                fit: true,
+                center: true,
+                title: "Favorites",
+                row: (deck) => <Text>{deck.favorites}</Text>,
+              },
+              {
+                fit: true,
+                center: true,
+                title: "Views",
+                row: (deck) => <Text>{deck.views}</Text>,
+              },
+            ] as TableColumn<Deck>[]
+          }
         />
       )}
     </View>

@@ -2,23 +2,23 @@ import React from "react";
 import { Pressable, View } from "react-native";
 import Text from "../text/text";
 
-interface TableColumn {
+export interface TableColumn<T> {
   title?: string;
 
   fit?: boolean;
   center?: boolean;
 
-  row: (arg: any) => React.ReactNode;
+  row: (arg: T) => React.ReactNode;
 }
 
-export interface TableProps {
-  data: any[];
-  columns: TableColumn[];
+export interface TableProps<T> {
+  data: T[];
+  columns: TableColumn<T>[];
 
-  rowClick?: (arg: any) => void;
+  rowClick?: (arg: T) => void;
 }
 
-export default function Table({ data, columns, rowClick }: TableProps) {
+export default function Table({ data, columns, rowClick }: TableProps<any>) {
   const [hoveredIndex, setHoveredIndex] = React.useState(-1);
 
   return (
