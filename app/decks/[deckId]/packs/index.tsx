@@ -153,7 +153,7 @@ export default function PackBuilderPage() {
 
   return (
     <ScrollView className="bg-background-100">
-      <View className="flex flex-1 gap-4 px-16 py-8 min-h-[100vh] bg-background-100 bg-opacity-60 rounded-xl overflow-hidden">
+      <View className="flex flex-1 gap-4 lg:px-16 px-4 py-8 min-h-[100vh] bg-background-100 bg-opacity-60 rounded-xl overflow-hidden">
         <BoxHeader
           title="Pack Builder"
           className="!pb-0"
