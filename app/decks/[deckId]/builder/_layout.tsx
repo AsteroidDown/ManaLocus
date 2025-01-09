@@ -1,6 +1,6 @@
 import Text from "@/components/ui/text/text";
 import { BoardTypes } from "@/constants/boards";
-import CardPreferencesContext from "@/contexts/cards/card-preferences.context";
+import BuilderPreferencesContext from "@/contexts/cards/builder-preferences.context";
 import StoredCardsContext from "@/contexts/cards/stored-cards.context";
 import DashboardContext from "@/contexts/dashboard/dashboard.context";
 import DeckContext from "@/contexts/deck/deck.context";
@@ -14,7 +14,7 @@ import { setLocalStorageDashboard } from "@/functions/local-storage/dashboard-lo
 import DeckService from "@/hooks/services/deck.service";
 import { Card } from "@/models/card/card";
 import { Dashboard } from "@/models/dashboard/dashboard";
-import { Preferences } from "@/models/preferences/preferences";
+import { BuilderPreferences } from "@/models/preferences/builder-preferences";
 import {
   faClipboardList,
   faClipboardQuestion,
@@ -36,7 +36,9 @@ export default function TabLayout() {
 
   const [dashboard, setDashboard] = React.useState(null as Dashboard | null);
 
-  const [preferences, setPreferences] = React.useState({} as Preferences);
+  const [preferences, setPreferences] = React.useState(
+    {} as BuilderPreferences
+  );
 
   useEffect(() => {
     if (
@@ -79,7 +81,7 @@ export default function TabLayout() {
   return (
     <StoredCardsContext.Provider value={{ storedCards, setStoredCards }}>
       <DashboardContext.Provider value={{ dashboard, setDashboard }}>
-        <CardPreferencesContext.Provider
+        <BuilderPreferencesContext.Provider
           value={{ preferences, setPreferences }}
         >
           <View className="flex flex-row w-full h-full bg-background-100">
@@ -247,7 +249,7 @@ export default function TabLayout() {
               />
             </Tabs>
           </View>
-        </CardPreferencesContext.Provider>
+        </BuilderPreferencesContext.Provider>
       </DashboardContext.Provider>
     </StoredCardsContext.Provider>
   );

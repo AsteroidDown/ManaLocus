@@ -2,7 +2,7 @@ import Chip from "@/components/ui/chip/chip";
 import Dropdown from "@/components/ui/dropdown/dropdown";
 import Text from "@/components/ui/text/text";
 import { MTGRarities, MTGRarity } from "@/constants/mtg/mtg-rarity";
-import CardPreferencesContext from "@/contexts/cards/card-preferences.context";
+import BuilderPreferencesContext from "@/contexts/cards/builder-preferences.context";
 import React, { useContext, useEffect } from "react";
 import { View } from "react-native";
 
@@ -23,7 +23,7 @@ export default function RarityFilter({
   rarityFilters,
   setRarityFilters,
 }: RarityFilterProps) {
-  const { preferences } = useContext(CardPreferencesContext);
+  const { preferences } = useContext(BuilderPreferencesContext);
 
   const [expanded, setExpanded] = React.useState(false);
 

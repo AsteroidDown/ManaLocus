@@ -6,14 +6,14 @@ import TabBar from "@/components/ui/tabs/tab-bar";
 import { Tooltip } from "@/components/ui/tooltip/tooltip";
 import { BoardType, BoardTypes } from "@/constants/boards";
 import BoardContext from "@/contexts/cards/board.context";
-import CardPreferencesContext from "@/contexts/cards/card-preferences.context";
+import BuilderPreferencesContext from "@/contexts/cards/builder-preferences.context";
 import StoredCardsContext from "@/contexts/cards/stored-cards.context";
 import DeckContext from "@/contexts/deck/deck.context";
-import { getLocalStorageStoredCards } from "@/functions/local-storage/card-local-storage";
 import {
-  getLocalStoragePreferences,
-  setLocalStoragePreferences,
-} from "@/functions/local-storage/preferences-local-storage";
+  getLocalStorageBuilderPreferences,
+  setLocalStorageBuilderPreferences,
+} from "@/functions/local-storage/builder-preferences-local-storage";
+import { getLocalStorageStoredCards } from "@/functions/local-storage/card-local-storage";
 import {
   faBars,
   faEye,
@@ -29,7 +29,7 @@ export default function AcquireBoardLayout() {
   if (!deck) return;
 
   const { setStoredCards } = useContext(StoredCardsContext);
-  const { setPreferences } = useContext(CardPreferencesContext);
+  const { setPreferences } = useContext(BuilderPreferencesContext);
 
   const [board, setBoard] = React.useState(BoardTypes.ACQUIRE as BoardType);
 
@@ -59,7 +59,7 @@ export default function AcquireBoardLayout() {
   useEffect(() => {
     setStoredCards(getLocalStorageStoredCards(board));
 
-    const storedPreferences = getLocalStoragePreferences();
+    const storedPreferences = getLocalStorageBuilderPreferences();
     if (storedPreferences) setPreferences(storedPreferences);
 
     if (storedPreferences?.groupMulticolored) setGroupMulticolored(true);
@@ -71,26 +71,26 @@ export default function AcquireBoardLayout() {
 
   function groupMulticoloredCards() {
     setGroupMulticolored(true);
-    setLocalStoragePreferences({ groupMulticolored: true });
-    setPreferences(getLocalStoragePreferences() || {});
+    setLocalStorageBuilderPreferences({ groupMulticolored: true });
+    setPreferences(getLocalStorageBuilderPreferences() || {});
   }
 
   function ungroupMulticoloredCards() {
     setGroupMulticolored(false);
-    setLocalStoragePreferences({ groupMulticolored: false });
-    setPreferences(getLocalStoragePreferences() || {});
+    setLocalStorageBuilderPreferences({ groupMulticolored: false });
+    setPreferences(getLocalStorageBuilderPreferences() || {});
   }
 
   function hideCardImages() {
     setHideImages(true);
-    setLocalStoragePreferences({ hideCardImages: true });
-    setPreferences(getLocalStoragePreferences() || {});
+    setLocalStorageBuilderPreferences({ hideCardImages: true });
+    setPreferences(getLocalStorageBuilderPreferences() || {});
   }
 
   function showCardImages() {
     setHideImages(false);
-    setLocalStoragePreferences({ hideCardImages: false });
-    setPreferences(getLocalStoragePreferences() || {});
+    setLocalStorageBuilderPreferences({ hideCardImages: false });
+    setPreferences(getLocalStorageBuilderPreferences() || {});
   }
 
   return (

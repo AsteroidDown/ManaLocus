@@ -1,22 +1,24 @@
-import { Preferences } from "@/models/preferences/preferences";
+import { BuilderPreferences } from "@/models/preferences/builder-preferences";
 import { Platform } from "react-native";
 
-export function getLocalStoragePreferences(): Preferences | null {
+export function getLocalStorageBuilderPreferences(): BuilderPreferences | null {
   if (Platform.OS === "ios") return null;
 
-  const preferences: Preferences = JSON.parse(
-    localStorage.getItem("preferences") || "{}"
+  const preferences: BuilderPreferences = JSON.parse(
+    localStorage.getItem("builder-preferences") || "{}"
   );
 
   return preferences;
 }
 
-export function setLocalStoragePreferences(preferences: Preferences) {
-  let storedPreferences = getLocalStoragePreferences();
+export function setLocalStorageBuilderPreferences(
+  preferences: BuilderPreferences
+) {
+  let storedPreferences = getLocalStorageBuilderPreferences();
 
   if (!storedPreferences?.filters) {
     localStorage.setItem(
-      "preferences",
+      "builder-preferences",
       JSON.stringify({
         filters: preferences.filters || [],
         groupMulticolored: preferences.groupMulticolored || false,
@@ -46,5 +48,8 @@ export function setLocalStoragePreferences(preferences: Preferences) {
     storedPreferences.hideCardImages = preferences.hideCardImages;
   }
 
-  return localStorage.setItem("preferences", JSON.stringify(storedPreferences));
+  return localStorage.setItem(
+    "builder-preferences",
+    JSON.stringify(storedPreferences)
+  );
 }

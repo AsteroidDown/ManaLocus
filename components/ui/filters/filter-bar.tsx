@@ -4,11 +4,11 @@ import { MTGColor } from "@/constants/mtg/mtg-colors";
 import { MTGRarity } from "@/constants/mtg/mtg-rarity";
 import { MTGCardType } from "@/constants/mtg/mtg-types";
 import { SortType } from "@/constants/sorting";
-import CardPreferencesContext from "@/contexts/cards/card-preferences.context";
+import BuilderPreferencesContext from "@/contexts/cards/builder-preferences.context";
 import {
-  getLocalStoragePreferences,
-  setLocalStoragePreferences,
-} from "@/functions/local-storage/preferences-local-storage";
+  getLocalStorageBuilderPreferences,
+  setLocalStorageBuilderPreferences,
+} from "@/functions/local-storage/builder-preferences-local-storage";
 import {
   CardFilters,
   CardFilterSortType,
@@ -29,7 +29,7 @@ export interface FilterBarProps {
 }
 
 export default function FilterBar({ clear, type, setFilters }: FilterBarProps) {
-  const { setPreferences } = useContext(CardPreferencesContext);
+  const { setPreferences } = useContext(BuilderPreferencesContext);
 
   const [showFilters, setShowFilters] = React.useState(false);
   const [filterLength, setFilterLength] = React.useState(0);
@@ -69,8 +69,8 @@ export default function FilterBar({ clear, type, setFilters }: FilterBarProps) {
     setFilterLength(filterLength);
 
     if (filterLength) {
-      setLocalStoragePreferences({ filters });
-      setPreferences(getLocalStoragePreferences() || {});
+      setLocalStorageBuilderPreferences({ filters });
+      setPreferences(getLocalStorageBuilderPreferences() || {});
     }
   }, [
     colorFilter,
@@ -88,10 +88,10 @@ export default function FilterBar({ clear, type, setFilters }: FilterBarProps) {
     setManaValueSort(null);
     setPriceSort(null);
     setResetFilters(!resetFilters);
-    setLocalStoragePreferences({
+    setLocalStorageBuilderPreferences({
       filters: { colorFilter: [], typeFilter: [], rarityFilter: [] },
     });
-    setPreferences(getLocalStoragePreferences() || {});
+    setPreferences(getLocalStorageBuilderPreferences() || {});
   }
 
   return (

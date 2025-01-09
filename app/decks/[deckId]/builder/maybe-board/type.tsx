@@ -1,9 +1,9 @@
 import CardItemGallery from "@/components/cards/card-item-gallery";
-import CardPreferencesContext from "@/contexts/cards/card-preferences.context";
+import BuilderPreferencesContext from "@/contexts/cards/builder-preferences.context";
 import React, { useContext } from "react";
 
 export default function CardsByTypePage() {
-  const { preferences } = useContext(CardPreferencesContext);
+  const { preferences } = useContext(BuilderPreferencesContext);
   return (
     <CardItemGallery
       type="type"
