@@ -2,6 +2,7 @@ import Button from "@/components/ui/button/button";
 import Input from "@/components/ui/input/input";
 import Select from "@/components/ui/input/select";
 import { MTGFormats } from "@/constants/mtg/mtg-format";
+import { LostURL } from "@/constants/urls";
 import UserPageContext from "@/contexts/user/user-page.context";
 import UserPreferencesContext from "@/contexts/user/user-preferences.context";
 import UserContext from "@/contexts/user/user.context";
@@ -26,7 +27,7 @@ import {
 import { Link, router } from "expo-router";
 import moment from "moment";
 import React, { useContext, useEffect } from "react";
-import { View } from "react-native";
+import { Image, View } from "react-native";
 import CardText from "../cards/card-text";
 import Table, { TableColumn } from "../ui/table/table";
 import Text from "../ui/text/text";
@@ -188,6 +189,19 @@ export default function DeckGallery({
           rowClick={(deck) => router.push(`decks/${deck.id}`)}
           columns={
             [
+              {
+                fit: true,
+                row: (deck) => (
+                  <Image
+                    source={{
+                      uri: deck.featuredArtUrl?.length
+                        ? deck.featuredArtUrl
+                        : LostURL,
+                    }}
+                    className="h-7 w-10 rounded"
+                  />
+                ),
+              },
               {
                 title: "Name",
                 row: (deck) => <Text>{deck.name}</Text>,
