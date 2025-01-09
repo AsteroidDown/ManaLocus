@@ -29,7 +29,7 @@ export enum DeckSortTypes {
   VIEWS_REVERSE = "views",
 }
 
-export enum DecksViewType {
+export enum DeckViewType {
   LIST = "list",
   CARD = "card",
 }

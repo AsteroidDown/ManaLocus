@@ -17,7 +17,7 @@ import {
   DeckFiltersDTO,
   DeckSortType,
   DeckSortTypes,
-  DecksViewType,
+  DeckViewType,
 } from "@/models/deck/dtos/deck-filters.dto";
 import {
   faBorderAll,
@@ -77,7 +77,7 @@ export default function DeckGallery({
   }, [user, format, search, sort]);
 
   useEffect(() => {
-    setListView(preferences?.decksViewType === DecksViewType.LIST);
+    setListView(preferences?.decksViewType === DeckViewType.LIST);
   }, [preferences]);
 
   useEffect(() => {
@@ -87,7 +87,7 @@ export default function DeckGallery({
 
   function toggleListView() {
     setLocalStorageUserPreferences({
-      decksViewType: listView ? DecksViewType.CARD : DecksViewType.LIST,
+      decksViewType: listView ? DeckViewType.CARD : DeckViewType.LIST,
     });
     setPreferences(getLocalStorageUserPreferences() || {});
     setListView(!listView);
