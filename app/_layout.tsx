@@ -2,6 +2,7 @@ import Button from "@/components/ui/button/button";
 import Text from "@/components/ui/text/text";
 import UserPreferencesContext from "@/contexts/user/user-preferences.context";
 import UserContext from "@/contexts/user/user.context";
+import { getLocalStorageUserPreferences } from "@/functions/local-storage/user-preferences-local-storage";
 import "@/global.css";
 import UserService from "@/hooks/services/user.service";
 import { UserPreferences } from "@/models/preferences/user-preferences";
@@ -18,6 +19,8 @@ export default function RootLayout() {
 
   useEffect(() => {
     UserService.getCurrentUser().then((user) => setUser(user));
+
+    setPreferences(getLocalStorageUserPreferences());
   }, []);
 
   return (
