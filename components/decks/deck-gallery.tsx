@@ -3,7 +3,12 @@ import Input from "@/components/ui/input/input";
 import Select from "@/components/ui/input/select";
 import { MTGFormats } from "@/constants/mtg/mtg-format";
 import UserPageContext from "@/contexts/user/user-page.context";
+import UserPreferencesContext from "@/contexts/user/user-preferences.context";
 import UserContext from "@/contexts/user/user.context";
+import {
+  getLocalStorageUserPreferences,
+  setLocalStorageUserPreferences,
+} from "@/functions/local-storage/user-preferences-local-storage";
 import { titleCase } from "@/functions/text-manipulation";
 import DeckService from "@/hooks/services/deck.service";
 import { Deck } from "@/models/deck/deck";
@@ -11,6 +16,7 @@ import {
   DeckFiltersDTO,
   DeckSortType,
   DeckSortTypes,
+  DecksViewType,
 } from "@/models/deck/dtos/deck-filters.dto";
 import {
   faBorderAll,
@@ -37,6 +43,7 @@ export default function DeckGallery({
 }: DeckGalleryProps) {
   const { user } = useContext(UserContext);
   const { userPageUser } = useContext(UserPageContext);
+  const { preferences, setPreferences } = useContext(UserPreferencesContext);
 
   const [decks, setDecks] = React.useState([] as Deck[]);
 
@@ -69,9 +76,21 @@ export default function DeckGallery({
   }, [user, format, search, sort]);
 
   useEffect(() => {
+    setListView(preferences?.decksViewType === DecksViewType.LIST);
+  }, [preferences]);
+
+  useEffect(() => {
     if (filtersOpen) setTimeout(() => setOverflow(filtersOpen), 300);
     else setOverflow(false);
   }, [filtersOpen]);
+
+  function toggleListView() {
+    setLocalStorageUserPreferences({
+      decksViewType: listView ? DecksViewType.CARD : DecksViewType.LIST,
+    });
+    setPreferences(getLocalStorageUserPreferences() || {});
+    setListView(!listView);
+  }
 
   return (
     <View className="flex gap-4">
@@ -87,7 +106,7 @@ export default function DeckGallery({
           type="outlined"
           className="max-w-12 self-end"
           icon={listView ? faBorderAll : faList}
-          onClick={() => setListView(!listView)}
+          onClick={toggleListView}
         />
 
         <Button
