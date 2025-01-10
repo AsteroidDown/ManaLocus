@@ -1,9 +1,19 @@
 import Button from "@/components/ui/button/button";
 import CollapsableSection from "@/components/ui/collapsable-section/collapsable-section";
 import Input from "@/components/ui/input/input";
+import Select from "@/components/ui/input/select";
 import { EmailMask } from "@/constants/masks/text-masks";
 import UserPageContext from "@/contexts/user/user-page.context";
+import UserPreferencesContext from "@/contexts/user/user-preferences.context";
 import UserContext from "@/contexts/user/user.context";
+import {
+  getLocalStorageUserPreferences,
+  setLocalStorageUserPreferences,
+} from "@/functions/local-storage/user-preferences-local-storage";
+import {
+  DeckSortType,
+  DeckSortTypes,
+} from "@/models/deck/dtos/deck-filters.dto";
 import { router } from "expo-router";
 import React, { useContext, useEffect } from "react";
 import { SafeAreaView, View } from "react-native";
@@ -18,6 +28,7 @@ interface PasswordErrors {
 export default function UserSettingsPage() {
   const { user } = useContext(UserContext);
   const { userPageUser } = useContext(UserPageContext);
+  const { preferences, setPreferences } = useContext(UserPreferencesContext);
 
   if (user?.id !== userPageUser?.id) {
     router.push(`users/${userPageUser?.id}`);
@@ -27,6 +38,10 @@ export default function UserSettingsPage() {
   const [preferencesOpen, setPreferencesOpen] = React.useState(false);
   const [emailOpen, setEmailOpen] = React.useState(false);
   const [passwordOpen, setPasswordOpen] = React.useState(false);
+
+  const [sort, setSort] = React.useState(
+    preferences?.decksSortType ?? (DeckSortTypes.CREATED as DeckSortType)
+  );
 
   const [email, setEmail] = React.useState("");
   const [emailError, setEmailError] = React.useState(false);
@@ -68,13 +83,55 @@ export default function UserSettingsPage() {
     setPasswordErrors(errors);
   }, [newPassword]);
 
+  useEffect(() => {
+    setSort(preferences?.decksSortType || DeckSortTypes.CREATED);
+  }, [preferences]);
+
+  function updateSort(sortType: DeckSortType) {
+    if (sortType === sort) return;
+
+    setLocalStorageUserPreferences({ decksSortType: sortType });
+    setPreferences(getLocalStorageUserPreferences() || {});
+    setSort(sortType);
+  }
+
   return (
     <SafeAreaView className="flex-1 flex w-full h-full bg-background-100">
-      <CollapsableSection
-        title="Preferences"
-        expanded={preferencesOpen}
-        setExpanded={setPreferencesOpen}
-      ></CollapsableSection>
+      <View className="z-10">
+        <CollapsableSection
+          title="Preferences"
+          expanded={preferencesOpen}
+          setExpanded={setPreferencesOpen}
+        >
+          <Select
+            label="Default Decks Sorting"
+            value={sort}
+            onChange={(change) => updateSort(change)}
+            options={[
+              { label: "Created", value: DeckSortTypes.CREATED },
+              {
+                label: "Created (Old to New)",
+                value: DeckSortTypes.CREATED_REVERSE,
+              },
+              { label: "Updated", value: DeckSortTypes.UPDATED },
+              {
+                label: "Updated (Old to New)",
+                value: DeckSortTypes.UPDATED_REVERSE,
+              },
+              { label: "Favorites", value: DeckSortTypes.FAVORITES },
+              {
+                label: "Favorites (Ascending)",
+                value: DeckSortTypes.FAVORITES_REVERSE,
+              },
+              { label: "Views", value: DeckSortTypes.VIEWS },
+              {
+                label: "Views (Ascending)",
+                value: DeckSortTypes.VIEWS_REVERSE,
+              },
+            ]}
+          />
+        </CollapsableSection>
+      </View>
 
       <CollapsableSection
         title="Email"

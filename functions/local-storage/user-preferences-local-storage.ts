@@ -1,4 +1,7 @@
-import { DeckViewType } from "@/models/deck/dtos/deck-filters.dto";
+import {
+  DeckSortTypes,
+  DeckViewType,
+} from "@/models/deck/dtos/deck-filters.dto";
 import { UserPreferences } from "@/models/preferences/user-preferences";
 import { Platform } from "react-native";
 
@@ -20,6 +23,10 @@ export function setLocalStorageUserPreferences(preferences: UserPreferences) {
       preferences?.decksViewType ??
       storedPreferences?.decksViewType ??
       DeckViewType.CARD,
+    decksSortType:
+      preferences?.decksSortType ??
+      storedPreferences?.decksSortType ??
+      DeckSortTypes.CREATED,
   };
 
   return localStorage.setItem(

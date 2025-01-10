@@ -1,6 +1,8 @@
+import CardText from "@/components/cards/card-text";
 import Button from "@/components/ui/button/button";
 import Input from "@/components/ui/input/input";
 import Select from "@/components/ui/input/select";
+import Table, { TableColumn } from "@/components/ui/table/table";
 import { MTGFormats } from "@/constants/mtg/mtg-format";
 import { LostURL } from "@/constants/urls";
 import UserPageContext from "@/contexts/user/user-page.context";
@@ -28,8 +30,6 @@ import { Link, router } from "expo-router";
 import moment from "moment";
 import React, { useContext, useEffect } from "react";
 import { Image, View } from "react-native";
-import CardText from "../cards/card-text";
-import Table, { TableColumn } from "../ui/table/table";
 import Text from "../ui/text/text";
 import DeckCard from "./deck-card";
 
@@ -54,7 +54,24 @@ export default function DeckGallery({
 
   const [search, setSearch] = React.useState("");
   const [format, setFormat] = React.useState(null as MTGFormats | null);
-  const [sort, setSort] = React.useState(DeckSortTypes.CREATED as DeckSortType);
+  const [sort, setSort] = React.useState(
+    preferences?.decksSortType ?? (DeckSortTypes.CREATED as DeckSortType)
+  );
+
+  useEffect(() => {
+    if (preferences?.decksViewType) {
+      setListView(preferences?.decksViewType === DeckViewType.LIST);
+    }
+
+    if (preferences?.decksSortType) {
+      setSort(preferences.decksSortType);
+    }
+  }, [preferences]);
+
+  useEffect(() => {
+    if (filtersOpen) setTimeout(() => setOverflow(filtersOpen), 300);
+    else setOverflow(false);
+  }, [filtersOpen]);
 
   useEffect(() => {
     const filters: DeckFiltersDTO = {
@@ -75,15 +92,6 @@ export default function DeckGallery({
       DeckService.getMany(filters).then((decks) => setDecks(decks));
     }
   }, [user, format, search, sort]);
-
-  useEffect(() => {
-    setListView(preferences?.decksViewType === DeckViewType.LIST);
-  }, [preferences]);
-
-  useEffect(() => {
-    if (filtersOpen) setTimeout(() => setOverflow(filtersOpen), 300);
-    else setOverflow(false);
-  }, [filtersOpen]);
 
   function toggleListView() {
     setLocalStorageUserPreferences({
@@ -143,7 +151,7 @@ export default function DeckGallery({
           <Select
             label="Sort"
             value={sort}
-            onChange={(change) => setSort(change)}
+            onChange={(change) => change !== sort && setSort(change)}
             options={[
               { label: "Created", value: DeckSortTypes.CREATED },
               {
