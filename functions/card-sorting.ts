@@ -82,10 +82,12 @@ export function sortCardsByPrice(
   ascending = true,
   euro = false
 ) {
-  return cards.sort((a, b) =>
-    euro
-      ? ((a.prices.eur || 0) - (b.prices.eur || 0)) * (ascending ? 1 : -1)
-      : ((a.prices.usd || 0) - (b.prices.usd || 0)) * (ascending ? 1 : -1)
+  return (
+    cards?.sort((a, b) =>
+      euro
+        ? ((a.prices.eur || 0) - (b.prices.eur || 0)) * (ascending ? 1 : -1)
+        : ((a.prices.usd || 0) - (b.prices.usd || 0)) * (ascending ? 1 : -1)
+    ) || []
   );
 }
 
