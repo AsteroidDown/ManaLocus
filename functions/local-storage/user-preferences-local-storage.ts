@@ -1,4 +1,10 @@
 import {
+  DeckCardGalleryGroupTypes,
+  DeckCardGallerySortTypes,
+  DeckCardGalleryViewTypes,
+} from "@/components/decks/deck-card-gallery";
+import { SortTypes } from "@/constants/sorting";
+import {
   DeckSortTypes,
   DeckViewType,
 } from "@/models/deck/dtos/deck-filters.dto";
@@ -18,6 +24,9 @@ export function getLocalStorageUserPreferences(): UserPreferences | null {
 export function setLocalStorageUserPreferences(preferences: UserPreferences) {
   const storedPreferences = getLocalStorageUserPreferences();
 
+  console.log("New", preferences.deckCardViewType);
+  console.log("Old", storedPreferences?.deckCardViewType);
+
   const updatedPreferences: UserPreferences = {
     decksViewType:
       preferences?.decksViewType ??
@@ -27,6 +36,34 @@ export function setLocalStorageUserPreferences(preferences: UserPreferences) {
       preferences?.decksSortType ??
       storedPreferences?.decksSortType ??
       DeckSortTypes.CREATED,
+    deckCardViewType:
+      preferences?.deckCardViewType ??
+      storedPreferences?.deckCardViewType ??
+      DeckCardGalleryViewTypes.CARD,
+    deckCardGrouping:
+      preferences?.deckCardGrouping ??
+      storedPreferences?.deckCardGrouping ??
+      DeckCardGalleryGroupTypes.TYPE,
+    deckCardSortType:
+      preferences?.deckCardSortType ??
+      storedPreferences?.deckCardSortType ??
+      DeckCardGallerySortTypes.NAME,
+    deckCardSortDirection:
+      preferences?.deckCardSortDirection ??
+      storedPreferences?.deckCardSortDirection ??
+      SortTypes.ASC,
+    deckCardColumnShowPrice:
+      preferences?.deckCardColumnShowPrice ??
+      storedPreferences?.deckCardColumnShowPrice ??
+      false,
+    deckCardColumnShowManaValue:
+      preferences?.deckCardColumnShowManaValue ??
+      storedPreferences?.deckCardColumnShowManaValue ??
+      true,
+    deckCardColumnGroupMulticolored:
+      preferences?.deckCardColumnGroupMulticolored ??
+      storedPreferences?.deckCardColumnGroupMulticolored ??
+      false,
   };
 
   return localStorage.setItem(

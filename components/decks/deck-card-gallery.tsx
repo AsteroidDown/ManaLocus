@@ -1,5 +1,6 @@
 import { BoardTypes } from "@/constants/boards";
 import { SortTypes } from "@/constants/sorting";
+import UserPreferencesContext from "@/contexts/user/user-preferences.context";
 import {
   groupCardsByColor,
   groupCardsByCost,
@@ -16,7 +17,7 @@ import { titleCase } from "@/functions/text-manipulation";
 import { Card } from "@/models/card/card";
 import { Deck } from "@/models/deck/deck";
 import { faFilter } from "@fortawesome/free-solid-svg-icons";
-import React, { useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import { View, ViewProps } from "react-native";
 import Button from "../ui/button/button";
 import Checkbox from "../ui/checkbox/checkbox";
@@ -61,20 +62,40 @@ export default function DeckCardGallery({
   deck,
   className,
 }: DeckCardGalleryProps) {
-  const [viewType, setViewType] = React.useState(DeckCardGalleryViewTypes.LIST);
-  const [sortType, setSortType] = React.useState(DeckCardGallerySortTypes.NAME);
-  const [sortDirection, setSortDirection] = React.useState(SortTypes.ASC);
-  const [boardType, setBoardType] = React.useState(BoardTypes.MAIN);
+  const { preferences } = useContext(UserPreferencesContext);
+
+  const [viewType, setViewType] = React.useState(
+    preferences?.deckCardViewType ?? DeckCardGalleryViewTypes.LIST
+  );
   const [groupType, setGroupType] = React.useState(
-    DeckCardGalleryGroupTypes.TYPE
+    preferences?.deckCardGrouping ?? DeckCardGalleryGroupTypes.TYPE
+  );
+  const [boardType, setBoardType] = React.useState(BoardTypes.MAIN);
+  const [sortType, setSortType] = React.useState(
+    preferences?.deckCardSortType ?? DeckCardGallerySortTypes.NAME
+  );
+  const [sortDirection, setSortDirection] = React.useState(
+    preferences?.deckCardSortDirection ?? SortTypes.ASC
+  );
+
+  const [showManaValue, setShowManaValue] = React.useState(
+    preferences?.deckCardColumnShowManaValue !== undefined
+      ? preferences.deckCardColumnShowManaValue
+      : true
+  );
+  const [showPrice, setShowPrice] = React.useState(
+    preferences?.deckCardColumnShowPrice !== undefined
+      ? preferences.deckCardColumnShowPrice
+      : false
+  );
+  const [groupMulticolored, setGroupMulticolored] = React.useState(
+    preferences?.deckCardColumnGroupMulticolored !== undefined
+      ? preferences.deckCardColumnGroupMulticolored
+      : false
   );
 
   const [filtersOpen, setFiltersOpen] = React.useState(false);
   const [overflow, setOverflow] = React.useState(false);
-
-  const [showManaValue, setShowManaValue] = React.useState(true);
-  const [showPrice, setShowPrice] = React.useState(false);
-  const [groupMulticolored, setGroupMulticolored] = React.useState(false);
 
   const [boardCards, setBoardCards] = React.useState(
     {} as { [key: string]: Card[] }
@@ -327,7 +348,7 @@ export default function DeckCardGallery({
             label="View"
             value={viewType}
             className="max-w-min"
-            onChange={(type) => setViewType(type)}
+            onChange={setViewType}
             options={Object.keys(DeckCardGalleryViewTypes).map((key) => {
               return {
                 label: titleCase(key),
@@ -340,7 +361,7 @@ export default function DeckCardGallery({
             label="Grouping"
             value={groupType}
             className="max-w-min"
-            onChange={(type) => setGroupType(type)}
+            onChange={setGroupType}
             options={Object.keys(DeckCardGalleryGroupTypes).map((key) => {
               return {
                 label: titleCase(key.replace("_", " ")),
@@ -353,7 +374,7 @@ export default function DeckCardGallery({
             label="Board"
             value={boardType}
             className="max-w-min"
-            onChange={(board) => setBoardType(board)}
+            onChange={setBoardType}
             options={Object.values(BoardTypes).map((board) => ({
               label: titleCase(board),
               value: board,
@@ -378,7 +399,7 @@ export default function DeckCardGallery({
             label="Sort"
             value={sortType}
             className="max-w-min"
-            onChange={(type) => setSortType(type)}
+            onChange={setSortType}
             options={Object.values(DeckCardGallerySortTypes).map((key) => ({
               label: titleCase(key.replace("-", " ")),
               value: key,
@@ -390,7 +411,7 @@ export default function DeckCardGallery({
             label="Direction"
             value={sortDirection}
             className="mr-4 max-w-min"
-            onChange={(direction) => setSortDirection(direction)}
+            onChange={setSortDirection}
             options={[
               { label: "Ascending", value: SortTypes.ASC },
               { label: "Descending", value: SortTypes.DESC },

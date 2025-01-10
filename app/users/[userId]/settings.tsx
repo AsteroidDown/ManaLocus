@@ -1,8 +1,17 @@
+import {
+  DeckCardGalleryGroupTypes,
+  DeckCardGallerySortTypes,
+  DeckCardGalleryViewTypes,
+} from "@/components/decks/deck-card-gallery";
 import Button from "@/components/ui/button/button";
+import Checkbox from "@/components/ui/checkbox/checkbox";
 import CollapsableSection from "@/components/ui/collapsable-section/collapsable-section";
+import Divider from "@/components/ui/divider/divider";
 import Input from "@/components/ui/input/input";
 import Select from "@/components/ui/input/select";
+import Text from "@/components/ui/text/text";
 import { EmailMask } from "@/constants/masks/text-masks";
+import { SortType, SortTypes } from "@/constants/sorting";
 import UserPageContext from "@/contexts/user/user-page.context";
 import UserPreferencesContext from "@/contexts/user/user-preferences.context";
 import UserContext from "@/contexts/user/user.context";
@@ -10,10 +19,13 @@ import {
   getLocalStorageUserPreferences,
   setLocalStorageUserPreferences,
 } from "@/functions/local-storage/user-preferences-local-storage";
+import { titleCase } from "@/functions/text-manipulation";
 import {
   DeckSortType,
   DeckSortTypes,
+  DeckViewType,
 } from "@/models/deck/dtos/deck-filters.dto";
+import { faBorderAll, faList } from "@fortawesome/free-solid-svg-icons";
 import { router } from "expo-router";
 import React, { useContext, useEffect } from "react";
 import { SafeAreaView, View } from "react-native";
@@ -39,9 +51,32 @@ export default function UserSettingsPage() {
   const [emailOpen, setEmailOpen] = React.useState(false);
   const [passwordOpen, setPasswordOpen] = React.useState(false);
 
-  const [sort, setSort] = React.useState(
+  const [decksSort, setDecksSort] = React.useState(
     preferences?.decksSortType ?? (DeckSortTypes.CREATED as DeckSortType)
   );
+  const [decksView, setDecksView] = React.useState(
+    preferences?.decksViewType ?? (DeckViewType.CARD as DeckViewType)
+  );
+
+  const [deckCardViewType, setDeckCardViewType] = React.useState(
+    preferences?.deckCardViewType ?? DeckCardGalleryViewTypes.LIST
+  );
+  const [deckCardGrouping, setDeckCardGrouping] = React.useState(
+    preferences?.deckCardGrouping ?? DeckCardGalleryGroupTypes.TYPE
+  );
+  const [deckCardSortType, setDeckCardSortType] = React.useState(
+    preferences?.deckCardSortType ?? DeckCardGallerySortTypes.NAME
+  );
+  const [deckCardSortDirection, setDeckCardSortDirection] = React.useState(
+    preferences?.deckCardSortDirection ?? (SortTypes.ASC as SortType)
+  );
+  const [deckCardColumnShowPrice, setDeckCardColumnShowPrice] = React.useState(
+    preferences?.deckCardColumnShowPrice ?? false
+  );
+  const [deckCardColumnShowManaValue, setDeckCardColumnShowManaValue] =
+    React.useState(preferences?.deckCardColumnShowManaValue ?? true);
+  const [deckCardColumnGroupMulticolored, setDeckCardColumnGroupMulticolored] =
+    React.useState(preferences?.deckCardColumnGroupMulticolored ?? false);
 
   const [email, setEmail] = React.useState("");
   const [emailError, setEmailError] = React.useState(false);
@@ -84,15 +119,79 @@ export default function UserSettingsPage() {
   }, [newPassword]);
 
   useEffect(() => {
-    setSort(preferences?.decksSortType || DeckSortTypes.CREATED);
+    setDecksSort(preferences?.decksSortType || DeckSortTypes.CREATED);
   }, [preferences]);
 
-  function updateSort(sortType: DeckSortType) {
-    if (sortType === sort) return;
+  function updateDecksSort(sort: DeckSortType) {
+    if (decksSort === sort) return;
 
-    setLocalStorageUserPreferences({ decksSortType: sortType });
+    setLocalStorageUserPreferences({ decksSortType: sort });
     setPreferences(getLocalStorageUserPreferences() || {});
-    setSort(sortType);
+    setDecksSort(sort);
+  }
+
+  function updateDecksViewType(view: DeckViewType) {
+    if (decksView === view) return;
+
+    setLocalStorageUserPreferences({ decksViewType: view });
+    setPreferences(getLocalStorageUserPreferences() || {});
+    setDecksView(view);
+  }
+
+  function updateDeckCardViewType(view: DeckCardGalleryViewTypes) {
+    if (deckCardViewType === view) return;
+
+    setLocalStorageUserPreferences({ deckCardViewType: view });
+    setPreferences(getLocalStorageUserPreferences() || {});
+    setDeckCardViewType(view);
+  }
+
+  function updateDeckCardGrouping(grouping: DeckCardGalleryGroupTypes) {
+    if (deckCardGrouping === grouping) return;
+
+    setLocalStorageUserPreferences({ deckCardGrouping: grouping });
+    setPreferences(getLocalStorageUserPreferences() || {});
+    setDeckCardGrouping(grouping);
+  }
+
+  function updateDeckCardSortType(sort: DeckCardGallerySortTypes) {
+    if (deckCardSortType === sort) return;
+
+    setLocalStorageUserPreferences({ deckCardSortType: sort });
+    setPreferences(getLocalStorageUserPreferences() || {});
+    setDeckCardSortType(sort);
+  }
+
+  function updateDeckCardSortDirection(direction: SortType) {
+    if (deckCardSortDirection === direction) return;
+
+    setLocalStorageUserPreferences({ deckCardSortDirection: direction });
+    setPreferences(getLocalStorageUserPreferences() || {});
+    setDeckCardSortDirection(direction);
+  }
+
+  function updateDeckCardColumnShowPrice(show: boolean) {
+    if (deckCardColumnShowPrice === show) return;
+
+    setLocalStorageUserPreferences({ deckCardColumnShowPrice: show });
+    setPreferences(getLocalStorageUserPreferences() || {});
+    setDeckCardColumnShowPrice(show);
+  }
+
+  function updateDeckCardColumnShowManaValue(show: boolean) {
+    if (deckCardColumnShowManaValue === show) return;
+
+    setLocalStorageUserPreferences({ deckCardColumnShowManaValue: show });
+    setPreferences(getLocalStorageUserPreferences() || {});
+    setDeckCardColumnShowManaValue(show);
+  }
+
+  function updateDeckCardColumnGroupMulticolored(group: boolean) {
+    if (deckCardColumnGroupMulticolored === group) return;
+
+    setLocalStorageUserPreferences({ deckCardColumnGroupMulticolored: group });
+    setPreferences(getLocalStorageUserPreferences() || {});
+    setDeckCardColumnGroupMulticolored(group);
   }
 
   return (
@@ -103,33 +202,156 @@ export default function UserSettingsPage() {
           expanded={preferencesOpen}
           setExpanded={setPreferencesOpen}
         >
-          <Select
-            label="Default Decks Sorting"
-            value={sort}
-            onChange={(change) => updateSort(change)}
-            options={[
-              { label: "Created", value: DeckSortTypes.CREATED },
-              {
-                label: "Created (Old to New)",
-                value: DeckSortTypes.CREATED_REVERSE,
-              },
-              { label: "Updated", value: DeckSortTypes.UPDATED },
-              {
-                label: "Updated (Old to New)",
-                value: DeckSortTypes.UPDATED_REVERSE,
-              },
-              { label: "Favorites", value: DeckSortTypes.FAVORITES },
-              {
-                label: "Favorites (Ascending)",
-                value: DeckSortTypes.FAVORITES_REVERSE,
-              },
-              { label: "Views", value: DeckSortTypes.VIEWS },
-              {
-                label: "Views (Ascending)",
-                value: DeckSortTypes.VIEWS_REVERSE,
-              },
-            ]}
-          />
+          <Text size="lg" thickness="bold">
+            Decks Page
+          </Text>
+
+          <Divider thick className="!border-background-200" />
+
+          <View className="flex flex-row flex-wrap gap-4 z-10">
+            <Select
+              className="max-w-min"
+              label="Default Decks Sorting"
+              value={decksSort}
+              onChange={updateDecksSort}
+              options={[
+                { label: "Created", value: DeckSortTypes.CREATED },
+                {
+                  label: "Created (Old to New)",
+                  value: DeckSortTypes.CREATED_REVERSE,
+                },
+                { label: "Updated", value: DeckSortTypes.UPDATED },
+                {
+                  label: "Updated (Old to New)",
+                  value: DeckSortTypes.UPDATED_REVERSE,
+                },
+                { label: "Favorites", value: DeckSortTypes.FAVORITES },
+                {
+                  label: "Favorites (Ascending)",
+                  value: DeckSortTypes.FAVORITES_REVERSE,
+                },
+                { label: "Views", value: DeckSortTypes.VIEWS },
+                {
+                  label: "Views (Ascending)",
+                  value: DeckSortTypes.VIEWS_REVERSE,
+                },
+              ]}
+            />
+
+            <View className={`flex gap-2 max-h-fit min-w-fit z-[-1]`}>
+              <Text size="md" thickness="bold">
+                Default Decks View
+              </Text>
+
+              <View className="flex flex-row">
+                <Button
+                  squareRight
+                  icon={faBorderAll}
+                  className="flex-1"
+                  type={
+                    decksView === DeckViewType.CARD ? "default" : "outlined"
+                  }
+                  onClick={() => updateDecksViewType(DeckViewType.CARD)}
+                />
+
+                <Button
+                  squareLeft
+                  icon={faList}
+                  className="flex-1"
+                  type={
+                    decksView === DeckViewType.LIST ? "default" : "outlined"
+                  }
+                  onClick={() => updateDecksViewType(DeckViewType.LIST)}
+                />
+              </View>
+            </View>
+          </View>
+
+          <Text size="lg" thickness="bold" className="mt-4">
+            Deck Page
+          </Text>
+
+          <Divider thick className="!border-background-200" />
+
+          <View className="flex flex-row flex-wrap gap-4">
+            <Select
+              label="Default View"
+              className="max-w-min"
+              value={deckCardViewType}
+              onChange={updateDeckCardViewType}
+              options={Object.keys(DeckCardGalleryViewTypes).map((key) => {
+                return {
+                  label: titleCase(key),
+                  value: (DeckCardGalleryViewTypes as any)[key],
+                };
+              })}
+            />
+
+            <Select
+              className="max-w-min"
+              label="Default Grouping"
+              value={deckCardGrouping}
+              onChange={updateDeckCardGrouping}
+              options={Object.keys(DeckCardGalleryGroupTypes).map((key) => {
+                return {
+                  label: titleCase(key.replace("_", " ")),
+                  value: (DeckCardGalleryGroupTypes as any)[key],
+                };
+              })}
+            />
+
+            <View className="flex flex-row">
+              <Select
+                squareRight
+                label="Default Card Sorting"
+                className="max-w-min"
+                value={deckCardSortType}
+                onChange={updateDeckCardSortType}
+                options={Object.values(DeckCardGallerySortTypes).map((key) => ({
+                  label: titleCase(key.replace("-", " ")),
+                  value: key,
+                }))}
+              />
+
+              <Select
+                squareLeft
+                label="Direction"
+                className="mr-4 max-w-min"
+                value={deckCardSortDirection}
+                onChange={updateDeckCardSortDirection}
+                options={[
+                  { label: "Ascending", value: SortTypes.ASC },
+                  { label: "Descending", value: SortTypes.DESC },
+                ]}
+              />
+            </View>
+
+            <View className="flex-1 flex gap-2 max-h-fit min-w-fit">
+              <Text size="md" thickness="bold">
+                Default Column Options
+              </Text>
+
+              <View className="flex flex-row gap-4 my-2 max-w-fit">
+                <Checkbox
+                  label="Show Price"
+                  checked={deckCardColumnShowPrice}
+                  onChange={updateDeckCardColumnShowPrice}
+                />
+
+                <Checkbox
+                  label="Show Mana Value"
+                  checked={deckCardColumnShowManaValue}
+                  onChange={updateDeckCardColumnShowManaValue}
+                />
+
+                <Checkbox
+                  label="Separate by Color"
+                  checked={deckCardColumnGroupMulticolored}
+                  onChange={updateDeckCardColumnGroupMulticolored}
+                />
+              </View>
+            </View>
+          </View>
         </CollapsableSection>
       </View>
 
