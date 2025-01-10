@@ -12,6 +12,8 @@ export interface CardImageProps {
   focusable?: boolean;
   placeHolder?: string;
 
+  enlargeOnHover?: boolean;
+
   onClick?: () => any;
 }
 
@@ -19,6 +21,7 @@ export default function CardImage({
   card,
   focusable,
   placeHolder,
+  enlargeOnHover,
   onClick,
 }: CardImageProps) {
   const [hovered, setHovered] = React.useState(false);
@@ -159,7 +162,7 @@ export default function CardImage({
 
   return (
     <Pressable
-      className={containerClasses}
+      className={`${enlargeOnHover ? "hover:!-m-4" : ""} ${containerClasses}`}
       disabled={!card || !onClick}
       tabIndex={!card ? -1 : focusable ? 0 : -1}
       onPress={() => (focusable ? onClick?.() : null)}
