@@ -50,17 +50,16 @@ export default function Select({
   const [search, setSearch] = React.useState("");
   const [filteredOptions, setFilteredOptions] = React.useState(options);
 
-  React.useEffect(
-    () =>
-      setSearch(
-        options.find((option) =>
-          property
-            ? option.value?.[property] === value?.[property]
-            : option.value === value
-        )?.label ?? ""
-      ),
-    [value]
-  );
+  React.useEffect(() => {
+    const search =
+      options.find((option) =>
+        property
+          ? option.value?.[property] === value?.[property]
+          : option.value === value
+      )?.label ?? "";
+
+    setSearch(search);
+  }, [value]);
 
   React.useEffect(() => {
     const foundOption = options.find(
@@ -75,7 +74,7 @@ export default function Select({
 
       setFilteredOptions(filteredOptions);
     }
-  }, [options, search]);
+  }, [search]);
 
   function onFocus() {
     setFocused(true);
