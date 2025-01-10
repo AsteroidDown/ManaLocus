@@ -110,7 +110,7 @@ export function HandCard({ card }: { card: Card }) {
 
   return (
     <View className="flex-1 flex flex-row justify-center hover:z-10 z-0">
-      <CardImage card={card} onClick={() => setOpen(true)} />
+      <CardImage enlargeOnHover card={card} onClick={() => setOpen(true)} />
 
       <View className="-mt-0.5">
         <Modal open={open} setOpen={setOpen}>
