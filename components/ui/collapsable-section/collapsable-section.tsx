@@ -62,8 +62,8 @@ export default function CollapsableSection({
 
       <View
         className={`${expanded ? "max-h-[1000px]" : "max-h-0"} ${
-          collapsed ? "!border-b-0" : ""
-        } border-2 border-background-200 rounded-b-lg overflow-hidden transition-all duration-300`}
+          collapsed ? "!border-b-0 overflow-hidden" : ""
+        } border-2 border-background-200 rounded-b-lg transition-all duration-300`}
       >
         <View className={`${className} flex gap-4 px-4 py-6`}>{children}</View>
       </View>
