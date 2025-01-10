@@ -303,8 +303,8 @@ export default function UserSettingsPage() {
             <View className="flex flex-row">
               <Select
                 squareRight
-                label="Default Card Sorting"
                 className="max-w-min"
+                label="Default Card Sorting"
                 value={deckCardSortType}
                 onChange={updateDeckCardSortType}
                 options={Object.values(DeckCardGallerySortTypes).map((key) => ({
@@ -326,7 +326,7 @@ export default function UserSettingsPage() {
               />
             </View>
 
-            <View className="flex-1 flex gap-2 max-h-fit min-w-fit">
+            <View className="flex-1 flex gap-2 max-h-fit min-w-fit z-[-1]">
               <Text size="md" thickness="bold">
                 Default Column Options
               </Text>
