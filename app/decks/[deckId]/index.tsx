@@ -53,7 +53,6 @@ export default function DeckPage() {
 
   useEffect(() => {
     if (deckViewed === null || deckViewed) return;
-    console.log("deckViewed", deckViewed);
 
     DeckService.addView(deck.id).then((response) => {
       if (response) {

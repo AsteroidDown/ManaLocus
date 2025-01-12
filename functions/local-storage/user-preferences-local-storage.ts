@@ -24,9 +24,6 @@ export function getLocalStorageUserPreferences(): UserPreferences | null {
 export function setLocalStorageUserPreferences(preferences: UserPreferences) {
   const storedPreferences = getLocalStorageUserPreferences();
 
-  console.log("New", preferences.deckCardViewType);
-  console.log("Old", storedPreferences?.deckCardViewType);
-
   const updatedPreferences: UserPreferences = {
     decksViewType:
       preferences?.decksViewType ??
