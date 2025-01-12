@@ -8,8 +8,8 @@ import { SortType } from "@/constants/sorting";
 import BoardContext from "@/contexts/cards/board.context";
 import StoredCardsContext from "@/contexts/cards/stored-cards.context";
 import DeckContext from "@/contexts/deck/deck.context";
-import { filterCards } from "@/functions/card/card-filtering";
-import { sortCards } from "@/functions/card/card-sorting";
+import { filterCards } from "@/functions/cards/card-filtering";
+import { sortCards } from "@/functions/cards/card-sorting";
 import {
   getLocalStorageStoredCards,
   saveLocalStorageCard,

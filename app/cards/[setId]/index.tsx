@@ -5,11 +5,11 @@ import Placeholder from "@/components/ui/placeholder/placeholder";
 import SearchBar from "@/components/ui/search-bar/search-bar";
 import { TabProps } from "@/components/ui/tabs/tab";
 import TabBar from "@/components/ui/tabs/tab-bar";
-import { filterCards } from "@/functions/card/card-filtering";
+import { filterCards } from "@/functions/cards/card-filtering";
 import {
   sortCards,
   sortCardsByCollectorNumber,
-} from "@/functions/card/card-sorting";
+} from "@/functions/cards/card-sorting";
 import ScryfallService from "@/hooks/services/scryfall.service";
 import { Card } from "@/models/card/card";
 import { Set } from "@/models/card/set";

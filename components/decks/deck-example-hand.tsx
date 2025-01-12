@@ -1,7 +1,7 @@
 import {
   sortCardsAlphabetically,
   sortCardsByManaValue,
-} from "@/functions/card/card-sorting";
+} from "@/functions/cards/card-sorting";
 import { Card } from "@/models/card/card";
 import { Deck } from "@/models/deck/deck";
 import { faList, faShop } from "@fortawesome/free-solid-svg-icons";

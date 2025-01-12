@@ -1,4 +1,4 @@
-import { groupCardsByType } from "@/functions/card/card-grouping";
+import { groupCardsByType } from "@/functions/cards/card-grouping";
 import { currency, titleCase } from "@/functions/text-manipulation";
 import { Deck } from "@/models/deck/deck";
 import { faCopy, faFileArrowDown } from "@fortawesome/free-solid-svg-icons";

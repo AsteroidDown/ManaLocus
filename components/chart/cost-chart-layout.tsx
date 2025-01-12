@@ -1,7 +1,7 @@
 import {
   groupCardsByColor,
   groupCardsByCost,
-} from "@/functions/card/card-grouping";
+} from "@/functions/cards/card-grouping";
 import { titleCase } from "@/functions/text-manipulation";
 import { Card } from "@/models/card/card";
 import { CardFilters } from "@/models/sorted-cards/sorted-cards";
