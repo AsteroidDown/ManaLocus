@@ -1,6 +1,6 @@
 import { MTGFormat, MTGFormats } from "@/constants/mtg/mtg-format";
 import { MTGLegalities } from "@/constants/mtg/mtg-legality";
-import { groupCardsByColorMulti } from "@/functions/card-grouping";
+import { groupCardsByColorMulti } from "@/functions/card/card-grouping";
 import { currency, titleCase } from "@/functions/text-manipulation";
 import { Card } from "@/models/card/card";
 import { faShop } from "@fortawesome/free-solid-svg-icons";

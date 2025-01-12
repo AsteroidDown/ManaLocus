@@ -2,9 +2,9 @@ import { BarData } from "@/components/graph/bar/bar";
 import { MTGColor, MTGColors } from "@/constants/mtg/mtg-colors";
 import { MTGRarity } from "@/constants/mtg/mtg-rarity";
 import { MTGCardTypes } from "@/constants/mtg/mtg-types";
-import { SetData } from "../components/graph/layout/graph-plot";
-import { Card } from "../models/card/card";
-import { CardsSortedByColor } from "../models/sorted-cards/sorted-cards";
+import { SetData } from "../../components/graph/layout/graph-plot";
+import { Card } from "../../models/card/card";
+import { CardsSortedByColor } from "../../models/sorted-cards/sorted-cards";
 import {
   groupCardsByColor,
   groupCardsByCost,

@@ -1,5 +1,8 @@
 import { MTGCardTypes } from "@/constants/mtg/mtg-types";
-import { groupCardsByColor, groupCardsByType } from "@/functions/card-grouping";
+import {
+  groupCardsByColor,
+  groupCardsByType,
+} from "@/functions/card/card-grouping";
 import { titleCase } from "@/functions/text-manipulation";
 import { Card } from "@/models/card/card";
 import { CardFilters } from "@/models/sorted-cards/sorted-cards";

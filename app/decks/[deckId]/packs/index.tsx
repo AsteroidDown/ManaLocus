@@ -7,7 +7,7 @@ import Input from "@/components/ui/input/input";
 import NumberInput from "@/components/ui/input/number-input";
 import { MTGRarities } from "@/constants/mtg/mtg-rarity";
 import DeckContext from "@/contexts/deck/deck.context";
-import { groupCardsByRarity } from "@/functions/card-grouping";
+import { groupCardsByRarity } from "@/functions/card/card-grouping";
 import { Card } from "@/models/card/card";
 import React, { useContext, useEffect } from "react";
 import { ScrollView, View } from "react-native";

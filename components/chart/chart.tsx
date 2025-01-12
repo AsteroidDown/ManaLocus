@@ -1,8 +1,8 @@
-import { filterCards } from "@/functions/card-filtering";
+import { filterCards } from "@/functions/card/card-filtering";
 import {
   sortCardsAlphabetically,
   sortCardsByManaValue,
-} from "@/functions/card-sorting";
+} from "@/functions/card/card-sorting";
 import { Card } from "@/models/card/card";
 import { CardFilters } from "@/models/sorted-cards/sorted-cards";
 import React, { ReactNode } from "react";

@@ -2,7 +2,7 @@ import { MTGRarities } from "@/constants/mtg/mtg-rarity";
 import {
   groupCardsByColor,
   groupCardsByRarity,
-} from "@/functions/card-grouping";
+} from "@/functions/card/card-grouping";
 import { titleCase } from "@/functions/text-manipulation";
 import { Card } from "@/models/card/card";
 import { CardFilters } from "@/models/sorted-cards/sorted-cards";

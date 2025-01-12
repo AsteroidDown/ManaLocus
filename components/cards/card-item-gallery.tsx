@@ -7,19 +7,22 @@ import { MTGCardTypes } from "@/constants/mtg/mtg-types";
 import BoardContext from "@/contexts/cards/board.context";
 import StoredCardsContext from "@/contexts/cards/stored-cards.context";
 import DeckContext from "@/contexts/deck/deck.context";
-import { filterCards } from "@/functions/card-filtering";
+import { filterCards } from "@/functions/card/card-filtering";
 import {
   groupCardsByColor,
   groupCardsByCost,
   groupCardsByType,
   groupCardsCustom,
-} from "@/functions/card-grouping";
+} from "@/functions/card/card-grouping";
 import {
   sortCards,
   sortCardsAlphabetically,
   sortCardsByManaValue,
-} from "@/functions/card-sorting";
-import { getCountOfCards, getTotalValueOfCards } from "@/functions/card-stats";
+} from "@/functions/card/card-sorting";
+import {
+  getCountOfCards,
+  getTotalValueOfCards,
+} from "@/functions/card/card-stats";
 import { getLocalStorageStoredCards } from "@/functions/local-storage/card-local-storage";
 import { titleCase } from "@/functions/text-manipulation";
 import { Card } from "@/models/card/card";

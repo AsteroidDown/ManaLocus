@@ -7,12 +7,12 @@ import {
   groupCardsByRarity,
   groupCardsByType,
   groupCardsCustom,
-} from "@/functions/card-grouping";
+} from "@/functions/card/card-grouping";
 import {
   sortCardsAlphabetically,
   sortCardsByManaValue,
   sortCardsByPrice,
-} from "@/functions/card-sorting";
+} from "@/functions/card/card-sorting";
 import { titleCase } from "@/functions/text-manipulation";
 import { Card } from "@/models/card/card";
 import { Deck } from "@/models/deck/deck";

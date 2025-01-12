@@ -8,7 +8,7 @@ import { MTGColorSymbols } from "@/constants/mtg/mtg-colors";
 import { MTGFormat, MTGFormats } from "@/constants/mtg/mtg-format";
 import { MTGCardTypes } from "@/constants/mtg/mtg-types";
 import DeckContext from "@/contexts/deck/deck.context";
-import { getCardType } from "@/functions/card-information";
+import { getCardType } from "@/functions/card/card-information";
 import { getLocalStorageStoredCards } from "@/functions/local-storage/card-local-storage";
 import { getLocalStorageDashboard } from "@/functions/local-storage/dashboard-local-storage";
 import { mapCardsToDeckCard } from "@/functions/mapping/card-mapping";

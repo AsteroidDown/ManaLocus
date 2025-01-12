@@ -1,7 +1,7 @@
 import Divider from "@/components/ui/divider/divider";
 import Text from "@/components/ui/text/text";
-import { groupCardsByColorMulti } from "@/functions/card-grouping";
-import { getCountOfCards } from "@/functions/card-stats";
+import { groupCardsByColorMulti } from "@/functions/card/card-grouping";
+import { getCountOfCards } from "@/functions/card/card-stats";
 import { titleCase } from "@/functions/text-manipulation";
 import { Card } from "@/models/card/card";
 import React from "react";

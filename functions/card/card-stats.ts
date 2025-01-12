@@ -1,4 +1,4 @@
-import { Card } from "../models/card/card";
+import { Card } from "../../models/card/card";
 
 export function getTotalValueOfCards(cards: Card[], euro: boolean = false) {
   return (

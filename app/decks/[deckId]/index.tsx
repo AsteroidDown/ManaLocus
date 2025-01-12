@@ -12,7 +12,7 @@ import Divider from "@/components/ui/divider/divider";
 import TabBar from "@/components/ui/tabs/tab-bar";
 import { BoardTypes } from "@/constants/boards";
 import DeckContext from "@/contexts/deck/deck.context";
-import { graphCardsByCost } from "@/functions/card-graphing";
+import { graphCardsByCost } from "@/functions/card/card-graphing";
 import { setLocalStorageCards } from "@/functions/local-storage/card-local-storage";
 import { setLocalStorageDashboard } from "@/functions/local-storage/dashboard-local-storage";
 import DeckService from "@/hooks/services/deck.service";

@@ -2,12 +2,12 @@ import Graph from "@/components/graph/graph";
 import Box from "@/components/ui/box/box";
 import Button from "@/components/ui/button/button";
 import DashboardContext from "@/contexts/dashboard/dashboard.context";
-import { filterCards } from "@/functions/card-filtering";
+import { filterCards } from "@/functions/card/card-filtering";
 import {
   graphCardsByColor,
   graphCardsByCost,
   graphCardsByType,
-} from "@/functions/card-graphing";
+} from "@/functions/card/card-graphing";
 import {
   getLocalStorageDashboard,
   updateLocalStorageDashboardItem,

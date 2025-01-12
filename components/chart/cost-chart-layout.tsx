@@ -1,4 +1,7 @@
-import { groupCardsByColor, groupCardsByCost } from "@/functions/card-grouping";
+import {
+  groupCardsByColor,
+  groupCardsByCost,
+} from "@/functions/card/card-grouping";
 import { titleCase } from "@/functions/text-manipulation";
 import { Card } from "@/models/card/card";
 import { CardFilters } from "@/models/sorted-cards/sorted-cards";

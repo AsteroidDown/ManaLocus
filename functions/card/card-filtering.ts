@@ -2,11 +2,11 @@ import {
   MTGColor,
   MTGColorMap,
   MTGColorSymbol,
-} from "../constants/mtg/mtg-colors";
-import { MTGRarity } from "../constants/mtg/mtg-rarity";
-import { MTGCardType } from "../constants/mtg/mtg-types";
-import { Card } from "../models/card/card";
-import { CardFilters } from "../models/sorted-cards/sorted-cards";
+} from "../../constants/mtg/mtg-colors";
+import { MTGRarity } from "../../constants/mtg/mtg-rarity";
+import { MTGCardType } from "../../constants/mtg/mtg-types";
+import { Card } from "../../models/card/card";
+import { CardFilters } from "../../models/sorted-cards/sorted-cards";
 
 const baseColors: MTGColorSymbol[] = ["W", "U", "B", "R", "G"];
 
