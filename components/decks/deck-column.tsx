@@ -131,7 +131,6 @@ export default function DeckColumn({
               viewType={viewType}
               showPrice={showPrice}
               showManaValue={showManaValue}
-              groupMulticolored={groupMulticolored}
               hideCount={hideCount}
               commander={commander}
             />
@@ -177,7 +176,6 @@ export default function DeckColumn({
                     viewType={viewType}
                     showPrice={showPrice}
                     showManaValue={showManaValue}
-                    groupMulticolored={groupMulticolored}
                     hideCount={hideCount}
                     commander={commander}
                   />
@@ -206,7 +204,6 @@ interface DeckCardProps {
 
   showPrice?: boolean;
   showManaValue?: boolean;
-  groupMulticolored?: boolean;
   hideCount?: boolean;
   commander?: boolean;
 }
@@ -218,7 +215,6 @@ function DeckCard({
   viewType,
   showPrice,
   showManaValue,
-  groupMulticolored,
   hideCount,
   commander,
 }: DeckCardProps) {
