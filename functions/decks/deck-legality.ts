@@ -62,9 +62,16 @@ export function evaluateDeckLegality(deck: Deck): LegalityEvaluation {
   legality.unique = deck.main.every((card) => {
     if (basicLands.includes(card.name)) return true;
     else if (
-      card.oracleText?.includes("A deck can have any number of cards named")
+      card.oracleText?.includes("A deck can have") &&
+      card.oracleText?.includes("cards named")
     ) {
-      return true;
+      if (card.oracleText?.includes("up to")) {
+        if (card.oracleText?.includes("seven") && card.count <= 7) {
+          return true;
+        } else if (card.oracleText?.includes("nine") && card.count <= 9) {
+          return true;
+        }
+      } else if (card.oracleText?.includes("any number of")) return true;
     } else {
       return restrictions?.uniqueCardCount
         ? card.count <= restrictions.uniqueCardCount
