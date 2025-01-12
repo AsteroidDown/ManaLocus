@@ -13,6 +13,7 @@ import {
   setLocalStorageUserPreferences,
 } from "@/functions/local-storage/user-preferences-local-storage";
 import { titleCase } from "@/functions/text-manipulation";
+import { PaginationMeta } from "@/hooks/pagination";
 import DeckService from "@/hooks/services/deck.service";
 import { Deck } from "@/models/deck/deck";
 import {
@@ -30,6 +31,7 @@ import { Link, router } from "expo-router";
 import moment from "moment";
 import React, { useContext, useEffect } from "react";
 import { Image, View } from "react-native";
+import Pagination from "../ui/pagination/pagination";
 import Text from "../ui/text/text";
 import DeckCard from "./deck-card";
 
@@ -47,6 +49,8 @@ export default function DeckGallery({
   const { preferences, setPreferences } = useContext(UserPreferencesContext);
 
   const [decks, setDecks] = React.useState([] as Deck[]);
+  const [meta, setMeta] = React.useState(null as PaginationMeta | null);
+  const [page, setPage] = React.useState(1);
 
   const [listView, setListView] = React.useState(false);
   const [filtersOpen, setFiltersOpen] = React.useState(false);
@@ -83,15 +87,22 @@ export default function DeckGallery({
 
     if (userId) {
       if (favorites) {
-        DeckService.getUserFavorites(userId, filters).then((decks) =>
-          setDecks(decks)
-        );
+        DeckService.getUserFavorites(userId, filters).then((response) => {
+          setDecks(response.data);
+          setMeta(response.meta);
+        });
       } else
-        DeckService.getByUser(userId, filters).then((decks) => setDecks(decks));
+        DeckService.getByUser(userId, filters).then((response) => {
+          setDecks(response.data);
+          setMeta(response.meta);
+        });
     } else {
-      DeckService.getMany(filters).then((decks) => setDecks(decks));
+      DeckService.getMany(filters, { page, items: 50 }).then((response) => {
+        setDecks(response.data);
+        setMeta(response.meta);
+      });
     }
-  }, [user, format, search, sort]);
+  }, [user, format, search, sort, page]);
 
   function toggleListView() {
     setLocalStorageUserPreferences({
@@ -257,6 +268,14 @@ export default function DeckGallery({
               },
             ] as TableColumn<Deck>[]
           }
+        />
+      )}
+
+      {meta && (
+        <Pagination
+          meta={meta}
+          center={!listView}
+          onChange={(page) => setPage(page)}
         />
       )}
     </View>
