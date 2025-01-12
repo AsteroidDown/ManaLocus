@@ -4,13 +4,29 @@ import { DeckChange } from "@/models/deck/deck-change";
 import { DeckFiltersDTO } from "@/models/deck/dtos/deck-filters.dto";
 import { DeckDTO } from "@/models/deck/dtos/deck.dto";
 import API from "../api-methods/api-methods";
+import {
+  DefaultPagination,
+  PaginatedResponse,
+  PaginationOptions,
+} from "../pagination";
 
-async function getMany(filters: DeckFiltersDTO) {
-  return await API.get(`decks/`, { ...filters })
-    .then((decks) => decks.map((deck: any) => mapDatabaseDeck(deck)))
-    .catch((error) =>
-      console.error(`Error retrieving decks.\nError: ${error}`)
-    );
+async function getMany(
+  filters: DeckFiltersDTO,
+  pagination?: PaginationOptions
+): Promise<PaginatedResponse<Deck>> {
+  if (!pagination) pagination = DefaultPagination;
+
+  const response: PaginatedResponse<Deck> = await API.get(`decks/`, {
+    ...filters,
+    ...pagination,
+  }).catch((error) =>
+    console.error(`Error retrieving decks.\nError: ${error}`)
+  );
+
+  return {
+    meta: response.meta,
+    data: response.data.map((deck) => mapDatabaseDeck(deck)),
+  };
 }
 
 async function get(deckId: string): Promise<Deck> {
@@ -25,28 +41,51 @@ async function get(deckId: string): Promise<Deck> {
     });
 }
 
-async function getByUser(userId: string, filters?: DeckFiltersDTO) {
-  return await API.get(`user-decks/${userId}`, {
-    ...filters,
-  })
-    .then((decks) => decks.map((deck: any) => mapDatabaseDeck(deck)))
-    .catch((error) =>
-      console.error(
-        `Error retrieving decks for user: (${userId}).\nError: ${error}`
-      )
-    );
+async function getByUser(
+  userId: string,
+  filters?: DeckFiltersDTO,
+  pagination?: PaginationOptions
+): Promise<PaginatedResponse<Deck>> {
+  if (!pagination) pagination = DefaultPagination;
+
+  const response: PaginatedResponse<Deck> = await API.get(
+    `user-decks/${userId}`,
+    { ...filters, ...pagination }
+  ).catch((error) =>
+    console.error(
+      `Error retrieving decks for user: (${userId}).\nError: ${error}`
+    )
+  );
+
+  return {
+    meta: response.meta,
+    data: response.data.map((deck) => mapDatabaseDeck(deck)),
+  };
 }
 
-async function getUserFavorites(userId: string, filters?: DeckFiltersDTO) {
-  return await API.get(`user-decks/${userId}/favorites`, {
-    ...filters,
-  })
-    .then((decks) => decks.map((deck: any) => mapDatabaseDeck(deck)))
-    .catch((error) =>
-      console.error(
-        `Error retrieving decks for user: (${userId}).\nError: ${error}`
-      )
-    );
+async function getUserFavorites(
+  userId: string,
+  filters?: DeckFiltersDTO,
+  pagination?: PaginationOptions
+): Promise<PaginatedResponse<Deck>> {
+  if (!pagination) pagination = DefaultPagination;
+
+  const response: PaginatedResponse<Deck> = await API.get(
+    `user-decks/${userId}/favorites`,
+    {
+      ...filters,
+      ...pagination,
+    }
+  ).catch((error) =>
+    console.error(
+      `Error retrieving decks for user: (${userId}).\nError: ${error}`
+    )
+  );
+
+  return {
+    meta: response.meta,
+    data: response.data.map((deck) => mapDatabaseDeck(deck)),
+  };
 }
 
 async function getChanges(deckId: string): Promise<DeckChange> {
