@@ -6,3 +6,15 @@ export enum MTGLegalities {
   RESTRICTED = "restricted",
   BANNED = "banned",
 }
+
+export interface LegalityEvaluation {
+  legal: boolean;
+
+  cards?: boolean;
+  size?: boolean;
+  unique?: boolean;
+  commander?: boolean;
+  signatureSpell?: boolean;
+  rarity?: boolean;
+  tix?: boolean;
+}
