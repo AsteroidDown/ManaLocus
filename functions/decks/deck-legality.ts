@@ -79,11 +79,17 @@ export function evaluateDeckLegality(deck: Deck): LegalityEvaluation {
     }
   });
 
-  if (deck.format === MTGFormats.COMMANDER) {
+  if (formatsWithCommander.includes(deck.format as any)) {
     legality.commander =
       deck.commander &&
       formatsWithCommander.includes(deck.format as any) &&
       deck.commander.legalities[deck.format] === MTGLegalities.LEGAL;
+
+    legality.colorIdentity = deck.main.every((card) =>
+      card.colorIdentity.every((color) =>
+        deck.commander?.colorIdentity.includes(color)
+      )
+    );
   }
 
   if (restrictions?.maxRarity) {

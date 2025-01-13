@@ -15,6 +15,7 @@ export interface LegalityEvaluation {
   unique?: boolean;
   commander?: boolean;
   signatureSpell?: boolean;
+  colorIdentity?: boolean;
   rarity?: boolean;
   tix?: boolean;
 }
