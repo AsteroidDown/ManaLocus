@@ -19,3 +19,18 @@ export interface LegalityEvaluation {
   rarity?: boolean;
   tix?: boolean;
 }
+
+export const MTGBasicLands = [
+  "Plains",
+  "Island",
+  "Swamp",
+  "Mountain",
+  "Forest",
+  "Wastes",
+  "Snow-Covered Plains",
+  "Snow-Covered Island",
+  "Snow-Covered Swamp",
+  "Snow-Covered Mountain",
+  "Snow-Covered Forest",
+  "Snow-Covered Wastes",
+];

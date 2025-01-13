@@ -4,6 +4,7 @@ import {
 } from "@/constants/mtg/mtg-format";
 import {
   LegalityEvaluation,
+  MTGBasicLands,
   MTGLegalities,
 } from "@/constants/mtg/mtg-legality";
 import { MTGRarities } from "@/constants/mtg/mtg-rarity";
@@ -17,21 +18,6 @@ const formatsWithCommander = [
   MTGFormats.STANDARDBRAWL,
   MTGFormats.PAUPERCOMMANDER,
   MTGFormats.PRED,
-];
-
-const basicLands = [
-  "Plains",
-  "Island",
-  "Swamp",
-  "Mountain",
-  "Forest",
-  "Wastes",
-  "Snow-Covered Plains",
-  "Snow-Covered Island",
-  "Snow-Covered Swamp",
-  "Snow-Covered Mountain",
-  "Snow-Covered Forest",
-  "Snow-Covered Wastes",
 ];
 
 export function evaluateDeckLegality(deck: Deck): LegalityEvaluation {
@@ -66,7 +52,7 @@ export function evaluateDeckLegality(deck: Deck): LegalityEvaluation {
       : true;
 
   legality.unique = deck.main.every((card) => {
-    if (basicLands.includes(card.name)) return true;
+    if (MTGBasicLands.includes(card.name)) return true;
     else if (
       card.oracleText?.includes("A deck can have") &&
       card.oracleText?.includes("cards named")
