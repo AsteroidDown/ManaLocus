@@ -83,7 +83,7 @@ export default function CardItem({
     setLegal(legal);
     setReasons(reasons);
     setRestricted(restricted);
-  }, [card]);
+  }, [deck, card]);
 
   useEffect(
     () => (itemsExpanded === 0 ? setExpanded(false) : undefined),
@@ -141,7 +141,7 @@ export default function CardItem({
               </>
             )}
 
-            {reasons?.length && (
+            {reasons?.length > 0 && (
               <>
                 <View className="flex mx-4">
                   <Text size="sm" thickness="semi">

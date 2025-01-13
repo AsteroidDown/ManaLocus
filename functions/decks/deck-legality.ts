@@ -12,6 +12,7 @@ import {
 import { MTGRarities } from "@/constants/mtg/mtg-rarity";
 import { Card } from "@/models/card/card";
 import { Deck } from "@/models/deck/deck";
+import { titleCase } from "../text-manipulation";
 
 const formatsWithCommander = [
   MTGFormats.COMMANDER,
@@ -159,7 +160,7 @@ export function evaluateCardLegality(
     card.legalities[format] === MTGLegalities.NOT_LEGAL
   ) {
     legal = false;
-    reasons.push(`Legality: ${card.legalities[format]}`);
+    reasons.push(`Card not legal in ${titleCase(format)}`);
   } else if (card.legalities[format] === MTGLegalities.RESTRICTED) {
     if (card.count > 1) {
       legal = false;

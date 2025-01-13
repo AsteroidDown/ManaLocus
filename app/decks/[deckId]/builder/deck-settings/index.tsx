@@ -90,6 +90,12 @@ export default function DeckSettingsPage() {
   }, [featuredCardSearch]);
 
   useEffect(() => {
+    if (!deck || !format || format === deck?.format) return;
+
+    setDeck({ ...deck, format: format });
+  }, [format]);
+
+  useEffect(() => {
     if (!deck || !commander) return;
 
     if (deck.commander?.scryfallId !== commander.scryfallId) {
