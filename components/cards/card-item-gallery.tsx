@@ -217,7 +217,7 @@ export default function CardItemGallery({
         <View className="overflow-x-scroll overflow-y-hidden">
           {type === "cost" && (
             <View className="flex flex-row gap-4 w-full min-h-[500px]">
-              {deck?.commander && (
+              {board === BoardTypes.MAIN && deck?.commander && (
                 <CardItemGalleryColumn
                   title="Commander"
                   hideImages={hideImages}
@@ -303,7 +303,7 @@ export default function CardItemGallery({
 
           {type === "color" && (
             <View className="flex flex-row gap-4 w-full min-h-[500px]">
-              {deck?.commander && (
+              {board === BoardTypes.MAIN && deck?.commander && (
                 <CardItemGalleryColumn
                   title="Commander"
                   hideImages={hideImages}
@@ -339,7 +339,7 @@ export default function CardItemGallery({
 
           {type === "type" && (
             <View className="flex flex-row gap-4 w-full min-h-[500px]">
-              {deck?.commander && (
+              {board === BoardTypes.MAIN && deck?.commander && (
                 <CardItemGalleryColumn
                   title="Commander"
                   hideImages={hideImages}

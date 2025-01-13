@@ -148,7 +148,9 @@ export default function DeckCardGallery({
       const rarityGroupedCards = groupCardsByRarity(sortedCards);
 
       setGroupedCards([
-        ...(commander ? [{ title: "Commander", cards: [commander] }] : []),
+        ...(boardType === BoardTypes.MAIN && commander
+          ? [{ title: "Commander", cards: [commander] }]
+          : []),
         ...(rarityGroupedCards.common?.length
           ? [{ title: "Common", cards: rarityGroupedCards.common }]
           : []),
@@ -166,7 +168,9 @@ export default function DeckCardGallery({
       const colorGroupedCards = groupCardsByColor(sortedCards);
 
       setGroupedCards([
-        ...(commander ? [{ title: "Commander", cards: [commander] }] : []),
+        ...(boardType === BoardTypes.MAIN && commander
+          ? [{ title: "Commander", cards: [commander] }]
+          : []),
 
         ...(colorGroupedCards.white?.length
           ? [{ title: "White", cards: colorGroupedCards.white }]
@@ -197,7 +201,9 @@ export default function DeckCardGallery({
       const costGroupedCards = groupCardsByCost(sortedCards);
 
       setGroupedCards([
-        ...(commander ? [{ title: "Commander", cards: [commander] }] : []),
+        ...(boardType === BoardTypes.MAIN && commander
+          ? [{ title: "Commander", cards: [commander] }]
+          : []),
 
         ...(costGroupedCards.zero?.length
           ? [{ title: "Zero", cards: costGroupedCards.zero }]
@@ -237,7 +243,9 @@ export default function DeckCardGallery({
         : ({} as any);
 
       setGroupedCards([
-        ...(commander ? [{ title: "Commander", cards: [commander] }] : []),
+        ...(boardType === BoardTypes.MAIN && commander
+          ? [{ title: "Commander", cards: [commander] }]
+          : []),
         ...customGroups,
         ...(typeGroupedCards
           ? [
@@ -282,7 +290,9 @@ export default function DeckCardGallery({
       const typeGroupedCards = groupCardsByType(sortedCards);
 
       setGroupedCards([
-        ...(commander ? [{ title: "Commander", cards: [commander] }] : []),
+        ...(boardType === BoardTypes.MAIN && commander
+          ? [{ title: "Commander", cards: [commander] }]
+          : []),
         ...(typeGroupedCards.creature?.length
           ? [{ title: "Creature", cards: typeGroupedCards.creature }]
           : []),
