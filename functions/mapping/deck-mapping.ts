@@ -47,6 +47,8 @@ export function mapDatabaseDeck(data: any, withCards = false): Deck {
     commander: deck?.commander
       ? mapDatabaseCardToCard(deck.commander)
       : undefined,
+
+    partner: deck?.partner ? mapDatabaseCardToCard(deck.partner) : undefined,
   };
 }
 

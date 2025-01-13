@@ -32,6 +32,7 @@ export interface Deck {
   dashboard?: Dashboard;
 
   commander?: Card;
+  partner?: Card;
 }
 
 export interface DeckCard {

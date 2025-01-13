@@ -17,4 +17,5 @@ export interface DeckDTO {
   dashboard?: DashboardSection[];
 
   commanderId?: string;
+  partnerId?: string;
 }
