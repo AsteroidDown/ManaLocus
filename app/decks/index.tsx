@@ -13,9 +13,15 @@ export default function DecksPage() {
   function createDeck() {
     if (!user) return;
 
-    DeckService.create({}).then((response) =>
-      router.push(`decks/${response.deckId}/builder/main-board`)
-    );
+    DeckService.create({}).then((response) => {
+      localStorage.removeItem("builderCardsMain");
+      localStorage.removeItem("builderCardsSide");
+      localStorage.removeItem("builderCardsMaybe");
+      localStorage.removeItem("builderCardsAcquire");
+      localStorage.removeItem("dashboard");
+
+      router.push(`decks/${response.deckId}/builder/main-board`);
+    });
   }
 
   return (
