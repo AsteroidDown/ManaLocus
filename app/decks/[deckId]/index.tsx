@@ -11,8 +11,10 @@ import Button from "@/components/ui/button/button";
 import Divider from "@/components/ui/divider/divider";
 import TabBar from "@/components/ui/tabs/tab-bar";
 import { BoardTypes } from "@/constants/boards";
+import { LegalityEvaluation } from "@/constants/mtg/mtg-legality";
 import DeckContext from "@/contexts/deck/deck.context";
 import { graphCardsByCost } from "@/functions/cards/card-graphing";
+import { evaluateDeckLegality } from "@/functions/decks/deck-legality";
 import { setLocalStorageCards } from "@/functions/local-storage/card-local-storage";
 import { setLocalStorageDashboard } from "@/functions/local-storage/dashboard-local-storage";
 import DeckService from "@/hooks/services/deck.service";
@@ -28,6 +30,10 @@ import { ScrollView, View } from "react-native";
 export default function DeckPage() {
   const { deck, setDeck } = useContext(DeckContext);
 
+  const [legalityEvaluation, setLegalityEvaluation] = React.useState(
+    {} as LegalityEvaluation
+  );
+
   const [deckFavorited, setDeckFavorited] = React.useState(false);
   const [deckViewed, setDeckViewed] = React.useState(null as boolean | null);
 
@@ -41,6 +47,8 @@ export default function DeckPage() {
     setLocalStorageCards([], BoardTypes.MAYBE);
     setLocalStorageCards([], BoardTypes.ACQUIRE);
     setLocalStorageDashboard({ sections: [] });
+
+    setLegalityEvaluation(evaluateDeckLegality(deck));
 
     DeckService.getDeckFavorited(deck.id).then((favorited) =>
       setDeckFavorited(favorited)
@@ -158,7 +166,7 @@ export default function DeckPage() {
         <DeckTokens deck={deck} />
       </View>
 
-      <DeckFooter deck={deck} />
+      <DeckFooter deck={deck} legalityEvaluation={legalityEvaluation} />
     </ScrollView>
   );
 }

@@ -1,15 +1,33 @@
+import { LegalityEvaluation } from "@/constants/mtg/mtg-legality";
 import { groupCardsByType } from "@/functions/cards/card-grouping";
 import { currency, titleCase } from "@/functions/text-manipulation";
 import { Deck } from "@/models/deck/deck";
-import { faCopy, faFileArrowDown } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCheckCircle,
+  faCircleXmark,
+  faCopy,
+  faFileArrowDown,
+} from "@fortawesome/free-solid-svg-icons";
 import React, { useEffect } from "react";
 import { Image, View } from "react-native";
 import CardImportExportModal from "../cards/card-import-export-modal";
+import Box from "../ui/box/box";
 import Button from "../ui/button/button";
+import Dropdown from "../ui/dropdown/dropdown";
 import Text from "../ui/text/text";
 import DeckDuplicateModal from "./deck-duplicate-modal";
+import DeckLegalityInfo from "./deck-legality-info";
 
-export default function DeckFooter({ deck }: { deck: Deck }) {
+export interface DeckFooterProps {
+  deck: Deck;
+  legalityEvaluation: LegalityEvaluation;
+}
+
+export default function DeckFooter({
+  deck,
+  legalityEvaluation,
+}: DeckFooterProps) {
+  const [legalityOpen, setLegalityOpen] = React.useState(false);
   const [copyOpen, setCopyOpen] = React.useState(false);
   const [importOpen, setImportOpen] = React.useState(false);
 
@@ -74,6 +92,30 @@ export default function DeckFooter({ deck }: { deck: Deck }) {
     <View className="sticky bottom-0 flex flex-row gap-4 justify-between items-center px-16 py-4 max-h-14 bg-gradient-to-b from-primary-200 to-primary-100 shadow-[0_0_16px] shadow-background-100">
       <View className="flex flex-row items-center gap-2">
         <Text thickness="bold">{titleCase(deck.format)}</Text>
+
+        <Button
+          rounded
+          type="clear"
+          action="default"
+          className="-ml-3.5 -mr-2"
+          icon={legalityEvaluation.legal ? faCheckCircle : faCircleXmark}
+          onClick={() => setLegalityOpen(!legalityOpen)}
+        >
+          <View className="-mx-1.5 -mb-6">
+            <Dropdown
+              xOffset={-132}
+              expanded={legalityOpen}
+              setExpanded={setLegalityOpen}
+            >
+              <Box className="flex justify-start items-start border-2 border-primary-300 !bg-background-100 !bg-opacity-90 overflow-auto max-w-[450px]">
+                <DeckLegalityInfo
+                  format={deck.format}
+                  legalityEvaluation={legalityEvaluation}
+                />
+              </Box>
+            </Dropdown>
+          </View>
+        </Button>
 
         <View className="h-5 border-r rounded-lg border-white" />
 
