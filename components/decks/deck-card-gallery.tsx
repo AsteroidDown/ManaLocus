@@ -461,8 +461,9 @@ export default function DeckCardGallery({
             viewType={viewType}
             showPrice={showPrice}
             showManaValue={showManaValue}
-            groupMulticolored={groupMulticolored}
             commander={title === "Commander"}
+            groupMulticolored={groupMulticolored}
+            colorIdentity={deck.commander?.colorIdentity}
             shouldWrap={shouldWrap && index === groupedCards.length - 1}
             cards={cards}
           />

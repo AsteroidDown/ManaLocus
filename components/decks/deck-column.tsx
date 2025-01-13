@@ -1,3 +1,4 @@
+import { MTGColorSymbol } from "@/constants/mtg/mtg-colors";
 import { MTGFormat, MTGFormats } from "@/constants/mtg/mtg-format";
 import { MTGLegalities } from "@/constants/mtg/mtg-legality";
 import { groupCardsByColorMulti } from "@/functions/cards/card-grouping";
@@ -37,6 +38,7 @@ export interface DeckColumnProps {
   groupMulticolored?: boolean;
   hideCount?: boolean;
   commander?: boolean;
+  colorIdentity?: MTGColorSymbol[];
   shouldWrap?: boolean;
 }
 
@@ -51,6 +53,7 @@ export default function DeckColumn({
   groupMulticolored,
   hideCount,
   commander,
+  colorIdentity,
   shouldWrap,
 }: DeckColumnProps) {
   const [count, setCount] = React.useState(0);
@@ -133,6 +136,7 @@ export default function DeckColumn({
               showManaValue={showManaValue}
               hideCount={hideCount}
               commander={commander}
+              colorIdentity={colorIdentity}
             />
           ))}
         </View>
@@ -178,6 +182,7 @@ export default function DeckColumn({
                     showManaValue={showManaValue}
                     hideCount={hideCount}
                     commander={commander}
+                    colorIdentity={colorIdentity}
                   />
                 ))}
               </View>
@@ -206,6 +211,7 @@ interface DeckCardProps {
   showManaValue?: boolean;
   hideCount?: boolean;
   commander?: boolean;
+  colorIdentity?: MTGColorSymbol[];
 }
 
 function DeckCard({
@@ -217,6 +223,7 @@ function DeckCard({
   showManaValue,
   hideCount,
   commander,
+  colorIdentity,
 }: DeckCardProps) {
   const [open, setOpen] = React.useState(false);
   const [hoveredIndex, setHoveredIndex] = React.useState(-1);
@@ -228,6 +235,13 @@ function DeckCard({
 
   useEffect(() => {
     if (!format || format === MTGFormats.CUBE) return;
+
+    if (
+      colorIdentity &&
+      !card.colorIdentity.every((color) => colorIdentity.includes(color))
+    ) {
+      setBanned(true);
+    }
 
     if (
       card.legalities[format] === MTGLegalities.BANNED ||
