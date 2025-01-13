@@ -6,6 +6,8 @@ import { BoardType, BoardTypes } from "@/constants/boards";
 import { SideBoardLimit } from "@/constants/mtg/limits";
 import BoardContext from "@/contexts/cards/board.context";
 import StoredCardsContext from "@/contexts/cards/stored-cards.context";
+import DeckContext from "@/contexts/deck/deck.context";
+import { evaluateCardLegality } from "@/functions/decks/deck-legality";
 import {
   addToLocalStorageCardCount,
   getLocalStorageStoredCards,
@@ -38,6 +40,7 @@ import CardCost from "./card-cost";
 import CardDetailedPreview from "./card-detailed-preview";
 import CardImage from "./card-image";
 import CardPrints from "./card-prints";
+import CardText from "./card-text";
 
 export interface CardItemProps {
   card: Card;
@@ -55,12 +58,32 @@ export default function CardItem({
   itemsExpanded?: number;
   setItemsExpanded: React.Dispatch<React.SetStateAction<number>>;
 }) {
+  const { deck } = useContext(DeckContext);
+
   const [expanded, setExpanded] = React.useState(false);
   const [modalOpen, setModalOpen] = React.useState(false);
   const [focused, setFocused] = React.useState(false);
   const [hovered, setHovered] = React.useState(false);
 
+  const [legal, setLegal] = React.useState(true);
+  const [reasons, setReasons] = React.useState([] as string[]);
+  const [restricted, setRestricted] = React.useState(false);
+
   let leftHover = false;
+
+  useEffect(() => {
+    if (!deck) return;
+
+    const { legal, reasons, restricted } = evaluateCardLegality(
+      card,
+      deck.format,
+      deck.commander?.colorIdentity
+    );
+
+    setLegal(legal);
+    setReasons(reasons);
+    setRestricted(restricted);
+  }, [card]);
 
   useEffect(
     () => (itemsExpanded === 0 ? setExpanded(false) : undefined),
@@ -93,7 +116,12 @@ export default function CardItem({
           expanded ? "max-h-[1000px] " : "max-h-[24px]"
         } ${expanded ? "bg-background-300" : "bg-none"}`}
       >
-        <CardItemHeader card={card} focused={focused} />
+        <CardItemHeader
+          card={card}
+          focused={focused}
+          legal={legal}
+          restricted={restricted}
+        />
 
         {expanded && (
           <>
@@ -109,6 +137,19 @@ export default function CardItem({
                   />
                 </View>
 
+                <Divider thick />
+              </>
+            )}
+
+            {reasons?.length && (
+              <>
+                <View className="flex mx-4">
+                  <Text size="sm" thickness="semi">
+                    Legality Issues
+                  </Text>
+
+                  <CardText text={reasons.join("\n")} />
+                </View>
                 <Divider thick />
               </>
             )}
@@ -178,13 +219,16 @@ export default function CardItem({
 export function CardItemHeader({
   card,
   focused,
-}: CardItemProps & { focused: boolean }) {
+  legal,
+  restricted,
+}: CardItemProps & { focused: boolean; legal: boolean; restricted: boolean }) {
   const [hovered, setHovered] = React.useState(false);
 
   return (
     <View
-      className={`flex flex-row justify-between gap-1 px-2 max-h-[24px] h-[24px] items-center transition-all
-      } ${focused ? "bg-primary-300" : ""}
+      className={`flex flex-row justify-between gap-1 px-2 max-h-[24px] h-[24px] items-center transition-all ${
+        !legal ? "!bg-danger-100" : ""
+      } ${restricted ? "bg-warning-100" : ""} ${focused ? "bg-primary-300" : ""}
         ${hovered ? "bg-primary-300" : "bg-none"}`}
       onPointerEnter={() => setHovered(true)}
       onPointerLeave={() => setHovered(false)}
