@@ -7,6 +7,7 @@ import { BoardTypes } from "@/constants/boards";
 import { MTGColorSymbols } from "@/constants/mtg/mtg-colors";
 import { MTGFormat, MTGFormats } from "@/constants/mtg/mtg-format";
 import { MTGCardTypes } from "@/constants/mtg/mtg-types";
+import StoredCardsContext from "@/contexts/cards/stored-cards.context";
 import DeckContext from "@/contexts/deck/deck.context";
 import { getCardType } from "@/functions/cards/card-information";
 import { getLocalStorageStoredCards } from "@/functions/local-storage/card-local-storage";
@@ -22,6 +23,7 @@ import { Image, View } from "react-native";
 
 export default function DeckSettingsPage() {
   const { deck, setDeck } = useContext(DeckContext);
+  const { storedCards } = useContext(StoredCardsContext);
 
   const [saving, setSaving] = React.useState(false);
   const [saved, setSaved] = React.useState(false);
@@ -33,11 +35,14 @@ export default function DeckSettingsPage() {
     undefined as MTGFormat | undefined
   );
   const [commander, setCommander] = React.useState(null as Card | null);
+  const [partner, setPartner] = React.useState(null as Card | null);
 
   const [featuredCardSearch, setFeaturedCardSearch] = React.useState("");
   const [featuredCard, setFeaturedCard] = React.useState(null as Card | null);
 
   const [commanderOptions, setCommanderOptions] = React.useState([] as Card[]);
+  const [allowedPartner, setAllowedPartner] = React.useState(false);
+  const [partnerOptions, setPartnerOptions] = React.useState([] as Card[]);
 
   const mainBoardCards = getLocalStorageStoredCards(BoardTypes.MAIN);
 
@@ -59,15 +64,101 @@ export default function DeckSettingsPage() {
       setFeaturedCardSearch(foundFeaturedCard.name);
     }
 
-    if (deck.commander) setCommander(deck.commander);
-    setCommanderOptions(
-      mainBoardCards.filter(
-        (card) =>
-          card.typeLine.toLowerCase().includes("legendary") &&
-          getCardType(card) === MTGCardTypes.CREATURE
-      )
-    );
+    if (deck.commander) {
+      setCommander(deck.commander);
+      if (deck.partner) setPartner(deck.partner);
+
+      const oracleText = deck.commander.oracleText;
+      if (
+        oracleText?.includes("Partner") ||
+        oracleText?.includes("Choose a Background")
+      ) {
+        setAllowedPartner(true);
+      } else setAllowedPartner(false);
+    }
   }, [deck]);
+
+  useEffect(() => {
+    if (!deck || !commander) return;
+
+    let newCommander = false;
+    let newPartner = false;
+
+    if (deck.commander?.scryfallId !== commander.scryfallId) {
+      newCommander = true;
+      setPartner(null);
+    }
+    if (deck.partner?.scryfallId !== commander.scryfallId) {
+      newPartner = true;
+    }
+
+    setDeck({
+      ...deck,
+      ...(newCommander && { commander, partner: undefined }),
+      ...(!newCommander && newPartner && partner && { partner }),
+    });
+
+    const mainStoredCards = getLocalStorageStoredCards(BoardTypes.MAIN);
+
+    const commanderOptions = mainStoredCards.filter(
+      (card) =>
+        card.typeLine.toLowerCase().includes("legendary") &&
+        (getCardType(card) === MTGCardTypes.CREATURE ||
+          card.oracleText?.includes("can be your commander"))
+    );
+    setCommanderOptions(commanderOptions);
+
+    let commanderAllowsPartner = false;
+    const commanderText = commander?.oracleText;
+    if (
+      commanderText?.includes("Partner") ||
+      commanderText?.includes("Choose a Background")
+    ) {
+      commanderAllowsPartner = true;
+    } else commanderAllowsPartner = false;
+
+    if (!commanderAllowsPartner) {
+      setPartner(null);
+      return;
+    }
+
+    const partnerOptions: Card[] = [];
+
+    const legendaries = mainStoredCards
+      .filter((card) => card.typeLine.toLowerCase().includes("legendary"))
+      .filter((card) => card.scryfallId !== commander?.scryfallId);
+
+    if (commanderText?.includes("Partner with")) {
+      let partnerName = commanderText.split("Partner with")[1].split("\n")[0];
+      if (partnerName.includes("(")) partnerName = partnerName.split(" (")[0];
+
+      const foundPartner = legendaries.find(
+        (card) =>
+          card.name.toLowerCase().trim() === partnerName.toLowerCase().trim()
+      );
+
+      if (foundPartner && foundPartner.scryfallId !== partner?.scryfallId) {
+        setPartner(foundPartner);
+        setPartnerOptions([foundPartner]);
+        return;
+      }
+      return;
+    } else if (commanderText?.includes("Partner")) {
+      partnerOptions.push(
+        ...legendaries.filter(
+          (card) =>
+            card.oracleText?.includes("Partner") &&
+            !card.oracleText?.includes("Partner with")
+        )
+      );
+    } else if (commanderText?.includes("Choose a Background")) {
+      partnerOptions.push(
+        ...legendaries.filter((card) => card.typeLine.includes("Background"))
+      );
+    }
+
+    setPartnerOptions(partnerOptions);
+  }, [commander, partner, storedCards]);
 
   useEffect(() => {
     if (!featuredCardSearch) return;
@@ -95,23 +186,24 @@ export default function DeckSettingsPage() {
     setDeck({ ...deck, format: format });
   }, [format]);
 
-  useEffect(() => {
-    if (!deck || !commander) return;
-
-    if (deck.commander?.scryfallId !== commander.scryfallId) {
-      setDeck({ ...deck, commander });
-    }
-  }, [commander]);
-
   function saveDeck() {
     if (!deck) return;
 
     setSaving(true);
 
     const mainBoard = getLocalStorageStoredCards(BoardTypes.MAIN);
-    const colorsInDeck = sortColors(getDeckColors(mainBoard));
+    const colorsInDeck = deck.commander
+      ? [
+          ...(deck.commander.colorIdentity?.length
+            ? deck.commander.colorIdentity
+            : [MTGColorSymbols.COLORLESS]),
+          ...(deck.partner?.colorIdentity?.length
+            ? deck.partner.colorIdentity
+            : [MTGColorSymbols.COLORLESS]),
+        ]
+      : sortColors(getDeckColors(mainBoard));
     const deckColors = colorsInDeck?.length
-      ? sortColors(colorsInDeck)
+      ? colorsInDeck
       : [MTGColorSymbols.COLORLESS];
 
     const dto: DeckDTO = {
@@ -143,6 +235,7 @@ export default function DeckSettingsPage() {
       dashboard: getLocalStorageDashboard()?.sections || [],
 
       commanderId: commander?.scryfallId,
+      partnerId: partner?.scryfallId,
     };
 
     DeckService.update(deck.id, dto).then(() => {
@@ -221,7 +314,7 @@ export default function DeckSettingsPage() {
               onChange={setFeaturedCardSearch}
             />
 
-            <View className="flex-1 flex flex-row min-w-min">
+            <View className="flex-[2] flex flex-row min-w-min">
               <Select
                 label="Format"
                 placeholder="Format"
@@ -235,17 +328,34 @@ export default function DeckSettingsPage() {
               />
 
               {format === MTGFormats.COMMANDER && (
-                <Select
-                  squareLeft
-                  label="Commander"
-                  value={commander}
-                  property="scryfallId"
-                  options={commanderOptions.map((option) => ({
-                    label: option.name,
-                    value: option,
-                  }))}
-                  onChange={(change) => setCommander(change)}
-                />
+                <>
+                  <Select
+                    squareLeft
+                    squareRight={allowedPartner}
+                    label="Commander"
+                    value={commander}
+                    property="scryfallId"
+                    onChange={setCommander}
+                    options={commanderOptions.map((option) => ({
+                      label: option.name,
+                      value: option,
+                    }))}
+                  />
+
+                  {allowedPartner && (
+                    <Select
+                      squareLeft
+                      label="Partner"
+                      value={partner}
+                      property="scryfallId"
+                      onChange={setPartner}
+                      options={partnerOptions.map((option) => ({
+                        label: option.name,
+                        value: option,
+                      }))}
+                    />
+                  )}
+                </>
               )}
             </View>
           </View>
