@@ -62,16 +62,16 @@ export default function TabLayout() {
 
     DeckService.get(deck.id).then((deck) => {
       deck.main.forEach((card) =>
-        saveLocalStorageCard(card, 1, BoardTypes.MAIN)
+        saveLocalStorageCard(card, card.count, BoardTypes.MAIN)
       );
       deck.side.forEach((card) =>
-        saveLocalStorageCard(card, 1, BoardTypes.SIDE)
+        saveLocalStorageCard(card, card.count, BoardTypes.SIDE)
       );
       deck.maybe.forEach((card) =>
-        saveLocalStorageCard(card, 1, BoardTypes.MAYBE)
+        saveLocalStorageCard(card, card.count, BoardTypes.MAYBE)
       );
       deck.acquire.forEach((card) =>
-        saveLocalStorageCard(card, 1, BoardTypes.ACQUIRE)
+        saveLocalStorageCard(card, card.count, BoardTypes.ACQUIRE)
       );
 
       setStoredCards(getLocalStorageStoredCards(BoardTypes.MAIN));
