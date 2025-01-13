@@ -28,7 +28,10 @@ export default function DeckExampleHand({ deck }: DeckTestHandProps) {
     if (!deck) return;
 
     const mainCards = deck.main.reduce((acc, card) => {
-      if (deck.commander && card.scryfallId === deck.commander.scryfallId) {
+      if (
+        (deck.commander && card.scryfallId === deck.commander.scryfallId) ||
+        (deck.partner && card.scryfallId === deck.partner.scryfallId)
+      ) {
         return acc;
       }
 

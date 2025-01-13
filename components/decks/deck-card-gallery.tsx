@@ -106,6 +106,7 @@ export default function DeckCardGallery({
   );
 
   const [commander, setCommander] = React.useState(null as Card | null);
+  const [partner, setPartner] = React.useState(null as Card | null);
 
   const [shouldWrap, setShouldWrap] = React.useState(false);
 
@@ -114,12 +115,15 @@ export default function DeckCardGallery({
 
     const mainCards = deck.commander
       ? deck.main.filter(
-          (card) => card.scryfallId !== deck.commander?.scryfallId
+          (card) =>
+            card.scryfallId !== deck.commander?.scryfallId &&
+            card.scryfallId !== deck.partner?.scryfallId
         )
       : deck.main;
 
     if (deck.commander) {
       setCommander(deck.commander);
+      if (deck.partner) setPartner(deck.partner);
     }
 
     setBoardCards({
@@ -149,7 +153,12 @@ export default function DeckCardGallery({
 
       setGroupedCards([
         ...(boardType === BoardTypes.MAIN && commander
-          ? [{ title: "Commander", cards: [commander] }]
+          ? [
+              {
+                title: "Commander",
+                cards: [commander, ...(partner ? [partner] : [])],
+              },
+            ]
           : []),
         ...(rarityGroupedCards.common?.length
           ? [{ title: "Common", cards: rarityGroupedCards.common }]
@@ -169,7 +178,12 @@ export default function DeckCardGallery({
 
       setGroupedCards([
         ...(boardType === BoardTypes.MAIN && commander
-          ? [{ title: "Commander", cards: [commander] }]
+          ? [
+              {
+                title: "Commander",
+                cards: [commander, ...(partner ? [partner] : [])],
+              },
+            ]
           : []),
 
         ...(colorGroupedCards.white?.length
@@ -202,7 +216,12 @@ export default function DeckCardGallery({
 
       setGroupedCards([
         ...(boardType === BoardTypes.MAIN && commander
-          ? [{ title: "Commander", cards: [commander] }]
+          ? [
+              {
+                title: "Commander",
+                cards: [commander, ...(partner ? [partner] : [])],
+              },
+            ]
           : []),
 
         ...(costGroupedCards.zero?.length
@@ -244,7 +263,12 @@ export default function DeckCardGallery({
 
       setGroupedCards([
         ...(boardType === BoardTypes.MAIN && commander
-          ? [{ title: "Commander", cards: [commander] }]
+          ? [
+              {
+                title: "Commander",
+                cards: [commander, ...(partner ? [partner] : [])],
+              },
+            ]
           : []),
         ...customGroups,
         ...(typeGroupedCards
@@ -291,7 +315,12 @@ export default function DeckCardGallery({
 
       setGroupedCards([
         ...(boardType === BoardTypes.MAIN && commander
-          ? [{ title: "Commander", cards: [commander] }]
+          ? [
+              {
+                title: "Commander",
+                cards: [commander, ...(partner ? [partner] : [])],
+              },
+            ]
           : []),
         ...(typeGroupedCards.creature?.length
           ? [{ title: "Creature", cards: typeGroupedCards.creature }]
@@ -466,6 +495,7 @@ export default function DeckCardGallery({
         {groupedCards?.map(({ title, cards }, index) => (
           <DeckColumn
             key={title}
+            cards={cards}
             title={title}
             format={deck.format}
             viewType={viewType}
@@ -473,9 +503,15 @@ export default function DeckCardGallery({
             showManaValue={showManaValue}
             commander={title === "Commander"}
             groupMulticolored={groupMulticolored}
-            colorIdentity={deck.commander?.colorIdentity}
             shouldWrap={shouldWrap && index === groupedCards.length - 1}
-            cards={cards}
+            colorIdentity={
+              deck.commander
+                ? [
+                    ...deck.commander?.colorIdentity,
+                    ...(deck.partner?.colorIdentity || []),
+                  ]
+                : undefined
+            }
           />
         ))}
       </View>
