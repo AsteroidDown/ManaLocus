@@ -1,6 +1,10 @@
 import { MTGColorSymbol } from "@/constants/mtg/mtg-colors";
-import { MTGFormat, MTGFormats } from "@/constants/mtg/mtg-format";
-import { MTGLegalities } from "@/constants/mtg/mtg-legality";
+import {
+  MTGFormat,
+  MTGFormatRestrictionsMap,
+  MTGFormats,
+} from "@/constants/mtg/mtg-format";
+import { MTGBasicLands, MTGLegalities } from "@/constants/mtg/mtg-legality";
 import { groupCardsByColorMulti } from "@/functions/cards/card-grouping";
 import { currency, titleCase } from "@/functions/text-manipulation";
 import { Card } from "@/models/card/card";
@@ -239,6 +243,16 @@ function DeckCard({
     if (
       colorIdentity &&
       !card.colorIdentity.every((color) => colorIdentity.includes(color))
+    ) {
+      setBanned(true);
+    }
+
+    if (
+      card.count >
+        (MTGFormatRestrictionsMap.get(format)?.uniqueCardCount || 1) &&
+      (!MTGBasicLands.includes(card.name) ||
+        (card.oracleText?.includes("A deck can have") &&
+          card.oracleText?.includes("cards named")))
     ) {
       setBanned(true);
     }
