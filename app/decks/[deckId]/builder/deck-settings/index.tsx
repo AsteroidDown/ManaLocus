@@ -71,7 +71,8 @@ export default function DeckSettingsPage() {
       const oracleText = deck.commander.oracleText;
       if (
         oracleText?.includes("Partner") ||
-        oracleText?.includes("Choose a Background")
+        oracleText?.includes("Choose a Background") ||
+        oracleText?.includes("Friends forever")
       ) {
         setAllowedPartner(true);
       } else setAllowedPartner(false);
@@ -112,7 +113,8 @@ export default function DeckSettingsPage() {
     const commanderText = commander?.oracleText;
     if (
       commanderText?.includes("Partner") ||
-      commanderText?.includes("Choose a Background")
+      commanderText?.includes("Choose a Background") ||
+      commanderText?.includes("Friends forever")
     ) {
       commanderAllowsPartner = true;
     } else commanderAllowsPartner = false;
@@ -149,6 +151,12 @@ export default function DeckSettingsPage() {
           (card) =>
             card.oracleText?.includes("Partner") &&
             !card.oracleText?.includes("Partner with")
+        )
+      );
+    } else if (commanderText?.includes("Friends forever")) {
+      partnerOptions.push(
+        ...legendaries.filter((card) =>
+          card.oracleText?.includes("Friends forever")
         )
       );
     } else if (commanderText?.includes("Choose a Background")) {
