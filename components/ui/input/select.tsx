@@ -1,6 +1,6 @@
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React from "react";
+import React, { useEffect } from "react";
 import { Pressable, TextInput, View, ViewProps } from "react-native";
 import Text from "../text/text";
 
@@ -50,7 +50,9 @@ export default function Select({
   const [search, setSearch] = React.useState("");
   const [filteredOptions, setFilteredOptions] = React.useState(options);
 
-  React.useEffect(() => {
+  useEffect(() => setFilteredOptions(options), [options]);
+
+  useEffect(() => {
     const search =
       options.find((option) =>
         property
@@ -59,9 +61,9 @@ export default function Select({
       )?.label ?? "";
 
     setSearch(search);
-  }, [value]);
+  }, [value, options]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     const foundOption = options.find(
       (option) => option.label.toLowerCase() === search.toLowerCase()
     );
