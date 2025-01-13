@@ -77,7 +77,12 @@ export default function CardItem({
     const { legal, reasons, restricted } = evaluateCardLegality(
       card,
       deck.format,
-      deck.commander?.colorIdentity
+      deck.commander
+        ? [
+            ...deck.commander?.colorIdentity,
+            ...(deck.partner?.colorIdentity || []),
+          ]
+        : undefined
     );
 
     setLegal(legal);

@@ -118,7 +118,9 @@ export default function CardItemGallery({
 
     if (deck?.commander) {
       filteredCards = filteredCards.filter(
-        (card) => card.scryfallId !== deck.commander?.scryfallId
+        (card) =>
+          card.scryfallId !== deck.commander?.scryfallId &&
+          card.scryfallId !== deck.partner?.scryfallId
       );
     }
 
@@ -224,7 +226,10 @@ export default function CardItemGallery({
                   itemsExpanded={itemsExpanded}
                   setItemExpanded={setItemsExpanded}
                   groupMulticolored={groupMulticolored}
-                  cards={[deck.commander]}
+                  cards={[
+                    deck.commander,
+                    ...(deck.partner ? [deck.partner] : []),
+                  ]}
                 />
               )}
 
@@ -310,7 +315,10 @@ export default function CardItemGallery({
                   itemsExpanded={itemsExpanded}
                   setItemExpanded={setItemsExpanded}
                   groupMulticolored={groupMulticolored}
-                  cards={[deck.commander]}
+                  cards={[
+                    deck.commander,
+                    ...(deck.partner ? [deck.partner] : []),
+                  ]}
                 />
               )}
 
@@ -346,7 +354,10 @@ export default function CardItemGallery({
                   itemsExpanded={itemsExpanded}
                   setItemExpanded={setItemsExpanded}
                   groupMulticolored={groupMulticolored}
-                  cards={[deck.commander]}
+                  cards={[
+                    deck.commander,
+                    ...(deck.partner ? [deck.partner] : []),
+                  ]}
                 />
               )}
 
@@ -407,7 +418,10 @@ export default function CardItemGallery({
                   itemsExpanded={itemsExpanded}
                   setItemExpanded={setItemsExpanded}
                   groupMulticolored={groupMulticolored}
-                  cards={[deck.commander]}
+                  cards={[
+                    deck.commander,
+                    ...(deck.partner ? [deck.partner] : []),
+                  ]}
                 />
               )}
 
