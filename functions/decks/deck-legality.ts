@@ -26,6 +26,12 @@ const basicLands = [
   "Mountain",
   "Forest",
   "Wastes",
+  "Snow-Covered Plains",
+  "Snow-Covered Island",
+  "Snow-Covered Swamp",
+  "Snow-Covered Mountain",
+  "Snow-Covered Forest",
+  "Snow-Covered Wastes",
 ];
 
 export function evaluateDeckLegality(deck: Deck): LegalityEvaluation {
