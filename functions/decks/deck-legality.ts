@@ -1,4 +1,6 @@
+import { MTGColorSymbol } from "@/constants/mtg/mtg-colors";
 import {
+  MTGFormat,
   MTGFormatRestrictionsMap,
   MTGFormats,
 } from "@/constants/mtg/mtg-format";
@@ -8,6 +10,7 @@ import {
   MTGLegalities,
 } from "@/constants/mtg/mtg-legality";
 import { MTGRarities } from "@/constants/mtg/mtg-rarity";
+import { Card } from "@/models/card/card";
 import { Deck } from "@/models/deck/deck";
 
 const formatsWithCommander = [
@@ -111,4 +114,60 @@ export function evaluateDeckLegality(deck: Deck): LegalityEvaluation {
   legality.legal = Object.values(legality).every((value) => !!value);
 
   return legality;
+}
+
+export function evaluateCardLegality(
+  card: Card,
+  format?: MTGFormat,
+  colorIdentity?: MTGColorSymbol[]
+) {
+  let legal = true;
+  let restricted = false;
+  let reasons: string[] = [];
+
+  if (!format || format === MTGFormats.CUBE)
+    return { legal, restricted, reasons };
+
+  const restrictions = MTGFormatRestrictionsMap.get(format);
+
+  if (
+    colorIdentity &&
+    !card.colorIdentity.every((color) => colorIdentity.includes(color))
+  ) {
+    legal = false;
+    reasons.push(
+      `Not in color identity ${
+        "{" + (colorIdentity?.length ? colorIdentity : ["C"]).join("}{") + "}"
+      }`
+    );
+  }
+
+  if (
+    card.count > (MTGFormatRestrictionsMap.get(format)?.uniqueCardCount || 1) &&
+    (!MTGBasicLands.includes(card.name) ||
+      (card.oracleText?.includes("A deck can have") &&
+        card.oracleText?.includes("cards named")))
+  ) {
+    legal = false;
+    reasons.push(
+      `Above unique card count of ${restrictions?.uniqueCardCount || 1}`
+    );
+  }
+
+  if (
+    card.legalities[format] === MTGLegalities.BANNED ||
+    card.legalities[format] === MTGLegalities.NOT_LEGAL
+  ) {
+    legal = false;
+    reasons.push(`Legality: ${card.legalities[format]}`);
+  } else if (card.legalities[format] === MTGLegalities.RESTRICTED) {
+    if (card.count > 1) {
+      legal = false;
+      reasons.push(`Only 1 copy of restricted card allowed`);
+    } else {
+      restricted = true;
+    }
+  }
+
+  return { legal, restricted, reasons };
 }

@@ -1,11 +1,7 @@
 import { MTGColorSymbol } from "@/constants/mtg/mtg-colors";
-import {
-  MTGFormat,
-  MTGFormatRestrictionsMap,
-  MTGFormats,
-} from "@/constants/mtg/mtg-format";
-import { MTGBasicLands, MTGLegalities } from "@/constants/mtg/mtg-legality";
+import { MTGFormat, MTGFormats } from "@/constants/mtg/mtg-format";
 import { groupCardsByColorMulti } from "@/functions/cards/card-grouping";
+import { evaluateCardLegality } from "@/functions/decks/deck-legality";
 import { currency, titleCase } from "@/functions/text-manipulation";
 import { Card } from "@/models/card/card";
 import { faShop } from "@fortawesome/free-solid-svg-icons";
@@ -234,36 +230,27 @@ function DeckCard({
 
   const [banned, setBanned] = React.useState(false);
   const [restricted, setRestricted] = React.useState(false);
+  const [reasons, setReasons] = React.useState([] as string[]);
 
   const cardCount = Array(card.count).fill(undefined);
 
   useEffect(() => {
     if (!format || format === MTGFormats.CUBE) return;
 
-    if (
-      colorIdentity &&
-      !card.colorIdentity.every((color) => colorIdentity.includes(color))
-    ) {
-      setBanned(true);
-    }
+    const { legal, restricted, reasons } = evaluateCardLegality(
+      card,
+      format,
+      colorIdentity
+    );
 
-    if (
-      card.count >
-        (MTGFormatRestrictionsMap.get(format)?.uniqueCardCount || 1) &&
-      (!MTGBasicLands.includes(card.name) ||
-        (card.oracleText?.includes("A deck can have") &&
-          card.oracleText?.includes("cards named")))
-    ) {
+    if (!legal) {
       setBanned(true);
-    }
-
-    if (
-      card.legalities[format] === MTGLegalities.BANNED ||
-      card.legalities[format] === MTGLegalities.NOT_LEGAL
-    ) {
-      setBanned(true);
-    } else if (card.legalities[format] === MTGLegalities.RESTRICTED) {
+    } else if (restricted) {
       setRestricted(true);
+    }
+
+    if (reasons.length) {
+      setReasons(reasons);
     }
   }, [card]);
 
@@ -383,6 +370,15 @@ function DeckCard({
                 }
               />
             </View>
+
+            {reasons?.length && (
+              <View className="flex">
+                <Text size="sm" thickness="semi">
+                  Legality Issues
+                </Text>
+                <CardText text={reasons.join("\n")} />
+              </View>
+            )}
           </CardDetailedPreview>
         </Modal>
       </View>
