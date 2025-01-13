@@ -116,5 +116,7 @@ export function evaluateDeckLegality(deck: Deck): LegalityEvaluation {
     );
   }
 
+  legality.legal = Object.values(legality).every((value) => !!value);
+
   return legality;
 }
