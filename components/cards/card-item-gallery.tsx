@@ -139,7 +139,7 @@ export default function CardItemGallery({
     if (type === "custom") {
       setCardsSortedCustom(groupCardsCustom(filteredCards));
     }
-  }, [cards, filters]);
+  }, [deck, cards, filters]);
 
   useEffect(() => {
     if (!cardsSortedCustom) return;
