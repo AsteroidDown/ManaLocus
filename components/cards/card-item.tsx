@@ -321,10 +321,11 @@ export function CardItemFooter({
     setStoredCards(getLocalStorageStoredCards(board));
   }
 
-  function moveCard(moveToBoard: BoardType) {
+  function moveCard(moveToBoard: BoardType, add?: boolean) {
     saveLocalStorageCard(card, card.count, moveToBoard);
-    removeLocalStorageCard(card, board);
+    if (!add) removeLocalStorageCard(card, board);
     setStoredCards(getLocalStorageStoredCards(board));
+    setMoveOpen(false);
   }
 
   return (
@@ -412,15 +413,27 @@ export function CardItemFooter({
               )}
 
               {board !== BoardTypes.ACQUIRE && (
-                <Button
-                  start
-                  square
-                  type="clear"
-                  text="Acquire"
-                  className="w-full"
-                  icon={faListCheck}
-                  onClick={() => moveCard(BoardTypes.ACQUIRE)}
-                />
+                <>
+                  <Button
+                    start
+                    square
+                    type="clear"
+                    text="Acquire"
+                    className="w-full"
+                    icon={faListCheck}
+                    onClick={() => moveCard(BoardTypes.ACQUIRE)}
+                  />
+
+                  <Button
+                    start
+                    square
+                    type="clear"
+                    text="Acquire"
+                    className="w-full"
+                    icon={faPlus}
+                    onClick={() => moveCard(BoardTypes.ACQUIRE, true)}
+                  />
+                </>
               )}
             </Box>
           </Dropdown>
