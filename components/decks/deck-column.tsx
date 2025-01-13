@@ -371,7 +371,7 @@ function DeckCard({
               />
             </View>
 
-            {reasons?.length && (
+            {reasons?.length > 0 && (
               <View className="flex">
                 <Text size="sm" thickness="semi">
                   Legality Issues
