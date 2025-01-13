@@ -37,7 +37,7 @@ export default function DeckLegalityInfo({
         </Text>
       </Text>
 
-      {legalityEvaluation?.commander && (
+      {"commander" in legalityEvaluation && (
         <View className="flex flex-row items-center gap-2">
           <FontAwesomeIcon
             icon={legalityEvaluation.commander ? faCheckCircle : faCircleXmark}
@@ -65,7 +65,9 @@ export default function DeckLegalityInfo({
               : `This deck has the proper minimum size (${
                   restrictions!.deckMinSize
                 } cards)`
-            : `This deck does not meet the format size requirement (${format}: ${restrictions?.deckMinSize})`}
+            : `This deck is not the proper size (${titleCase(format)}: ${
+                restrictions?.deckMinSize
+              })`}
         </Text>
       </View>
 
@@ -83,7 +85,7 @@ export default function DeckLegalityInfo({
         </Text>
       </View>
 
-      {legalityEvaluation.colorIdentity && (
+      {"colorIdentity" in legalityEvaluation && (
         <View className="flex flex-row items-center gap-2">
           <FontAwesomeIcon
             icon={
@@ -98,7 +100,7 @@ export default function DeckLegalityInfo({
           <Text>
             {legalityEvaluation.colorIdentity
               ? `Each card is in the commander's color identity`
-              : `Cards in this deck are outside the commander's color identity`}
+              : `Some cards are outside the commander's color identity`}
           </Text>
         </View>
       )}
@@ -117,7 +119,7 @@ export default function DeckLegalityInfo({
         </Text>
       </View>
 
-      {legalityEvaluation.rarity && (
+      {"rarity" in legalityEvaluation && (
         <View className="flex flex-row items-center gap-2">
           <FontAwesomeIcon
             icon={legalityEvaluation.rarity ? faCheckCircle : faCircleXmark}
@@ -137,7 +139,7 @@ export default function DeckLegalityInfo({
         </View>
       )}
 
-      {legalityEvaluation.tix && (
+      {"tix" in legalityEvaluation && (
         <Text>
           {restrictions?.maxTix
             ? `Each cards is under the specified tix amount (${restrictions.maxTix})`
