@@ -68,7 +68,7 @@ export default function Select({
           : option.value === value
       )?.label ?? "";
 
-    if (!multiple) setSearch(search);
+    if (!multiple && search) setSearch(search);
   }, [value, options]);
 
   useEffect(() => {
@@ -169,7 +169,7 @@ export default function Select({
                     icon={faX}
                     type="clear"
                     action="default"
-                    className="!px-1 max-w-[24px] max-h-[24px]"
+                    buttonClasses="!px-1 max-w-[24px] max-h-[24px]"
                     onClick={() => removeOption(index)}
                   />
                 </View>
