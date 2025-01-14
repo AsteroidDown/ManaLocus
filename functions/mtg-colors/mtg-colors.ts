@@ -17,6 +17,10 @@ export function getDeckColors(cards: Card[]): MTGColorSymbol[] {
 
 export function sortColors(colors: MTGColorSymbol[]): MTGColorSymbol[] {
   colors = colors.filter((color) => color !== MTGColorSymbols.COLORLESS);
+  colors = colors.reduce((acc, color) => {
+    if (acc.includes(color)) return acc;
+    else return [...acc, color];
+  }, [] as MTGColorSymbol[]);
 
   if (colors.length === 5) {
     return [
