@@ -31,9 +31,7 @@ async function getMany(
 
 async function get(deckId: string): Promise<Deck> {
   return await API.get(`decks/${deckId}`)
-    .then((data) => {
-      return mapDatabaseDeck(data, true) as any;
-    })
+    .then((data) => mapDatabaseDeck(data, true) as any)
     .catch((error) => {
       console.error(
         `Error retrieving deck with id: (${deckId}).\nError: ${error}`

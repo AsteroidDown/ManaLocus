@@ -1,4 +1,4 @@
-import { Card, CardPart } from "@/models/card/card";
+import { Card, CardImageUris, CardPart } from "@/models/card/card";
 import { Deck } from "@/models/deck/deck";
 
 export function mapDatabaseDeck(data: any, withCards = false): Deck {
@@ -95,7 +95,10 @@ function mapDatabaseCardToCard(card: any): Card {
     nonfoil: card.nonfoil,
     lang: card.lang,
 
-    imageURIs: card.imageURIs,
+    ...(card.imageURIs && {
+      imageURIs: mapDatabaseCardImageUris(card.imageURIs),
+    }),
+
     faces: card.faces?.length
       ? {
           front: {
@@ -108,7 +111,7 @@ function mapDatabaseCardToCard(card: any): Card {
             defense: card.faces[0]?.defense,
             oracleText: card.faces[0].oracle_text,
             flavorText: card.faces[0].flavor_text,
-            imageUris: card.faces[0].image_uris,
+            imageUris: mapDatabaseCardImageUris(card.faces[0].imageURIs),
             artist: card.faces[0].artist,
             frameEffects: card.faces[0].frame_effects
               ? JSON.parse(card.faces[0].frame_effects.replace(/'/g, '"'))
@@ -124,7 +127,7 @@ function mapDatabaseCardToCard(card: any): Card {
             defense: card.faces[1]?.defense,
             oracleText: card.faces[1].oracle_text,
             flavorText: card.faces[1].flavor_text,
-            imageUris: card.faces[1].image_uris,
+            imageUris: mapDatabaseCardImageUris(card.faces[1].imageURIs),
             artist: card.faces[1].artist,
             frameEffects: card.faces[1].frame_effects
               ? JSON.parse(card.faces[1].frame_effects.replace(/'/g, '"'))
@@ -156,5 +159,17 @@ function mapDatabaseCardPart(part: any): CardPart {
     object: part.object,
     typeLine: part.type_line,
     uri: part.uri,
+  };
+}
+
+function mapDatabaseCardImageUris(imageURIs: any): CardImageUris {
+  return {
+    small: imageURIs?.small,
+    normal: imageURIs?.normal,
+    large: imageURIs?.large,
+
+    png: imageURIs?.png,
+    artCrop: imageURIs?.art_crop,
+    borderCrop: imageURIs?.border_crop,
   };
 }
