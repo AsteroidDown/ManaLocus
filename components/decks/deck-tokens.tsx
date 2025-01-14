@@ -66,6 +66,8 @@ export default function DeckTokens({ deck }: DeckTokensProps) {
     );
   }, [deck]);
 
+  if (!tokens?.length) return null;
+
   return (
     <View className="relative flex gap-2">
       <View className="sticky top-0 flex gap-2 bg-background-100 z-10">

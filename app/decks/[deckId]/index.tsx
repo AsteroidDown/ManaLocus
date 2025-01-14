@@ -170,7 +170,7 @@ export default function DeckPage() {
 
         <Divider thick className="!border-background-200" />
 
-        <DeckExampleHand deck={deck} />
+        {!deck.isKit && <DeckExampleHand deck={deck} />}
 
         <DeckTokens deck={deck} />
       </View>
