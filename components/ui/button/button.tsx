@@ -92,7 +92,7 @@ export default function Button({
     >
       <View
         ref={ref}
-        className={`${baseButtonClasses} ${buttonHeight}
+        className={`${className} ${baseButtonClasses} ${buttonHeight}
           ${baseColor} ${hoverColor} ${useFocus ? focusColor : ""} ${
           rounded && text
             ? "!rounded-full"
