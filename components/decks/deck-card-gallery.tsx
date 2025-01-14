@@ -505,6 +505,8 @@ export default function DeckCardGallery({
         className={`${
           groupedCards.length > 2
             ? "lg:columns-3 md:columns-2 columns-1"
+            : groupedCards.length === 2
+            ? "lg:columns-2 columns-1"
             : "columns-1"
         } block w-full mt-2 gap-8`}
       >
