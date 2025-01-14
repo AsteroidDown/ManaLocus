@@ -1,7 +1,8 @@
-import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
+import { faChevronDown, faX } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect } from "react";
 import { Pressable, TextInput, View, ViewProps } from "react-native";
+import Button from "../button/button";
 import Text from "../text/text";
 
 export interface SelectOption {
@@ -14,6 +15,7 @@ export type InputProps = ViewProps & {
 
   label?: string;
   placeholder?: string;
+  multiple?: boolean;
   disabled?: boolean;
   property?: string;
 
@@ -23,6 +25,7 @@ export type InputProps = ViewProps & {
 
   value?: any;
   onChange: React.Dispatch<React.SetStateAction<any>>;
+  onSearchChange?: React.Dispatch<React.SetStateAction<string>>;
 };
 
 export default function Select({
@@ -30,6 +33,7 @@ export default function Select({
 
   label,
   placeholder,
+  multiple,
   disabled,
   property,
 
@@ -41,6 +45,7 @@ export default function Select({
   onChange,
 
   className,
+  onSearchChange,
 }: InputProps) {
   const [hovered, setHovered] = React.useState(false);
   const [focused, setFocused] = React.useState(false);
@@ -48,11 +53,14 @@ export default function Select({
   const [open, setOpen] = React.useState(false);
 
   const [search, setSearch] = React.useState("");
+  const [selectedOptions, setSelectedOptions] = React.useState([] as any[]);
   const [filteredOptions, setFilteredOptions] = React.useState(options);
 
   useEffect(() => setFilteredOptions(options), [options]);
 
   useEffect(() => {
+    if (!options?.length) return;
+
     const search =
       options.find((option) =>
         property
@@ -60,7 +68,7 @@ export default function Select({
           : option.value === value
       )?.label ?? "";
 
-    setSearch(search);
+    if (!multiple) setSearch(search);
   }, [value, options]);
 
   useEffect(() => {
@@ -68,7 +76,7 @@ export default function Select({
       (option) => option.label.toLowerCase() === search.toLowerCase()
     );
 
-    if (foundOption) selectOption(foundOption);
+    if (!multiple && foundOption) selectOption(foundOption);
     else {
       const filteredOptions = options.filter((option) =>
         option.label.toLowerCase().includes(search.toLowerCase())
@@ -89,12 +97,28 @@ export default function Select({
   }
 
   function selectOption(option: any) {
-    onBlur();
-    setHovered(false);
-    setOpen(false);
-    onChange(option.value);
-    setSearch(option.label);
-    setFilteredOptions(options);
+    if (multiple) {
+      const optionsOut = [...selectedOptions, option];
+      onChange(optionsOut.map((option) => option.value));
+      setSelectedOptions(optionsOut);
+      setSearch("");
+      onSearchChange?.("");
+    } else {
+      onBlur();
+      setHovered(false);
+      setOpen(false);
+      onChange(option.value);
+      setSearch(option.label);
+      setFilteredOptions(options);
+    }
+  }
+
+  function removeOption(index: number) {
+    const optionsOut = [...selectedOptions];
+    optionsOut.splice(index, 1);
+
+    onChange(optionsOut.map((option) => option.value));
+    setSelectedOptions(optionsOut);
   }
 
   return (
@@ -126,8 +150,33 @@ export default function Select({
             open ? "!rounded-b-none" : ""
           } ${squareLeft ? "!rounded-l-none" : ""} ${
             squareRight ? "!rounded-r-none" : ""
-          } flex-1 flex flex-row items-center min-w-fit min-h-10 px-3 py-2 rounded-lg border-2 overflow-hidden transition-all`}
+          } flex-1 flex flex-row items-center gap-2 min-w-fit min-h-10 px-3 py-2 rounded-lg border-2 overflow-hidden transition-all`}
         >
+          {multiple && selectedOptions.length > 0 && (
+            <View className="flex flex-row gap-2 items-center">
+              {selectedOptions.map((option, index) => (
+                <View
+                  key={index}
+                  className="flex flex-row items-center gap-0.5 pl-3 pr-2 py-0.5 bg-background-300 rounded-xl"
+                >
+                  <Text key={index} size="sm">
+                    {option.label}
+                  </Text>
+
+                  <Button
+                    rounded
+                    size="xs"
+                    icon={faX}
+                    type="clear"
+                    action="default"
+                    className="!px-1 max-w-[24px] max-h-[24px]"
+                    onClick={() => removeOption(index)}
+                  />
+                </View>
+              ))}
+            </View>
+          )}
+
           <TextInput
             value={search}
             readOnly={disabled}
@@ -137,7 +186,10 @@ export default function Select({
             className={`flex-1 color-white text-base outline-none`}
             onFocus={() => onFocus()}
             onBlur={() => setTimeout(() => onBlur(), 200)}
-            onChangeText={(text) => setSearch(text)}
+            onChangeText={(change) => {
+              setSearch(change);
+              onSearchChange?.(change);
+            }}
           />
 
           <Pressable
