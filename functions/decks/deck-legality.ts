@@ -1,5 +1,6 @@
 import { MTGColorSymbol } from "@/constants/mtg/mtg-colors";
 import {
+  FormatsWithCommander,
   MTGFormat,
   MTGFormatRestrictionsMap,
   MTGFormats,
@@ -13,16 +14,6 @@ import { MTGRarities } from "@/constants/mtg/mtg-rarity";
 import { Card } from "@/models/card/card";
 import { Deck } from "@/models/deck/deck";
 import { titleCase } from "../text-manipulation";
-
-const formatsWithCommander = [
-  MTGFormats.COMMANDER,
-  MTGFormats.OATHBREAKER,
-  MTGFormats.DUEL,
-  MTGFormats.BRAWL,
-  MTGFormats.STANDARDBRAWL,
-  MTGFormats.PAUPERCOMMANDER,
-  MTGFormats.PRED,
-];
 
 export function evaluateDeckLegality(deck: Deck): LegalityEvaluation {
   if (!deck.format) return { legal: false };
@@ -75,10 +66,10 @@ export function evaluateDeckLegality(deck: Deck): LegalityEvaluation {
     }
   });
 
-  if (formatsWithCommander.includes(deck.format as any)) {
+  if (FormatsWithCommander.includes(deck.format as any)) {
     legality.commander =
       deck.commander &&
-      formatsWithCommander.includes(deck.format as any) &&
+      FormatsWithCommander.includes(deck.format as any) &&
       deck.commander.legalities[deck.format] === MTGLegalities.LEGAL;
 
     legality.colorIdentity = deck.main.every((card) =>

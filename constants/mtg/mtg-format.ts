@@ -51,6 +51,16 @@ export enum MTGFormats {
   PRED = "pred",
 }
 
+export const FormatsWithCommander = [
+  MTGFormats.COMMANDER,
+  MTGFormats.OATHBREAKER,
+  MTGFormats.DUEL,
+  MTGFormats.BRAWL,
+  MTGFormats.STANDARDBRAWL,
+  MTGFormats.PAUPERCOMMANDER,
+  MTGFormats.PRED,
+];
+
 export interface MTGFormatRestrictions {
   deckMinSize?: number;
   deckMaxSize?: number;
