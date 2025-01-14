@@ -12,6 +12,7 @@ export type ButtonType = "default" | "outlined" | "clear";
 export type ButtonProps = ViewProps & {
   text?: string;
   icon?: IconProp;
+  buttonClasses?: string;
   iconRight?: boolean;
   action?: ActionColor;
   size?: Size;
@@ -34,6 +35,7 @@ export type ButtonProps = ViewProps & {
 export default function Button({
   text,
   icon,
+  buttonClasses,
   className,
   iconRight = false,
   action = "primary",
@@ -92,7 +94,7 @@ export default function Button({
     >
       <View
         ref={ref}
-        className={`${className} ${baseButtonClasses} ${buttonHeight}
+        className={`${buttonClasses} ${baseButtonClasses} ${buttonHeight}
           ${baseColor} ${hoverColor} ${useFocus ? focusColor : ""} ${
           rounded && text
             ? "!rounded-full"
