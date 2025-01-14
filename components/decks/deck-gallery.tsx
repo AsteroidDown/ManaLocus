@@ -3,6 +3,7 @@ import Button from "@/components/ui/button/button";
 import Input from "@/components/ui/input/input";
 import Select from "@/components/ui/input/select";
 import Table, { TableColumn } from "@/components/ui/table/table";
+import { BoardType, BoardTypes } from "@/constants/boards";
 import { MTGFormats } from "@/constants/mtg/mtg-format";
 import { LostURL } from "@/constants/urls";
 import UserPageContext from "@/contexts/user/user-page.context";
@@ -67,6 +68,8 @@ export default function DeckGallery({
     [] as string[]
   );
   const [cards, setCards] = React.useState([] as string[]);
+  const [board, setBoard] = React.useState(BoardTypes.MAIN as BoardType);
+  const [exclusiveCardSearch, setSearchType] = React.useState(false);
 
   useEffect(() => {
     if (preferences?.decksViewType) {
@@ -95,9 +98,11 @@ export default function DeckGallery({
   useEffect(() => {
     const filters: DeckFiltersDTO = {
       ...(sort && { sort }),
+      ...(board && { board }),
       ...(search && { search }),
       ...(format && { deckFormat: format }),
       ...(cards?.length && { cardNames: cards }),
+      ...(exclusiveCardSearch && { exclusiveCardSearch }),
       ...(user?.id === userPageUser?.id && { includePrivate: "true" }),
     };
 
@@ -118,7 +123,7 @@ export default function DeckGallery({
         setMeta(response.meta);
       });
     }
-  }, [user, format, search, sort, page, cards]);
+  }, [user, format, search, sort, page, cards, board, exclusiveCardSearch]);
 
   function toggleListView() {
     setLocalStorageUserPreferences({
@@ -214,6 +219,30 @@ export default function DeckGallery({
               label: card,
               value: card,
             }))}
+          />
+
+          <Select
+            label="Board"
+            value={board}
+            className="max-w-min"
+            onChange={setBoard}
+            options={Object.keys(BoardTypes).map((key) => {
+              return {
+                label: titleCase(key),
+                value: (BoardTypes as any)[key],
+              };
+            })}
+          />
+
+          <Select
+            label="Board Contains"
+            value={exclusiveCardSearch}
+            className="max-w-min"
+            onChange={setSearchType}
+            options={[
+              { label: "A Selected Card", value: false },
+              { label: "Every Selected Card", value: true },
+            ]}
           />
         </View>
       </View>

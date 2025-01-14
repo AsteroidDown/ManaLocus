@@ -1,11 +1,14 @@
+import { BoardType } from "@/constants/boards";
 import { MTGFormat } from "@/constants/mtg/mtg-format";
 
 export interface DeckFiltersDTO {
   search?: string | null;
   deckFormat?: MTGFormat | null;
-  cardNames?: string[] | null;
   sort?: DeckSortType | null;
   includePrivate?: string | null;
+  cardNames?: string[] | null;
+  board?: BoardType | null;
+  exclusiveCardSearch?: boolean | null;
 }
 
 export type DeckSortType =
