@@ -34,6 +34,7 @@ export default function DeckSettingsPage() {
 
   const [name, setName] = React.useState("");
   const [privateView, setPrivateView] = React.useState(false);
+  const [isKit, setIsKit] = React.useState(false);
   const [description, setDescription] = React.useState("");
   const [format, setFormat] = React.useState(
     undefined as MTGFormat | undefined
@@ -59,6 +60,7 @@ export default function DeckSettingsPage() {
     setPrivateView(deck.private);
     setDescription(deck.description || "");
     setFormat(deck.format);
+    setIsKit(!!deck.isKit);
 
     const foundFeaturedCard = mainBoardCards.find(
       (card) =>
@@ -118,9 +120,6 @@ export default function DeckSettingsPage() {
     if (deck.partner?.scryfallId !== partner?.scryfallId) {
       newPartner = true;
     }
-
-    console.log(newCommander, newPartner);
-    console.log(commander?.name, partner?.name);
 
     if (newCommander || newPartner) {
       setDeck({
@@ -292,6 +291,8 @@ export default function DeckSettingsPage() {
 
       commanderId: commander?.scryfallId,
       partnerId: partner?.scryfallId,
+
+      isKit,
     };
 
     DeckService.update(deck.id, dto).then(() => {
@@ -345,19 +346,44 @@ export default function DeckSettingsPage() {
               <View className="flex flex-row -mt-[0.5px]">
                 <Button
                   squareRight
+                  text="Public"
+                  action="primary"
+                  className="flex-1"
+                  type={privateView ? "outlined" : "default"}
+                  onClick={() => setPrivateView(false)}
+                />
+                <Button
+                  squareLeft
                   text="Private"
                   action="primary"
                   className="flex-1"
                   type={privateView ? "default" : "outlined"}
                   onClick={() => setPrivateView(true)}
                 />
+              </View>
+            </View>
+
+            <View className="flex gap-2">
+              <Text size="md" thickness="bold">
+                Type
+              </Text>
+
+              <View className="flex flex-row -mt-[0.5px]">
                 <Button
-                  squareLeft
-                  text="Public"
+                  squareRight
+                  text="Deck"
                   action="primary"
                   className="flex-1"
-                  type={privateView ? "outlined" : "default"}
-                  onClick={() => setPrivateView(false)}
+                  type={isKit ? "outlined" : "default"}
+                  onClick={() => setIsKit(false)}
+                />
+                <Button
+                  squareLeft
+                  text="Kit"
+                  action="primary"
+                  className="flex-1"
+                  type={isKit ? "default" : "outlined"}
+                  onClick={() => setIsKit(true)}
                 />
               </View>
             </View>

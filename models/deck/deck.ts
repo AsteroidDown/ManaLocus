@@ -33,6 +33,8 @@ export interface Deck {
 
   commander?: Card;
   partner?: Card;
+
+  isKit?: boolean;
 }
 
 export interface DeckCard {

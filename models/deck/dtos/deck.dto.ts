@@ -18,4 +18,6 @@ export interface DeckDTO {
 
   commanderId?: string;
   partnerId?: string;
+
+  isKit?: boolean;
 }
