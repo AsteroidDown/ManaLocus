@@ -6,6 +6,9 @@ export interface DeckFiltersDTO {
   deckFormat?: MTGFormat | null;
   sort?: DeckSortType | null;
   includePrivate?: string | null;
+  commander?: string | null;
+  partner?: string | null;
+
   cardNames?: string[] | null;
   board?: BoardType | null;
   exclusiveCardSearch?: boolean | null;

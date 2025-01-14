@@ -71,6 +71,17 @@ export default function DeckGallery({
   const [board, setBoard] = React.useState(BoardTypes.MAIN as BoardType);
   const [exclusiveCardSearch, setSearchType] = React.useState(false);
 
+  const [commanderCardSearch, setCommanderCardSearch] = React.useState("");
+  const [commanderCardAutoComplete, setCommanderCardAutoComplete] =
+    React.useState([] as string[]);
+  const [commanderSearch, setCommanderSearch] = React.useState("");
+
+  const [partnerCardSearch, setPartnerCardSearch] = React.useState("");
+  const [partnerCardAutoComplete, setPartnerCardAutoComplete] = React.useState(
+    [] as string[]
+  );
+  const [partnerSearch, setPartnerSearch] = React.useState("");
+
   useEffect(() => {
     if (preferences?.decksViewType) {
       setListView(preferences?.decksViewType === DeckViewType.LIST);
@@ -87,13 +98,44 @@ export default function DeckGallery({
   }, [filtersOpen]);
 
   useEffect(() => {
-    if (!cardSearch) return;
+    if (!cardSearch) {
+      setCardSearch("");
+      setCardAutoComplete([]);
+      return;
+    }
 
     ScryfallService.autocomplete(cardSearch).then((names) => {
       if (!names.includes(cardSearch)) setCardAutoComplete(names);
       else setCardAutoComplete([]);
     });
   }, [cardSearch]);
+
+  useEffect(() => {
+    if (!commanderCardSearch) {
+      setCommanderCardSearch("");
+      setCommanderCardAutoComplete([]);
+      return;
+    }
+
+    ScryfallService.autocomplete(commanderCardSearch).then((names) => {
+      if (!names.includes(commanderCardSearch))
+        setCommanderCardAutoComplete(names);
+      else setCommanderCardAutoComplete([]);
+    });
+  }, [commanderCardSearch]);
+
+  useEffect(() => {
+    if (!partnerCardSearch) {
+      setPartnerCardSearch("");
+      setPartnerCardAutoComplete([]);
+      return;
+    }
+
+    ScryfallService.autocomplete(partnerCardSearch).then((names) => {
+      if (!names.includes(partnerCardSearch)) setPartnerCardAutoComplete(names);
+      else setPartnerCardAutoComplete([]);
+    });
+  }, [partnerCardSearch]);
 
   useEffect(() => {
     const filters: DeckFiltersDTO = {
@@ -103,6 +145,8 @@ export default function DeckGallery({
       ...(format && { deckFormat: format }),
       ...(cards?.length && { cardNames: cards }),
       ...(exclusiveCardSearch && { exclusiveCardSearch }),
+      ...(partnerSearch !== undefined && { partner: partnerSearch }),
+      ...(commanderSearch !== undefined && { commander: commanderSearch }),
       ...(user?.id === userPageUser?.id && { includePrivate: "true" }),
     };
 
@@ -123,7 +167,18 @@ export default function DeckGallery({
         setMeta(response.meta);
       });
     }
-  }, [user, format, search, sort, page, cards, board, exclusiveCardSearch]);
+  }, [
+    user,
+    format,
+    search,
+    sort,
+    page,
+    commanderSearch,
+    partnerSearch,
+    cards,
+    board,
+    exclusiveCardSearch,
+  ]);
 
   function toggleListView() {
     setLocalStorageUserPreferences({
@@ -163,7 +218,7 @@ export default function DeckGallery({
           !overflow && "overflow-hidden"
         } flex gap-4 z-[11] transition-all duration-300`}
       >
-        <View className="flex flex-row gap-4 z-[10]">
+        <View className="flex flex-row gap-4 z-[12]">
           <Select
             label="Format"
             value={format}
@@ -209,7 +264,7 @@ export default function DeckGallery({
           />
         </View>
 
-        <View className="flex flex-row gap-4">
+        <View className="flex flex-row gap-4 z-[11]">
           <Select
             multiple
             label="Cards"
@@ -243,6 +298,28 @@ export default function DeckGallery({
               { label: "A Selected Card", value: false },
               { label: "Every Selected Card", value: true },
             ]}
+          />
+        </View>
+
+        <View className="flex flex-row flex-wrap gap-4 z-[10]">
+          <Select
+            label="Commander"
+            onChange={setCommanderSearch}
+            onSearchChange={setCommanderCardSearch}
+            options={commanderCardAutoComplete.map((card) => ({
+              label: card,
+              value: card,
+            }))}
+          />
+
+          <Select
+            label="Partner"
+            onChange={setPartnerSearch}
+            onSearchChange={setPartnerCardSearch}
+            options={partnerCardAutoComplete.map((card) => ({
+              label: card,
+              value: card,
+            }))}
           />
         </View>
       </View>
