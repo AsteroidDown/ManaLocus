@@ -1,4 +1,5 @@
 import { BoardTypes } from "@/constants/boards";
+import { MTGFormats } from "@/constants/mtg/mtg-format";
 import { SortTypes } from "@/constants/sorting";
 import UserPreferencesContext from "@/contexts/user/user-preferences.context";
 import {
@@ -155,7 +156,10 @@ export default function DeckCardGallery({
         ...(boardType === BoardTypes.MAIN && commander
           ? [
               {
-                title: "Commander",
+                title:
+                  deck.format === MTGFormats.OATHBREAKER
+                    ? "Oathbreaker"
+                    : "Commander",
                 cards: [commander, ...(partner ? [partner] : [])],
               },
             ]
@@ -180,7 +184,10 @@ export default function DeckCardGallery({
         ...(boardType === BoardTypes.MAIN && commander
           ? [
               {
-                title: "Commander",
+                title:
+                  deck.format === MTGFormats.OATHBREAKER
+                    ? "Oathbreaker"
+                    : "Commander",
                 cards: [commander, ...(partner ? [partner] : [])],
               },
             ]
@@ -218,7 +225,10 @@ export default function DeckCardGallery({
         ...(boardType === BoardTypes.MAIN && commander
           ? [
               {
-                title: "Commander",
+                title:
+                  deck.format === MTGFormats.OATHBREAKER
+                    ? "Oathbreaker"
+                    : "Commander",
                 cards: [commander, ...(partner ? [partner] : [])],
               },
             ]
@@ -265,7 +275,10 @@ export default function DeckCardGallery({
         ...(boardType === BoardTypes.MAIN && commander
           ? [
               {
-                title: "Commander",
+                title:
+                  deck.format === MTGFormats.OATHBREAKER
+                    ? "Oathbreaker"
+                    : "Commander",
                 cards: [commander, ...(partner ? [partner] : [])],
               },
             ]
@@ -317,7 +330,10 @@ export default function DeckCardGallery({
         ...(boardType === BoardTypes.MAIN && commander
           ? [
               {
-                title: "Commander",
+                title:
+                  deck.format === MTGFormats.OATHBREAKER
+                    ? "Oathbreaker"
+                    : "Commander",
                 cards: [commander, ...(partner ? [partner] : [])],
               },
             ]
@@ -501,9 +517,11 @@ export default function DeckCardGallery({
             viewType={viewType}
             showPrice={showPrice}
             showManaValue={showManaValue}
-            commander={title === "Commander"}
             groupMulticolored={groupMulticolored}
             shouldWrap={shouldWrap && index === groupedCards.length - 1}
+            commander={
+              title === "Commander" || deck.format === MTGFormats.OATHBREAKER
+            }
             colorIdentity={
               deck.commander
                 ? [

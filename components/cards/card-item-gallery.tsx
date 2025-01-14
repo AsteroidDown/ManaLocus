@@ -3,6 +3,7 @@ import BoxHeader from "@/components/ui/box/box-header";
 import FilterBar from "@/components/ui/filters/filter-bar";
 import { BoardTypes } from "@/constants/boards";
 import { MTGColors } from "@/constants/mtg/mtg-colors";
+import { MTGFormats } from "@/constants/mtg/mtg-format";
 import { MTGCardTypes } from "@/constants/mtg/mtg-types";
 import BoardContext from "@/contexts/cards/board.context";
 import StoredCardsContext from "@/contexts/cards/stored-cards.context";
@@ -221,7 +222,11 @@ export default function CardItemGallery({
             <View className="flex flex-row gap-4 w-full min-h-[500px]">
               {board === BoardTypes.MAIN && deck?.commander && (
                 <CardItemGalleryColumn
-                  title="Commander"
+                  title={
+                    deck.format === MTGFormats.OATHBREAKER
+                      ? "Oathbreaker"
+                      : "Commander"
+                  }
                   hideImages={hideImages}
                   itemsExpanded={itemsExpanded}
                   setItemExpanded={setItemsExpanded}
@@ -310,7 +315,11 @@ export default function CardItemGallery({
             <View className="flex flex-row gap-4 w-full min-h-[500px]">
               {board === BoardTypes.MAIN && deck?.commander && (
                 <CardItemGalleryColumn
-                  title="Commander"
+                  title={
+                    deck.format === MTGFormats.OATHBREAKER
+                      ? "Oathbreaker"
+                      : "Commander"
+                  }
                   hideImages={hideImages}
                   itemsExpanded={itemsExpanded}
                   setItemExpanded={setItemsExpanded}
@@ -349,7 +358,11 @@ export default function CardItemGallery({
             <View className="flex flex-row gap-4 w-full min-h-[500px]">
               {board === BoardTypes.MAIN && deck?.commander && (
                 <CardItemGalleryColumn
-                  title="Commander"
+                  title={
+                    deck.format === MTGFormats.OATHBREAKER
+                      ? "Oathbreaker"
+                      : "Commander"
+                  }
                   hideImages={hideImages}
                   itemsExpanded={itemsExpanded}
                   setItemExpanded={setItemsExpanded}
@@ -413,7 +426,11 @@ export default function CardItemGallery({
             <View className="flex flex-row gap-4 w-full min-h-[500px]">
               {deck?.commander && (
                 <CardItemGalleryColumn
-                  title="Commander"
+                  title={
+                    deck.format === MTGFormats.OATHBREAKER
+                      ? "Oathbreaker"
+                      : "Commander"
+                  }
                   hideImages={hideImages}
                   itemsExpanded={itemsExpanded}
                   setItemExpanded={setItemsExpanded}
