@@ -10,6 +10,7 @@ import Box from "@/components/ui/box/box";
 import Button from "@/components/ui/button/button";
 import Divider from "@/components/ui/divider/divider";
 import TabBar from "@/components/ui/tabs/tab-bar";
+import Text from "@/components/ui/text/text";
 import { BoardTypes } from "@/constants/boards";
 import { LegalityEvaluation } from "@/constants/mtg/mtg-legality";
 import DeckContext from "@/contexts/deck/deck.context";
@@ -133,6 +134,14 @@ export default function DeckPage() {
             />
           </View>
         </TabBar>
+
+        {deck.description && (
+          <>
+            <Divider thick className="!border-background-200" />
+
+            <Text>{deck.description}</Text>
+          </>
+        )}
 
         <Divider thick className="!border-background-200" />
 

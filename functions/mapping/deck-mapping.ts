@@ -111,7 +111,7 @@ function mapDatabaseCardToCard(card: any): Card {
             defense: card.faces[0]?.defense,
             oracleText: card.faces[0].oracle_text,
             flavorText: card.faces[0].flavor_text,
-            imageUris: mapDatabaseCardImageUris(card.faces[0].imageURIs),
+            imageUris: mapDatabaseCardImageUris(card.faces[0].image_uris),
             artist: card.faces[0].artist,
             frameEffects: card.faces[0].frame_effects
               ? JSON.parse(card.faces[0].frame_effects.replace(/'/g, '"'))
@@ -127,7 +127,7 @@ function mapDatabaseCardToCard(card: any): Card {
             defense: card.faces[1]?.defense,
             oracleText: card.faces[1].oracle_text,
             flavorText: card.faces[1].flavor_text,
-            imageUris: mapDatabaseCardImageUris(card.faces[1].imageURIs),
+            imageUris: mapDatabaseCardImageUris(card.faces[1].image_uris),
             artist: card.faces[1].artist,
             frameEffects: card.faces[1].frame_effects
               ? JSON.parse(card.faces[1].frame_effects.replace(/'/g, '"'))
