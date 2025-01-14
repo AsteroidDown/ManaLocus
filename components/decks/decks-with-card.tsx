@@ -18,8 +18,8 @@ export default function DecksWithCard({ card }: DecksWithCardProps) {
   useEffect(() => {
     if (!card) return;
 
-    DeckService.getMany({ cardNames: [card.name] }).then((decks) =>
-      setDecks(decks)
+    DeckService.getMany({ cardNames: [card.name] }).then((response) =>
+      setDecks(response.data)
     );
   }, [card]);
 
