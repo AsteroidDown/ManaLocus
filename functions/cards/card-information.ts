@@ -24,7 +24,7 @@ export function getCardType(card: Card): MTGCardType {
 
   for (const cardType in MTGCardTypes) {
     if (cardTypeFromTypeLine.includes(cardType.toLowerCase()))
-      return cardType.toUpperCase() as MTGCardType;
+      return cardType.toLowerCase() as MTGCardType;
   }
 
   return MTGCardTypes.CREATURE;
