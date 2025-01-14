@@ -5,7 +5,11 @@ import Select from "@/components/ui/input/select";
 import Text from "@/components/ui/text/text";
 import { BoardTypes } from "@/constants/boards";
 import { MTGColorSymbols } from "@/constants/mtg/mtg-colors";
-import { MTGFormat, MTGFormats } from "@/constants/mtg/mtg-format";
+import {
+  FormatsWithCommander,
+  MTGFormat,
+  MTGFormats,
+} from "@/constants/mtg/mtg-format";
 import { MTGCardTypes } from "@/constants/mtg/mtg-types";
 import StoredCardsContext from "@/contexts/cards/stored-cards.context";
 import DeckContext from "@/contexts/deck/deck.context";
@@ -46,6 +50,8 @@ export default function DeckSettingsPage() {
 
   const mainBoardCards = getLocalStorageStoredCards(BoardTypes.MAIN);
 
+  const commanderFormat = FormatsWithCommander.includes(deck?.format as any);
+
   useEffect(() => {
     if (!deck) return;
 
@@ -70,6 +76,7 @@ export default function DeckSettingsPage() {
 
       const oracleText = deck.commander.oracleText;
       if (
+        deck.format === MTGFormats.OATHBREAKER ||
         oracleText?.includes("Partner") ||
         oracleText?.includes("Choose a Background") ||
         oracleText?.includes("Friends forever")
@@ -80,38 +87,72 @@ export default function DeckSettingsPage() {
   }, [deck]);
 
   useEffect(() => {
-    if (!deck || !commander) return;
+    if (!deck || !format || format === deck?.format) return;
+
+    setCommander(null);
+    setPartner(null);
+    setDeck({
+      ...deck,
+      format: format,
+    });
+  }, [format]);
+
+  useEffect(() => {
+    if (!deck) return;
+    if (
+      deck.commander?.scryfallId === commander?.scryfallId
+        ? partner
+          ? deck.partner?.scryfallId === partner.scryfallId
+          : false
+        : false
+    ) {
+      return;
+    }
 
     let newCommander = false;
     let newPartner = false;
 
-    if (deck.commander?.scryfallId !== commander.scryfallId) {
+    if (deck.commander?.scryfallId !== commander?.scryfallId) {
       newCommander = true;
-      setPartner(null);
     }
-    if (deck.partner?.scryfallId !== commander.scryfallId) {
+    if (deck.partner?.scryfallId !== partner?.scryfallId) {
       newPartner = true;
     }
 
-    setDeck({
-      ...deck,
-      ...(newCommander && { commander, partner: undefined }),
-      ...(!newCommander && newPartner && partner && { partner }),
-    });
+    console.log(newCommander, newPartner);
+    console.log(commander?.name, partner?.name);
+
+    if (newCommander || newPartner) {
+      setDeck({
+        ...deck,
+        ...(newCommander && {
+          commander: commander ?? undefined,
+        }),
+        ...(newPartner && { partner: partner ?? undefined }),
+      });
+    }
+
+    if (!FormatsWithCommander.includes(format as any)) {
+      setAllowedPartner(false);
+      return;
+    }
 
     const mainStoredCards = getLocalStorageStoredCards(BoardTypes.MAIN);
 
-    const commanderOptions = mainStoredCards.filter(
-      (card) =>
-        card.typeLine.toLowerCase().includes("legendary") &&
-        (getCardType(card) === MTGCardTypes.CREATURE ||
-          card.oracleText?.includes("can be your commander"))
+    const commanderOptions = mainStoredCards.filter((card) =>
+      format === MTGFormats.OATHBREAKER
+        ? getCardType(card) === MTGCardTypes.PLANESWALKER
+        : card.typeLine.toLowerCase().includes("legendary") &&
+          (getCardType(card) === MTGCardTypes.CREATURE ||
+            card.oracleText?.includes("can be your commander"))
     );
     setCommanderOptions(commanderOptions);
 
     let commanderAllowsPartner = false;
     const commanderText = commander?.oracleText;
-    if (
+    if (format === MTGFormats.OATHBREAKER) {
+      commanderAllowsPartner = true;
+    } else if (
       commanderText?.includes("Partner") ||
       commanderText?.includes("Choose a Background") ||
       commanderText?.includes("Friends forever")
@@ -120,53 +161,64 @@ export default function DeckSettingsPage() {
     } else commanderAllowsPartner = false;
 
     if (!commanderAllowsPartner) {
+      setAllowedPartner(false);
       setPartner(null);
       return;
-    }
+    } else setAllowedPartner(true);
 
     const partnerOptions: Card[] = [];
 
-    const legendaries = mainStoredCards
-      .filter((card) => card.typeLine.toLowerCase().includes("legendary"))
-      .filter((card) => card.scryfallId !== commander?.scryfallId);
-
-    if (commanderText?.includes("Partner with")) {
-      let partnerName = commanderText.split("Partner with")[1].split("\n")[0];
-      if (partnerName.includes("(")) partnerName = partnerName.split(" (")[0];
-
-      const foundPartner = legendaries.find(
-        (card) =>
-          card.name.toLowerCase().trim() === partnerName.toLowerCase().trim()
-      );
-
-      if (foundPartner && foundPartner.scryfallId !== partner?.scryfallId) {
-        setPartner(foundPartner);
-        setPartnerOptions([foundPartner]);
-        return;
-      }
-      return;
-    } else if (commanderText?.includes("Partner")) {
+    if (format === MTGFormats.OATHBREAKER) {
       partnerOptions.push(
-        ...legendaries.filter(
+        ...mainStoredCards.filter(
           (card) =>
-            card.oracleText?.includes("Partner") &&
-            !card.oracleText?.includes("Partner with")
+            card.typeLine.toLowerCase().includes("instant") ||
+            card.typeLine.toLowerCase().includes("sorcery")
         )
       );
-    } else if (commanderText?.includes("Friends forever")) {
-      partnerOptions.push(
-        ...legendaries.filter((card) =>
-          card.oracleText?.includes("Friends forever")
-        )
-      );
-    } else if (commanderText?.includes("Choose a Background")) {
-      partnerOptions.push(
-        ...legendaries.filter((card) => card.typeLine.includes("Background"))
-      );
+    } else {
+      const legendaries = mainStoredCards
+        .filter((card) => card.typeLine.toLowerCase().includes("legendary"))
+        .filter((card) => card.scryfallId !== commander?.scryfallId);
+
+      if (commanderText?.includes("Partner with")) {
+        let partnerName = commanderText.split("Partner with")[1].split("\n")[0];
+        if (partnerName.includes("(")) partnerName = partnerName.split(" (")[0];
+
+        const foundPartner = legendaries.find(
+          (card) =>
+            card.name.toLowerCase().trim() === partnerName.toLowerCase().trim()
+        );
+
+        if (foundPartner && foundPartner.scryfallId !== partner?.scryfallId) {
+          setTimeout(() => setPartner(foundPartner), 50);
+          setPartnerOptions([foundPartner]);
+          return;
+        }
+        return;
+      } else if (commanderText?.includes("Partner")) {
+        partnerOptions.push(
+          ...legendaries.filter(
+            (card) =>
+              card.oracleText?.includes("Partner") &&
+              !card.oracleText?.includes("Partner with")
+          )
+        );
+      } else if (commanderText?.includes("Friends forever")) {
+        partnerOptions.push(
+          ...legendaries.filter((card) =>
+            card.oracleText?.includes("Friends forever")
+          )
+        );
+      } else if (commanderText?.includes("Choose a Background")) {
+        partnerOptions.push(
+          ...legendaries.filter((card) => card.typeLine.includes("Background"))
+        );
+      }
     }
 
     setPartnerOptions(partnerOptions);
-  }, [commander, partner, storedCards]);
+  }, [format, commander, partner, storedCards]);
 
   useEffect(() => {
     if (!featuredCardSearch) return;
@@ -187,12 +239,6 @@ export default function DeckSettingsPage() {
       setFeaturedCard(foundFeaturedCards[0]);
     }
   }, [featuredCardSearch]);
-
-  useEffect(() => {
-    if (!deck || !format || format === deck?.format) return;
-
-    setDeck({ ...deck, format: format });
-  }, [format]);
 
   function saveDeck() {
     if (!deck) return;
@@ -330,22 +376,26 @@ export default function DeckSettingsPage() {
                 placeholder="Format"
                 value={format}
                 onChange={setFormat}
-                squareRight={format === MTGFormats.COMMANDER}
+                squareRight={commanderFormat}
                 options={Object.values(MTGFormats).map((format) => ({
                   label: titleCase(format),
                   value: format,
                 }))}
               />
 
-              {format === MTGFormats.COMMANDER && (
+              {commanderFormat && (
                 <>
                   <Select
                     squareLeft
                     squareRight={allowedPartner}
-                    label="Commander"
                     value={commander}
                     property="scryfallId"
                     onChange={setCommander}
+                    label={
+                      format === MTGFormats.OATHBREAKER
+                        ? "Oathbreaker"
+                        : "Commander"
+                    }
                     options={commanderOptions.map((option) => ({
                       label: option.name,
                       value: option,
@@ -355,10 +405,14 @@ export default function DeckSettingsPage() {
                   {allowedPartner && (
                     <Select
                       squareLeft
-                      label="Partner"
                       value={partner}
                       property="scryfallId"
                       onChange={setPartner}
+                      label={
+                        format === MTGFormats.OATHBREAKER
+                          ? "Signature Spell"
+                          : "Partner"
+                      }
                       options={partnerOptions.map((option) => ({
                         label: option.name,
                         value: option,
