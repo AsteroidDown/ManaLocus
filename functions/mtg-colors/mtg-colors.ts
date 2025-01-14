@@ -16,6 +16,8 @@ export function getDeckColors(cards: Card[]): MTGColorSymbol[] {
 }
 
 export function sortColors(colors: MTGColorSymbol[]): MTGColorSymbol[] {
+  colors = colors.filter((color) => color !== MTGColorSymbols.COLORLESS);
+
   if (colors.length === 5) {
     return [
       MTGColorSymbols.WHITE,

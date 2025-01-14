@@ -200,16 +200,18 @@ export default function DeckSettingsPage() {
     setSaving(true);
 
     const mainBoard = getLocalStorageStoredCards(BoardTypes.MAIN);
-    const colorsInDeck = deck.commander
-      ? [
-          ...(deck.commander.colorIdentity?.length
-            ? deck.commander.colorIdentity
-            : [MTGColorSymbols.COLORLESS]),
-          ...(deck.partner?.colorIdentity?.length
-            ? deck.partner.colorIdentity
-            : [MTGColorSymbols.COLORLESS]),
-        ]
-      : sortColors(getDeckColors(mainBoard));
+    const colorsInDeck = sortColors(
+      deck.commander
+        ? [
+            ...(deck.commander.colorIdentity?.length
+              ? deck.commander.colorIdentity
+              : [MTGColorSymbols.COLORLESS]),
+            ...(deck.partner?.colorIdentity?.length
+              ? deck.partner.colorIdentity
+              : [MTGColorSymbols.COLORLESS]),
+          ]
+        : getDeckColors(mainBoard)
+    );
     const deckColors = colorsInDeck?.length
       ? colorsInDeck
       : [MTGColorSymbols.COLORLESS];
