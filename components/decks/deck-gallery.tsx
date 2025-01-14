@@ -15,6 +15,7 @@ import {
 import { titleCase } from "@/functions/text-manipulation";
 import { PaginationMeta } from "@/hooks/pagination";
 import DeckService from "@/hooks/services/deck.service";
+import ScryfallService from "@/hooks/services/scryfall.service";
 import { Deck } from "@/models/deck/deck";
 import {
   DeckFiltersDTO,
@@ -61,6 +62,11 @@ export default function DeckGallery({
   const [sort, setSort] = React.useState(
     preferences?.decksSortType ?? (DeckSortTypes.CREATED as DeckSortType)
   );
+  const [cardSearch, setCardSearch] = React.useState("");
+  const [cardAutoComplete, setCardAutoComplete] = React.useState(
+    [] as string[]
+  );
+  const [cards, setCards] = React.useState([] as string[]);
 
   useEffect(() => {
     if (preferences?.decksViewType) {
@@ -78,10 +84,20 @@ export default function DeckGallery({
   }, [filtersOpen]);
 
   useEffect(() => {
+    if (!cardSearch) return;
+
+    ScryfallService.autocomplete(cardSearch).then((names) => {
+      if (!names.includes(cardSearch)) setCardAutoComplete(names);
+      else setCardAutoComplete([]);
+    });
+  }, [cardSearch]);
+
+  useEffect(() => {
     const filters: DeckFiltersDTO = {
       ...(sort && { sort }),
       ...(search && { search }),
       ...(format && { deckFormat: format }),
+      ...(cards?.length && { cardNames: cards }),
       ...(user?.id === userPageUser?.id && { includePrivate: "true" }),
     };
 
@@ -102,7 +118,7 @@ export default function DeckGallery({
         setMeta(response.meta);
       });
     }
-  }, [user, format, search, sort, page]);
+  }, [user, format, search, sort, page, cards]);
 
   function toggleListView() {
     setLocalStorageUserPreferences({
@@ -142,12 +158,12 @@ export default function DeckGallery({
           !overflow && "overflow-hidden"
         } flex gap-4 z-[11] transition-all duration-300`}
       >
-        <View className="flex flex-row gap-4">
+        <View className="flex flex-row gap-4 z-[10]">
           <Select
             label="Format"
             value={format}
             className="!flex-[2]"
-            onChange={(change) => setFormat(change)}
+            onChange={setFormat}
             options={[
               { label: "All", value: null },
               ...Object.keys(MTGFormats).map((key) => {
@@ -162,7 +178,7 @@ export default function DeckGallery({
           <Select
             label="Sort"
             value={sort}
-            onChange={(change) => change !== sort && setSort(change)}
+            onChange={setSort}
             options={[
               { label: "Created", value: DeckSortTypes.CREATED },
               {
@@ -185,6 +201,19 @@ export default function DeckGallery({
                 value: DeckSortTypes.VIEWS_REVERSE,
               },
             ]}
+          />
+        </View>
+
+        <View className="flex flex-row gap-4">
+          <Select
+            multiple
+            label="Cards"
+            onChange={setCards}
+            onSearchChange={setCardSearch}
+            options={cardAutoComplete.map((card) => ({
+              label: card,
+              value: card,
+            }))}
           />
         </View>
       </View>
