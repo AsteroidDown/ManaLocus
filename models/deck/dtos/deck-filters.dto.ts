@@ -14,6 +14,11 @@ export interface DeckFiltersDTO {
   exclusiveCardSearch?: boolean | null;
 }
 
+export interface DeckKitFiltersDto {
+  search?: string | null;
+  userKits?: boolean | null;
+}
+
 export type DeckSortType =
   | "created"
   | "-created"

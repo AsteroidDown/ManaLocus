@@ -1,7 +1,10 @@
 import { mapDatabaseDeck } from "@/functions/mapping/deck-mapping";
 import { Deck } from "@/models/deck/deck";
 import { DeckChange } from "@/models/deck/deck-change";
-import { DeckFiltersDTO } from "@/models/deck/dtos/deck-filters.dto";
+import {
+  DeckFiltersDTO,
+  DeckKitFiltersDto,
+} from "@/models/deck/dtos/deck-filters.dto";
 import { DeckDTO } from "@/models/deck/dtos/deck.dto";
 import API from "../api-methods/api-methods";
 import {
@@ -154,6 +157,29 @@ async function addView(deckId: string) {
   });
 }
 
+async function getKits(
+  dto: DeckKitFiltersDto,
+  pagination?: PaginationOptions
+): Promise<PaginatedResponse<Deck>> {
+  const response: PaginatedResponse<Deck> = await API.get(`deck-kits/`, {
+    ...dto,
+    ...pagination,
+  }).catch((error) => {
+    console.error(`Error retrieving deck kits.\nError: ${error}`);
+  });
+
+  return {
+    meta: response.meta,
+    data: response.data.map((deck) => mapDatabaseDeck(deck)),
+  };
+}
+
+async function getKit(deckId: string): Promise<Deck> {
+  return await API.get(`deck-kits/${deckId}`).then(
+    (data) => mapDatabaseDeck(data, true) as any
+  );
+}
+
 const DeckService = {
   get,
   getMany,
@@ -168,6 +194,8 @@ const DeckService = {
   addFavorite,
   removeFavorite,
   addView,
+  getKits,
+  getKit,
 };
 
 export default DeckService;
