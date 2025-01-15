@@ -2,12 +2,12 @@ import { LostURL } from "@/constants/urls";
 import { titleCase } from "@/functions/text-manipulation";
 import { Deck } from "@/models/deck/deck";
 import moment from "moment";
-import { Image, View } from "react-native";
+import { Image, View, ViewProps } from "react-native";
 import CardText from "../cards/card-text";
 import Table, { TableColumn } from "../ui/table/table";
 import Text from "../ui/text/text";
 
-export interface DecksTableProps {
+export type DecksTableProps = ViewProps & {
   decks: Deck[];
 
   hideHeader?: boolean;
@@ -22,7 +22,7 @@ export interface DecksTableProps {
   endColumns?: TableColumn<Deck>[];
 
   rowClick?: (arg: Deck) => void;
-}
+};
 
 export default function DecksTable({
   decks,
@@ -35,6 +35,7 @@ export default function DecksTable({
   startColumns,
   endColumns,
   rowClick,
+  className,
 }: DecksTableProps) {
   const columns: TableColumn<Deck>[] = [];
 
@@ -115,6 +116,7 @@ export default function DecksTable({
     <Table
       data={decks}
       columns={columns}
+      className={className}
       hideHeader={hideHeader}
       lightBackground={lightBackground}
       rowClick={(deck) => rowClick?.(deck)}
