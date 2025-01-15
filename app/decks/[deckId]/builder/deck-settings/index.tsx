@@ -461,7 +461,11 @@ export default function DeckSettingsPage() {
         onChange={setDescription}
       />
 
-      {deck && <DeckKits deck={deck} />}
+      {deck && (
+        <View className="mt-8">
+          <DeckKits deck={deck} />
+        </View>
+      )}
     </View>
   );
 }

@@ -8,9 +8,9 @@ import { PaginationMeta } from "@/hooks/pagination";
 import DeckService from "@/hooks/services/deck.service";
 import { Card } from "@/models/card/card";
 import { Deck } from "@/models/deck/deck";
-import { faChevronDown, faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import React, { useEffect } from "react";
-import { Pressable, View } from "react-native";
+import { View } from "react-native";
 import CardText from "../cards/card-text";
 import Button from "../ui/button/button";
 import Divider from "../ui/divider/divider";
@@ -26,55 +26,48 @@ export interface DeckKitProps {
 }
 
 export default function DeckKits({ deck }: DeckKitProps) {
-  const [open, setOpen] = React.useState(false);
-
+  const [deckKits, setDeckKits] = React.useState([] as Deck[]);
   const [addKitModalOpen, setAddKitModalOpen] = React.useState(false);
 
+  useEffect(() => {
+    if (!deck) return;
+
+    DeckService.getDeckKits(deck.id).then((deckKits) => setDeckKits(deckKits));
+  }, [deck]);
+
   return (
-    <View className="relative flex gap-2">
-      <View className="sticky top-0 flex gap-2 bg-background-100 z-10">
-        <Pressable
-          className="flex flex-row justify-between items-center gap-4"
-          onPress={() => setOpen(!open)}
-        >
-          <Text size="lg" thickness="bold">
-            Kits
-          </Text>
+    <View className="flex">
+      <View className="flex flex-row justify-between items-center gap-4">
+        <Text size="lg" thickness="bold">
+          Kits
+        </Text>
 
-          <View className="flex flex-row gap-2">
-            <Button
-              text="Add Kit"
-              type="clear"
-              icon={faPlus}
-              onClick={() => setAddKitModalOpen(true)}
-            />
-
-            <Button
-              rounded
-              type="clear"
-              action="default"
-              icon={faChevronDown}
-              className={`${
-                open ? "rotate-180" : ""
-              } transition-all duration-300`}
-              onClick={() => setOpen(!open)}
-            />
-          </View>
-        </Pressable>
-
-        <Divider thick className="!border-background-200 mb-2" />
+        <Button
+          text="Add Kit"
+          type="clear"
+          icon={faPlus}
+          onClick={() => setAddKitModalOpen(true)}
+        />
       </View>
 
-      <View
-        className={`${
-          open ? "max-h-[750px]" : "max-h-0"
-        } overflow-hidden transition-all duration-300`}
-      >
-        {/* <Table  /> */}
+      <Divider thick className="!border-background-200" />
+
+      <View>
+        {deckKits?.length > 0 && (
+          <DecksTable
+            hideFormat
+            hideModified
+            hideFavorites
+            hideViews
+            hideHeader
+            decks={deckKits}
+          />
+        )}
       </View>
 
       <AddKitModal
         deck={deck}
+        deckKits={deckKits}
         open={addKitModalOpen}
         setOpen={setAddKitModalOpen}
       />
@@ -84,11 +77,12 @@ export default function DeckKits({ deck }: DeckKitProps) {
 
 interface KitModalProps {
   deck: Deck;
+  deckKits: Deck[];
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-function AddKitModal({ deck, open, setOpen }: KitModalProps) {
+function AddKitModal({ deck, deckKits, open, setOpen }: KitModalProps) {
   const [kits, setKits] = React.useState([] as Deck[]);
   const [selectedKit, setSelectedKit] = React.useState(null as Deck | null);
 
@@ -104,7 +98,11 @@ function AddKitModal({ deck, open, setOpen }: KitModalProps) {
   useEffect(() => {
     if (!deck || !open) return;
 
-    DeckService.getKits({ search, userKits }).then((response) => {
+    DeckService.getKits({
+      search,
+      userKits,
+      excludedKitIds: deckKits?.map((kit) => kit.id),
+    }).then((response) => {
       setKits(response.data);
       setMeta(response.meta);
     });
@@ -120,21 +118,22 @@ function AddKitModal({ deck, open, setOpen }: KitModalProps) {
     if (!selectedKit) return;
     setSaving(true);
 
-    selectedKit.main.forEach((card) => {
-      saveLocalStorageCard(card, card.count, BoardTypes.MAIN);
-    });
+    DeckService.createDeckKitLink(deck.id, selectedKit.id).then(() => {
+      selectedKit.main.forEach((card) => {
+        saveLocalStorageCard(card, card.count, BoardTypes.MAIN);
+      });
 
-    setLocalStorageCards(getLocalStorageStoredCards(BoardTypes.MAIN));
+      setLocalStorageCards(getLocalStorageStoredCards(BoardTypes.MAIN));
 
-    setTimeout(() => {
-      setSuccess(true);
       setSaving(false);
-    }, 500);
+      setSuccess(true);
 
-    setTimeout(() => {
-      setSuccess(false);
-      setOpen(false);
-    }, 2000);
+      setTimeout(() => {
+        setSuccess(false);
+        setOpen(false);
+        setSelectedKit(null);
+      }, 2000);
+    });
   }
 
   return (
@@ -171,17 +170,23 @@ function AddKitModal({ deck, open, setOpen }: KitModalProps) {
         </View>
       </View>
 
-      <DecksTable
-        hideFormat
-        hideModified
-        hideFavorites
-        hideViews
-        lightBackground
-        decks={kits}
-        rowClick={selectKit}
-      />
+      {kits?.length > 0 && (
+        <>
+          <DecksTable
+            hideFormat
+            hideModified
+            hideFavorites
+            hideViews
+            lightBackground
+            decks={kits}
+            rowClick={selectKit}
+          />
 
-      {meta && <Pagination meta={meta} onChange={(page) => setPage(page)} />}
+          {meta && (
+            <Pagination meta={meta} onChange={(page) => setPage(page)} />
+          )}
+        </>
+      )}
 
       {selectedKit && (
         <View className="flex gap-4 mt-4">

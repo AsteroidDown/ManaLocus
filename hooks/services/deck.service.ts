@@ -180,6 +180,20 @@ async function getKit(deckId: string): Promise<Deck> {
   );
 }
 
+async function getDeckKits(deckId: string): Promise<Deck[]> {
+  return await API.get(`decks/${deckId}/kits/`).then((data) =>
+    data.map((deck: Deck) => mapDatabaseDeck(deck) as any)
+  );
+}
+
+async function createDeckKitLink(deckId: string, kitId: string) {
+  return await API.post(`decks/${deckId}/kits/`, { kitId }).catch((error) => {
+    console.error(
+      `Error creating deck kit link with deckId: (${deckId}) and kitId: (${kitId}).\nError: ${error}`
+    );
+  });
+}
+
 const DeckService = {
   get,
   getMany,
@@ -196,6 +210,8 @@ const DeckService = {
   addView,
   getKits,
   getKit,
+  getDeckKits,
+  createDeckKitLink,
 };
 
 export default DeckService;
