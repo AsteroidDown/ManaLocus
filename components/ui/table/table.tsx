@@ -14,6 +14,8 @@ export interface TableColumn<T> {
 export type TableProps<T> = ViewProps & {
   data: T[];
   columns: TableColumn<T>[];
+
+  hideHeader?: boolean;
   lightBackground?: boolean;
 
   rowClick?: (arg: T) => void;
@@ -22,6 +24,7 @@ export type TableProps<T> = ViewProps & {
 export default function Table({
   data,
   columns,
+  hideHeader,
   lightBackground,
   rowClick,
   className,
@@ -35,15 +38,17 @@ export default function Table({
           key={index}
           className={`${column.fit ? "max-w-fit" : "flex-1 min-w-max"} flex`}
         >
-          <View
-            className={`sticky top-0 flex flex-row items-center h-10 max-h-10 px-4 border-b border-background-300 overflow-hidden z-10 ${
-              column.center ? "justify-center" : "justify-start"
-            } ${lightBackground ? "bg-background-200" : "bg-background-100"}`}
-          >
-            <Text key={index} thickness="semi">
-              {column.title}
-            </Text>
-          </View>
+          {!hideHeader && (
+            <View
+              className={`sticky top-0 flex flex-row items-center h-10 max-h-10 px-4 border-b border-background-300 overflow-hidden z-10 ${
+                column.center ? "justify-center" : "justify-start"
+              } ${lightBackground ? "bg-background-200" : "bg-background-100"}`}
+            >
+              <Text key={index} thickness="semi">
+                {column.title}
+              </Text>
+            </View>
+          )}
 
           <View className="flex">
             {data.map((rowData, rowIndex) => (

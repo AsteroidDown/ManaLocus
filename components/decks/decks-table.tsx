@@ -10,6 +10,7 @@ import Text from "../ui/text/text";
 export interface DecksTableProps {
   decks: Deck[];
 
+  hideHeader?: boolean;
   hideFormat?: boolean;
   hideModified?: boolean;
   hideFavorites?: boolean;
@@ -25,6 +26,7 @@ export interface DecksTableProps {
 
 export default function DecksTable({
   decks,
+  hideHeader,
   hideFormat,
   hideModified,
   hideFavorites,
@@ -53,6 +55,7 @@ export default function DecksTable({
       ),
     },
     {
+      fit: true,
       title: "Name",
       row: (deck) => <Text>{deck.name}</Text>,
     },
@@ -112,6 +115,7 @@ export default function DecksTable({
     <Table
       data={decks}
       columns={columns}
+      hideHeader={hideHeader}
       lightBackground={lightBackground}
       rowClick={(deck) => rowClick?.(deck)}
     />
