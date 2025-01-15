@@ -8,7 +8,7 @@ export interface TableColumn<T> {
   fit?: boolean;
   center?: boolean;
 
-  row: (arg: T) => React.ReactNode;
+  row: (arg: T, index: number) => React.ReactNode;
 }
 
 export type TableProps<T> = ViewProps & {
@@ -65,7 +65,7 @@ export default function Table({
                     : ""
                 }`}
               >
-                {column.row(rowData)}
+                {column.row(rowData, rowIndex)}
               </Pressable>
             ))}
           </View>
