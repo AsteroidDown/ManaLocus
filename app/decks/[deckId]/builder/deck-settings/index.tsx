@@ -1,3 +1,4 @@
+import DeckKits from "@/components/decks/deck-kits";
 import BoxHeader from "@/components/ui/box/box-header";
 import Button from "@/components/ui/button/button";
 import Input from "@/components/ui/input/input";
@@ -459,6 +460,8 @@ export default function DeckSettingsPage() {
         value={description}
         onChange={setDescription}
       />
+
+      {deck && <DeckKits deck={deck} />}
     </View>
   );
 }
