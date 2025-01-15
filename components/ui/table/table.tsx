@@ -1,5 +1,5 @@
 import React from "react";
-import { Pressable, View } from "react-native";
+import { Pressable, View, ViewProps } from "react-native";
 import Text from "../text/text";
 
 export interface TableColumn<T> {
@@ -11,24 +11,35 @@ export interface TableColumn<T> {
   row: (arg: T) => React.ReactNode;
 }
 
-export interface TableProps<T> {
+export type TableProps<T> = ViewProps & {
   data: T[];
   columns: TableColumn<T>[];
+  lightBackground?: boolean;
 
   rowClick?: (arg: T) => void;
-}
+};
 
-export default function Table({ data, columns, rowClick }: TableProps<any>) {
+export default function Table({
+  data,
+  columns,
+  lightBackground,
+  rowClick,
+  className,
+}: TableProps<any>) {
   const [hoveredIndex, setHoveredIndex] = React.useState(-1);
 
   return (
-    <View className="flex flex-row overflow-x-auto">
+    <View className={`${className} flex flex-row overflow-x-auto`}>
       {columns.map((column, index) => (
         <View
           key={index}
           className={`${column.fit ? "max-w-fit" : "flex-1 min-w-max"} flex`}
         >
-          <View className="sticky top-0 flex flex-row items-center h-10 max-h-10 px-4 border-b border-background-300 overflow-hidden">
+          <View
+            className={`sticky top-0 flex flex-row items-center h-10 max-h-10 px-4 border-b border-background-300 overflow-hidden z-10 ${
+              column.center ? "justify-center" : "justify-start"
+            } ${lightBackground ? "bg-background-200" : "bg-background-100"}`}
+          >
             <Text key={index} thickness="semi">
               {column.title}
             </Text>
