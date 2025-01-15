@@ -29,6 +29,7 @@ export type ButtonProps = ViewProps & {
 
   disabled?: boolean;
   tabbable?: boolean;
+  stopPropagation?: boolean;
   onClick?: () => void;
 };
 
@@ -43,6 +44,7 @@ export default function Button({
   type = "default",
   disabled = false,
   tabbable = true,
+  stopPropagation = false,
   onClick,
   children,
   start = false,
@@ -82,9 +84,11 @@ export default function Button({
 
   return (
     <Pressable
-      onPress={() => {
+      onPress={(event) => {
         onClick?.();
         setFocused(false);
+
+        if (stopPropagation) event.stopPropagation();
       }}
       disabled={disabled}
       onBlur={() => setFocused(false)}
