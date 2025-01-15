@@ -5,6 +5,7 @@ import {
   removeLocalStorageCard,
   saveLocalStorageCard,
 } from "@/functions/local-storage/card-local-storage";
+import { mapCardsToDeckCard } from "@/functions/mapping/card-mapping";
 import { PaginationMeta } from "@/hooks/pagination";
 import DeckService from "@/hooks/services/deck.service";
 import { Card } from "@/models/card/card";
@@ -152,7 +153,26 @@ function AddKitModal({
         saveLocalStorageCard(card, card.count, BoardTypes.MAIN);
       });
 
-      setStoredCards(getLocalStorageStoredCards(BoardTypes.MAIN));
+      const mainCards = getLocalStorageStoredCards(BoardTypes.MAIN);
+      setStoredCards(mainCards);
+
+      DeckService.update(deck.id, {
+        cards: [
+          ...mapCardsToDeckCard(mainCards, BoardTypes.MAIN),
+          ...mapCardsToDeckCard(
+            getLocalStorageStoredCards(BoardTypes.SIDE),
+            BoardTypes.SIDE
+          ),
+          ...mapCardsToDeckCard(
+            getLocalStorageStoredCards(BoardTypes.MAYBE),
+            BoardTypes.MAYBE
+          ),
+          ...mapCardsToDeckCard(
+            getLocalStorageStoredCards(BoardTypes.ACQUIRE),
+            BoardTypes.ACQUIRE
+          ),
+        ],
+      });
 
       setSaving(false);
       setSuccess(true);
@@ -251,13 +271,18 @@ function AddKitModal({
             }
           />
 
+          <Text size="xs" className="italic">
+            Adding a kit to your deck also saves the deck cards currently in the
+            deck
+          </Text>
+
           <View className="flex flex-row justify-end">
             <Button
               icon={faPlus}
               disabled={!selectedKit || saving}
               action={success ? "success" : "primary"}
               text={saving ? "Saving..." : success ? "Kit Added!" : "Add Kit"}
-              onClick={() => addKit()}
+              onClick={addKit}
             />
           </View>
         </View>
@@ -302,15 +327,33 @@ function RemoveKitModal({
           removeLocalStorageCard(card, BoardTypes.MAIN);
         });
 
-        setStoredCards(getLocalStorageStoredCards(BoardTypes.MAIN));
+        const mainCards = getLocalStorageStoredCards(BoardTypes.MAIN);
+        setStoredCards(mainCards);
+
+        DeckService.update(deck.id, {
+          cards: [
+            ...mapCardsToDeckCard(mainCards, BoardTypes.MAIN),
+            ...mapCardsToDeckCard(
+              getLocalStorageStoredCards(BoardTypes.SIDE),
+              BoardTypes.SIDE
+            ),
+            ...mapCardsToDeckCard(
+              getLocalStorageStoredCards(BoardTypes.MAYBE),
+              BoardTypes.MAYBE
+            ),
+            ...mapCardsToDeckCard(
+              getLocalStorageStoredCards(BoardTypes.ACQUIRE),
+              BoardTypes.ACQUIRE
+            ),
+          ],
+        });
 
         DeckService.removeDeckKitLink(deck.id, kit.id).then(() => {
-          setKitIndex(kitIndex);
-
           setSaving(false);
           setSuccess(true);
 
           setTimeout(() => {
+            setKitIndex(kitIndex);
             setSuccess(false);
             setOpen(false);
             setRemoveCards(false);
@@ -352,6 +395,13 @@ function RemoveKitModal({
             Are you sure you want to remove this kit from your deck? This action
             cannot be undone.
           </Text>
+
+          {removeCards && (
+            <Text size="xs" className="italic">
+              Removing kit cards from your deck will also save the deck cards
+              currently in the deck
+            </Text>
+          )}
 
           <View className="flex flex-row justify-between items-center gap-4">
             <Checkbox
