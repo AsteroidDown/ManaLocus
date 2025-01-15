@@ -1,11 +1,8 @@
-import CardText from "@/components/cards/card-text";
 import Button from "@/components/ui/button/button";
 import Input from "@/components/ui/input/input";
 import Select from "@/components/ui/input/select";
-import Table, { TableColumn } from "@/components/ui/table/table";
 import { BoardType, BoardTypes } from "@/constants/boards";
 import { MTGFormats } from "@/constants/mtg/mtg-format";
-import { LostURL } from "@/constants/urls";
 import UserPageContext from "@/contexts/user/user-page.context";
 import UserPreferencesContext from "@/contexts/user/user-preferences.context";
 import UserContext from "@/contexts/user/user.context";
@@ -30,12 +27,11 @@ import {
   faList,
 } from "@fortawesome/free-solid-svg-icons";
 import { Link, router } from "expo-router";
-import moment from "moment";
 import React, { useContext, useEffect } from "react";
-import { Image, View } from "react-native";
+import { View } from "react-native";
 import Pagination from "../ui/pagination/pagination";
-import Text from "../ui/text/text";
 import DeckCard from "./deck-card";
+import DecksTable from "./decks-table";
 
 export interface DeckGalleryProps {
   userId?: string;
@@ -338,71 +334,9 @@ export default function DeckGallery({
       )}
 
       {listView && (
-        <Table
-          data={decks}
+        <DecksTable
+          decks={decks}
           rowClick={(deck) => router.push(`decks/${deck.id}`)}
-          columns={
-            [
-              {
-                fit: true,
-                row: (deck) => (
-                  <Image
-                    source={{
-                      uri: deck.featuredArtUrl?.length
-                        ? deck.featuredArtUrl
-                        : LostURL,
-                    }}
-                    className="h-7 w-10 rounded"
-                  />
-                ),
-              },
-              {
-                title: "Name",
-                row: (deck) => <Text>{deck.name}</Text>,
-              },
-              {
-                fit: true,
-                center: true,
-                row: (deck) => (
-                  <View className="max-w-fit py-0.5 px-1 bg-background-200 rounded-full overflow-hidden">
-                    <CardText text={deck.colors} />
-                  </View>
-                ),
-              },
-              {
-                title: "Format",
-                row: (deck) => <Text>{titleCase(deck.format)}</Text>,
-              },
-              {
-                title: "Creator",
-                row: (deck) => <Text>{deck.user?.name}</Text>,
-              },
-              {
-                title: "Created",
-                row: (deck) => (
-                  <Text>{moment(deck.created).format("MMM D, YYYY")}</Text>
-                ),
-              },
-              {
-                title: "Modified",
-                row: (deck) => (
-                  <Text>{moment(deck.updated).format("MMM D, YYYY")}</Text>
-                ),
-              },
-              {
-                fit: true,
-                center: true,
-                title: "Favorites",
-                row: (deck) => <Text>{deck.favorites}</Text>,
-              },
-              {
-                fit: true,
-                center: true,
-                title: "Views",
-                row: (deck) => <Text>{deck.views}</Text>,
-              },
-            ] as TableColumn<Deck>[]
-          }
         />
       )}
 
