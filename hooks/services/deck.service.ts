@@ -194,6 +194,14 @@ async function createDeckKitLink(deckId: string, kitId: string) {
   });
 }
 
+async function removeDeckKitLink(deckId: string, kitId: string) {
+  return await API.delete(`decks/${deckId}/kits/${kitId}/`).catch((error) => {
+    console.error(
+      `Error removing deck kit link with deckId: (${deckId}) and kitId: (${kitId}).\nError: ${error}`
+    );
+  });
+}
+
 const DeckService = {
   get,
   getMany,
@@ -212,6 +220,7 @@ const DeckService = {
   getKit,
   getDeckKits,
   createDeckKitLink,
+  removeDeckKitLink,
 };
 
 export default DeckService;

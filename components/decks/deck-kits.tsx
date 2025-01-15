@@ -1,18 +1,20 @@
 import { BoardTypes } from "@/constants/boards";
+import StoredCardsContext from "@/contexts/cards/stored-cards.context";
 import {
   getLocalStorageStoredCards,
+  removeLocalStorageCard,
   saveLocalStorageCard,
-  setLocalStorageCards,
 } from "@/functions/local-storage/card-local-storage";
 import { PaginationMeta } from "@/hooks/pagination";
 import DeckService from "@/hooks/services/deck.service";
 import { Card } from "@/models/card/card";
 import { Deck } from "@/models/deck/deck";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import React, { useEffect } from "react";
+import { faPlus, faTrash } from "@fortawesome/free-solid-svg-icons";
+import React, { useContext, useEffect } from "react";
 import { View } from "react-native";
 import CardText from "../cards/card-text";
 import Button from "../ui/button/button";
+import Checkbox from "../ui/checkbox/checkbox";
 import Divider from "../ui/divider/divider";
 import Input from "../ui/input/input";
 import Modal from "../ui/modal/modal";
@@ -29,11 +31,13 @@ export default function DeckKits({ deck }: DeckKitProps) {
   const [deckKits, setDeckKits] = React.useState([] as Deck[]);
   const [addKitModalOpen, setAddKitModalOpen] = React.useState(false);
 
+  const [kitIndex, setKitIndex] = React.useState(-1);
+
   useEffect(() => {
     if (!deck) return;
 
     DeckService.getDeckKits(deck.id).then((deckKits) => setDeckKits(deckKits));
-  }, [deck]);
+  }, [deck, kitIndex]);
 
   return (
     <View className="flex">
@@ -61,6 +65,19 @@ export default function DeckKits({ deck }: DeckKitProps) {
             hideViews
             hideHeader
             decks={deckKits}
+            endColumns={[
+              {
+                fit: true,
+                row: (kit) => (
+                  <RemoveKitModal
+                    kit={kit}
+                    deck={deck}
+                    deckKits={deckKits}
+                    setKitIndex={setKitIndex}
+                  />
+                ),
+              },
+            ]}
           />
         )}
       </View>
@@ -70,19 +87,29 @@ export default function DeckKits({ deck }: DeckKitProps) {
         deckKits={deckKits}
         open={addKitModalOpen}
         setOpen={setAddKitModalOpen}
+        setKitIndex={setKitIndex}
       />
     </View>
   );
 }
 
-interface KitModalProps {
+interface AddKitModalProps {
   deck: Deck;
   deckKits: Deck[];
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setKitIndex: React.Dispatch<React.SetStateAction<number>>;
 }
 
-function AddKitModal({ deck, deckKits, open, setOpen }: KitModalProps) {
+function AddKitModal({
+  deck,
+  deckKits,
+  open,
+  setOpen,
+  setKitIndex,
+}: AddKitModalProps) {
+  const { setStoredCards } = useContext(StoredCardsContext);
+
   const [kits, setKits] = React.useState([] as Deck[]);
   const [selectedKit, setSelectedKit] = React.useState(null as Deck | null);
 
@@ -119,11 +146,13 @@ function AddKitModal({ deck, deckKits, open, setOpen }: KitModalProps) {
     setSaving(true);
 
     DeckService.createDeckKitLink(deck.id, selectedKit.id).then(() => {
+      setKitIndex(deckKits.length + 1);
+
       selectedKit.main.forEach((card) => {
         saveLocalStorageCard(card, card.count, BoardTypes.MAIN);
       });
 
-      setLocalStorageCards(getLocalStorageStoredCards(BoardTypes.MAIN));
+      setStoredCards(getLocalStorageStoredCards(BoardTypes.MAIN));
 
       setSaving(false);
       setSuccess(true);
@@ -142,56 +171,58 @@ function AddKitModal({ deck, deckKits, open, setOpen }: KitModalProps) {
         <Text size="xl" thickness="bold">
           Add Kit
         </Text>
-      </View>
 
-      <Text>Select a kit to add to your deck</Text>
+        <Text>Select a kit to add to your deck</Text>
 
-      <View className="flex flex-row gap-4 my-4">
-        <Input
-          lightBorder
-          label="Search"
-          placeholder="Search for a kit"
-          onChange={setSearch}
-        />
-
-        <View className="flex flex-row self-end">
-          <Button
-            squareRight
-            text="All Kits"
-            type={!userKits ? "default" : "outlined"}
-            onClick={() => setUserKits(false)}
+        <View className="flex flex-row gap-4 my-4">
+          <Input
+            lightBorder
+            label="Search"
+            placeholder="Search for a kit"
+            onChange={setSearch}
           />
-          <Button
-            squareLeft
-            text="Your Kits"
-            type={userKits ? "default" : "outlined"}
-            onClick={() => setUserKits(true)}
-          />
+
+          <View className="flex flex-row self-end">
+            <Button
+              squareRight
+              text="All Kits"
+              type={!userKits ? "default" : "outlined"}
+              onClick={() => setUserKits(false)}
+            />
+            <Button
+              squareLeft
+              text="Your Kits"
+              type={userKits ? "default" : "outlined"}
+              onClick={() => setUserKits(true)}
+            />
+          </View>
         </View>
-      </View>
 
-      {kits?.length > 0 && (
-        <>
-          <DecksTable
-            hideFormat
-            hideModified
-            hideFavorites
-            hideViews
-            lightBackground
-            decks={kits}
-            rowClick={selectKit}
-          />
+        {kits?.length > 0 && (
+          <>
+            <DecksTable
+              hideFormat
+              hideModified
+              hideFavorites
+              hideViews
+              lightBackground
+              decks={kits}
+              rowClick={selectKit}
+            />
 
-          {meta && (
-            <Pagination meta={meta} onChange={(page) => setPage(page)} />
-          )}
-        </>
-      )}
+            {meta && (
+              <Pagination meta={meta} onChange={(page) => setPage(page)} />
+            )}
+          </>
+        )}
 
-      {selectedKit && (
-        <View className="flex gap-4 mt-4">
+        <View
+          className={`${
+            selectedKit ? "max-h-[1000px]" : "max-h-0 -mt-4"
+          } flex gap-4 mt-4 overflow-hidden transition-all duration-300`}
+        >
           <Text size="lg" thickness="bold">
-            {selectedKit.name} Cards
+            {selectedKit?.name} Cards
           </Text>
 
           <Divider thick />
@@ -199,7 +230,7 @@ function AddKitModal({ deck, deckKits, open, setOpen }: KitModalProps) {
           <Table
             lightBackground
             className="max-h-[250px]"
-            data={selectedKit.main}
+            data={selectedKit?.main || []}
             columns={
               [
                 {
@@ -230,7 +261,126 @@ function AddKitModal({ deck, deckKits, open, setOpen }: KitModalProps) {
             />
           </View>
         </View>
-      )}
+      </View>
     </Modal>
+  );
+}
+
+interface RemoveKitModalProps {
+  deck: Deck;
+  kit: Deck;
+  deckKits: Deck[];
+  setKitIndex: React.Dispatch<React.SetStateAction<number>>;
+}
+
+function RemoveKitModal({
+  deck,
+  kit,
+  deckKits,
+  setKitIndex,
+}: RemoveKitModalProps) {
+  const { setStoredCards } = useContext(StoredCardsContext);
+
+  const [open, setOpen] = React.useState(false);
+
+  const [removeCards, setRemoveCards] = React.useState(false);
+
+  const [saving, setSaving] = React.useState(false);
+  const [success, setSuccess] = React.useState(false);
+
+  function removeKit() {
+    if (!kit) return;
+
+    setSaving(true);
+
+    const kitIndex = deckKits.findIndex((deckKit) => deckKit.id === kit.id);
+    if (kitIndex < 0) return;
+
+    if (removeCards) {
+      DeckService.getKit(kit.id).then((response) => {
+        response.main.forEach((card) => {
+          removeLocalStorageCard(card, BoardTypes.MAIN);
+        });
+
+        setStoredCards(getLocalStorageStoredCards(BoardTypes.MAIN));
+
+        DeckService.removeDeckKitLink(deck.id, kit.id).then(() => {
+          setKitIndex(kitIndex);
+
+          setSaving(false);
+          setSuccess(true);
+
+          setTimeout(() => {
+            setSuccess(false);
+            setOpen(false);
+            setRemoveCards(false);
+          }, 2000);
+        });
+      });
+    } else {
+      DeckService.removeDeckKitLink(deck.id, kit.id).then(() => {
+        setKitIndex(kitIndex);
+
+        setSaving(false);
+        setSuccess(true);
+
+        setTimeout(() => {
+          setSuccess(false);
+          setOpen(false);
+          setRemoveCards(false);
+        }, 2000);
+      });
+    }
+  }
+
+  return (
+    <View className="border-l -mr-4 border-background-300">
+      <Button
+        square
+        type="clear"
+        icon={faTrash}
+        onClick={() => setOpen(true)}
+      />
+
+      <Modal open={open} setOpen={setOpen}>
+        <View className="flex gap-4 max-w-2xl max-h-[80vh]">
+          <Text size="xl" thickness="bold">
+            Remove {kit.name}
+          </Text>
+
+          <Text>
+            Are you sure you want to remove this kit from your deck? This action
+            cannot be undone.
+          </Text>
+
+          <View className="flex flex-row justify-between items-center gap-4">
+            <Checkbox
+              lightBorder
+              size="sm"
+              label="Remove kit cards from deck as well"
+              checked={removeCards}
+              onChange={setRemoveCards}
+            />
+
+            <View className="flex flex-row gap-2 items-center">
+              <Button
+                type="outlined"
+                text="Cancel"
+                onClick={() => setOpen(false)}
+              />
+
+              <Button
+                disabled={saving}
+                action={success ? "success" : "primary"}
+                text={
+                  saving ? "Removing..." : success ? "Kit Removed" : "Remove"
+                }
+                onClick={removeKit}
+              />
+            </View>
+          </View>
+        </View>
+      </Modal>
+    </View>
   );
 }
