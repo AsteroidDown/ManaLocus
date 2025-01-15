@@ -1,3 +1,4 @@
+import { Size } from "@/constants/ui/sizes";
 import { faCheck } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
@@ -7,11 +8,20 @@ import Text from "../text/text";
 export interface CheckboxProps {
   label?: string;
 
+  size?: Size;
+  lightBorder?: boolean;
+
   checked?: boolean;
   onChange: (checked: boolean) => void;
 }
 
-export default function Checkbox({ label, checked, onChange }: CheckboxProps) {
+export default function Checkbox({
+  label,
+  size,
+  lightBorder,
+  checked,
+  onChange,
+}: CheckboxProps) {
   const [hovered, setHovered] = React.useState(false);
 
   return (
@@ -22,9 +32,9 @@ export default function Checkbox({ label, checked, onChange }: CheckboxProps) {
       onPress={() => onChange?.(!checked)}
     >
       <View
-        className={`${
-          hovered ? "bg-primary-300 border-primary-200" : ""
-        } flex justify-center items-center w-6 h-6 rounded-lg bg-opacity-35 border-2 border-background-200 overflow-hidden transition-all duration-300`}
+        className={`${hovered ? "bg-primary-300 border-primary-200" : ""} ${
+          lightBorder ? "border-background-300" : "border-background-200"
+        } flex justify-center items-center w-6 h-6 rounded-lg bg-opacity-35 border-2 overflow-hidden transition-all duration-300`}
       >
         <View
           className={`${
@@ -36,7 +46,7 @@ export default function Checkbox({ label, checked, onChange }: CheckboxProps) {
       </View>
 
       {label && (
-        <Text size="md" thickness="medium">
+        <Text size={size ?? "md"} thickness="medium">
           {label}
         </Text>
       )}
