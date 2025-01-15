@@ -17,6 +17,7 @@ export interface DeckFiltersDTO {
 export interface DeckKitFiltersDto {
   search?: string | null;
   userKits?: boolean | null;
+  excludedKitIds?: string[] | null;
 }
 
 export type DeckSortType =
