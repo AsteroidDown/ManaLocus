@@ -40,6 +40,11 @@ export default function UserLayout() {
       link: `users/${userPageUser.id}/favorites`,
       name: "favorites",
     },
+    {
+      title: "Kits",
+      link: `users/${userPageUser.id}/kits`,
+      name: "kits",
+    },
   ];
 
   if (isPageUser) {
