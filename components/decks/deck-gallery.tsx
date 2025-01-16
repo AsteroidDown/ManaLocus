@@ -36,11 +36,13 @@ import DecksTable from "./decks-table";
 export interface DeckGalleryProps {
   userId?: string;
   favorites?: boolean;
+  kits?: boolean;
 }
 
 export default function DeckGallery({
   userId,
   favorites = false,
+  kits = false,
 }: DeckGalleryProps) {
   const { user } = useContext(UserContext);
   const { userPageUser } = useContext(UserPageContext);
@@ -138,6 +140,7 @@ export default function DeckGallery({
       ...(sort && { sort }),
       ...(board && { board }),
       ...(search && { search }),
+      ...(kits && { isKit: true }),
       ...(format && { deckFormat: format }),
       ...(cards?.length && { cardNames: cards }),
       ...(exclusiveCardSearch && { exclusiveCardSearch }),
@@ -272,52 +275,58 @@ export default function DeckGallery({
             }))}
           />
 
-          <Select
-            label="Board"
-            value={board}
-            className="max-w-min"
-            onChange={setBoard}
-            options={Object.keys(BoardTypes).map((key) => {
-              return {
-                label: titleCase(key),
-                value: (BoardTypes as any)[key],
-              };
-            })}
-          />
+          {!kits && (
+            <View className="flex flex-row gap-4">
+              <Select
+                label="Board"
+                value={board}
+                className="max-w-min"
+                onChange={setBoard}
+                options={Object.keys(BoardTypes).map((key) => {
+                  return {
+                    label: titleCase(key),
+                    value: (BoardTypes as any)[key],
+                  };
+                })}
+              />
 
-          <Select
-            label="Board Contains"
-            value={exclusiveCardSearch}
-            className="max-w-min"
-            onChange={setSearchType}
-            options={[
-              { label: "A Selected Card", value: false },
-              { label: "Every Selected Card", value: true },
-            ]}
-          />
+              <Select
+                label="Board Contains"
+                value={exclusiveCardSearch}
+                className="max-w-min"
+                onChange={setSearchType}
+                options={[
+                  { label: "A Selected Card", value: false },
+                  { label: "Every Selected Card", value: true },
+                ]}
+              />
+            </View>
+          )}
         </View>
 
-        <View className="flex flex-row flex-wrap gap-4 z-[10]">
-          <Select
-            label="Commander"
-            onChange={setCommanderSearch}
-            onSearchChange={setCommanderCardSearch}
-            options={commanderCardAutoComplete.map((card) => ({
-              label: card,
-              value: card,
-            }))}
-          />
+        {!kits && (
+          <View className="flex flex-row flex-wrap gap-4 z-[10]">
+            <Select
+              label="Commander"
+              onChange={setCommanderSearch}
+              onSearchChange={setCommanderCardSearch}
+              options={commanderCardAutoComplete.map((card) => ({
+                label: card,
+                value: card,
+              }))}
+            />
 
-          <Select
-            label="Partner"
-            onChange={setPartnerSearch}
-            onSearchChange={setPartnerCardSearch}
-            options={partnerCardAutoComplete.map((card) => ({
-              label: card,
-              value: card,
-            }))}
-          />
-        </View>
+            <Select
+              label="Partner"
+              onChange={setPartnerSearch}
+              onSearchChange={setPartnerCardSearch}
+              options={partnerCardAutoComplete.map((card) => ({
+                label: card,
+                value: card,
+              }))}
+            />
+          </View>
+        )}
       </View>
 
       {!listView && (
