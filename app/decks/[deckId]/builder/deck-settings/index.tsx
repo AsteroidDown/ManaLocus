@@ -320,7 +320,7 @@ export default function DeckSettingsPage() {
         }
       />
 
-      <View className="flex flex-row gap-6">
+      <View className="flex flex-row gap-6 z-10">
         <View className="w-64 h-[172px] bg-dark-100 rounded-xl overflow-hidden">
           {featuredCard && (
             <Image
@@ -403,14 +403,14 @@ export default function DeckSettingsPage() {
                 placeholder="Format"
                 value={format}
                 onChange={setFormat}
-                squareRight={commanderFormat}
+                squareRight={!isKit && commanderFormat}
                 options={Object.values(MTGFormats).map((format) => ({
                   label: titleCase(format),
                   value: format,
                 }))}
               />
 
-              {commanderFormat && (
+              {!isKit && commanderFormat && (
                 <>
                   <Select
                     squareLeft
