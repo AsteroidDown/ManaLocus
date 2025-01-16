@@ -12,7 +12,11 @@ import { PaginationMeta } from "@/hooks/pagination";
 import DeckService from "@/hooks/services/deck.service";
 import { Card } from "@/models/card/card";
 import { Deck } from "@/models/deck/deck";
-import { faPlus, faTrash } from "@fortawesome/free-solid-svg-icons";
+import {
+  faChevronLeft,
+  faPlus,
+  faTrash,
+} from "@fortawesome/free-solid-svg-icons";
 import React, { useContext, useEffect } from "react";
 import { View } from "react-native";
 import CardText from "../cards/card-text";
@@ -270,102 +274,119 @@ function AddKitModal({
   return (
     <Modal open={open} setOpen={setOpen}>
       <View className="flex gap-4 max-w-2xl max-h-[80vh]">
-        <Text size="xl" thickness="bold">
-          Add Kit
-        </Text>
+        <View className="flex flex-row gap-8 max-w-[416px]">
+          <View
+            className={`flex gap-4 ${
+              selectedKit ? "-ml-[450px]" : ""
+            } transition-all duration-300`}
+          >
+            <Text size="xl" thickness="bold">
+              Add Kit
+            </Text>
 
-        <Text>Select a kit to add to your deck</Text>
+            <Text>Select a kit to add to your deck</Text>
 
-        <View className="flex flex-row gap-4 my-4">
-          <Input
-            lightBorder
-            label="Search"
-            placeholder="Search for a kit"
-            onChange={setSearch}
-          />
+            <View className="flex flex-row gap-4 my-4">
+              <Input
+                lightBorder
+                label="Search"
+                placeholder="Search for a kit"
+                onChange={setSearch}
+              />
 
-          <View className="flex flex-row self-end">
-            <Button
-              squareRight
-              text="All Kits"
-              type={!userKits ? "default" : "outlined"}
-              onClick={() => setUserKits(false)}
-            />
-            <Button
-              squareLeft
-              text="Your Kits"
-              type={userKits ? "default" : "outlined"}
-              onClick={() => setUserKits(true)}
-            />
-          </View>
-        </View>
+              <View className="flex flex-row self-end">
+                <Button
+                  squareRight
+                  text="All Kits"
+                  type={!userKits ? "default" : "outlined"}
+                  onClick={() => setUserKits(false)}
+                />
+                <Button
+                  squareLeft
+                  text="Your Kits"
+                  type={userKits ? "default" : "outlined"}
+                  onClick={() => setUserKits(true)}
+                />
+              </View>
+            </View>
 
-        {kits?.length > 0 && (
-          <>
-            <DecksTable
-              hideFormat
-              hideModified
-              hideFavorites
-              hideViews
-              lightBackground
-              decks={kits}
-              rowClick={selectKit}
-            />
+            {kits?.length > 0 && (
+              <>
+                <DecksTable
+                  hideFormat
+                  hideModified
+                  hideFavorites
+                  hideViews
+                  lightBackground
+                  decks={kits}
+                  rowClick={selectKit}
+                />
 
-            {meta && (
-              <Pagination meta={meta} onChange={(page) => setPage(page)} />
+                {meta && (
+                  <Pagination meta={meta} onChange={(page) => setPage(page)} />
+                )}
+              </>
             )}
-          </>
-        )}
+          </View>
 
-        <View
-          className={`${
-            selectedKit ? "max-h-[1000px]" : "max-h-0 -mt-4"
-          } flex gap-4 mt-4 overflow-hidden transition-all duration-300`}
-        >
-          <Text size="lg" thickness="bold">
-            {selectedKit?.name} Cards
-          </Text>
+          <View className="flex flex-col gap-4">
+            <View className="flex flex-row gap-2 items-center -ml-2">
+              <Button
+                rounded
+                type="clear"
+                action="default"
+                icon={faChevronLeft}
+                onClick={() => setSelectedKit(null)}
+              />
 
-          <Divider thick />
+              <Text size="xl" thickness="bold">
+                {selectedKit?.name} Cards
+              </Text>
+            </View>
 
-          <Table
-            lightBackground
-            className="max-h-[250px]"
-            data={selectedKit?.main || []}
-            columns={
-              [
-                {
-                  title: "Name",
-                  row: (card) => <Text>{card.name}</Text>,
-                },
-                {
-                  fit: true,
-                  title: "Mana Cost",
-                  row: (card) =>
-                    card.manaCost && (
-                      <View className="max-w-fit py-0.5 px-1 bg-background-100 rounded-full overflow-hidden">
-                        <CardText text={card.manaCost} />
-                      </View>
-                    ),
-                },
-              ] as TableColumn<Card>[]
-            }
-          />
-
-          <Text size="xs" className="italic">
-            Adding a kit to your deck also saves the deck cards currently in the
-            deck
-          </Text>
-
-          <View className="flex flex-row justify-end">
-            <Button
-              icon={faPlus}
-              disabled={!selectedKit || saving}
-              action={success ? "success" : "primary"}
-              text={saving ? "Saving..." : success ? "Kit Added!" : "Add Kit"}
-              onClick={addKit}
+            <Table
+              lightBackground
+              className="max-h-[250px]"
+              data={selectedKit?.main || []}
+              columns={
+                [
+                  {
+                    title: "Name",
+                    row: (card) => <Text>{card.name}</Text>,
+                  },
+                  {
+                    fit: true,
+                    title: "Type",
+                    row: (card) => <Text>{titleCase(getCardType(card))}</Text>,
+                  },
+                  {
+                    fit: true,
+                    title: "Mana Cost",
+                    row: (card) =>
+                      card.manaCost && (
+                        <View className="max-w-fit py-0.5 px-1 bg-background-100 rounded-full overflow-hidden">
+                          <CardText text={card.manaCost} />
+                        </View>
+                      ),
+                  },
+                ] as TableColumn<Card>[]
+              }
             />
+
+            <Text size="xs" className="italic">
+              Adding a kit to your deck also saves the deck cards currently in
+              the deck
+            </Text>
+
+            <View className="flex flex-row justify-end">
+              <Button
+                icon={faPlus}
+                disabled={!selectedKit || saving}
+                action={success ? "success" : "primary"}
+                text={saving ? "Saving..." : success ? "Kit Added!" : "Add Kit"}
+                onClick={addKit}
+              />
+            </View>
           </View>
         </View>
       </View>
