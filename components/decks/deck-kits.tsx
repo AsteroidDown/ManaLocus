@@ -1,11 +1,13 @@
 import { BoardTypes } from "@/constants/boards";
 import StoredCardsContext from "@/contexts/cards/stored-cards.context";
+import { getCardType } from "@/functions/cards/card-information";
 import {
   getLocalStorageStoredCards,
   removeLocalStorageCard,
   saveLocalStorageCard,
 } from "@/functions/local-storage/card-local-storage";
 import { mapCardsToDeckCard } from "@/functions/mapping/card-mapping";
+import { titleCase } from "@/functions/text-manipulation";
 import { PaginationMeta } from "@/hooks/pagination";
 import DeckService from "@/hooks/services/deck.service";
 import { Card } from "@/models/card/card";
@@ -32,6 +34,9 @@ export interface DeckKitProps {
 
 export default function DeckKits({ deck, readonly }: DeckKitProps) {
   const [deckKits, setDeckKits] = React.useState([] as Deck[]);
+
+  const [selectedKit, setSelectedKit] = React.useState(null as Deck | null);
+  const [kitModalOpen, setKitModalOpen] = React.useState(false);
   const [addKitModalOpen, setAddKitModalOpen] = React.useState(false);
 
   const [kitIndex, setKitIndex] = React.useState(-1);
@@ -70,8 +75,12 @@ export default function DeckKits({ deck, readonly }: DeckKitProps) {
             hideModified
             hideFavorites
             hideViews
-            hideHeader={!readonly}
             decks={deckKits}
+            hideHeader={!readonly}
+            rowClick={(kit) => {
+              setSelectedKit(kit);
+              setKitModalOpen(true);
+            }}
             endColumns={
               !readonly
                 ? [
@@ -93,6 +102,14 @@ export default function DeckKits({ deck, readonly }: DeckKitProps) {
         )}
       </View>
 
+      {selectedKit && (
+        <KitModal
+          kit={selectedKit}
+          open={kitModalOpen}
+          setOpen={setKitModalOpen}
+        />
+      )}
+
       <AddKitModal
         deck={deck}
         deckKits={deckKits}
@@ -104,6 +121,61 @@ export default function DeckKits({ deck, readonly }: DeckKitProps) {
   );
 }
 
+interface KitModalProps {
+  kit: Deck;
+  open: boolean;
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+function KitModal({ kit, open, setOpen }: KitModalProps) {
+  const [kitCards, setKitCards] = React.useState([] as Card[]);
+
+  useEffect(() => {
+    if (!kit) return;
+
+    DeckService.getKit(kit.id).then((foundKit) =>
+      setKitCards(foundKit.main.sort((a, b) => a.name.localeCompare(b.name)))
+    );
+  }, [kit]);
+
+  return (
+    <Modal open={open} setOpen={setOpen}>
+      <View className="flex gap-4 min-w-[400px] max-w-2xl max-h-[80vh]">
+        <Text size="xl" thickness="bold">
+          {kit.name}
+        </Text>
+
+        <Table
+          lightBackground
+          className="max-h-[500px]"
+          data={kitCards}
+          columns={[
+            {
+              title: "Name",
+              row: (card) => <Text>{card.name}</Text>,
+            },
+            {
+              fit: true,
+              title: "Type",
+              row: (card) => <Text>{titleCase(getCardType(card))}</Text>,
+            },
+            {
+              fit: true,
+              center: true,
+              title: "Mana Cost",
+              row: (card) =>
+                card.manaCost && (
+                  <View className="max-w-fit py-0.5 px-1 bg-background-100 rounded-full overflow-hidden">
+                    <CardText text={card.manaCost} />
+                  </View>
+                ),
+            },
+          ]}
+        />
+      </View>
+    </Modal>
+  );
+}
 interface AddKitModalProps {
   deck: Deck;
   deckKits: Deck[];
