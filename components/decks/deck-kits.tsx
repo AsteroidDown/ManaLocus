@@ -26,9 +26,11 @@ import DecksTable from "./decks-table";
 
 export interface DeckKitProps {
   deck: Deck;
+
+  readonly?: boolean;
 }
 
-export default function DeckKits({ deck }: DeckKitProps) {
+export default function DeckKits({ deck, readonly }: DeckKitProps) {
   const [deckKits, setDeckKits] = React.useState([] as Deck[]);
   const [addKitModalOpen, setAddKitModalOpen] = React.useState(false);
 
@@ -44,41 +46,49 @@ export default function DeckKits({ deck }: DeckKitProps) {
     <View className="flex">
       <View className="flex flex-row justify-between items-center gap-4">
         <Text size="lg" thickness="bold">
-          Kits
+          {readonly ? "Kits in Deck" : "Kits"}
         </Text>
 
-        <Button
-          text="Add Kit"
-          type="clear"
-          icon={faPlus}
-          onClick={() => setAddKitModalOpen(true)}
-        />
+        {!readonly && (
+          <Button
+            text="Add Kit"
+            type="clear"
+            icon={faPlus}
+            onClick={() => setAddKitModalOpen(true)}
+          />
+        )}
       </View>
 
-      <Divider thick className="!border-background-200" />
+      <Divider
+        thick
+        className={`${readonly ? "my-4" : ""} !border-background-200`}
+      />
 
       <View>
         {deckKits?.length > 0 && (
           <DecksTable
-            hideFormat
             hideModified
             hideFavorites
             hideViews
-            hideHeader
+            hideHeader={!readonly}
             decks={deckKits}
-            endColumns={[
-              {
-                fit: true,
-                row: (kit) => (
-                  <RemoveKitModal
-                    kit={kit}
-                    deck={deck}
-                    deckKits={deckKits}
-                    setKitIndex={setKitIndex}
-                  />
-                ),
-              },
-            ]}
+            endColumns={
+              !readonly
+                ? [
+                    {
+                      fit: true,
+                      row: (kit) => (
+                        <RemoveKitModal
+                          kit={kit}
+                          deck={deck}
+                          deckKits={deckKits}
+                          setKitIndex={setKitIndex}
+                        />
+                      ),
+                    },
+                  ]
+                : []
+            }
           />
         )}
       </View>
