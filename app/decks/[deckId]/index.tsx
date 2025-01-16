@@ -4,6 +4,7 @@ import DeckChangeLog from "@/components/decks/deck-change-log";
 import DeckExampleHand from "@/components/decks/deck-example-hand";
 import DeckFooter from "@/components/decks/deck-footer";
 import DeckHeader from "@/components/decks/deck-header";
+import DeckKits from "@/components/decks/deck-kits";
 import DeckTokens from "@/components/decks/deck-tokens";
 import Graph from "@/components/graph/graph";
 import Box from "@/components/ui/box/box";
@@ -173,6 +174,8 @@ export default function DeckPage() {
         {!deck.isKit && <DeckExampleHand deck={deck} />}
 
         <DeckTokens deck={deck} />
+
+        <DeckKits readonly deck={deck} />
       </View>
 
       <DeckFooter deck={deck} legalityEvaluation={legalityEvaluation} />
