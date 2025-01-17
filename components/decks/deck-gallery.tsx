@@ -140,7 +140,7 @@ export default function DeckGallery({
       ...(sort && { sort }),
       ...(board && { board }),
       ...(search && { search }),
-      ...(kits && { isKit: true }),
+      ...(kits && { onlyKits: true }),
       ...(format && { deckFormat: format }),
       ...(cards?.length && { cardNames: cards }),
       ...(exclusiveCardSearch && { exclusiveCardSearch }),
