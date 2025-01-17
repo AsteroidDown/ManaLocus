@@ -94,7 +94,7 @@ export default function DeckChangeLog({ deck, className }: DeckChangeLogProps) {
           title: titleCase(title),
           onClick: () => setOpenIndex(-1),
           children: (
-            <View className="flex min-h-[300px] max-h-[300px] bg-dark-100 border-2 border-background-200 rounded-b-xl rounded-tr-xl overflow-hidden">
+            <View className="flex min-h-[300px] max-h-[300px] bg-dark-100 border-2 border-background-200 rounded-b-xl rounded-tr-xl overflow-x-hidden overflow-y-auto">
               {boardChanges[boardIndex]?.map((timeChange, timeIndex) => (
                 <View key={timeIndex}>
                   <Pressable
