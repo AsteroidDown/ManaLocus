@@ -12,12 +12,10 @@ export interface DeckFiltersDTO {
   cardNames?: string[] | null;
   board?: BoardType | null;
   exclusiveCardSearch?: boolean | null;
-}
 
-export interface DeckKitFiltersDto {
-  search?: string | null;
-  userKits?: boolean | null;
-  excludedKitIds?: string[] | null;
+  userDecks?: boolean | null;
+  onlyKits?: boolean | null;
+  excludeIds?: string[] | null;
 }
 
 export type DeckSortType =

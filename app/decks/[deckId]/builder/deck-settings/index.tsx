@@ -17,6 +17,7 @@ import DeckContext from "@/contexts/deck/deck.context";
 import { getCardType } from "@/functions/cards/card-information";
 import { getLocalStorageStoredCards } from "@/functions/local-storage/card-local-storage";
 import { getLocalStorageDashboard } from "@/functions/local-storage/dashboard-local-storage";
+import { getLocalStorageKits } from "@/functions/local-storage/kits-local-storage";
 import { mapCardsToDeckCard } from "@/functions/mapping/card-mapping";
 import { getDeckColors, sortColors } from "@/functions/mtg-colors/mtg-colors";
 import { titleCase } from "@/functions/text-manipulation";
@@ -294,6 +295,8 @@ export default function DeckSettingsPage() {
       partnerId: partner?.scryfallId,
 
       isKit,
+
+      kits: getLocalStorageKits().map((kit) => kit.id),
     };
 
     DeckService.update(deck.id, dto).then(() => {

@@ -18,6 +18,7 @@ export default function DecksPage() {
       localStorage.removeItem("builderCardsSide");
       localStorage.removeItem("builderCardsMaybe");
       localStorage.removeItem("builderCardsAcquire");
+      localStorage.removeItem("builderKits");
       localStorage.removeItem("dashboard");
 
       router.push(`decks/${response.deckId}/builder/main-board`);

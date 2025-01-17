@@ -1,10 +1,7 @@
 import { mapDatabaseDeck } from "@/functions/mapping/deck-mapping";
 import { Deck } from "@/models/deck/deck";
 import { DeckChange } from "@/models/deck/deck-change";
-import {
-  DeckFiltersDTO,
-  DeckKitFiltersDto,
-} from "@/models/deck/dtos/deck-filters.dto";
+import { DeckFiltersDTO } from "@/models/deck/dtos/deck-filters.dto";
 import { DeckDTO } from "@/models/deck/dtos/deck.dto";
 import API from "../api-methods/api-methods";
 import {
@@ -109,6 +106,12 @@ async function getDeckViewed(deckId: string): Promise<boolean> {
   );
 }
 
+async function getDeckKits(deckId: string): Promise<Deck[]> {
+  return await API.get(`decks/${deckId}/kits/`).then((data) =>
+    data.map((deck: Deck) => mapDatabaseDeck(deck) as any)
+  );
+}
+
 async function create(data: DeckDTO) {
   return await API.post(`decks/`, { ...data }, true).catch((error) => {
     console.error(
@@ -157,51 +160,6 @@ async function addView(deckId: string) {
   });
 }
 
-async function getKits(
-  dto: DeckKitFiltersDto,
-  pagination?: PaginationOptions
-): Promise<PaginatedResponse<Deck>> {
-  const response: PaginatedResponse<Deck> = await API.get(`deck-kits/`, {
-    ...dto,
-    ...pagination,
-  }).catch((error) => {
-    console.error(`Error retrieving deck kits.\nError: ${error}`);
-  });
-
-  return {
-    meta: response.meta,
-    data: response.data.map((deck) => mapDatabaseDeck(deck)),
-  };
-}
-
-async function getKit(deckId: string): Promise<Deck> {
-  return await API.get(`deck-kits/${deckId}`).then(
-    (data) => mapDatabaseDeck(data, true) as any
-  );
-}
-
-async function getDeckKits(deckId: string): Promise<Deck[]> {
-  return await API.get(`decks/${deckId}/kits/`).then((data) =>
-    data.map((deck: Deck) => mapDatabaseDeck(deck) as any)
-  );
-}
-
-async function createDeckKitLink(deckId: string, kitId: string) {
-  return await API.post(`decks/${deckId}/kits/`, { kitId }).catch((error) => {
-    console.error(
-      `Error creating deck kit link with deckId: (${deckId}) and kitId: (${kitId}).\nError: ${error}`
-    );
-  });
-}
-
-async function removeDeckKitLink(deckId: string, kitId: string) {
-  return await API.delete(`decks/${deckId}/kits/${kitId}/`).catch((error) => {
-    console.error(
-      `Error removing deck kit link with deckId: (${deckId}) and kitId: (${kitId}).\nError: ${error}`
-    );
-  });
-}
-
 const DeckService = {
   get,
   getMany,
@@ -210,17 +168,13 @@ const DeckService = {
   getChanges,
   getDeckFavorited,
   getDeckViewed,
+  getDeckKits,
   create,
   update,
   remove,
   addFavorite,
   removeFavorite,
   addView,
-  getKits,
-  getKit,
-  getDeckKits,
-  createDeckKitLink,
-  removeDeckKitLink,
 };
 
 export default DeckService;

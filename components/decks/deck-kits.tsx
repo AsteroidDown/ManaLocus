@@ -6,7 +6,12 @@ import {
   removeLocalStorageCard,
   saveLocalStorageCard,
 } from "@/functions/local-storage/card-local-storage";
-import { mapCardsToDeckCard } from "@/functions/mapping/card-mapping";
+import {
+  addLocalStorageKit,
+  getLocalStorageKits,
+  removeLocalStorageKit,
+  setLocalStorageKits,
+} from "@/functions/local-storage/kits-local-storage";
 import { titleCase } from "@/functions/text-manipulation";
 import { PaginationMeta } from "@/hooks/pagination";
 import DeckService from "@/hooks/services/deck.service";
@@ -43,13 +48,21 @@ export default function DeckKits({ deck, readonly }: DeckKitProps) {
   const [kitModalOpen, setKitModalOpen] = React.useState(false);
   const [addKitModalOpen, setAddKitModalOpen] = React.useState(false);
 
-  const [kitIndex, setKitIndex] = React.useState(-1);
+  const [kitIndex, setKitIndex] = React.useState(0);
 
   useEffect(() => {
     if (!deck) return;
 
-    DeckService.getDeckKits(deck.id).then((deckKits) => setDeckKits(deckKits));
-  }, [deck, kitIndex]);
+    DeckService.getDeckKits(deck.id).then((deckKits) => {
+      setDeckKits(deckKits);
+      if (!readonly) setLocalStorageKits(deckKits);
+      setKitIndex(-1);
+    });
+  }, [deck]);
+
+  useEffect(() => {
+    setDeckKits(getLocalStorageKits());
+  }, [kitIndex]);
 
   return (
     <View className="flex">
@@ -137,7 +150,7 @@ function KitModal({ kit, open, setOpen }: KitModalProps) {
   useEffect(() => {
     if (!kit) return;
 
-    DeckService.getKit(kit.id).then((foundKit) =>
+    DeckService.get(kit.id).then((foundKit) =>
       setKitCards(foundKit.main.sort((a, b) => a.name.localeCompare(b.name)))
     );
   }, [kit]);
@@ -212,10 +225,11 @@ function AddKitModal({
   useEffect(() => {
     if (!deck || !open) return;
 
-    DeckService.getKits({
+    DeckService.getMany({
       search,
-      userKits,
-      excludedKitIds: deckKits?.map((kit) => kit.id),
+      onlyKits: true,
+      userDecks: userKits,
+      excludeIds: deckKits?.map((kit) => kit.id),
     }).then((response) => {
       setKits(response.data);
       setMeta(response.meta);
@@ -225,50 +239,32 @@ function AddKitModal({
   function selectKit(kit: Deck) {
     if (!kit) return;
 
-    DeckService.getKit(kit.id).then((response) => setSelectedKit(response));
+    DeckService.get(kit.id).then((response) => setSelectedKit(response));
   }
 
   function addKit() {
     if (!selectedKit) return;
     setSaving(true);
 
-    DeckService.createDeckKitLink(deck.id, selectedKit.id).then(() => {
-      setKitIndex(deckKits.length + 1);
+    setKitIndex(deckKits.length + 1);
 
-      selectedKit.main.forEach((card) => {
-        saveLocalStorageCard(card, card.count, BoardTypes.MAIN);
-      });
+    addLocalStorageKit(selectedKit);
 
-      const mainCards = getLocalStorageStoredCards(BoardTypes.MAIN);
-      setStoredCards(mainCards);
-
-      DeckService.update(deck.id, {
-        cards: [
-          ...mapCardsToDeckCard(mainCards, BoardTypes.MAIN),
-          ...mapCardsToDeckCard(
-            getLocalStorageStoredCards(BoardTypes.SIDE),
-            BoardTypes.SIDE
-          ),
-          ...mapCardsToDeckCard(
-            getLocalStorageStoredCards(BoardTypes.MAYBE),
-            BoardTypes.MAYBE
-          ),
-          ...mapCardsToDeckCard(
-            getLocalStorageStoredCards(BoardTypes.ACQUIRE),
-            BoardTypes.ACQUIRE
-          ),
-        ],
-      });
-
-      setSaving(false);
-      setSuccess(true);
-
-      setTimeout(() => {
-        setSuccess(false);
-        setOpen(false);
-        setSelectedKit(null);
-      }, 2000);
+    selectedKit.main.forEach((card) => {
+      saveLocalStorageCard(card, card.count, BoardTypes.MAIN);
     });
+
+    const mainCards = getLocalStorageStoredCards(BoardTypes.MAIN);
+    setStoredCards(mainCards);
+
+    setSaving(false);
+    setSuccess(true);
+
+    setTimeout(() => {
+      setSuccess(false);
+      setOpen(false);
+      setSelectedKit(null);
+    }, 2000);
   }
 
   return (
@@ -373,11 +369,6 @@ function AddKitModal({
               }
             />
 
-            <Text size="xs" className="italic">
-              Adding a kit to your deck also saves the deck cards currently in
-              the deck
-            </Text>
-
             <View className="flex flex-row justify-end">
               <Button
                 icon={faPlus}
@@ -416,7 +407,7 @@ function RemoveKitModal({
   const [saving, setSaving] = React.useState(false);
   const [success, setSuccess] = React.useState(false);
 
-  function removeKit() {
+  async function removeKit() {
     if (!kit) return;
 
     setSaving(true);
@@ -425,58 +416,27 @@ function RemoveKitModal({
     if (kitIndex < 0) return;
 
     if (removeCards) {
-      DeckService.getKit(kit.id).then((response) => {
+      await DeckService.get(kit.id).then((response) => {
         response.main.forEach((card) => {
           removeLocalStorageCard(card, BoardTypes.MAIN);
         });
 
         const mainCards = getLocalStorageStoredCards(BoardTypes.MAIN);
         setStoredCards(mainCards);
-
-        DeckService.update(deck.id, {
-          cards: [
-            ...mapCardsToDeckCard(mainCards, BoardTypes.MAIN),
-            ...mapCardsToDeckCard(
-              getLocalStorageStoredCards(BoardTypes.SIDE),
-              BoardTypes.SIDE
-            ),
-            ...mapCardsToDeckCard(
-              getLocalStorageStoredCards(BoardTypes.MAYBE),
-              BoardTypes.MAYBE
-            ),
-            ...mapCardsToDeckCard(
-              getLocalStorageStoredCards(BoardTypes.ACQUIRE),
-              BoardTypes.ACQUIRE
-            ),
-          ],
-        });
-
-        DeckService.removeDeckKitLink(deck.id, kit.id).then(() => {
-          setSaving(false);
-          setSuccess(true);
-
-          setTimeout(() => {
-            setKitIndex(kitIndex);
-            setSuccess(false);
-            setOpen(false);
-            setRemoveCards(false);
-          }, 2000);
-        });
-      });
-    } else {
-      DeckService.removeDeckKitLink(deck.id, kit.id).then(() => {
-        setKitIndex(kitIndex);
-
-        setSaving(false);
-        setSuccess(true);
-
-        setTimeout(() => {
-          setSuccess(false);
-          setOpen(false);
-          setRemoveCards(false);
-        }, 2000);
       });
     }
+
+    removeLocalStorageKit(kit);
+
+    setSaving(false);
+    setSuccess(true);
+
+    setTimeout(() => {
+      setKitIndex(kitIndex);
+      setSuccess(false);
+      setOpen(false);
+      setRemoveCards(false);
+    }, 2000);
   }
 
   return (
@@ -498,13 +458,6 @@ function RemoveKitModal({
             Are you sure you want to remove this kit from your deck? This action
             cannot be undone.
           </Text>
-
-          {removeCards && (
-            <Text size="xs" className="italic">
-              Removing kit cards from your deck will also save the deck cards
-              currently in the deck
-            </Text>
-          )}
 
           <View className="flex flex-row justify-between items-center gap-4">
             <Checkbox
