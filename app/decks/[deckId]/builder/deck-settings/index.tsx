@@ -83,7 +83,8 @@ export default function DeckSettingsPage() {
         deck.format === MTGFormats.OATHBREAKER ||
         oracleText?.includes("Partner") ||
         oracleText?.includes("Choose a Background") ||
-        oracleText?.includes("Friends forever")
+        oracleText?.includes("Friends forever") ||
+        deck.commander.typeLine.includes("Time Lord Doctor")
       ) {
         setAllowedPartner(true);
       } else setAllowedPartner(false);
@@ -135,6 +136,7 @@ export default function DeckSettingsPage() {
 
     if (!FormatsWithCommander.includes(format as any)) {
       setAllowedPartner(false);
+      setDeck({ ...deck, commander: undefined, partner: undefined });
       return;
     }
 
@@ -156,7 +158,8 @@ export default function DeckSettingsPage() {
     } else if (
       commanderText?.includes("Partner") ||
       commanderText?.includes("Choose a Background") ||
-      commanderText?.includes("Friends forever")
+      commanderText?.includes("Friends forever") ||
+      commander?.typeLine.includes("Time Lord Doctor")
     ) {
       commanderAllowsPartner = true;
     } else commanderAllowsPartner = false;
@@ -211,11 +214,25 @@ export default function DeckSettingsPage() {
             card.oracleText?.includes("Friends forever")
           )
         );
+      } else if (commander?.typeLine.includes("Time Lord Doctor")) {
+        partnerOptions.push(
+          ...legendaries.filter((card) =>
+            card.oracleText?.includes("Doctor's companion")
+          )
+        );
       } else if (commanderText?.includes("Choose a Background")) {
         partnerOptions.push(
           ...legendaries.filter((card) => card.typeLine.includes("Background"))
         );
       }
+    }
+
+    if (
+      !partnerOptions
+        .map((option) => option.scryfallId)
+        .includes(partner?.scryfallId || "")
+    ) {
+      setPartner(null);
     }
 
     setPartnerOptions(partnerOptions);
