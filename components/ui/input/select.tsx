@@ -69,6 +69,7 @@ export default function Select({
       )?.label ?? "";
 
     if (!multiple && search) setSearch(search);
+    else if (!value) setSearch("");
   }, [value, options]);
 
   useEffect(() => {
