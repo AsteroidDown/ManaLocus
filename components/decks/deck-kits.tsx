@@ -55,8 +55,10 @@ export default function DeckKits({ deck, readonly }: DeckKitProps) {
 
     DeckService.getDeckKits(deck.id).then((deckKits) => {
       setDeckKits(deckKits);
-      if (!readonly) setLocalStorageKits(deckKits);
-      setKitIndex(-1);
+      if (!readonly) {
+        setLocalStorageKits(deckKits);
+        setKitIndex(-1);
+      }
     });
   }, [deck]);
 
