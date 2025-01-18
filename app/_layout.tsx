@@ -54,10 +54,21 @@ export default function RootLayout() {
 function Logo() {
   return (
     <View className="flex flex-row items-center gap-2 px-6 py-4">
-      <Link href="/">
-        <Text size="2xl" thickness="medium" className="mr-2">
+      <Link className="flex flex-col" href="/">
+        <Text
+          size="2xl"
+          thickness="medium"
+          className="hover:text-primary-200 transition-all duration-300"
+        >
           Mana Locus
         </Text>
+
+        <View className="flex flex-row">
+          <View className="flex-1 h-1 bg-gradient-to-r from-mtg-white to-mtg-blue to-85% rounded-l" />
+          <View className="flex-1 h-1 bg-gradient-to-r from-mtg-blue to-mtg-black to-75%" />
+          <View className="flex-1 h-1 bg-gradient-to-r from-mtg-black to-mtg-red to-95%" />
+          <View className="flex-1 h-1 bg-gradient-to-r from-mtg-red to-mtg-green to-50% rounded-r" />
+        </View>
       </Link>
 
       <Link href="/decks">
