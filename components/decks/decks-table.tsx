@@ -11,6 +11,7 @@ export type DecksTableProps = ViewProps & {
   decks: Deck[];
 
   hideHeader?: boolean;
+  hideCreator?: boolean;
   hideFormat?: boolean;
   hideModified?: boolean;
   hideFavorites?: boolean;
@@ -27,6 +28,7 @@ export type DecksTableProps = ViewProps & {
 export default function DecksTable({
   decks,
   hideHeader,
+  hideCreator,
   hideFormat,
   hideModified,
   hideFavorites,
@@ -78,10 +80,12 @@ export default function DecksTable({
     });
   }
 
-  columns.push({
-    title: "Creator",
-    row: (deck) => <Text>{deck.user?.name}</Text>,
-  });
+  if (!hideCreator) {
+    columns.push({
+      title: "Creator",
+      row: (deck) => <Text>{deck.user?.name}</Text>,
+    });
+  }
 
   if (!hideModified) {
     columns.push({
