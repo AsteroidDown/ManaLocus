@@ -47,7 +47,7 @@ async function getByUser(
   if (!pagination) pagination = DefaultPagination;
 
   const response: PaginatedResponse<Deck> = await API.get(
-    `user-decks/${userId}`,
+    `decks/user-decks/${userId}`,
     { ...filters, ...pagination }
   ).catch((error) =>
     console.error(
@@ -69,7 +69,7 @@ async function getUserFavorites(
   if (!pagination) pagination = DefaultPagination;
 
   const response: PaginatedResponse<Deck> = await API.get(
-    `user-decks/${userId}/favorites`,
+    `decks/user-decks/${userId}/favorites`,
     {
       ...filters,
       ...pagination,
