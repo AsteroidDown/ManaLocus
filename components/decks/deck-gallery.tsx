@@ -35,14 +35,16 @@ import DecksTable from "./decks-table";
 
 export interface DeckGalleryProps {
   userId?: string;
-  favorites?: boolean;
   kits?: boolean;
+  favorites?: boolean;
+  includeIds?: string[];
 }
 
 export default function DeckGallery({
   userId,
-  favorites = false,
+  includeIds,
   kits = false,
+  favorites = false,
 }: DeckGalleryProps) {
   const { user } = useContext(UserContext);
   const { userPageUser } = useContext(UserPageContext);
@@ -141,6 +143,7 @@ export default function DeckGallery({
       ...(board && { board }),
       ...(search && { search }),
       ...(kits && { onlyKits: true }),
+      ...(includeIds && { includeIds }),
       ...(format && { deckFormat: format }),
       ...(cards?.length && { cardNames: cards }),
       ...(exclusiveCardSearch && { exclusiveCardSearch }),
