@@ -1,6 +1,8 @@
 import Button from "@/components/ui/button/button";
 import Input from "@/components/ui/input/input";
 import Select from "@/components/ui/input/select";
+import Pagination from "@/components/ui/pagination/pagination";
+import { TableColumn } from "@/components/ui/table/table";
 import { BoardType, BoardTypes } from "@/constants/boards";
 import { MTGFormats } from "@/constants/mtg/mtg-format";
 import UserPageContext from "@/contexts/user/user-page.context";
@@ -29,7 +31,6 @@ import {
 import { Link, router } from "expo-router";
 import React, { useContext, useEffect } from "react";
 import { View } from "react-native";
-import Pagination from "../ui/pagination/pagination";
 import DeckCard from "./deck-card";
 import DecksTable from "./decks-table";
 
@@ -38,6 +39,7 @@ export interface DeckGalleryProps {
   kits?: boolean;
   favorites?: boolean;
   includeIds?: string[];
+  endColumns?: TableColumn<Deck>[];
 }
 
 export default function DeckGallery({
@@ -45,6 +47,7 @@ export default function DeckGallery({
   includeIds,
   kits = false,
   favorites = false,
+  endColumns,
 }: DeckGalleryProps) {
   const { user } = useContext(UserContext);
   const { userPageUser } = useContext(UserPageContext);
@@ -349,6 +352,7 @@ export default function DeckGallery({
         <DecksTable
           decks={decks}
           rowClick={(deck) => router.push(`decks/${deck.id}`)}
+          endColumns={endColumns}
         />
       )}
 
