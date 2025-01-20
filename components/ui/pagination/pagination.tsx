@@ -35,6 +35,11 @@ export default function Pagination({
         center ? "justify-center" : "justify-end"
       }`}
     >
+      <Text size="xs">
+        {(meta.page - 1) * meta.items + 1} -{" "}
+        {Math.min(meta.page * meta.items, meta.totalItems)} of {meta.totalItems}
+      </Text>
+
       <Button
         rounded
         action="default"
