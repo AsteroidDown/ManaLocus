@@ -108,7 +108,6 @@ export default function DeckKits({ deck, readonly }: DeckKitProps) {
                       row: (kit) => (
                         <RemoveKitModal
                           kit={kit}
-                          deck={deck}
                           deckKits={deckKits}
                           setKitIndex={setKitIndex}
                         />
@@ -388,18 +387,12 @@ function AddKitModal({
 }
 
 interface RemoveKitModalProps {
-  deck: Deck;
   kit: Deck;
   deckKits: Deck[];
   setKitIndex: React.Dispatch<React.SetStateAction<number>>;
 }
 
-function RemoveKitModal({
-  deck,
-  kit,
-  deckKits,
-  setKitIndex,
-}: RemoveKitModalProps) {
+function RemoveKitModal({ kit, deckKits, setKitIndex }: RemoveKitModalProps) {
   const { setStoredCards } = useContext(StoredCardsContext);
 
   const [open, setOpen] = React.useState(false);
