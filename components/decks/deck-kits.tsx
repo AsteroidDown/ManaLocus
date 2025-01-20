@@ -164,7 +164,6 @@ function KitModal({ kit, open, setOpen }: KitModalProps) {
         </Text>
 
         <Table
-          lightBackground
           className="max-h-[500px]"
           data={kitCards}
           columns={[
@@ -285,7 +284,6 @@ function AddKitModal({
 
             <View className="flex flex-row gap-4 my-4">
               <Input
-                lightBorder
                 label="Search"
                 placeholder="Search for a kit"
                 onChange={setSearch}
@@ -314,7 +312,6 @@ function AddKitModal({
                   hideModified
                   hideFavorites
                   hideViews
-                  lightBackground
                   decks={kits}
                   rowClick={selectKit}
                 />
@@ -342,7 +339,6 @@ function AddKitModal({
             </View>
 
             <Table
-              lightBackground
               className="max-h-[250px]"
               data={selectedKit?.main || []}
               columns={
@@ -456,7 +452,6 @@ function RemoveKitModal({ kit, deckKits, setKitIndex }: RemoveKitModalProps) {
 
           <View className="flex flex-row justify-between items-center gap-4">
             <Checkbox
-              lightBorder
               size="sm"
               label="Remove kit cards from deck as well"
               checked={removeCards}

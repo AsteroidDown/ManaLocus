@@ -99,7 +99,6 @@ export default function DeckDuplicateModal({
         </Text>
 
         <Input
-          lightBorder
           label="New Deck Name"
           placeholder="Name your copy of the deck"
           value={deck.name}

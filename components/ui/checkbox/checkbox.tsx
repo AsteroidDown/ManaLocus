@@ -9,7 +9,6 @@ export interface CheckboxProps {
   label?: string;
 
   size?: Size;
-  lightBorder?: boolean;
 
   checked?: boolean;
   onChange: (checked: boolean) => void;
@@ -18,7 +17,6 @@ export interface CheckboxProps {
 export default function Checkbox({
   label,
   size,
-  lightBorder,
   checked,
   onChange,
 }: CheckboxProps) {
@@ -32,8 +30,8 @@ export default function Checkbox({
       onPress={() => onChange?.(!checked)}
     >
       <View
-        className={`${hovered ? "bg-primary-300 border-primary-200" : ""} ${
-          lightBorder ? "border-background-300" : "border-background-200"
+        className={`${
+          hovered ? "bg-primary-300 border-primary-200" : ""
         } flex justify-center items-center w-6 h-6 rounded-lg bg-opacity-35 border-2 overflow-hidden transition-all duration-300`}
       >
         <View

@@ -17,8 +17,6 @@ export type DecksTableProps = ViewProps & {
   hideFavorites?: boolean;
   hideViews?: boolean;
 
-  lightBackground?: boolean;
-
   startColumns?: TableColumn<Deck>[];
   endColumns?: TableColumn<Deck>[];
 
@@ -33,7 +31,6 @@ export default function DecksTable({
   hideModified,
   hideFavorites,
   hideViews,
-  lightBackground,
   startColumns,
   endColumns,
   rowClick,
@@ -122,7 +119,6 @@ export default function DecksTable({
       columns={columns}
       className={className}
       hideHeader={hideHeader}
-      lightBackground={lightBackground}
       rowClick={(deck) => rowClick?.(deck)}
     />
   );

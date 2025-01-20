@@ -9,7 +9,6 @@ export interface InputProps {
   error?: boolean;
   errorMessage?: string;
 
-  lightBorder?: boolean;
   disabled?: boolean;
   secured?: boolean;
   multiline?: boolean;
@@ -29,7 +28,6 @@ export default function Input({
   error,
   errorMessage,
 
-  lightBorder,
   disabled,
   secured,
   multiline,
@@ -94,8 +92,6 @@ export default function Input({
             ? "border-primary-300"
             : hovered
             ? "border-primary-200"
-            : lightBorder
-            ? "border-background-300"
             : "border-background-200"
         } ${disabled ? "!border-background-100" : ""} ${
           multiline ? "min-h-24" : "h-10"

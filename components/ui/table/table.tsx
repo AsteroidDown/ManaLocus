@@ -16,7 +16,6 @@ export type TableProps<T> = ViewProps & {
   columns: TableColumn<T>[];
 
   hideHeader?: boolean;
-  lightBackground?: boolean;
 
   rowClick?: (arg: T) => void;
 };
@@ -25,7 +24,6 @@ export default function Table({
   data,
   columns,
   hideHeader,
-  lightBackground,
   rowClick,
   className,
 }: TableProps<any>) {
@@ -42,7 +40,7 @@ export default function Table({
             <View
               className={`sticky top-0 flex flex-row items-center h-10 max-h-10 px-4 border-b border-background-300 overflow-hidden z-10 ${
                 column.center ? "justify-center" : "justify-start"
-              } ${lightBackground ? "bg-background-200" : "bg-background-100"}`}
+              } `}
             >
               <Text key={index} thickness="semi">
                 {column.title}
