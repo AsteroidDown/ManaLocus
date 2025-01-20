@@ -43,12 +43,12 @@ export default function FolderDetailsModal({
     FolderService.create(user.id, name ?? "New Folder").then((response) => {
       setSaving(false);
       setSuccess(true);
+      setSelectedFolderId?.((response as any).folderId);
 
       setTimeout(() => {
         setSuccess(false);
         setName("");
         setOpen(false);
-        setSelectedFolderId?.((response as any).folderId);
       }, 2000);
     });
   }
@@ -60,12 +60,12 @@ export default function FolderDetailsModal({
     FolderService.update(user.id, folder.id, name).then(() => {
       setSaving(false);
       setSuccess(true);
+      setSelectedFolderId?.(folder.id);
 
       setTimeout(() => {
         setSuccess(false);
         setName("");
         setOpen(false);
-        setSelectedFolderId?.(folder.id);
       }, 2000);
     });
   }
