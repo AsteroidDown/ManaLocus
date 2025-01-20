@@ -51,6 +51,7 @@ export function mapDatabaseDeck(data: any, withCards = false): Deck {
     partner: deck?.partner ? mapDatabaseCardToCard(deck.partner) : undefined,
 
     isKit: !!deck?.isKit,
+    inProgress: !!deck?.inProgress,
   };
 }
 

@@ -35,6 +35,7 @@ export interface Deck {
   partner?: Card;
 
   isKit?: boolean;
+  inProgress?: boolean;
 }
 
 export interface DeckCard {

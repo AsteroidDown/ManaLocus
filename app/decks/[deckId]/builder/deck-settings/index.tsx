@@ -1,6 +1,7 @@
 import DeckKits from "@/components/decks/deck-kits";
 import BoxHeader from "@/components/ui/box/box-header";
 import Button from "@/components/ui/button/button";
+import Checkbox from "@/components/ui/checkbox/checkbox";
 import Input from "@/components/ui/input/input";
 import Select from "@/components/ui/input/select";
 import Text from "@/components/ui/text/text";
@@ -43,6 +44,7 @@ export default function DeckSettingsPage() {
   );
   const [commander, setCommander] = React.useState(null as Card | null);
   const [partner, setPartner] = React.useState(null as Card | null);
+  const [inProgress, setInProgress] = React.useState(false);
 
   const [featuredCardSearch, setFeaturedCardSearch] = React.useState("");
   const [featuredCard, setFeaturedCard] = React.useState(null as Card | null);
@@ -63,6 +65,7 @@ export default function DeckSettingsPage() {
     setDescription(deck.description || "");
     setFormat(deck.format);
     setIsKit(!!deck.isKit);
+    setInProgress(!!deck.inProgress);
 
     const foundFeaturedCard = mainBoardCards.find(
       (card) =>
@@ -322,6 +325,7 @@ export default function DeckSettingsPage() {
       partnerId: partner?.scryfallId,
 
       isKit,
+      inProgress,
 
       kits: getLocalStorageKits().map((kit) => kit.id),
     };
@@ -489,6 +493,13 @@ export default function DeckSettingsPage() {
         placeholder="Description"
         value={description}
         onChange={setDescription}
+      />
+
+      <Checkbox
+        label="In Progress"
+        text="Decks in progress will not be visible to other users"
+        checked={inProgress}
+        onChange={setInProgress}
       />
 
       {deck && (
