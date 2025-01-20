@@ -4,7 +4,7 @@ import Select from "@/components/ui/input/select";
 import Pagination from "@/components/ui/pagination/pagination";
 import { TableColumn } from "@/components/ui/table/table";
 import { BoardType, BoardTypes } from "@/constants/boards";
-import { MTGFormats } from "@/constants/mtg/mtg-format";
+import { FormatsWithCommander, MTGFormats } from "@/constants/mtg/mtg-format";
 import UserPageContext from "@/contexts/user/user-page.context";
 import UserPreferencesContext from "@/contexts/user/user-preferences.context";
 import UserContext from "@/contexts/user/user.context";
@@ -63,6 +63,7 @@ export default function DeckGallery({
 
   const [search, setSearch] = React.useState("");
   const [format, setFormat] = React.useState(null as MTGFormats | null);
+  const [commanderFormat, setCommanderFormat] = React.useState(false);
   const [sort, setSort] = React.useState(
     preferences?.decksSortType ?? (DeckSortTypes.CREATED as DeckSortType)
   );
@@ -141,6 +142,10 @@ export default function DeckGallery({
   }, [partnerCardSearch]);
 
   useEffect(() => {
+    if (FormatsWithCommander.includes(format as any)) {
+      setCommanderFormat(true);
+    } else setCommanderFormat(false);
+
     const filters: DeckFiltersDTO = {
       ...(sort && { sort }),
       ...(board && { board }),
@@ -267,6 +272,30 @@ export default function DeckGallery({
               },
             ]}
           />
+
+          {!kits && commanderFormat && (
+            <View className="flex flex-row flex-wrap gap-4 z-[10]">
+              <Select
+                label="Commander"
+                onChange={setCommanderSearch}
+                onSearchChange={setCommanderCardSearch}
+                options={commanderCardAutoComplete.map((card) => ({
+                  label: card,
+                  value: card,
+                }))}
+              />
+
+              <Select
+                label="Partner"
+                onChange={setPartnerSearch}
+                onSearchChange={setPartnerCardSearch}
+                options={partnerCardAutoComplete.map((card) => ({
+                  label: card,
+                  value: card,
+                }))}
+              />
+            </View>
+          )}
         </View>
 
         <View className="flex flex-row gap-4 z-[11]">
@@ -309,30 +338,6 @@ export default function DeckGallery({
             </View>
           )}
         </View>
-
-        {!kits && (
-          <View className="flex flex-row flex-wrap gap-4 z-[10]">
-            <Select
-              label="Commander"
-              onChange={setCommanderSearch}
-              onSearchChange={setCommanderCardSearch}
-              options={commanderCardAutoComplete.map((card) => ({
-                label: card,
-                value: card,
-              }))}
-            />
-
-            <Select
-              label="Partner"
-              onChange={setPartnerSearch}
-              onSearchChange={setPartnerCardSearch}
-              options={partnerCardAutoComplete.map((card) => ({
-                label: card,
-                value: card,
-              }))}
-            />
-          </View>
-        )}
       </View>
 
       {!listView && (
