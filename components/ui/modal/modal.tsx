@@ -53,7 +53,7 @@ export default function Modal({
                     <Box
                       className={`
                         ${className} ${transParentClasses}
-                        bg-background-200 border-background-100 border-2 transition-all duration-500
+                        !bg-background-100 !border-background-200 border-2 transition-all duration-500
                         ${animate ? "opacity-0" : "opacity-100"}`}
                     >
                       {children}
