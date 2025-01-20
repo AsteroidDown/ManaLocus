@@ -74,6 +74,8 @@ export default function DeckSettingsPage() {
       setFeaturedCardSearch(foundFeaturedCard.name);
     }
 
+    if (!commanderFormat) return;
+
     if (deck.commander) {
       setCommander(deck.commander);
       if (deck.partner) setPartner(deck.partner);
@@ -94,12 +96,14 @@ export default function DeckSettingsPage() {
   useEffect(() => {
     if (!deck || !format || format === deck?.format) return;
 
-    setCommander(null);
-    setPartner(null);
     setDeck({
       ...deck,
       format: format,
+      commander: undefined,
+      partner: undefined,
     });
+    setCommander(null);
+    setPartner(null);
   }, [format]);
 
   useEffect(() => {
@@ -127,6 +131,7 @@ export default function DeckSettingsPage() {
     if (newCommander || newPartner) {
       setDeck({
         ...deck,
+        ...(format && { format }),
         ...(newCommander && {
           commander: commander ?? undefined,
         }),
@@ -136,7 +141,12 @@ export default function DeckSettingsPage() {
 
     if (!FormatsWithCommander.includes(format as any)) {
       setAllowedPartner(false);
-      setDeck({ ...deck, commander: undefined, partner: undefined });
+      setDeck({
+        ...deck,
+        commander: undefined,
+        partner: undefined,
+        ...(format && { format }),
+      });
       return;
     }
 
