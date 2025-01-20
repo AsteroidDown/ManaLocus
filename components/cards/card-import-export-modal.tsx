@@ -405,17 +405,14 @@ export default function CardImportExportModal({
             </View>
           </View>
 
-          <View className="bg-background-100 p-4 rounded-xl overflow-hidden">
+          <View className="bg-dark-100 p-4 rounded-xl overflow-hidden">
             <View className="max-h-40 overflow-y-auto">
               <Text mono>{cards}</Text>
             </View>
           </View>
 
           <Text className="pl-3">For importing use one of the standards:</Text>
-          <Text
-            mono
-            className="-mt-2 px-2.5 py-1.5 bg-background-100 rounded-lg"
-          >
+          <Text mono className="-mt-2 px-2.5 py-1.5 bg-dark-100 rounded-lg">
             1 id {"\n"}1 name {"\n"}1 name (set) collection_number
           </Text>
         </View>
