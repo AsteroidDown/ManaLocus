@@ -45,6 +45,11 @@ export default function UserLayout() {
       link: `users/${userPageUser.id}/kits`,
       name: "kits",
     },
+    {
+      title: "Folders",
+      link: `users/${userPageUser.id}/folders`,
+      name: "folders",
+    },
   ];
 
   if (isPageUser) {
