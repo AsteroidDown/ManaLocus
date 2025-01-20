@@ -7,6 +7,7 @@ import Text from "../text/text";
 
 export interface CheckboxProps {
   label?: string;
+  text?: string;
 
   size?: Size;
   disabled?: boolean;
@@ -17,6 +18,7 @@ export interface CheckboxProps {
 
 export default function Checkbox({
   label,
+  text,
   size,
   disabled,
   checked,
@@ -45,11 +47,15 @@ export default function Checkbox({
         </View>
       </View>
 
-      {label && (
-        <Text size={size ?? "md"} thickness="medium">
-          {label}
-        </Text>
-      )}
+      <View className="flex">
+        {label && (
+          <Text size={size ?? "md"} thickness="medium">
+            {label}
+          </Text>
+        )}
+
+        {text && <Text size="xs">{text}</Text>}
+      </View>
     </Pressable>
   );
 }
