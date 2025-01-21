@@ -66,6 +66,8 @@ export default function DeckKits({ deck, readonly }: DeckKitProps) {
     setDeckKits(getLocalStorageKits());
   }, [kitIndex]);
 
+  if (readonly && !deckKits?.length) return null;
+
   return (
     <View className="flex">
       <View className="flex flex-row justify-between items-center gap-4">
