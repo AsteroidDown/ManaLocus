@@ -56,6 +56,7 @@ export default function DeckGallery({
   const [decks, setDecks] = React.useState([] as Deck[]);
   const [meta, setMeta] = React.useState(null as PaginationMeta | null);
   const [page, setPage] = React.useState(1);
+  const [loading, setLoading] = React.useState(false);
 
   const [listView, setListView] = React.useState(false);
   const [filtersOpen, setFiltersOpen] = React.useState(false);
@@ -142,6 +143,8 @@ export default function DeckGallery({
   }, [partnerCardSearch]);
 
   useEffect(() => {
+    setLoading(true);
+
     if (FormatsWithCommander.includes(format as any)) {
       setCommanderFormat(true);
     } else setCommanderFormat(false);
@@ -165,16 +168,19 @@ export default function DeckGallery({
         DeckService.getUserFavorites(userId, filters).then((response) => {
           setDecks(response.data);
           setMeta(response.meta);
+          setLoading(false);
         });
       } else
         DeckService.getByUser(userId, filters).then((response) => {
           setDecks(response.data);
           setMeta(response.meta);
+          setLoading(false);
         });
     } else {
       DeckService.getMany(filters, { page, items: 50 }).then((response) => {
         setDecks(response.data);
         setMeta(response.meta);
+        setLoading(false);
       });
     }
   }, [
@@ -356,6 +362,7 @@ export default function DeckGallery({
       {listView && (
         <DecksTable
           decks={decks}
+          loading={loading}
           rowClick={(deck) => router.push(`decks/${deck.id}`)}
           endColumns={endColumns}
         />

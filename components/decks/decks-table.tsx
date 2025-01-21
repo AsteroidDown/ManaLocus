@@ -4,11 +4,13 @@ import { Deck } from "@/models/deck/deck";
 import moment from "moment";
 import { Image, View, ViewProps } from "react-native";
 import CardText from "../cards/card-text";
+import LoadingTable from "../ui/table/loading-table";
 import Table, { TableColumn } from "../ui/table/table";
 import Text from "../ui/text/text";
 
 export type DecksTableProps = ViewProps & {
   decks: Deck[];
+  loading?: boolean;
 
   hideHeader?: boolean;
   hideCreator?: boolean;
@@ -25,6 +27,7 @@ export type DecksTableProps = ViewProps & {
 
 export default function DecksTable({
   decks,
+  loading,
   hideHeader,
   hideCreator,
   hideFormat,
@@ -36,6 +39,8 @@ export default function DecksTable({
   rowClick,
   className,
 }: DecksTableProps) {
+  if (loading) return <LoadingTable />;
+
   const columns: TableColumn<Deck>[] = [];
 
   if (startColumns?.length) {

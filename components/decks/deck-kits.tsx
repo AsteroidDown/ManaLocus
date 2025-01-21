@@ -44,6 +44,8 @@ export interface DeckKitProps {
 export default function DeckKits({ deck, readonly }: DeckKitProps) {
   const [deckKits, setDeckKits] = React.useState([] as Deck[]);
 
+  const [loading, setLoading] = React.useState(false);
+
   const [selectedKit, setSelectedKit] = React.useState(null as Deck | null);
   const [kitModalOpen, setKitModalOpen] = React.useState(false);
   const [addKitModalOpen, setAddKitModalOpen] = React.useState(false);
@@ -52,9 +54,12 @@ export default function DeckKits({ deck, readonly }: DeckKitProps) {
 
   useEffect(() => {
     if (!deck) return;
+    setLoading(true);
 
     DeckService.getDeckKits(deck.id).then((deckKits) => {
       setDeckKits(deckKits);
+      setLoading(false);
+
       if (!readonly) {
         setLocalStorageKits(deckKits);
         setKitIndex(-1);
@@ -97,6 +102,7 @@ export default function DeckKits({ deck, readonly }: DeckKitProps) {
             hideFavorites
             hideViews
             decks={deckKits}
+            loading={loading}
             hideHeader={!readonly}
             rowClick={(kit) => {
               setSelectedKit(kit);
