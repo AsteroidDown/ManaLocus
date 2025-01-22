@@ -3,7 +3,7 @@ import { ScryfallURL } from "../../constants/urls";
 
 function getHeaders() {
   return {
-    // "User-Agent": "ChromaticCube/1.0",
+    // "User-Agent": "Mana Locus/1.0",
     Accept: "*/*",
   };
 }

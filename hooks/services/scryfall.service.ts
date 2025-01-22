@@ -168,8 +168,6 @@ async function getAllCards() {
       cards: data,
     });
   });
-
-  // return response.data.map((card) => ScryfallToCard(card));
 }
 
 const ScryfallService = {

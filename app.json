@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "ChromaticCube",
-    "slug": "ChromaticCube",
+    "name": "Mana Locus",
+    "slug": "Mana Locus",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -13,21 +13,21 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.anonymous.ChromaticCube"
+      "bundleIdentifier": "com.anonymous.ManaLocus"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.anonymous.ChromaticCube"
+      "package": "com.anonymous.ManaLocus"
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
     "plugins": ["expo-router"]
   },
-  "scheme": "chromatic-cube-scheme",
+  "scheme": "manalocus-cube-scheme",
   "web": {
     "bundler": "metro"
   }
