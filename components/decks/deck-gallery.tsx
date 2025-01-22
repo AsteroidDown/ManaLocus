@@ -234,53 +234,56 @@ export default function DeckGallery({
           !overflow && "overflow-hidden"
         } flex gap-4 z-[11] transition-all duration-300`}
       >
-        <View className="flex flex-row gap-4 z-[12]">
-          <Select
-            label="Format"
-            value={format}
-            className="!flex-[2]"
-            onChange={setFormat}
-            options={[
-              { label: "All", value: null },
-              ...Object.keys(MTGFormats).map((key) => {
-                return {
-                  label: titleCase(key),
-                  value: (MTGFormats as any)[key],
-                };
-              }),
-            ]}
-          />
+        <View className="flex flex-row flex-wrap gap-4 z-[12]">
+          <View className="flex-[2] z-[20] min-w-[250px]">
+            <Select
+              label="Format"
+              value={format}
+              onChange={setFormat}
+              options={[
+                { label: "All", value: null },
+                ...Object.keys(MTGFormats).map((key) => {
+                  return {
+                    label: titleCase(key),
+                    value: (MTGFormats as any)[key],
+                  };
+                }),
+              ]}
+            />
+          </View>
 
-          <Select
-            label="Sort"
-            value={sort}
-            onChange={setSort}
-            options={[
-              { label: "Created", value: DeckSortTypes.CREATED },
-              {
-                label: "Created (Old to New)",
-                value: DeckSortTypes.CREATED_REVERSE,
-              },
-              { label: "Updated", value: DeckSortTypes.UPDATED },
-              {
-                label: "Updated (Old to New)",
-                value: DeckSortTypes.UPDATED_REVERSE,
-              },
-              { label: "Favorites", value: DeckSortTypes.FAVORITES },
-              {
-                label: "Favorites (Ascending)",
-                value: DeckSortTypes.FAVORITES_REVERSE,
-              },
-              { label: "Views", value: DeckSortTypes.VIEWS },
-              {
-                label: "Views (Ascending)",
-                value: DeckSortTypes.VIEWS_REVERSE,
-              },
-            ]}
-          />
+          <View className="flex-1 z-[12] min-w-[250px]">
+            <Select
+              label="Sort"
+              value={sort}
+              onChange={setSort}
+              options={[
+                { label: "Created", value: DeckSortTypes.CREATED },
+                {
+                  label: "Created (Old to New)",
+                  value: DeckSortTypes.CREATED_REVERSE,
+                },
+                { label: "Updated", value: DeckSortTypes.UPDATED },
+                {
+                  label: "Updated (Old to New)",
+                  value: DeckSortTypes.UPDATED_REVERSE,
+                },
+                { label: "Favorites", value: DeckSortTypes.FAVORITES },
+                {
+                  label: "Favorites (Ascending)",
+                  value: DeckSortTypes.FAVORITES_REVERSE,
+                },
+                { label: "Views", value: DeckSortTypes.VIEWS },
+                {
+                  label: "Views (Ascending)",
+                  value: DeckSortTypes.VIEWS_REVERSE,
+                },
+              ]}
+            />
+          </View>
 
           {!kits && commanderFormat && (
-            <View className="flex flex-row flex-wrap gap-4 z-[10]">
+            <View className="flex-1 z-[12] min-w-[250px]">
               <Select
                 label="Commander"
                 onChange={setCommanderSearch}
@@ -290,7 +293,11 @@ export default function DeckGallery({
                   value: card,
                 }))}
               />
+            </View>
+          )}
 
+          {!kits && commanderFormat && (
+            <View className="flex-1 z-[10] min-w-[250px]">
               <Select
                 label="Partner"
                 onChange={setPartnerSearch}
@@ -304,24 +311,25 @@ export default function DeckGallery({
           )}
         </View>
 
-        <View className="flex flex-row gap-4 z-[11]">
-          <Select
-            multiple
-            label="Cards"
-            onChange={setCards}
-            onSearchChange={setCardSearch}
-            options={cardAutoComplete.map((card) => ({
-              label: card,
-              value: card,
-            }))}
-          />
+        <View className="flex flex-row flex-wrap gap-4 z-[11]">
+          <View className="flex-[3] z-[10] min-w-[250px]">
+            <Select
+              multiple
+              label="Cards"
+              onChange={setCards}
+              onSearchChange={setCardSearch}
+              options={cardAutoComplete.map((card) => ({
+                label: card,
+                value: card,
+              }))}
+            />
+          </View>
 
           {!kits && (
-            <View className="flex flex-row gap-4">
+            <View className="flex-1 z-[10] min-w-[250px]">
               <Select
                 label="Board"
                 value={board}
-                className="max-w-min"
                 onChange={setBoard}
                 options={Object.keys(BoardTypes).map((key) => {
                   return {
@@ -330,11 +338,14 @@ export default function DeckGallery({
                   };
                 })}
               />
+            </View>
+          )}
 
+          {!kits && (
+            <View className="flex-1 z-[8] min-w-[250px]">
               <Select
                 label="Board Contains"
                 value={exclusiveCardSearch}
-                className="max-w-min"
                 onChange={setSearchType}
                 options={[
                   { label: "A Selected Card", value: false },
