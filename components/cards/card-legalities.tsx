@@ -1,9 +1,13 @@
 import { MTGLegality } from "@/constants/mtg/mtg-legality";
-import { ActionColor } from "@/constants/ui/colors";
-import { titleCase } from "@/functions/text-manipulation";
 import { Card } from "@/models/card/card";
+import {
+  faBan,
+  faCircleCheck,
+  faCircleInfo,
+  faCircleXmark,
+} from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { View } from "react-native";
-import Chip from "../ui/chip/chip";
 import Text from "../ui/text/text";
 
 export interface CardLegalitiesProps {
@@ -21,11 +25,20 @@ export function CardLegalities({ card }: CardLegalitiesProps) {
         <Legality gameType="Modern" legality={card.legalities.modern} />
         <Legality gameType="Legacy" legality={card.legalities.legacy} />
         <Legality gameType="Vintage" legality={card.legalities.vintage} />
+      </View>
+
+      <View className="flex-1 flex gap-2 min-w-min">
         <Legality gameType="Commander" legality={card.legalities.commander} />
         <Legality
           gameType="Oathbreaker"
           legality={card.legalities.oathbreaker}
         />
+        <Legality gameType="Pauper" legality={card.legalities.pauper} />
+        <Legality
+          gameType="Pauper EDH"
+          legality={card.legalities.paupercommander}
+        />
+        <Legality gameType="Penny" legality={card.legalities.penny} />
       </View>
 
       <View className="flex-1 flex gap-2 min-w-min">
@@ -34,8 +47,6 @@ export function CardLegalities({ card }: CardLegalitiesProps) {
         <Legality gameType="Historic" legality={card.legalities.historic} />
         <Legality gameType="Timeless" legality={card.legalities.timeless} />
         <Legality gameType="Brawl" legality={card.legalities.brawl} />
-        <Legality gameType="Pauper" legality={card.legalities.pauper} />
-        <Legality gameType="Penny" legality={card.legalities.penny} />
       </View>
     </View>
   );
@@ -48,25 +59,34 @@ function Legality({
   gameType: string;
   legality: MTGLegality;
 }) {
-  function getLegalityColor(legality: MTGLegality): ActionColor {
-    return legality === "legal"
-      ? "success"
+  const legalityColor =
+    legality === "legal"
+      ? "bg-success-100"
       : legality === "restricted"
-      ? "warning"
-      : "danger";
-  }
+      ? "bg-warning-100"
+      : legality === "banned"
+      ? "bg-danger-100"
+      : "bg-dark-400";
 
   return (
     <View className="flex flex-row items-center justify-between w-full gap-2">
-      <Text size="sm" className="flex-1">
-        {gameType}
-      </Text>
+      <View
+        className={`${legalityColor} flex justify-center items-center w-5 h-5 p-px rounded-full`}
+      >
+        <FontAwesomeIcon
+          icon={
+            legality === "legal"
+              ? faCircleCheck
+              : legality === "restricted"
+              ? faCircleInfo
+              : legality === "banned"
+              ? faCircleXmark
+              : faBan
+          }
+        />
+      </View>
 
-      <Chip
-        size="xs"
-        text={titleCase(legality).replace("_", " ")}
-        action={getLegalityColor(legality)}
-      />
+      <Text className="flex-1">{gameType}</Text>
     </View>
   );
 }
