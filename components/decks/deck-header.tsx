@@ -1,11 +1,19 @@
 import { LostURL } from "@/constants/urls";
+import DeckContext from "@/contexts/deck/deck.context";
 import UserContext from "@/contexts/user/user.context";
 import { titleCase } from "@/functions/text-manipulation";
+import DeckService from "@/hooks/services/deck.service";
 import { Deck } from "@/models/deck/deck";
-import { faEllipsisV, faPen, faTrash } from "@fortawesome/free-solid-svg-icons";
+import {
+  faEllipsisV,
+  faEye,
+  faHeart,
+  faPen,
+  faTrash,
+} from "@fortawesome/free-solid-svg-icons";
 import { Link } from "expo-router";
 import moment from "moment";
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { Image, View } from "react-native";
 import Button from "../ui/button/button";
 import Dropdown from "../ui/dropdown/dropdown";
@@ -14,9 +22,55 @@ import DeckDeleteModal from "./deck-delete-modal";
 
 export default function DeckHeader({ deck }: { deck: Deck }) {
   const { user } = useContext(UserContext);
+  const { setDeck } = useContext(DeckContext);
+
+  const [deckFavorited, setDeckFavorited] = React.useState(false);
+  const [deckViewed, setDeckViewed] = React.useState(null as boolean | null);
 
   const [optionsExpanded, setOptionsExpanded] = React.useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = React.useState(false);
+
+  useEffect(() => {
+    if (!deck) return;
+
+    DeckService.getDeckFavorited(deck.id).then((favorited) =>
+      setDeckFavorited(favorited)
+    );
+
+    DeckService.getDeckViewed(deck.id).then((viewed) => setDeckViewed(viewed));
+  }, [deck]);
+
+  useEffect(() => {
+    if (deckViewed === null || deckViewed) return;
+
+    DeckService.addView(deck.id).then((response) => {
+      if (response) {
+        setDeck({ ...deck, views: deck.views + 1 });
+      }
+    });
+  }, [deckViewed]);
+
+  function addFavorite() {
+    if (!deck) return;
+
+    DeckService.addFavorite(deck.id).then((response) => {
+      if (response) {
+        setDeckFavorited(true);
+        setDeck({ ...deck, favorites: deck.favorites + 1 });
+      }
+    });
+  }
+
+  function removeFavorite() {
+    if (!deck) return;
+
+    DeckService.removeFavorite(deck.id).then((response) => {
+      if (response) {
+        setDeckFavorited(false);
+        setDeck({ ...deck, favorites: deck.favorites - 1 });
+      }
+    });
+  }
 
   return (
     <View className="relative h-72 overflow-hidden">
@@ -58,12 +112,19 @@ export default function DeckHeader({ deck }: { deck: Deck }) {
       </View>
 
       {user?.id === deck.userId && (
-        <View className="absolute top-4 right-6 flex flex-row gap-2 shadow-lg">
-          <Link href={`${deck.id}/builder/main-board`}>
+        <View className="absolute top-4 right-6 flex flex-row gap-2">
+          <Link
+            href={`${deck.id}/builder/main-board`}
+            className="shadow-lg rounded-lg"
+          >
             <Button text="Edit" icon={faPen} className="w-full" />
           </Link>
 
-          <Button icon={faEllipsisV} onClick={() => setOptionsExpanded(true)}>
+          <Button
+            icon={faEllipsisV}
+            onClick={() => setOptionsExpanded(true)}
+            className="shadow-lg rounded-lg"
+          >
             <View className="-mx-1">
               <Dropdown
                 xOffset={-100}
@@ -93,6 +154,28 @@ export default function DeckHeader({ deck }: { deck: Deck }) {
           </Button>
         </View>
       )}
+
+      <View className="absolute bottom-4 right-6">
+        <View className="flex flex-row rounded-full bg-background-100">
+          <Button
+            rounded
+            size="sm"
+            type="clear"
+            className="-mr-4"
+            icon={faEye}
+            text={deck.views + ""}
+          />
+
+          <Button
+            rounded
+            size="sm"
+            type="clear"
+            icon={faHeart}
+            text={deck.favorites + ""}
+            onClick={() => (deckFavorited ? removeFavorite() : addFavorite())}
+          />
+        </View>
+      </View>
     </View>
   );
 }
