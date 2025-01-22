@@ -7,15 +7,16 @@ export function titleCase(text?: string) {
     : "";
 }
 
-export function currency(value?: number | null) {
-  if (!value) return "$0.00";
+export function currency(value?: number | null, euro = false) {
+  const symbol = euro ? "€" : "$";
+  if (!value) return symbol + "0.00";
 
   if (typeof value !== "number") {
     const valueNumber = Number(value);
-    if (isNaN(valueNumber)) return "$0.00";
+    if (isNaN(valueNumber)) return symbol + "0.00";
 
-    return "$" + valueNumber.toFixed(2);
+    return symbol + valueNumber.toFixed(2);
   }
 
-  return "$" + value.toFixed(2);
+  return symbol + value.toFixed(2);
 }
