@@ -6,7 +6,6 @@ import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import moment from "moment";
 import React from "react";
 import { Pressable, View } from "react-native";
-import Box from "../ui/box/box";
 import Button from "../ui/button/button";
 import Divider from "../ui/divider/divider";
 import Text from "../ui/text/text";
@@ -61,22 +60,26 @@ export default function CardRulings({ card }: CardRulingsProps) {
         } flex gap-2 max-w-full rounded-lg overflow-y-scroll transition-all duration-300`}
       >
         {rulings?.map((ruling, index) => (
-          <Box key={index} shade={300} className="flex gap-2">
-            <CardText text={ruling.comment} />
+          <View key={index}>
+            <View className="flex gap-2 px-4 py-2">
+              <CardText text={ruling.comment} />
 
-            <View className="flex flex-row justify-between items-center gap-2">
-              <Text size="sm" thickness="semi">
-                Source:{" "}
-                {ruling.source === "wotc"
-                  ? "Wizards of the Coast"
-                  : titleCase(ruling.source)}
-              </Text>
+              <View className="flex flex-row justify-between items-center gap-2">
+                <Text size="sm" thickness="semi">
+                  Source:{" "}
+                  {ruling.source === "wotc"
+                    ? "Wizards of the Coast"
+                    : titleCase(ruling.source)}
+                </Text>
 
-              <Text size="sm" thickness="semi">
-                {moment(ruling.publishedAt).format("MMM D, YYYY")}
-              </Text>
+                <Text size="sm" thickness="semi">
+                  {moment(ruling.publishedAt).format("MMM D, YYYY")}
+                </Text>
+              </View>
             </View>
-          </Box>
+
+            <Divider thick className="!border-background-200" />
+          </View>
         ))}
       </View>
     </View>
