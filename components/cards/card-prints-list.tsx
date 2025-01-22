@@ -25,8 +25,8 @@ export default function CardPrintsList({ card }: CardPrintsListProps) {
   }, [card]);
 
   return (
-    <View className="flex max-w-[400px]">
-      <View className="flex flex-row mb-2">
+    <View className="flex w-[400px] max-h-fit border-2 border-dark-200 rounded-lg overflow-hidden">
+      <View className="flex flex-row gap-2 p-2 max-w-full bg-dark-200">
         <Text thickness="semi">Print</Text>
 
         <View className="flex flex-row gap-2 ml-auto">
@@ -39,35 +39,37 @@ export default function CardPrintsList({ card }: CardPrintsListProps) {
         </View>
       </View>
 
-      <View className="-mx-2">
-        <Divider thick />
-      </View>
-
-      <ScrollView className="flex max-h-[264px] -mx-2">
+      <ScrollView className="flex max-h-[264px]">
         {cardPrints.map((print, index) => (
-          <Link
-            key={print.scryfallId + index}
-            href={`cards/${print.set}/${print.collectorNumber}`}
-            className={`flex flex-row gap-2 p-2 max-w-full border-b hover:bg-primary-300 transition-all duration-300 ${
-              print.set === setId && print.collectorNumber === cardNumber
-                ? "bg-background-300"
-                : "border-background-100"
-            }`}
-          >
-            <Text truncate size="sm">
-              {print.setName}
-            </Text>
-
-            <View className="flex flex-row gap-2 ml-auto">
-              <Text size="sm" className="w-16">
-                {print.collectorNumber}
+          <View key={index}>
+            <Link
+              key={print.scryfallId + index}
+              href={`cards/${print.set}/${print.collectorNumber}`}
+              className={`flex flex-row gap-2 p-2 max-w-full hover:bg-primary-300 transition-all duration-300 ${
+                print.set === setId && print.collectorNumber === cardNumber
+                  ? "bg-background-300"
+                  : "border-background-100"
+              }`}
+            >
+              <Text truncate size="sm">
+                {print.setName}
               </Text>
 
-              <Text size="sm" className="w-12">
-                {currency(print.prices?.usd)}
-              </Text>
-            </View>
-          </Link>
+              <View className="flex flex-row gap-2 ml-auto">
+                <Text size="sm" className="w-16">
+                  {print.collectorNumber}
+                </Text>
+
+                <Text size="sm" className="w-12">
+                  {currency(print.prices?.usd)}
+                </Text>
+              </View>
+            </Link>
+
+            {index < cardPrints.length - 1 && (
+              <Divider thick className="!border-background-200" />
+            )}
+          </View>
         ))}
       </ScrollView>
     </View>
