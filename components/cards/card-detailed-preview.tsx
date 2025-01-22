@@ -1,7 +1,9 @@
+import Button from "@/components/ui/button/button";
+import { currency } from "@/functions/text-manipulation";
 import { Card } from "@/models/card/card";
+import { faShop } from "@fortawesome/free-solid-svg-icons";
 import React from "react";
-import { View, ViewProps } from "react-native";
-import Box from "../ui/box/box";
+import { Linking, View, ViewProps } from "react-native";
 import Divider from "../ui/divider/divider";
 import CardImage from "./card-image";
 import { CardInfo } from "./card-info";
@@ -37,6 +39,34 @@ export default function CardDetailedPreview({
           placeHolder="Search for a card and it will be previewed here"
         />
 
+        <View className="flex gap-2">
+          <Button
+            size="sm"
+            action="info"
+            type="outlined"
+            className="flex-1"
+            icon={faShop}
+            text={`TCG Player  ${currency(card.prices?.usd)}`}
+            onClick={async () =>
+              card.priceUris?.tcgplayer &&
+              (await Linking.openURL(card.priceUris.tcgplayer))
+            }
+          />
+
+          <Button
+            size="sm"
+            action="info"
+            type="outlined"
+            className="flex-1"
+            icon={faShop}
+            text={`Card Market  ${currency(card.prices?.eur, true)}`}
+            onClick={async () =>
+              card.priceUris?.cardmarket &&
+              (await Linking.openURL(card.priceUris.cardmarket))
+            }
+          />
+        </View>
+
         {children}
       </View>
 
@@ -57,12 +87,14 @@ export default function CardDetailedPreview({
           </View>
         )}
 
-        {!hideLegalities && <Divider thick />}
+        {!hideLegalities && (
+          <Divider thick className="!border-background-200" />
+        )}
 
         {!hideLegalities && (
-          <Box className="mb-0" shade={300}>
+          <View className="px-1 mb-0">
             <CardLegalities card={card} />
-          </Box>
+          </View>
         )}
       </View>
     </View>

@@ -4,7 +4,6 @@ import { titleCase } from "@/functions/text-manipulation";
 import { Card, CardFace } from "@/models/card/card";
 import { Link } from "expo-router";
 import { Pressable, View } from "react-native";
-import Box from "../ui/box/box";
 import CardText from "./card-text";
 
 export interface CardInfoProps {
@@ -54,7 +53,7 @@ export function CardInfo({ card, face, link, onLinkPress }: CardInfoProps) {
         <CardText size="lg" text={face?.manaCost || card.manaCost} />
       </View>
 
-      <Box className="flex gap-2" shade={300}>
+      <View className="flex gap-2 px-2">
         <View className="flex flex-row justify-between gap-2">
           <Text className="!text-gray-300">
             {face?.typeLine || card.typeLine}
@@ -94,7 +93,7 @@ export function CardInfo({ card, face, link, onLinkPress }: CardInfoProps) {
             {card.releasedAt.split("-")[0]}
           </Text>
         </View>
-      </Box>
+      </View>
     </View>
   );
 }

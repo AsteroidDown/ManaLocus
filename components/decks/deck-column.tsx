@@ -4,14 +4,12 @@ import { groupCardsByColorMulti } from "@/functions/cards/card-grouping";
 import { evaluateCardLegality } from "@/functions/decks/deck-legality";
 import { currency, titleCase } from "@/functions/text-manipulation";
 import { Card } from "@/models/card/card";
-import { faShop } from "@fortawesome/free-solid-svg-icons";
 import React, { useEffect } from "react";
-import { Linking, Pressable, View } from "react-native";
+import { Pressable, View } from "react-native";
 import CardDetailedPreview from "../cards/card-detailed-preview";
 import CardImage from "../cards/card-image";
 import CardText from "../cards/card-text";
 import CardViewMultipleModal from "../cards/card-view-multiple-modal";
-import Button from "../ui/button/button";
 import Divider from "../ui/divider/divider";
 import Modal from "../ui/modal/modal";
 import Text from "../ui/text/text";
@@ -342,35 +340,10 @@ function DeckCard({
         <Modal open={open} setOpen={setOpen}>
           <CardDetailedPreview
             link
+            fullHeight
             onLinkPress={() => setOpen(false)}
             card={card}
           >
-            <View className="flex flex-row gap-2">
-              <Button
-                size="xs"
-                action="info"
-                className="flex-1"
-                icon={faShop}
-                text={`$${card.prices?.usd || "0.00"}`}
-                onClick={async () =>
-                  card.priceUris?.tcgplayer &&
-                  (await Linking.openURL(card.priceUris.tcgplayer))
-                }
-              />
-
-              <Button
-                size="xs"
-                action="info"
-                className="flex-1"
-                icon={faShop}
-                text={`€${card.prices?.eur || "0.00"}`}
-                onClick={async () =>
-                  card.priceUris?.cardmarket &&
-                  (await Linking.openURL(card.priceUris.cardmarket))
-                }
-              />
-            </View>
-
             {reasons?.length > 0 && (
               <View className="flex">
                 <Text size="sm" thickness="semi">
