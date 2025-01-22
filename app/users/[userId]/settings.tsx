@@ -20,6 +20,7 @@ import {
   setLocalStorageUserPreferences,
 } from "@/functions/local-storage/user-preferences-local-storage";
 import { titleCase } from "@/functions/text-manipulation";
+import UserService from "@/hooks/services/user.service";
 import {
   DeckSortType,
   DeckSortTypes,
@@ -38,7 +39,7 @@ interface PasswordErrors {
 }
 
 export default function UserSettingsPage() {
-  const { user } = useContext(UserContext);
+  const { user, setUser } = useContext(UserContext);
   const { userPageUser } = useContext(UserPageContext);
   const { preferences, setPreferences } = useContext(UserPreferencesContext);
 
@@ -192,6 +193,13 @@ export default function UserSettingsPage() {
     setLocalStorageUserPreferences({ deckCardColumnGroupMulticolored: group });
     setPreferences(getLocalStorageUserPreferences() || {});
     setDeckCardColumnGroupMulticolored(group);
+  }
+
+  function logout() {
+    UserService.logout().then(() => {
+      setUser(null);
+      router.push("../..");
+    });
   }
 
   return (
@@ -437,6 +445,17 @@ export default function UserSettingsPage() {
           errorMessage="Passwords must match!"
         />
       </CollapsableSection>
+
+      {user.id === userPageUser?.id && (
+        <View className="flex flex-row justify-end m-4">
+          <Button
+            text="Logout"
+            action="danger"
+            type="clear"
+            onClick={() => logout()}
+          />
+        </View>
+      )}
     </SafeAreaView>
   );
 }

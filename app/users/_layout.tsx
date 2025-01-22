@@ -1,4 +1,3 @@
-import Button from "@/components/ui/button/button";
 import { TabProps } from "@/components/ui/tabs/tab";
 import TabBar from "@/components/ui/tabs/tab-bar";
 import Text from "@/components/ui/text/text";
@@ -7,7 +6,7 @@ import UserContext from "@/contexts/user/user.context";
 import "@/global.css";
 import UserService from "@/hooks/services/user.service";
 import { User } from "@/models/user/user";
-import { router, useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams } from "expo-router";
 import React, { useContext, useEffect } from "react";
 import { SafeAreaView, View } from "react-native";
 
@@ -26,8 +25,6 @@ export default function UserLayout() {
   }, [userId]);
 
   if (!user || !userPageUser) return null;
-
-  const isPageUser = user.id === userPageUser.id;
 
   const tabs: TabProps[] = [
     {
@@ -52,18 +49,11 @@ export default function UserLayout() {
     },
   ];
 
-  if (isPageUser) {
+  if (user.id === userPageUser.id) {
     tabs.push({
       title: "Settings",
       link: `users/${userPageUser.id}/settings`,
       name: "settings",
-    });
-  }
-
-  function logout() {
-    UserService.logout().then(() => {
-      setUser(null);
-      router.push("../..");
     });
   }
 
@@ -75,10 +65,6 @@ export default function UserLayout() {
             <Text size="2xl" thickness="medium">
               {userPageUser?.name}
             </Text>
-
-            {isPageUser && (
-              <Button text="Logout" action="danger" onClick={() => logout()} />
-            )}
           </View>
 
           <TabBar hideBorder tabs={tabs} />
