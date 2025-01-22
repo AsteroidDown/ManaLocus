@@ -368,7 +368,7 @@ export default function DeckGallery({
       </View>
 
       {!listView && (
-        <View className="flex flex-row flex-wrap gap-4 z-[10]">
+        <View className="flex flex-row flex-wrap lg:justify-start justify-center gap-4 z-[10]">
           {decks?.map((deck, index) => (
             <Link
               key={deck.id + deck.name + index}

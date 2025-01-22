@@ -19,7 +19,7 @@ import { Card } from "@/models/card/card";
 import { Deck } from "@/models/deck/deck";
 import { faFilter } from "@fortawesome/free-solid-svg-icons";
 import React, { useContext, useEffect } from "react";
-import { View, ViewProps } from "react-native";
+import { useWindowDimensions, View, ViewProps } from "react-native";
 import Button from "../ui/button/button";
 import Checkbox from "../ui/checkbox/checkbox";
 import Select from "../ui/input/select";
@@ -64,6 +64,8 @@ export default function DeckCardGallery({
   className,
 }: DeckCardGalleryProps) {
   const { preferences } = useContext(UserPreferencesContext);
+
+  const width = useWindowDimensions().width;
 
   const [viewType, setViewType] = React.useState(
     preferences?.deckCardViewType ?? DeckCardGalleryViewTypes.LIST
@@ -399,42 +401,48 @@ export default function DeckCardGallery({
           className="flex-1 flex flex-row flex-wrap gap-2"
           style={{ zIndex: 11 }}
         >
-          <Select
-            label="View"
-            value={viewType}
-            className="max-w-min"
-            onChange={setViewType}
-            options={Object.keys(DeckCardGalleryViewTypes).map((key) => {
-              return {
-                label: titleCase(key),
-                value: (DeckCardGalleryViewTypes as any)[key],
-              };
-            })}
-          />
+          <View className="lg:flex-[0] flex-1 z-[18] min-w-max">
+            <Select
+              label="View"
+              value={viewType}
+              className="lg:max-w-min"
+              onChange={setViewType}
+              options={Object.keys(DeckCardGalleryViewTypes).map((key) => {
+                return {
+                  label: titleCase(key),
+                  value: (DeckCardGalleryViewTypes as any)[key],
+                };
+              })}
+            />
+          </View>
 
-          <Select
-            label="Grouping"
-            value={groupType}
-            className="max-w-min"
-            onChange={setGroupType}
-            options={Object.keys(DeckCardGalleryGroupTypes).map((key) => {
-              return {
-                label: titleCase(key.replace("_", " ")),
-                value: (DeckCardGalleryGroupTypes as any)[key],
-              };
-            })}
-          />
+          {width > 600 && (
+            <Select
+              label="Grouping"
+              value={groupType}
+              className="lg:max-w-min"
+              onChange={setGroupType}
+              options={Object.keys(DeckCardGalleryGroupTypes).map((key) => {
+                return {
+                  label: titleCase(key.replace("_", " ")),
+                  value: (DeckCardGalleryGroupTypes as any)[key],
+                };
+              })}
+            />
+          )}
 
-          <Select
-            label="Board"
-            value={boardType}
-            className="max-w-min"
-            onChange={setBoardType}
-            options={Object.values(BoardTypes).map((board) => ({
-              label: titleCase(board),
-              value: board,
-            }))}
-          />
+          {width > 600 && (
+            <Select
+              label="Board"
+              value={boardType}
+              className="lg:max-w-min"
+              onChange={setBoardType}
+              options={Object.values(BoardTypes).map((board) => ({
+                label: titleCase(board),
+                value: board,
+              }))}
+            />
+          )}
 
           <Button
             icon={faFilter}
@@ -447,31 +455,67 @@ export default function DeckCardGallery({
         <View
           className={`${filtersOpen ? "max-h-[1000px]" : "max-h-0"} ${
             !overflow ? "overflow-hidden" : ""
-          } flex flex-row mr-auto transition-all duration-300`}
+          } flex flex-row flex-wrap lg:gap-0 gap-2 mr-auto transition-all duration-300`}
         >
-          <Select
-            squareRight
-            label="Sort"
-            value={sortType}
-            className="max-w-min"
-            onChange={setSortType}
-            options={Object.values(DeckCardGallerySortTypes).map((key) => ({
-              label: titleCase(key.replace("-", " ")),
-              value: key,
-            }))}
-          />
+          <View className="flex-1 z-[16] min-w-max">
+            {width <= 600 && (
+              <Select
+                label="Grouping"
+                value={groupType}
+                className="lg:max-w-min"
+                onChange={setGroupType}
+                options={Object.keys(DeckCardGalleryGroupTypes).map((key) => {
+                  return {
+                    label: titleCase(key.replace("_", " ")),
+                    value: (DeckCardGalleryGroupTypes as any)[key],
+                  };
+                })}
+              />
+            )}
+          </View>
 
-          <Select
-            squareLeft
-            label="Direction"
-            value={sortDirection}
-            className="mr-4 max-w-min"
-            onChange={setSortDirection}
-            options={[
-              { label: "Ascending", value: SortTypes.ASC },
-              { label: "Descending", value: SortTypes.DESC },
-            ]}
-          />
+          <View className="flex-1 z-[14] min-w-max">
+            {width <= 600 && (
+              <Select
+                label="Board"
+                value={boardType}
+                className="lg:max-w-min"
+                onChange={setBoardType}
+                options={Object.values(BoardTypes).map((board) => ({
+                  label: titleCase(board),
+                  value: board,
+                }))}
+              />
+            )}
+          </View>
+
+          <View className="flex-1 z-[12] min-w-max">
+            <Select
+              squareRight={width > 600}
+              label="Sort"
+              value={sortType}
+              className="lg:max-w-min"
+              onChange={setSortType}
+              options={Object.values(DeckCardGallerySortTypes).map((key) => ({
+                label: titleCase(key.replace("-", " ")),
+                value: key,
+              }))}
+            />
+          </View>
+
+          <View className="flex-1 z-[10] min-w-max">
+            <Select
+              squareLeft={width > 600}
+              label="Direction"
+              value={sortDirection}
+              className="lg:mr-4 lg:max-w-min"
+              onChange={setSortDirection}
+              options={[
+                { label: "Ascending", value: SortTypes.ASC },
+                { label: "Descending", value: SortTypes.DESC },
+              ]}
+            />
+          </View>
 
           <View className="flex-1 flex gap-2 max-h-fit min-w-fit">
             <Text size="md" thickness="bold">

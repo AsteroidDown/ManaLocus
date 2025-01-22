@@ -50,7 +50,7 @@ export default function DeckPage() {
     <ScrollView className="bg-background-100">
       <DeckHeader deck={deck} />
 
-      <View className="flex flex-1 gap-8 px-16 py-8 border-t-2 border-background-200 bg-background-100">
+      <View className="flex flex-1 gap-8 lg:px-16 px-4 py-8 border-t-2 border-background-200 bg-background-100">
         {(deck.dashboard?.sections?.length || 0) > 0 ? (
           <TabBar
             hideBorder
@@ -91,8 +91,11 @@ export default function DeckPage() {
 
         <Divider thick className="!border-background-200" />
 
-        <View className="flex flex-row gap-12">
-          <Box className="flex-1" shade={100}>
+        <View className="flex flex-row flex-wrap gap-12">
+          <Box
+            className="flex-1 min-w-[250px] min-h-[350px] lg:pl-6 !pl-4"
+            shade={100}
+          >
             <Graph
               readonly
               title="Mana Curve"
@@ -111,7 +114,7 @@ export default function DeckPage() {
             />
           </Box>
 
-          <DeckChangeLog className="flex-1" deck={deck} />
+          <DeckChangeLog className="flex-1 min-w-[250px]" deck={deck} />
         </View>
 
         <Divider thick className="!border-background-200" />

@@ -9,7 +9,7 @@ import {
   faFileArrowDown,
 } from "@fortawesome/free-solid-svg-icons";
 import React, { useEffect } from "react";
-import { Image, View } from "react-native";
+import { Image, useWindowDimensions, View } from "react-native";
 import CardImportExportModal from "../cards/card-import-export-modal";
 import Box from "../ui/box/box";
 import Button from "../ui/button/button";
@@ -27,6 +27,8 @@ export default function DeckFooter({
   deck,
   legalityEvaluation,
 }: DeckFooterProps) {
+  const width = useWindowDimensions().width;
+
   const [legalityOpen, setLegalityOpen] = React.useState(false);
   const [copyOpen, setCopyOpen] = React.useState(false);
   const [importOpen, setImportOpen] = React.useState(false);
@@ -89,39 +91,43 @@ export default function DeckFooter({
   }, [deck]);
 
   return (
-    <View className="sticky bottom-0 flex flex-row gap-4 justify-between items-center px-16 py-4 max-h-14 bg-gradient-to-b from-primary-200 to-primary-100 shadow-[0_0_16px] shadow-background-100">
-      <View className="flex flex-row items-center gap-2">
-        <Text thickness="bold">{titleCase(deck.format)}</Text>
+    <View className="sticky bottom-[-1px] flex flex-row gap-4 justify-between items-center lg:px-16 px-4 py-4 max-h-14 bg-gradient-to-b from-primary-200 to-primary-100 shadow-[0_0_16px] shadow-background-100">
+      <View className="flex flex-row lg:justify-start justify-around lg:w-fit w-full items-center gap-2">
+        <View className="flex flex-row items-center gap-2">
+          <Text thickness="bold">{titleCase(deck.format)}</Text>
 
-        <Button
-          rounded
-          type="clear"
-          action="default"
-          className="-ml-3.5 -mr-2"
-          icon={legalityEvaluation.legal ? faCheckCircle : faCircleXmark}
-          onClick={() => setLegalityOpen(!legalityOpen)}
-        >
-          <View className="-mx-1.5 -mb-6">
-            <Dropdown
-              xOffset={-132}
-              expanded={legalityOpen}
-              setExpanded={setLegalityOpen}
-            >
-              <Box className="flex justify-start items-start border-2 border-primary-300 !bg-background-100 !bg-opacity-90 overflow-auto max-w-[450px]">
-                <DeckLegalityInfo
-                  format={deck.format}
-                  legalityEvaluation={legalityEvaluation}
-                />
-              </Box>
-            </Dropdown>
-          </View>
-        </Button>
+          <Button
+            rounded
+            type="clear"
+            action="default"
+            className="-ml-3.5 -mr-2"
+            icon={legalityEvaluation.legal ? faCheckCircle : faCircleXmark}
+            onClick={() => setLegalityOpen(!legalityOpen)}
+          >
+            <View className="-mx-1.5 -mb-6">
+              <Dropdown
+                xOffset={-132}
+                expanded={legalityOpen}
+                setExpanded={setLegalityOpen}
+              >
+                <Box className="flex justify-start items-start border-2 border-primary-300 !bg-background-100 !bg-opacity-90 overflow-auto max-w-[450px]">
+                  <DeckLegalityInfo
+                    format={deck.format}
+                    legalityEvaluation={legalityEvaluation}
+                  />
+                </Box>
+              </Dropdown>
+            </View>
+          </Button>
+        </View>
 
         <View className="h-5 border-r rounded-lg border-white" />
 
         <Text>
-          {mainCards} Card Mainboard
-          {sideCards ? ` + ${sideCards} Card Sideboard` : ""}
+          {mainCards} {width > 600 ? "Card Mainboard" : "Main"}
+          {sideCards
+            ? ` + ${sideCards} ${width > 600 ? "Card Sideboard" : "Side"}`
+            : ""}
         </Text>
 
         <View className="h-5 border-r rounded-lg border-white" />
@@ -129,129 +135,131 @@ export default function DeckFooter({
         <Text>{currency(totalValue)}</Text>
       </View>
 
-      <View className="flex flex-row items-center gap-4">
-        <View className="flex flex-row items-center gap-2">
-          <Image
-            resizeMode="contain"
-            className="max-h-4 max-w-4"
-            source={require("assets/mtg-types/creature.png")}
-          />
-
-          <Text>{creatureCount}</Text>
-        </View>
-
-        <View className="flex flex-row items-center gap-2">
-          <Image
-            resizeMode="contain"
-            className="max-h-4 max-w-4"
-            source={require("assets/mtg-types/instant.png")}
-          />
-
-          <Text>{instantCount}</Text>
-        </View>
-
-        <View className="flex flex-row items-center gap-2">
-          <Image
-            resizeMode="contain"
-            className="max-h-4 max-w-4"
-            source={require("assets/mtg-types/sorcery.png")}
-          />
-
-          <Text>{sorceryCount}</Text>
-        </View>
-
-        <View className="flex flex-row items-center gap-2">
-          <Image
-            resizeMode="contain"
-            className="max-h-4 max-w-4"
-            source={require("assets/mtg-types/artifact.png")}
-          />
-
-          <Text>{artifactCount}</Text>
-        </View>
-
-        <View className="flex flex-row items-center gap-2">
-          <Image
-            resizeMode="contain"
-            className="max-h-4 max-w-4"
-            source={require("assets/mtg-types/enchantment.png")}
-          />
-
-          <Text>{enchantmentCount}</Text>
-        </View>
-
-        {planeswalkerCount > 0 && (
+      {width > 600 && (
+        <View className="flex flex-row items-center gap-4">
           <View className="flex flex-row items-center gap-2">
             <Image
               resizeMode="contain"
               className="max-h-4 max-w-4"
-              source={require("assets/mtg-types/planeswalker.png")}
+              source={require("assets/mtg-types/creature.png")}
             />
 
-            <Text>{planeswalkerCount}</Text>
+            <Text>{creatureCount}</Text>
           </View>
-        )}
 
-        {battleCount > 0 && (
           <View className="flex flex-row items-center gap-2">
             <Image
               resizeMode="contain"
               className="max-h-4 max-w-4"
-              source={require("assets/mtg-types/battle.png")}
+              source={require("assets/mtg-types/instant.png")}
             />
 
-            <Text>{battleCount}</Text>
+            <Text>{instantCount}</Text>
           </View>
-        )}
 
-        <View className="flex flex-row items-center gap-2">
-          <Image
-            resizeMode="contain"
-            className="max-h-4 max-w-4"
-            source={require("assets/mtg-types/land.png")}
-          />
+          <View className="flex flex-row items-center gap-2">
+            <Image
+              resizeMode="contain"
+              className="max-h-4 max-w-4"
+              source={require("assets/mtg-types/sorcery.png")}
+            />
 
-          <Text>{landCount}</Text>
+            <Text>{sorceryCount}</Text>
+          </View>
+
+          <View className="flex flex-row items-center gap-2">
+            <Image
+              resizeMode="contain"
+              className="max-h-4 max-w-4"
+              source={require("assets/mtg-types/artifact.png")}
+            />
+
+            <Text>{artifactCount}</Text>
+          </View>
+
+          <View className="flex flex-row items-center gap-2">
+            <Image
+              resizeMode="contain"
+              className="max-h-4 max-w-4"
+              source={require("assets/mtg-types/enchantment.png")}
+            />
+
+            <Text>{enchantmentCount}</Text>
+          </View>
+
+          {planeswalkerCount > 0 && (
+            <View className="flex flex-row items-center gap-2">
+              <Image
+                resizeMode="contain"
+                className="max-h-4 max-w-4"
+                source={require("assets/mtg-types/planeswalker.png")}
+              />
+
+              <Text>{planeswalkerCount}</Text>
+            </View>
+          )}
+
+          {battleCount > 0 && (
+            <View className="flex flex-row items-center gap-2">
+              <Image
+                resizeMode="contain"
+                className="max-h-4 max-w-4"
+                source={require("assets/mtg-types/battle.png")}
+              />
+
+              <Text>{battleCount}</Text>
+            </View>
+          )}
+
+          <View className="flex flex-row items-center gap-2">
+            <Image
+              resizeMode="contain"
+              className="max-h-4 max-w-4"
+              source={require("assets/mtg-types/land.png")}
+            />
+
+            <Text>{landCount}</Text>
+          </View>
+
+          <View className="h-5 border-r rounded-lg border-white -mr-2 ml-1" />
+
+          <View className="flex flex-row">
+            <Button
+              rounded
+              type="clear"
+              action="default"
+              icon={faCopy}
+              onClick={() => setCopyOpen(true)}
+            />
+
+            <Button
+              rounded
+              type="clear"
+              action="default"
+              icon={faFileArrowDown}
+              onClick={() => setImportOpen(true)}
+            />
+          </View>
+
+          <View className="-mx-2">
+            <DeckDuplicateModal
+              deck={deck}
+              open={copyOpen}
+              setOpen={setCopyOpen}
+            />
+          </View>
+
+          <View className="-mx-2">
+            <CardImportExportModal
+              exportOnly
+              open={importOpen}
+              setOpen={setImportOpen}
+              exportCards={deck.main}
+              exportSideboard={deck.side}
+            />
+          </View>
         </View>
-
-        <View className="h-5 border-r rounded-lg border-white -mr-2 ml-1" />
-
-        <View className="flex flex-row">
-          <Button
-            rounded
-            type="clear"
-            action="default"
-            icon={faCopy}
-            onClick={() => setCopyOpen(true)}
-          />
-
-          <Button
-            rounded
-            type="clear"
-            action="default"
-            icon={faFileArrowDown}
-            onClick={() => setImportOpen(true)}
-          />
-        </View>
-
-        <View className="-mx-2">
-          <DeckDuplicateModal
-            deck={deck}
-            open={copyOpen}
-            setOpen={setCopyOpen}
-          />
-        </View>
-
-        <View className="-mx-2">
-          <CardImportExportModal
-            exportOnly
-            open={importOpen}
-            setOpen={setImportOpen}
-            exportCards={deck.main}
-            exportSideboard={deck.side}
-          />
-        </View>
-      </View>
+      )}
     </View>
   );
 }

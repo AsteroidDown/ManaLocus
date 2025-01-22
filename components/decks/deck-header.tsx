@@ -74,7 +74,7 @@ export default function DeckHeader({ deck }: { deck: Deck }) {
 
   return (
     <View className="relative h-72 overflow-hidden">
-      <View className="absolute flex h-full w-[60%] top-0 right-0 overflow-hidden">
+      <View className="absolute flex h-full lg:w-[60%] w-full top-0 right-0 overflow-hidden">
         <Image
           className="absolute top-0 left-0 w-full aspect-[626/457]"
           source={{
@@ -83,11 +83,11 @@ export default function DeckHeader({ deck }: { deck: Deck }) {
         />
       </View>
 
-      <View className="absolute w-full h-full bg-gradient-to-r from-primary-300 from-[41%] to-transparent to-75%" />
+      <View className="absolute w-full h-full lg:bg-gradient-to-r bg-gradient-to-t from-primary-300 lg:from-[41%] from-10% to-transparent lg:to-75% to-50%" />
 
       <View className="absolute w-full h-full bg-gradient-to-b from-transparent to-black opacity-40" />
 
-      <View className="absolute flex justify-center gap-1 w-full h-full px-16 top-0 left-0">
+      <View className="absolute flex justify-center gap-1 w-full h-full lg:px-16 px-4 top-0 left-0">
         <Text
           size="sm"
           thickness="bold"
@@ -96,7 +96,7 @@ export default function DeckHeader({ deck }: { deck: Deck }) {
           {deck.format?.length ? titleCase(deck.format) : "TBD"}
         </Text>
 
-        <Text thickness="bold" className="!text-5xl">
+        <Text thickness="bold" className="lg:!text-5xl !text-3xl">
           {deck.name}
         </Text>
 
@@ -105,14 +105,14 @@ export default function DeckHeader({ deck }: { deck: Deck }) {
         </Text>
       </View>
 
-      <View className="absolute bottom-4 left-16">
+      <View className="absolute bottom-4 lg:left-16 left-4">
         <Text size="sm" thickness="semi" className="!text-gray-300">
           Last Updated: {moment(deck.updated).format("MMM D, YYYY")}
         </Text>
       </View>
 
       {user?.id === deck.userId && (
-        <View className="absolute top-4 right-6 flex flex-row gap-2">
+        <View className="lg:flex hidden absolute top-4 right-6 flex-row gap-2">
           <Link
             href={`${deck.id}/builder/main-board`}
             className="shadow-lg rounded-lg"
@@ -155,7 +155,7 @@ export default function DeckHeader({ deck }: { deck: Deck }) {
         </View>
       )}
 
-      <View className="absolute bottom-4 right-6">
+      <View className="absolute bottom-2.5 right-6">
         <View className="flex flex-row rounded-full bg-background-100">
           <Button
             rounded

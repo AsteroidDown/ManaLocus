@@ -99,7 +99,7 @@ export default function DeckTokens({ deck }: DeckTokensProps) {
           open ? "max-h-[750px]" : "max-h-0"
         } overflow-hidden transition-all duration-300`}
       >
-        <View className="flex flex-row flex-wrap gap-3 max-h-full overflow-y-auto">
+        <View className="flex flex-row lg:justify-start justify-center flex-wrap gap-3 max-h-full overflow-y-auto">
           {tokens.map((token, index) => (
             <Token key={index} creator={token.creator} token={token.token} />
           ))}
