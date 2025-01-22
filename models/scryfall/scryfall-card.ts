@@ -42,6 +42,8 @@ export interface ScryfallCard {
   prices: ScryfallCardPrices;
   purchase_uris: ScryfallCardPriceUris;
   legalities: ScryfallCardLegalities;
+  all_parts?: ScryfallCardPart[];
+  related_uris: ScryfallRelatedUris;
 }
 
 export interface ScryfallImageUris {
@@ -112,4 +114,20 @@ export interface ScryfallCardLegalities {
   oldschool: MTGLegality;
   premodern: MTGLegality;
   pred: MTGLegality;
+}
+
+export interface ScryfallCardPart {
+  component: string;
+  id: string;
+  name: string;
+  object: string;
+  type_line: string;
+  uri: string;
+}
+
+export interface ScryfallRelatedUris {
+  edhrec: string;
+  gatherer: string;
+  tcgplayer_infinite_articles: string;
+  tcgplayer_infinite_decks: string;
 }

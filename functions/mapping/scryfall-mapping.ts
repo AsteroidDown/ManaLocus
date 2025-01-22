@@ -90,6 +90,22 @@ export function ScryfallToCard(scryfallCard: ScryfallCard): Card {
       cardmarket: scryfallCard.purchase_uris?.cardmarket,
       cardhoarder: scryfallCard.purchase_uris?.cardhoarder,
     },
+    allParts: scryfallCard.all_parts?.map((part: any) => ({
+      component: part.component,
+      id: part.id,
+      name: part.name,
+      object: part.object,
+      typeLine: part.type_line,
+      uri: part.uri,
+    })),
+    relatedUris: {
+      edhrec: scryfallCard.related_uris?.edhrec,
+      gatherer: scryfallCard.related_uris?.gatherer,
+      tcgplayerInfiniteArticles:
+        scryfallCard.related_uris?.tcgplayer_infinite_articles,
+      tcgplayerInfiniteDecks:
+        scryfallCard.related_uris?.tcgplayer_infinite_decks,
+    },
   };
 }
 

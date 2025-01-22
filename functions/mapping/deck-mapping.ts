@@ -151,6 +151,7 @@ function mapDatabaseCardToCard(card: any): Card {
     allParts: card.allParts
       ? card.allParts.map((part: any) => mapDatabaseCardPart(part))
       : [],
+    relatedUris: card.relatedUris,
   };
 }
 

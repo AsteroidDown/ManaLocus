@@ -43,7 +43,8 @@ export interface Card {
   prices: CardPrices;
   priceUris: CardPriceUris;
   legalities: CardLegalities;
-  allParts: CardPart[];
+  allParts?: CardPart[];
+  relatedUris: CardRelatedUris;
 }
 
 export type CardBorderColor = "black" | "borderless";
@@ -133,6 +134,13 @@ export interface CardPart {
 export enum CardPartTypes {
   COMBO_PIECE = "combo_piece",
   TOKEN = "token",
+}
+
+export interface CardRelatedUris {
+  edhrec: string;
+  gatherer: string;
+  tcgplayerInfiniteArticles: string;
+  tcgplayerInfiniteDecks: string;
 }
 
 export type CardIdentifier =
