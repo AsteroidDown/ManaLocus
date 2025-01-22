@@ -15,7 +15,6 @@ export type CardDetailedPreview = ViewProps & {
   link?: boolean;
   onLinkPress?: () => any;
   fullHeight?: boolean;
-  hideLegalities?: boolean;
 };
 
 export default function CardDetailedPreview({
@@ -23,7 +22,6 @@ export default function CardDetailedPreview({
   link = false,
   onLinkPress,
   fullHeight = false,
-  hideLegalities = false,
   className,
   children,
 }: CardDetailedPreview) {
@@ -87,15 +85,11 @@ export default function CardDetailedPreview({
           </View>
         )}
 
-        {!hideLegalities && (
-          <Divider thick className="!border-background-200" />
-        )}
+        <Divider thick className="!border-background-200" />
 
-        {!hideLegalities && (
-          <View className="px-1 mb-0">
-            <CardLegalities card={card} />
-          </View>
-        )}
+        <View className="px-1 mb-0">
+          <CardLegalities card={card} />
+        </View>
       </View>
     </View>
   );
