@@ -79,7 +79,7 @@ export default function CardText({ text, flavor, size = "md" }: CardTextProps) {
             {line.value && (
               <Text
                 thickness="bold"
-                className="px-2 py-0.5 bg-background-100 rounded"
+                className="px-2 py-0.5 bg-dark-300 rounded"
               >
                 {line.loyalty === "add"
                   ? "+"
