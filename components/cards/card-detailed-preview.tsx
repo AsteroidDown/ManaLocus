@@ -14,7 +14,9 @@ export type CardDetailedPreview = ViewProps & {
 
   link?: boolean;
   onLinkPress?: () => any;
+
   fullHeight?: boolean;
+  hidePrices?: boolean;
 };
 
 export default function CardDetailedPreview({
@@ -22,6 +24,7 @@ export default function CardDetailedPreview({
   link = false,
   onLinkPress,
   fullHeight = false,
+  hidePrices = false,
   className,
   children,
 }: CardDetailedPreview) {
@@ -37,33 +40,35 @@ export default function CardDetailedPreview({
           placeHolder="Search for a card and it will be previewed here"
         />
 
-        <View className="flex gap-2">
-          <Button
-            size="sm"
-            action="info"
-            type="outlined"
-            className="flex-1"
-            icon={faShop}
-            text={`TCG Player  ${currency(card.prices?.usd)}`}
-            onClick={async () =>
-              card.priceUris?.tcgplayer &&
-              (await Linking.openURL(card.priceUris.tcgplayer))
-            }
-          />
+        {!hidePrices && (
+          <View className="flex gap-2">
+            <Button
+              size="sm"
+              action="info"
+              type="outlined"
+              className="flex-1"
+              icon={faShop}
+              text={`TCG Player  ${currency(card.prices?.usd)}`}
+              onClick={async () =>
+                card.priceUris?.tcgplayer &&
+                (await Linking.openURL(card.priceUris.tcgplayer))
+              }
+            />
 
-          <Button
-            size="sm"
-            action="info"
-            type="outlined"
-            className="flex-1"
-            icon={faShop}
-            text={`Card Market  ${currency(card.prices?.eur, true)}`}
-            onClick={async () =>
-              card.priceUris?.cardmarket &&
-              (await Linking.openURL(card.priceUris.cardmarket))
-            }
-          />
-        </View>
+            <Button
+              size="sm"
+              action="info"
+              type="outlined"
+              className="flex-1"
+              icon={faShop}
+              text={`Card Market  ${currency(card.prices?.eur, true)}`}
+              onClick={async () =>
+                card.priceUris?.cardmarket &&
+                (await Linking.openURL(card.priceUris.cardmarket))
+              }
+            />
+          </View>
+        )}
 
         {children}
       </View>
