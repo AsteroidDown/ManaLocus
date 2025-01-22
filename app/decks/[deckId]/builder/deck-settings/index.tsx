@@ -7,11 +7,7 @@ import Select from "@/components/ui/input/select";
 import Text from "@/components/ui/text/text";
 import { BoardTypes } from "@/constants/boards";
 import { MTGColorSymbols } from "@/constants/mtg/mtg-colors";
-import {
-  FormatsWithCommander,
-  MTGFormat,
-  MTGFormats,
-} from "@/constants/mtg/mtg-format";
+import { FormatsWithCommander, MTGFormats } from "@/constants/mtg/mtg-format";
 import { MTGCardTypes } from "@/constants/mtg/mtg-types";
 import StoredCardsContext from "@/contexts/cards/stored-cards.context";
 import DeckContext from "@/contexts/deck/deck.context";
@@ -29,7 +25,16 @@ import React, { useContext, useEffect } from "react";
 import { Image, View } from "react-native";
 
 export default function DeckSettingsPage() {
-  const { deck, setDeck } = useContext(DeckContext);
+  const {
+    deck,
+    setDeck,
+    format,
+    setFormat,
+    commander,
+    setCommander,
+    partner,
+    setPartner,
+  } = useContext(DeckContext);
   const { storedCards } = useContext(StoredCardsContext);
 
   const [saving, setSaving] = React.useState(false);
@@ -39,11 +44,6 @@ export default function DeckSettingsPage() {
   const [privateView, setPrivateView] = React.useState(false);
   const [isKit, setIsKit] = React.useState(false);
   const [description, setDescription] = React.useState("");
-  const [format, setFormat] = React.useState(
-    undefined as MTGFormat | undefined
-  );
-  const [commander, setCommander] = React.useState(null as Card | null);
-  const [partner, setPartner] = React.useState(null as Card | null);
   const [inProgress, setInProgress] = React.useState(false);
 
   const [featuredCardSearch, setFeaturedCardSearch] = React.useState("");
@@ -55,7 +55,7 @@ export default function DeckSettingsPage() {
 
   const mainBoardCards = getLocalStorageStoredCards(BoardTypes.MAIN);
 
-  const commanderFormat = FormatsWithCommander.includes(deck?.format as any);
+  const commanderFormat = FormatsWithCommander.includes(format as any);
 
   useEffect(() => {
     if (!deck) return;
@@ -97,61 +97,25 @@ export default function DeckSettingsPage() {
   }, [deck]);
 
   useEffect(() => {
-    if (!deck || !format || format === deck?.format) return;
+    if (!deck || !format || deck.format === format) return;
 
-    setDeck({
-      ...deck,
-      format: format,
-      commander: undefined,
-      partner: undefined,
-    });
     setCommander(null);
     setPartner(null);
   }, [format]);
 
   useEffect(() => {
     if (!deck) return;
-    if (
-      deck.commander?.scryfallId === commander?.scryfallId
-        ? partner
-          ? deck.partner?.scryfallId === partner.scryfallId
-          : false
-        : false
-    ) {
-      return;
-    }
-
-    let newCommander = false;
-    let newPartner = false;
-
-    if (deck.commander?.scryfallId !== commander?.scryfallId) {
-      newCommander = true;
-    }
-    if (deck.partner?.scryfallId !== partner?.scryfallId) {
-      newPartner = true;
-    }
-
-    if (newCommander || newPartner) {
-      setDeck({
-        ...deck,
-        ...(format && { format }),
-        ...(newCommander && {
-          commander: commander ?? undefined,
-        }),
-        ...(newPartner && { partner: partner ?? undefined }),
-      });
-    }
 
     if (!FormatsWithCommander.includes(format as any)) {
+      setCommander(null);
+      setPartner(null);
       setAllowedPartner(false);
-      setDeck({
-        ...deck,
-        commander: undefined,
-        partner: undefined,
-        ...(format && { format }),
-      });
       return;
     }
+  }, [format, commander, partner, storedCards]);
+
+  useEffect(() => {
+    if (!FormatsWithCommander.includes(format as any)) return;
 
     const mainStoredCards = getLocalStorageStoredCards(BoardTypes.MAIN);
 
@@ -182,8 +146,15 @@ export default function DeckSettingsPage() {
       setPartner(null);
       return;
     } else setAllowedPartner(true);
+  }, [format, commander]);
+
+  useEffect(() => {
+    if (!commander || !allowedPartner) return;
 
     const partnerOptions: Card[] = [];
+    const commanderText = commander?.oracleText;
+
+    const mainStoredCards = getLocalStorageStoredCards(BoardTypes.MAIN);
 
     if (format === MTGFormats.OATHBREAKER) {
       partnerOptions.push(
@@ -248,8 +219,10 @@ export default function DeckSettingsPage() {
       setPartner(null);
     }
 
+    if (partnerOptions.length === 1) setPartner(partnerOptions[0]);
+
     setPartnerOptions(partnerOptions);
-  }, [format, commander, partner, storedCards]);
+  }, [commander, allowedPartner]);
 
   useEffect(() => {
     if (!featuredCardSearch) return;
@@ -272,16 +245,16 @@ export default function DeckSettingsPage() {
   }, [featuredCardSearch]);
 
   function saveDeck() {
-    if (!deck) return;
+    if (!deck || !format) return;
 
     setSaving(true);
 
     const mainBoard = getLocalStorageStoredCards(BoardTypes.MAIN);
     const colorsInDeck = sortColors(
-      deck.commander
+      commander
         ? [
-            ...(deck.commander.colorIdentity?.length
-              ? deck.commander.colorIdentity
+            ...(commander.colorIdentity?.length
+              ? commander.colorIdentity
               : [MTGColorSymbols.COLORLESS]),
             ...(deck.partner?.colorIdentity?.length
               ? deck.partner.colorIdentity
@@ -295,9 +268,9 @@ export default function DeckSettingsPage() {
 
     const dto: DeckDTO = {
       name,
+      format,
       description,
       private: privateView,
-      format,
       colors: `{${deckColors.join("}{")}}`,
       featuredArtUrl:
         featuredCard?.imageURIs?.artCrop ??

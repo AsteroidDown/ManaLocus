@@ -58,7 +58,7 @@ export default function CardItem({
   itemsExpanded?: number;
   setItemsExpanded: React.Dispatch<React.SetStateAction<number>>;
 }) {
-  const { deck } = useContext(DeckContext);
+  const { deck, format, commander, partner } = useContext(DeckContext);
 
   const [expanded, setExpanded] = React.useState(false);
   const [modalOpen, setModalOpen] = React.useState(false);
@@ -72,23 +72,20 @@ export default function CardItem({
   let leftHover = false;
 
   useEffect(() => {
-    if (!deck) return;
+    if (!deck || !format) return;
 
     const { legal, reasons, restricted } = evaluateCardLegality(
       card,
-      deck.format,
-      deck.commander
-        ? [
-            ...deck.commander?.colorIdentity,
-            ...(deck.partner?.colorIdentity || []),
-          ]
+      format,
+      commander
+        ? [...commander?.colorIdentity, ...(partner?.colorIdentity || [])]
         : undefined
     );
 
     setLegal(legal);
     setReasons(reasons);
     setRestricted(restricted);
-  }, [deck, card]);
+  }, [deck, card, format, commander, partner]);
 
   useEffect(
     () => (itemsExpanded === 0 ? setExpanded(false) : undefined),

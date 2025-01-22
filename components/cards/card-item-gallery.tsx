@@ -61,7 +61,7 @@ export default function CardItemGallery({
   groupMulticolored,
   hideImages,
 }: CardItemGalleryProps) {
-  const { deck } = useContext(DeckContext);
+  const { deck, format, commander, partner } = useContext(DeckContext);
   const { board } = useContext(BoardContext);
   const { storedCards } = useContext(StoredCardsContext);
 
@@ -117,11 +117,11 @@ export default function CardItemGallery({
 
     let filteredCards = filterCards(sortedCards, filters);
 
-    if (deck?.commander) {
+    if (commander) {
       filteredCards = filteredCards.filter(
         (card) =>
-          card.scryfallId !== deck.commander?.scryfallId &&
-          card.scryfallId !== deck.partner?.scryfallId
+          card.scryfallId !== commander?.scryfallId &&
+          card.scryfallId !== partner?.scryfallId
       );
     }
 
@@ -140,7 +140,7 @@ export default function CardItemGallery({
     if (type === "custom") {
       setCardsSortedCustom(groupCardsCustom(filteredCards));
     }
-  }, [deck, cards, filters]);
+  }, [deck, cards, filters, format, commander, partner]);
 
   useEffect(() => {
     if (!cardsSortedCustom) return;
@@ -157,10 +157,12 @@ export default function CardItemGallery({
             (type === "cost" ? "Mana Value" : titleCase(type))
           }
           startIcon={faChartSimple}
-          subtitle={`${cardCount + (deck?.commander ? 1 : 0)} Card${
-            cardCount !== 1 ? "s" : ""
-          } | Total Value: $${(
-            cardsValue + (deck?.commander ? deck.commander.prices?.usd || 0 : 0)
+          subtitle={`${
+            cardCount + (commander ? 1 : 0) + (partner ? 1 : 0)
+          } Card${cardCount !== 1 ? "s" : ""} | Total Value: $${(
+            cardsValue +
+            (commander ? commander.prices?.usd || 0 : 0) +
+            (partner ? partner.prices?.usd || 0 : 0)
           ).toFixed(2)}`}
           end={
             <View className="flex flex-row gap-2">
@@ -220,10 +222,10 @@ export default function CardItemGallery({
         <View className="overflow-x-scroll overflow-y-hidden">
           {type === "cost" && (
             <View className="flex flex-row gap-4 w-full min-h-[500px]">
-              {board === BoardTypes.MAIN && deck?.commander && (
+              {board === BoardTypes.MAIN && commander && (
                 <CardItemGalleryColumn
                   title={
-                    deck.format === MTGFormats.OATHBREAKER
+                    format === MTGFormats.OATHBREAKER
                       ? "Oathbreaker"
                       : "Commander"
                   }
@@ -231,10 +233,7 @@ export default function CardItemGallery({
                   itemsExpanded={itemsExpanded}
                   setItemExpanded={setItemsExpanded}
                   groupMulticolored={groupMulticolored}
-                  cards={[
-                    deck.commander,
-                    ...(deck.partner ? [deck.partner] : []),
-                  ]}
+                  cards={[commander, ...(partner ? [partner] : [])]}
                 />
               )}
 
@@ -313,10 +312,10 @@ export default function CardItemGallery({
 
           {type === "color" && (
             <View className="flex flex-row gap-4 w-full min-h-[500px]">
-              {board === BoardTypes.MAIN && deck?.commander && (
+              {board === BoardTypes.MAIN && commander && (
                 <CardItemGalleryColumn
                   title={
-                    deck.format === MTGFormats.OATHBREAKER
+                    format === MTGFormats.OATHBREAKER
                       ? "Oathbreaker"
                       : "Commander"
                   }
@@ -324,10 +323,7 @@ export default function CardItemGallery({
                   itemsExpanded={itemsExpanded}
                   setItemExpanded={setItemsExpanded}
                   groupMulticolored={groupMulticolored}
-                  cards={[
-                    deck.commander,
-                    ...(deck.partner ? [deck.partner] : []),
-                  ]}
+                  cards={[commander, ...(partner ? [partner] : [])]}
                 />
               )}
 
@@ -356,10 +352,10 @@ export default function CardItemGallery({
 
           {type === "type" && (
             <View className="flex flex-row gap-4 w-full min-h-[500px]">
-              {board === BoardTypes.MAIN && deck?.commander && (
+              {board === BoardTypes.MAIN && commander && (
                 <CardItemGalleryColumn
                   title={
-                    deck.format === MTGFormats.OATHBREAKER
+                    format === MTGFormats.OATHBREAKER
                       ? "Oathbreaker"
                       : "Commander"
                   }
@@ -367,10 +363,7 @@ export default function CardItemGallery({
                   itemsExpanded={itemsExpanded}
                   setItemExpanded={setItemsExpanded}
                   groupMulticolored={groupMulticolored}
-                  cards={[
-                    deck.commander,
-                    ...(deck.partner ? [deck.partner] : []),
-                  ]}
+                  cards={[commander, ...(partner ? [partner] : [])]}
                 />
               )}
 
@@ -424,10 +417,10 @@ export default function CardItemGallery({
 
           {type === "custom" && (
             <View className="flex flex-row gap-4 w-full min-h-[500px]">
-              {deck?.commander && (
+              {commander && (
                 <CardItemGalleryColumn
                   title={
-                    deck.format === MTGFormats.OATHBREAKER
+                    format === MTGFormats.OATHBREAKER
                       ? "Oathbreaker"
                       : "Commander"
                   }
@@ -435,10 +428,7 @@ export default function CardItemGallery({
                   itemsExpanded={itemsExpanded}
                   setItemExpanded={setItemsExpanded}
                   groupMulticolored={groupMulticolored}
-                  cards={[
-                    deck.commander,
-                    ...(deck.partner ? [deck.partner] : []),
-                  ]}
+                  cards={[commander, ...(partner ? [partner] : [])]}
                 />
               )}
 
