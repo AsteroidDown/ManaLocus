@@ -87,6 +87,8 @@ export default function DeckGallery({
   );
   const [partnerSearch, setPartnerSearch] = React.useState("");
 
+  const [searchDto, setSearchDto] = React.useState({} as DeckFiltersDTO);
+
   useEffect(() => {
     if (preferences?.decksViewType) {
       setListView(preferences?.decksViewType === DeckViewType.LIST);
@@ -143,13 +145,55 @@ export default function DeckGallery({
   }, [partnerCardSearch]);
 
   useEffect(() => {
+    if (filtersOpen) return;
+
+    setSearchDto({ ...searchDto, search });
+  }, [search]);
+
+  useEffect(() => {
     setLoading(true);
 
     if (FormatsWithCommander.includes(format as any)) {
       setCommanderFormat(true);
     } else setCommanderFormat(false);
 
-    const filters: DeckFiltersDTO = {
+    if (userId) {
+      if (favorites) {
+        DeckService.getUserFavorites(userId, searchDto, {
+          page,
+          items: 50,
+        }).then((response) => {
+          setDecks(response.data);
+          setMeta(response.meta);
+          setLoading(false);
+        });
+      } else
+        DeckService.getByUser(userId, searchDto, { page, items: 50 }).then(
+          (response) => {
+            setDecks(response.data);
+            setMeta(response.meta);
+            setLoading(false);
+          }
+        );
+    } else {
+      DeckService.getMany(searchDto, { page, items: 50 }).then((response) => {
+        setDecks(response.data);
+        setMeta(response.meta);
+        setLoading(false);
+      });
+    }
+  }, [user, searchDto]);
+
+  function toggleListView() {
+    setLocalStorageUserPreferences({
+      decksViewType: listView ? DeckViewType.CARD : DeckViewType.LIST,
+    });
+    setPreferences(getLocalStorageUserPreferences() || {});
+    setListView(!listView);
+  }
+
+  function searchWithFilters() {
+    setSearchDto({
       ...(sort && { sort }),
       ...(board && { board }),
       ...(search && { search }),
@@ -161,47 +205,9 @@ export default function DeckGallery({
       ...(partnerSearch !== undefined && { partner: partnerSearch }),
       ...(commanderSearch !== undefined && { commander: commanderSearch }),
       ...(user?.id === userPageUser?.id && { includePrivate: "true" }),
-    };
-
-    if (userId) {
-      if (favorites) {
-        DeckService.getUserFavorites(userId, filters).then((response) => {
-          setDecks(response.data);
-          setMeta(response.meta);
-          setLoading(false);
-        });
-      } else
-        DeckService.getByUser(userId, filters).then((response) => {
-          setDecks(response.data);
-          setMeta(response.meta);
-          setLoading(false);
-        });
-    } else {
-      DeckService.getMany(filters, { page, items: 50 }).then((response) => {
-        setDecks(response.data);
-        setMeta(response.meta);
-        setLoading(false);
-      });
-    }
-  }, [
-    user,
-    format,
-    search,
-    sort,
-    page,
-    commanderSearch,
-    partnerSearch,
-    cards,
-    board,
-    exclusiveCardSearch,
-  ]);
-
-  function toggleListView() {
-    setLocalStorageUserPreferences({
-      decksViewType: listView ? DeckViewType.CARD : DeckViewType.LIST,
     });
-    setPreferences(getLocalStorageUserPreferences() || {});
-    setListView(!listView);
+
+    setFiltersOpen(false);
   }
 
   return (
@@ -354,6 +360,10 @@ export default function DeckGallery({
               />
             </View>
           )}
+        </View>
+
+        <View className="flex flex-row justify-end">
+          <Button text="Search" action="primary" onClick={searchWithFilters} />
         </View>
       </View>
 
