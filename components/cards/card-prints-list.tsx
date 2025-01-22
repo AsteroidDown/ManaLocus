@@ -33,7 +33,7 @@ export default function CardPrintsList({ card }: CardPrintsListProps) {
           <Text size="sm" className="w-16">
             Number
           </Text>
-          <Text size="sm" className="w-12">
+          <Text size="sm" className="w-14">
             Price
           </Text>
         </View>
@@ -60,7 +60,7 @@ export default function CardPrintsList({ card }: CardPrintsListProps) {
                   {print.collectorNumber}
                 </Text>
 
-                <Text size="sm" className="w-12">
+                <Text size="sm" className="w-14">
                   {currency(print.prices?.usd)}
                 </Text>
               </View>
