@@ -18,7 +18,7 @@ export function CardLegalities({ card }: CardLegalitiesProps) {
   if (!card) return;
 
   return (
-    <View className="flex-1 flex flex-row flex-wrap gap-4 justify-between">
+    <View className="flex-1 flex flex-row justify-center flex-wrap gap-4">
       <View className="flex-1 flex gap-2 min-w-min">
         <Legality gameType="Standard" legality={card.legalities.standard} />
         <Legality gameType="Pioneer" legality={card.legalities.pioneer} />
@@ -69,7 +69,7 @@ function Legality({
       : "bg-dark-400";
 
   return (
-    <View className="flex flex-row items-center justify-between w-full gap-2">
+    <View className="flex flex-row items-center justify-between w-full gap-2 px-1">
       <View
         className={`${legalityColor} flex justify-center items-center w-5 h-5 p-px rounded-full`}
       >

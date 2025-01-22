@@ -74,7 +74,7 @@ export default function CardDetailedPreview({
       </View>
 
       <View
-        className={`flex gap-3 w-[400px] overflow-y-auto ${
+        className={`flex gap-3 lg:w-[400px] w-full overflow-y-auto ${
           fullHeight ? "h-fit" : "max-h-[458px]"
         }`}
       >
@@ -85,6 +85,8 @@ export default function CardDetailedPreview({
         {card?.faces && (
           <View className="flex gap-3">
             <CardInfo link={link} card={card} face={card.faces.front} />
+
+            <Divider thick className="!border-background-300" />
 
             <CardInfo link={link} card={card} face={card.faces.back} />
           </View>

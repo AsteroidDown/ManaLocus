@@ -25,7 +25,7 @@ export default function CardPrintsList({ card }: CardPrintsListProps) {
   }, [card]);
 
   return (
-    <View className="flex w-[400px] max-h-fit border-2 border-dark-200 rounded-lg overflow-hidden">
+    <View className="flex lg:w-[400px] w-full max-h-fit border-2 border-dark-200 rounded-lg overflow-hidden">
       <View className="flex flex-row gap-2 p-2 max-w-full bg-dark-200">
         <Text thickness="semi">Print</Text>
 
