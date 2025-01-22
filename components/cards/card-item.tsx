@@ -170,10 +170,8 @@ export default function CardItem({
       </Pressable>
 
       {expanded && (
-        <Modal transparent open={modalOpen} setOpen={setModalOpen}>
-          <CardDetailedPreview card={card}>
-            <CardItemFooter card={card} groups={groups} />
-          </CardDetailedPreview>
+        <Modal open={modalOpen} setOpen={setModalOpen}>
+          <CardDetailedPreview fullHeight card={card} />
         </Modal>
       )}
 
