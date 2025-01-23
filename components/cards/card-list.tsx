@@ -3,7 +3,7 @@ import { titleCase } from "@/functions/text-manipulation";
 import { PaginationMeta } from "@/hooks/pagination";
 import { Card } from "@/models/card/card";
 import { DeckViewType } from "@/models/deck/dtos/deck-filters.dto";
-import { Link, router, useLocalSearchParams } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import React, { useEffect } from "react";
 import { View } from "react-native";
 import Pagination from "../ui/pagination/pagination";
@@ -48,12 +48,13 @@ export default function CardList({ cards, viewType }: CardListProps) {
       {viewType === DeckViewType.CARD ? (
         <View className="flex flex-row flex-wrap lg:justify-start justify-center gap-2">
           {cards.map((card, index) => (
-            <Link
+            <CardImage
               key={card.scryfallId + index}
-              href={`cards/${setId}/${card.collectorNumber}`}
-            >
-              <CardImage card={card} />
-            </Link>
+              card={card}
+              onClick={() =>
+                router.push(`cards/${setId}/${card.collectorNumber}`)
+              }
+            />
           ))}
         </View>
       ) : (
