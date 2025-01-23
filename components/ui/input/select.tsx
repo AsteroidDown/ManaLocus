@@ -61,18 +61,23 @@ export default function Select({
   useEffect(() => {
     if (!options?.length) return;
 
-    const search =
+    const foundOption =
       options.find((option) =>
         property
           ? option.value?.[property] === value?.[property]
           : option.value === value
       )?.label ?? "";
 
-    if (!multiple && search) setSearch(search);
-    else if (!value) setSearch("");
+    if (!multiple && foundOption) setSearch(foundOption);
   }, [value, options]);
 
   useEffect(() => {
+    if (!search) {
+      setFilteredOptions(options);
+      onChange(null);
+      return;
+    }
+
     const foundOption = options.find(
       (option) => option.label.toLowerCase() === search.toLowerCase()
     );

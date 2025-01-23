@@ -206,8 +206,6 @@ export default function DeckGallery({
       ...(commanderSearch !== undefined && { commander: commanderSearch }),
       ...(user?.id === userPageUser?.id && { includePrivate: "true" }),
     });
-
-    setFiltersOpen(false);
   }
 
   return (
