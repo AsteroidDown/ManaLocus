@@ -87,7 +87,9 @@ export default function DeckGallery({
   );
   const [partnerSearch, setPartnerSearch] = React.useState("");
 
-  const [searchDto, setSearchDto] = React.useState({} as DeckFiltersDTO);
+  const [searchDto, setSearchDto] = React.useState({
+    onlyKits: kits,
+  } as DeckFiltersDTO);
 
   useEffect(() => {
     if (preferences?.decksViewType) {
@@ -147,7 +149,7 @@ export default function DeckGallery({
   useEffect(() => {
     if (filtersOpen) return;
 
-    setSearchDto({ ...searchDto, search });
+    searchWithFilters();
   }, [search]);
 
   useEffect(() => {
@@ -167,7 +169,7 @@ export default function DeckGallery({
           setMeta(response.meta);
           setLoading(false);
         });
-      } else
+      } else {
         DeckService.getByUser(userId, searchDto, { page, items: 50 }).then(
           (response) => {
             setDecks(response.data);
@@ -175,6 +177,7 @@ export default function DeckGallery({
             setLoading(false);
           }
         );
+      }
     } else {
       DeckService.getMany(searchDto, { page, items: 50 }).then((response) => {
         setDecks(response.data);
