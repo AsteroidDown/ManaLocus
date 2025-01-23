@@ -1,5 +1,6 @@
 import CardList from "@/components/cards/card-list";
 import BoxHeader from "@/components/ui/box/box-header";
+import Button from "@/components/ui/button/button";
 import FilterBar from "@/components/ui/filters/filter-bar";
 import Placeholder from "@/components/ui/placeholder/placeholder";
 import SearchBar from "@/components/ui/search-bar/search-bar";
@@ -13,7 +14,9 @@ import {
 import ScryfallService from "@/hooks/services/scryfall.service";
 import { Card } from "@/models/card/card";
 import { Set } from "@/models/card/set";
+import { DeckViewType } from "@/models/deck/dtos/deck-filters.dto";
 import { CardFilters } from "@/models/sorted-cards/sorted-cards";
+import { faBorderAll, faList } from "@fortawesome/free-solid-svg-icons";
 import { useLocalSearchParams } from "expo-router";
 import React, { useEffect } from "react";
 import { ScrollView, View } from "react-native";
@@ -28,6 +31,7 @@ export default function SetPage() {
   const [search, setSearch] = React.useState("");
 
   const [filters, setFilters] = React.useState({} as CardFilters);
+  const [viewType, setViewType] = React.useState(DeckViewType.CARD);
 
   const [tabs, setTabs] = React.useState([] as TabProps[]);
 
@@ -97,25 +101,27 @@ export default function SetPage() {
     });
 
     setTabs([
-      ...(baseCards?.length ? getTabContent("Base", baseCards) : []),
+      ...(baseCards?.length ? getTabContent("Base", baseCards, viewType) : []),
       ...(showcaseCards?.length
-        ? getTabContent("Showcase", showcaseCards)
+        ? getTabContent("Showcase", showcaseCards, viewType)
         : []),
       ...(borderlessCards?.length
-        ? getTabContent("Borderless", borderlessCards)
+        ? getTabContent("Borderless", borderlessCards, viewType)
         : []),
       ...(extendedArtCards?.length
-        ? getTabContent("Extended Art", extendedArtCards)
+        ? getTabContent("Extended Art", extendedArtCards, viewType)
         : []),
-      ...(promoCards?.length ? getTabContent("Promo", promoCards) : []),
+      ...(promoCards?.length
+        ? getTabContent("Promo", promoCards, viewType)
+        : []),
     ]);
-  }, [filteredCards]);
+  }, [filteredCards, viewType]);
 
   if (!set) return;
 
   return (
     <ScrollView>
-      <View className="flex-1 flex gap-6 px-16 py-8 bg-background-100 min-h-[100vh]">
+      <View className="flex-1 flex gap-6 lg:px-16 px-4 py-8 bg-background-100 min-h-[100vh]">
         <BoxHeader
           className="!pb-0"
           title={set.name}
@@ -127,10 +133,28 @@ export default function SetPage() {
           hideAutocomplete
           search={search}
           searchChange={setSearch}
-          placeholder={"Find a " + set.name + " Card"}
+          placeholder={`Search ${set.name}`}
         />
 
-        {filteredCards?.length > 0 && <TabBar hideBorder tabs={tabs}></TabBar>}
+        {filteredCards?.length > 0 && (
+          <TabBar hideBorder tabs={tabs}>
+            <View className="flex flex-row">
+              <Button
+                squareRight
+                icon={faBorderAll}
+                type={viewType === DeckViewType.CARD ? "default" : "outlined"}
+                onClick={() => setViewType(DeckViewType.CARD)}
+              />
+
+              <Button
+                squareLeft
+                icon={faList}
+                type={viewType === DeckViewType.LIST ? "default" : "outlined"}
+                onClick={() => setViewType(DeckViewType.LIST)}
+              />
+            </View>
+          </TabBar>
+        )}
 
         {!filteredCards?.length && (
           <View className="flex flex-1 items-center justify-center max-h-fit">
@@ -145,11 +169,11 @@ export default function SetPage() {
   );
 }
 
-function getTabContent(title: string, cards: Card[]) {
+function getTabContent(title: string, cards: Card[], viewType: DeckViewType) {
   return [
     {
       title,
-      children: <CardList subtitle={cards.length + " Cards"} cards={cards} />,
+      children: <CardList cards={cards} viewType={viewType} />,
     },
   ];
 }
