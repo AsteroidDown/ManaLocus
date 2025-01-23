@@ -4,6 +4,7 @@ import Text from "../text/text";
 
 export interface TableColumn<T> {
   title?: string;
+  titleEnd?: React.ReactNode;
 
   fit?: boolean;
   center?: boolean;
@@ -45,6 +46,10 @@ export default function Table({
               <Text key={index} thickness="semi">
                 {column.title}
               </Text>
+
+              {column.titleEnd && (
+                <View className="ml-auto">{column.titleEnd}</View>
+              )}
             </View>
           )}
 
