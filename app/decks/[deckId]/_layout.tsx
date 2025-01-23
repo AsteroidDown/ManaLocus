@@ -19,9 +19,9 @@ export default function BuilderLayout() {
     if (typeof deckId === "string") {
       DeckService.get(deckId).then((deck) => {
         setDeck(deck);
-        setFormat(deck.format);
-        if (deck.commander) setCommander(deck.commander);
-        if (deck.partner) setPartner(deck.partner);
+        if (deck?.format) setFormat(deck.format);
+        if (deck?.commander) setCommander(deck.commander);
+        if (deck?.partner) setPartner(deck.partner);
       });
     }
   }, [deckId]);

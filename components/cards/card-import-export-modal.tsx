@@ -258,7 +258,7 @@ export default function CardImportExportModal({
                   commanderCards[0].imageURIs?.artCrop || "";
 
                 setDeck({ ...deck });
-                setFormat(format);
+                setFormat(MTGFormats.COMMANDER);
                 setCommander(commanderCards[0]);
 
                 if (commanderCards.length > 1) {
