@@ -53,7 +53,16 @@ export default function CardImportExportModal({
   exportCards,
   exportSideboard,
 }: CardImportExportModalProps) {
-  const { deck, setDeck } = useContext(DeckContext);
+  const {
+    deck,
+    setDeck,
+    format,
+    setFormat,
+    commander,
+    setCommander,
+    partner,
+    setPartner,
+  } = useContext(DeckContext);
   const { board } = useContext(BoardContext);
   const { setStoredCards } = useContext(StoredCardsContext);
 
@@ -166,6 +175,10 @@ export default function CardImportExportModal({
       ? importText.split("Commander\n")[1].split("\n")[0]
       : undefined;
 
+    const partnerText = importText.includes("Commander\n")
+      ? importText.split("Commander\n")[1].split("\n")[1].split("\n")[0]
+      : undefined;
+
     const deckText = importText.includes("Deck\n")
       ? importText.split("Deck\n")[1]
       : importText;
@@ -176,17 +189,26 @@ export default function CardImportExportModal({
 
     const { cardIdentifiers, errorFound } =
       getCardIdentifiersFromText(deckText);
+
     const {
       cardIdentifiers: sideBoardCardIdentifiers,
       errorFound: errorFoundSideboard,
     } = sideboardText
       ? getCardIdentifiersFromText(sideboardText)
       : { cardIdentifiers: [], errorFound: false };
+
     const {
       cardIdentifiers: commanderIdentifiers,
       errorFound: errorFoundCommander,
     } = commanderText
       ? getCardIdentifiersFromText(commanderText)
+      : { cardIdentifiers: [], errorFound: false };
+
+    const {
+      cardIdentifiers: partnerIdentifiers,
+      errorFound: errorFoundPartner,
+    } = partnerText
+      ? getCardIdentifiersFromText(partnerText)
       : { cardIdentifiers: [], errorFound: false };
 
     if (errorFound || errorFoundSideboard || errorFoundCommander) {
@@ -220,22 +242,31 @@ export default function CardImportExportModal({
           }
 
           if (commanderIdentifiers.length) {
-            ScryfallService.getCardsFromCollection(commanderIdentifiers).then(
-              (commanderCards) => {
-                commanderCards.forEach((card) => {
-                  saveLocalStorageCard(card, 1, BoardTypes.MAIN);
-                  newCards.push(card);
-                });
+            ScryfallService.getCardsFromCollection([
+              ...commanderIdentifiers,
+              ...partnerIdentifiers,
+            ]).then((commanderCards) => {
+              commanderCards.forEach((card) => {
+                saveLocalStorageCard(card, 1, BoardTypes.MAIN);
+                newCards.push(card);
+              });
 
-                if (deck) {
-                  deck.format = MTGFormats.COMMANDER;
-                  deck.commander = commanderCards[0];
-                  deck.featuredArtUrl =
-                    commanderCards[0].imageURIs?.artCrop || "";
-                  setDeck({ ...deck });
+              if (deck) {
+                deck.format = MTGFormats.COMMANDER;
+                deck.commander = commanderCards[0];
+                deck.featuredArtUrl =
+                  commanderCards[0].imageURIs?.artCrop || "";
+
+                setDeck({ ...deck });
+                setFormat(format);
+                setCommander(commanderCards[0]);
+
+                if (commanderCards.length > 1) {
+                  deck.partner = commanderCards[1];
+                  setPartner(commanderCards[1]);
                 }
               }
-            );
+            });
           }
 
           setStoredCards(newCards);
