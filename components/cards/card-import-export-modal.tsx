@@ -171,6 +171,7 @@ export default function CardImportExportModal({
       deck.name = deckName;
       setDeck({ ...deck });
     }
+
     const commanderText = importText.includes("Commander\n")
       ? importText.split("Commander\n")[1].split("\n")[0]
       : undefined;
@@ -180,11 +181,15 @@ export default function CardImportExportModal({
       : undefined;
 
     const deckText = importText.includes("Deck\n")
-      ? importText.split("Deck\n")[1]
+      ? importText.split("Deck\n")[1].split("\n\n")[0]
+      : importText?.includes("\n\n")
+      ? importText.split("\n\n")[0]
       : importText;
 
     const sideboardText = importText.includes("Sideboard\n")
       ? importText.split("Sideboard\n")[1]
+      : importText?.includes("\n\n")
+      ? importText.split("\n\n")[1]
       : undefined;
 
     const { cardIdentifiers, errorFound } =
@@ -211,7 +216,12 @@ export default function CardImportExportModal({
       ? getCardIdentifiersFromText(partnerText)
       : { cardIdentifiers: [], errorFound: false };
 
-    if (errorFound || errorFoundSideboard || errorFoundCommander) {
+    if (
+      errorFound ||
+      errorFoundSideboard ||
+      errorFoundCommander ||
+      errorFoundPartner
+    ) {
       setTimeout(() => setError(false), 3000);
       return;
     } else {
