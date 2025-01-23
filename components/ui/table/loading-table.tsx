@@ -13,6 +13,7 @@ export default function LoadingTable() {
 
   return (
     <Table
+      hideHeader
       data={data}
       columns={[
         {
