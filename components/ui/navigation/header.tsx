@@ -41,7 +41,7 @@ export default function Header() {
                 <Button square type="clear" text="Cards" size="lg" />
               </Link>
 
-              <Button square type="clear" text="Explore" size="lg" />
+              {/* <Button square type="clear" text="Explore" size="lg" /> */}
             </View>
           )}
         </View>
@@ -101,14 +101,14 @@ export default function Header() {
 
             <Divider thick />
 
-            <Button
+            {/* <Button
               start
               square
               size="lg"
               type="clear"
               text="Explore"
               className="w-full"
-            />
+            /> */}
 
             <Divider thick />
           </View>
