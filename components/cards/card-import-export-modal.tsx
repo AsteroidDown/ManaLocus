@@ -182,13 +182,13 @@ export default function CardImportExportModal({
 
     const deckText = importText.includes("Deck\n")
       ? importText.split("Deck\n")[1].split("\n\n")[0]
-      : importText?.includes("\n\n")
+      : importText?.includes("\n\n") && !importText.includes("Deck\n")
       ? importText.split("\n\n")[0]
       : importText;
 
     const sideboardText = importText.includes("Sideboard\n")
       ? importText.split("Sideboard\n")[1]
-      : importText?.includes("\n\n")
+      : importText?.includes("\n\n") && !importText.includes("Deck\n")
       ? importText.split("\n\n")[1]
       : undefined;
 
