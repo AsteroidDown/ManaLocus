@@ -155,7 +155,7 @@ export default function CardSearch({
           } max-h-[490px] transition-all duration-300 overflow-hidden`}
         >
           <Box>
-            <CardDetailedPreview card={card}>
+            <CardDetailedPreview hidePrices card={card}>
               <CardPrints card={card} setCard={setCard} />
 
               <View className="flex flex-row justify-center items-end w-full gap-0.5">
