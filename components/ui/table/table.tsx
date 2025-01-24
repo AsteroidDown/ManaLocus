@@ -30,9 +30,11 @@ export default function Table({
 }: TableProps<any>) {
   const [hoveredIndex, setHoveredIndex] = React.useState(-1);
 
+  if (!data?.length) return null;
+
   return (
     <View className={`${className} flex flex-row overflow-x-auto`}>
-      {columns.map((column, index) => (
+      {columns?.map((column, index) => (
         <View
           key={index}
           className={`${column.fit ? "max-w-fit" : "flex-1 min-w-max"} flex`}
@@ -54,7 +56,7 @@ export default function Table({
           )}
 
           <View className="flex">
-            {data.map((rowData, rowIndex) => (
+            {data?.map((rowData, rowIndex) => (
               <Pressable
                 key={rowIndex}
                 onPress={() => rowClick?.(data[rowIndex])}

@@ -31,6 +31,7 @@ import {
 import { Link, router } from "expo-router";
 import React, { useContext, useEffect } from "react";
 import { View } from "react-native";
+import Placeholder from "../ui/placeholder/placeholder";
 import DeckCard from "./deck-card";
 import DecksTable from "./decks-table";
 
@@ -382,12 +383,21 @@ export default function DeckGallery({
       )}
 
       {listView && (
-        <DecksTable
-          decks={decks}
-          loading={loading}
-          rowClick={(deck) => router.push(`decks/${deck.id}`)}
-          endColumns={endColumns}
-        />
+        <>
+          <DecksTable
+            decks={decks}
+            loading={loading}
+            rowClick={(deck) => router.push(`decks/${deck.id}`)}
+            endColumns={endColumns}
+          />
+
+          {!decks?.length && (
+            <Placeholder
+              title="No Decks Found"
+              subtitle="Try adjusting your search filters to find something else!"
+            />
+          )}
+        </>
       )}
 
       {meta && (
