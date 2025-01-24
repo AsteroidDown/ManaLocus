@@ -6,7 +6,7 @@ import { Image, SafeAreaView, View } from "react-native";
 export default function RootLayout() {
   return (
     <SafeAreaView className="flex w-full bg-background-100">
-      <View className="relative flex-1 flex items-center justify-center w-full min-h-[100vh]">
+      <View className="relative flex-1 flex items-center justify-center w-full min-h-[100dvh]">
         <Image
           source={{
             uri: "https://cards.scryfall.io/art_crop/front/4/e/4e4fb50c-a81f-44d3-93c5-fa9a0b37f617.jpg?1639436752",

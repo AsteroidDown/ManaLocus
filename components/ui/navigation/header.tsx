@@ -22,7 +22,7 @@ export default function Header() {
   return (
     <View
       className={`flex bg-black shadow-lg overflow-hidden transition-all duration-300 ${
-        open ? "max-h-[100vh] h-[100vh]" : "max-h-12 h-12"
+        open ? "max-h-[100dvh] h-[100dvh]" : "max-h-12 h-12"
       }`}
     >
       <View

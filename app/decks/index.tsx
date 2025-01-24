@@ -27,7 +27,7 @@ export default function DecksPage() {
 
   return (
     <ScrollView>
-      <View className="flex flex-1 gap-4 lg:px-16 px-4 py-8 min-h-[100vh] bg-background-100">
+      <View className="flex flex-1 gap-4 lg:px-16 px-4 py-8 min-h-[100dvh] bg-background-100">
         <BoxHeader
           title="Find Decks"
           className="!pb-0"

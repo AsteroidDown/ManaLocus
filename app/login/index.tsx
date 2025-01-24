@@ -48,7 +48,7 @@ export default function Login() {
   return (
     <SafeAreaView className="flex-1 flex w-full h-full bg-dark-100">
       <ScrollView>
-        <View className="flex-1 flex items-center justify-center w-full min-h-[100vh] -mt-[50px]">
+        <View className="flex-1 flex items-center justify-center w-full min-h-[100dvh] -mt-[50px]">
           <View className="flex flex-row mb-4 w-96">
             <Button
               squareRight
