@@ -3,10 +3,12 @@ import Box from "@/components/ui/box/box";
 import BoxHeader from "@/components/ui/box/box-header";
 import Button from "@/components/ui/button/button";
 import Dropdown from "@/components/ui/dropdown/dropdown";
+import Pagination from "@/components/ui/pagination/pagination";
 import Table, { TableColumn } from "@/components/ui/table/table";
 import Text from "@/components/ui/text/text";
 import { MTGSetType, MTGSetTypes } from "@/constants/mtg/mtg-set-types";
 import { titleCase } from "@/functions/text-manipulation";
+import { PaginationMeta } from "@/hooks/pagination";
 import ScryfallService from "@/hooks/services/scryfall.service";
 import { faCheck, faFilter } from "@fortawesome/free-solid-svg-icons";
 import { router } from "expo-router";
@@ -16,6 +18,15 @@ import { Set } from "../../models/card/set";
 
 export default function CardsPage() {
   const [loading, setLoading] = React.useState(false);
+
+  const [page, setPage] = React.useState(1);
+  const [items, setItems] = React.useState(25);
+  const [meta, setMeta] = React.useState({
+    page,
+    items,
+    totalItems: 0,
+    totalPages: 0,
+  } as PaginationMeta);
 
   const [sets, setSets] = React.useState([] as Set[]);
   const [filteredSets, setFilteredSets] = React.useState([] as Set[]);
@@ -28,11 +39,26 @@ export default function CardsPage() {
   }, []);
 
   useEffect(() => {
-    if (!selectedSets?.length) setFilteredSets(sets);
-    else {
-      setFilteredSets(sets.filter((set) => selectedSets.includes(set.setType)));
+    const setsToView: Set[] = [];
+    if (!selectedSets?.length) {
+      sets
+        .slice((page - 1) * items, page * items)
+        .forEach((set) => setsToView.push(set));
+    } else {
+      sets
+        .filter((set) => selectedSets.includes(set.setType))
+        .slice((page - 1) * items, page * items)
+        .forEach((set) => setsToView.push(set));
     }
-  }, [sets, selectedSets]);
+
+    setFilteredSets(setsToView);
+    setMeta({
+      page,
+      items,
+      totalItems: sets.length,
+      totalPages: Math.ceil(sets.length / items),
+    });
+  }, [sets, selectedSets, page, sets]);
 
   function importAllCards() {
     setLoading(true);
@@ -106,6 +132,8 @@ export default function CardsPage() {
               ] as TableColumn<Set>[]
             }
           />
+
+          <Pagination meta={meta} onChange={(page) => setPage(page)} />
         </View>
       </View>
     </ScrollView>
