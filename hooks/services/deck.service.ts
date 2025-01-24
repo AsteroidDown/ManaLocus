@@ -24,8 +24,8 @@ async function getMany(
   );
 
   return {
-    meta: response.meta,
-    data: response.data.map((deck) => mapDatabaseDeck(deck)),
+    meta: response?.meta,
+    data: response?.data.map((deck) => mapDatabaseDeck(deck)),
   };
 }
 
@@ -56,8 +56,8 @@ async function getByUser(
   );
 
   return {
-    meta: response.meta,
-    data: response.data.map((deck) => mapDatabaseDeck(deck)),
+    meta: response?.meta,
+    data: response?.data.map((deck) => mapDatabaseDeck(deck)),
   };
 }
 
@@ -81,8 +81,8 @@ async function getUserFavorites(
   );
 
   return {
-    meta: response.meta,
-    data: response.data.map((deck) => mapDatabaseDeck(deck)),
+    meta: response?.meta,
+    data: response?.data.map((deck) => mapDatabaseDeck(deck)),
   };
 }
 
