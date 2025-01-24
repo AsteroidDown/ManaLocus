@@ -1,18 +1,29 @@
 import Box from "@/components/ui/box/box";
 import BoxHeader from "@/components/ui/box/box-header";
 import FilterBar from "@/components/ui/filters/filter-bar";
+import { BoardTypes } from "@/constants/boards";
+import { MTGColors } from "@/constants/mtg/mtg-colors";
+import { MTGFormats } from "@/constants/mtg/mtg-format";
+import { MTGCardTypes } from "@/constants/mtg/mtg-types";
 import BoardContext from "@/contexts/cards/board.context";
 import StoredCardsContext from "@/contexts/cards/stored-cards.context";
-import { filterCards } from "@/functions/card-filtering";
+import DeckContext from "@/contexts/deck/deck.context";
+import { filterCards } from "@/functions/cards/card-filtering";
 import {
+  groupCardsByColor,
+  groupCardsByCost,
+  groupCardsByType,
+  groupCardsCustom,
+} from "@/functions/cards/card-grouping";
+import {
+  sortCards,
   sortCardsAlphabetically,
-  sortCardsByColor,
-  sortCardsByCost,
   sortCardsByManaValue,
-  sortCardsByPrice,
-  sortCardsByType,
-} from "@/functions/card-sorting";
-import { getCountOfCards, getTotalValueOfCards } from "@/functions/card-stats";
+} from "@/functions/cards/card-sorting";
+import {
+  getCountOfCards,
+  getTotalValueOfCards,
+} from "@/functions/cards/card-stats";
 import { getLocalStorageStoredCards } from "@/functions/local-storage/card-local-storage";
 import { titleCase } from "@/functions/text-manipulation";
 import { Card } from "@/models/card/card";
@@ -22,15 +33,18 @@ import {
   CardsSortedByColor,
   CardsSortedByCost,
   CardsSortedByType,
+  CardsSortedCustom,
 } from "@/models/sorted-cards/sorted-cards";
 import {
   faChartSimple,
   faDownLeftAndUpRightToCenter,
+  faPlus,
   faTable,
 } from "@fortawesome/free-solid-svg-icons";
 import React, { useContext, useEffect } from "react";
 import { View } from "react-native";
 import Button from "../ui/button/button";
+import Input from "../ui/input/input";
 import CardItemGalleryColumn from "./card-item-gallery-column";
 import CardSaveAsChartModal from "./card-save-as-chart-modal";
 import CardSaveAsGraphModal from "./card-save-as-graph-modal";
@@ -38,15 +52,16 @@ import CardSaveAsGraphModal from "./card-save-as-graph-modal";
 export interface CardItemGalleryProps {
   type: CardFilterSortType;
 
-  condensed: boolean;
+  groupMulticolored: boolean;
   hideImages: boolean;
 }
 
 export default function CardItemGallery({
   type = "cost",
-  condensed,
+  groupMulticolored,
   hideImages,
 }: CardItemGalleryProps) {
+  const { deck, format, commander, partner } = useContext(DeckContext);
   const { board } = useContext(BoardContext);
   const { storedCards } = useContext(StoredCardsContext);
 
@@ -56,6 +71,9 @@ export default function CardItemGallery({
   const [saveAsChartOpen, setSaveAsChartOpen] = React.useState(false);
 
   const [cards, setCards] = React.useState([] as Card[]);
+
+  const [group, setGroup] = React.useState("");
+  const [groupOptions, setGroupOptions] = React.useState([] as string[]);
 
   const [cardCount, setCardCount] = React.useState(0);
   const [cardsValue, setCardsValue] = React.useState(0);
@@ -70,6 +88,9 @@ export default function CardItemGallery({
   );
   const [cardsSortedByType, setCardsSortedByType] = React.useState(
     {} as CardsSortedByType
+  );
+  const [cardsSortedCustom, setCardsSortedCustom] = React.useState(
+    {} as CardsSortedCustom
   );
 
   useEffect(
@@ -89,338 +110,369 @@ export default function CardItemGallery({
       filters.manaValueSort ||
       filters.alphabeticalSort
     ) {
-      if (filters.alphabeticalSort) {
-        sortedCards =
-          filters.alphabeticalSort === "ASC"
-            ? sortCardsAlphabetically(cards)
-            : filters.alphabeticalSort === "DESC"
-            ? sortCardsAlphabetically(cards, false)
-            : cards;
-      }
-
-      if (filters.priceSort) {
-        const cardsToSort: Card[] = sortedCards?.length ? sortedCards : cards;
-
-        sortedCards =
-          filters.priceSort === "ASC"
-            ? sortCardsByPrice(cardsToSort)
-            : filters.priceSort === "DESC"
-            ? sortCardsByPrice(cardsToSort, false)
-            : cardsToSort;
-      }
-
-      if (filters.manaValueSort) {
-        const cardsToSort: Card[] = sortedCards?.length ? sortedCards : cards;
-
-        sortedCards =
-          filters.manaValueSort === "ASC"
-            ? sortCardsByManaValue(cardsToSort)
-            : filters.manaValueSort === "DESC"
-            ? sortCardsByManaValue(cardsToSort, false)
-            : cardsToSort;
-      }
+      sortedCards = sortCards(cards, filters);
     } else {
       sortedCards = sortCardsByManaValue(sortCardsAlphabetically(cards));
     }
 
-    const filteredCards = filterCards(sortedCards, filters);
+    let filteredCards = filterCards(sortedCards, filters);
+
+    if (commander) {
+      filteredCards = filteredCards.filter(
+        (card) =>
+          card.scryfallId !== commander?.scryfallId &&
+          card.scryfallId !== partner?.scryfallId
+      );
+    }
 
     setCardCount(getCountOfCards(filteredCards));
     setCardsValue(getTotalValueOfCards(filteredCards));
 
     if (type === "cost") {
-      setCardsSortedByCost(sortCardsByCost(filteredCards));
+      setCardsSortedByCost(groupCardsByCost(filteredCards));
     }
     if (type === "color") {
-      setCardsSortedByColor(sortCardsByColor(filteredCards));
+      setCardsSortedByColor(groupCardsByColor(filteredCards));
     }
     if (type === "type") {
-      setCardsSortedByType(sortCardsByType(filteredCards));
+      setCardsSortedByType(groupCardsByType(filteredCards));
     }
-  }, [cards, filters]);
+    if (type === "custom") {
+      setCardsSortedCustom(groupCardsCustom(filteredCards));
+    }
+  }, [deck, cards, filters, format, commander, partner]);
+
+  useEffect(() => {
+    if (!cardsSortedCustom) return;
+
+    setGroupOptions(Object.keys(cardsSortedCustom));
+  }, [cardsSortedCustom]);
 
   return (
-    <Box className="!rounded-tl-none flex gap-2 px-0 overflow-hidden">
-      <BoxHeader
-        title={
-          "Cards Sorted by " +
-          (type === "cost" ? "Mana Value" : titleCase(type))
-        }
-        startIcon={faChartSimple}
-        subtitle={`${cardCount} Card${
-          cardCount !== 1 ? "s" : ""
-        } | Total Value: $${cardsValue.toFixed(2)}`}
-        end={
-          <View className="flex flex-row gap-2">
-            <FilterBar type={type} setFilters={setFilters} />
+    <View className="bg-background-100 pb-4">
+      <Box className="!rounded-tl-none flex gap-2 px-0 overflow-hidden">
+        <BoxHeader
+          title={
+            "Cards Sorted by " +
+            (type === "cost" ? "Mana Value" : titleCase(type))
+          }
+          startIcon={faChartSimple}
+          subtitle={`${
+            cardCount + (commander ? 1 : 0) + (partner ? 1 : 0)
+          } Card${cardCount !== 1 ? "s" : ""} | Total Value: $${(
+            cardsValue +
+            (commander ? commander.prices?.usd || 0 : 0) +
+            (partner ? partner.prices?.usd || 0 : 0)
+          ).toFixed(2)}`}
+          end={
+            <View className="flex flex-row gap-2">
+              <FilterBar type={type} setFilters={setFilters} />
 
-            <View
-              className={`${
-                itemsExpanded ? "max-w-10 mx-0" : "max-w-0 -ml-2"
-              } flex flex-row overflow-hidden transition-all duration-300`}
-            >
-              <Button
-                rounded
-                type="clear"
-                className="-rotate-45"
-                icon={faDownLeftAndUpRightToCenter}
-                onClick={() => setItemsExpanded(0)}
+              <View
+                className={`${
+                  itemsExpanded ? "max-w-10 mx-0" : "max-w-0 -ml-2"
+                } flex flex-row overflow-hidden transition-all duration-300`}
+              >
+                <Button
+                  rounded
+                  type="clear"
+                  className="-rotate-45"
+                  icon={faDownLeftAndUpRightToCenter}
+                  onClick={() => setItemsExpanded(0)}
+                />
+              </View>
+
+              {board === BoardTypes.MAIN && (
+                <>
+                  <View className="-mx-1">
+                    <CardSaveAsGraphModal
+                      type={type}
+                      open={saveAsGraphOpen}
+                      setOpen={setSaveAsGraphOpen}
+                    />
+                  </View>
+
+                  <Button
+                    rounded
+                    type="clear"
+                    icon={faChartSimple}
+                    onClick={() => setSaveAsGraphOpen(true)}
+                  />
+
+                  <View className="-mx-1">
+                    <CardSaveAsChartModal
+                      type={type === "type" ? "type" : "cost"}
+                      open={saveAsChartOpen}
+                      setOpen={setSaveAsChartOpen}
+                    />
+                  </View>
+
+                  <Button
+                    rounded
+                    type="clear"
+                    icon={faTable}
+                    onClick={() => setSaveAsChartOpen(true)}
+                  />
+                </>
+              )}
+            </View>
+          }
+        />
+
+        <View className="overflow-x-scroll overflow-y-hidden">
+          {type === "cost" && (
+            <View className="flex flex-row gap-4 w-full min-h-[500px]">
+              {board === BoardTypes.MAIN && commander && (
+                <CardItemGalleryColumn
+                  title={
+                    format === MTGFormats.OATHBREAKER
+                      ? "Oathbreaker"
+                      : "Commander"
+                  }
+                  hideImages={hideImages}
+                  itemsExpanded={itemsExpanded}
+                  setItemExpanded={setItemsExpanded}
+                  groupMulticolored={groupMulticolored}
+                  cards={[commander, ...(partner ? [partner] : [])]}
+                />
+              )}
+
+              {cardsSortedByCost.zero?.length > 0 && (
+                <CardItemGalleryColumn
+                  title="0 Cost"
+                  hideImages={hideImages}
+                  itemsExpanded={itemsExpanded}
+                  setItemExpanded={setItemsExpanded}
+                  groupMulticolored={groupMulticolored}
+                  cards={cardsSortedByCost.zero}
+                />
+              )}
+              <CardItemGalleryColumn
+                title="1 Cost"
+                hideImages={hideImages}
+                itemsExpanded={itemsExpanded}
+                setItemExpanded={setItemsExpanded}
+                groupMulticolored={groupMulticolored}
+                cards={cardsSortedByCost.one}
+              />
+              <CardItemGalleryColumn
+                title="2 Cost"
+                hideImages={hideImages}
+                itemsExpanded={itemsExpanded}
+                setItemExpanded={setItemsExpanded}
+                groupMulticolored={groupMulticolored}
+                cards={cardsSortedByCost.two}
+              />
+              <CardItemGalleryColumn
+                title="3 Cost"
+                hideImages={hideImages}
+                itemsExpanded={itemsExpanded}
+                setItemExpanded={setItemsExpanded}
+                groupMulticolored={groupMulticolored}
+                cards={cardsSortedByCost.three}
+              />
+              <CardItemGalleryColumn
+                title="4 Cost"
+                hideImages={hideImages}
+                itemsExpanded={itemsExpanded}
+                setItemExpanded={setItemsExpanded}
+                groupMulticolored={groupMulticolored}
+                cards={cardsSortedByCost.four}
+              />
+              <CardItemGalleryColumn
+                title="5 Cost"
+                hideImages={hideImages}
+                itemsExpanded={itemsExpanded}
+                setItemExpanded={setItemsExpanded}
+                groupMulticolored={groupMulticolored}
+                cards={cardsSortedByCost.five}
+              />
+              {cardsSortedByCost.six?.length > 0 && (
+                <CardItemGalleryColumn
+                  title="6+ Cost"
+                  hideImages={hideImages}
+                  itemsExpanded={itemsExpanded}
+                  setItemExpanded={setItemsExpanded}
+                  groupMulticolored={groupMulticolored}
+                  cards={cardsSortedByCost.six}
+                />
+              )}
+              {cardsSortedByCost.land?.length > 0 && (
+                <CardItemGalleryColumn
+                  title="Lands"
+                  hideImages={hideImages}
+                  itemsExpanded={itemsExpanded}
+                  setItemExpanded={setItemsExpanded}
+                  groupMulticolored={groupMulticolored}
+                  cards={cardsSortedByCost.land}
+                />
+              )}
+            </View>
+          )}
+
+          {type === "color" && (
+            <View className="flex flex-row gap-4 w-full min-h-[500px]">
+              {board === BoardTypes.MAIN && commander && (
+                <CardItemGalleryColumn
+                  title={
+                    format === MTGFormats.OATHBREAKER
+                      ? "Oathbreaker"
+                      : "Commander"
+                  }
+                  hideImages={hideImages}
+                  itemsExpanded={itemsExpanded}
+                  setItemExpanded={setItemsExpanded}
+                  groupMulticolored={groupMulticolored}
+                  cards={[commander, ...(partner ? [partner] : [])]}
+                />
+              )}
+
+              {[
+                MTGColors.WHITE,
+                MTGColors.BLUE,
+                MTGColors.BLACK,
+                MTGColors.RED,
+                MTGColors.GREEN,
+                MTGColors.GOLD,
+                MTGColors.COLORLESS,
+                MTGColors.LAND,
+              ].map((color, index) => (
+                <CardItemGalleryColumn
+                  key={index}
+                  title={titleCase(color)}
+                  hideImages={hideImages}
+                  itemsExpanded={itemsExpanded}
+                  setItemExpanded={setItemsExpanded}
+                  groupMulticolored={groupMulticolored}
+                  cards={cardsSortedByColor[color]}
+                />
+              ))}
+            </View>
+          )}
+
+          {type === "type" && (
+            <View className="flex flex-row gap-4 w-full min-h-[500px]">
+              {board === BoardTypes.MAIN && commander && (
+                <CardItemGalleryColumn
+                  title={
+                    format === MTGFormats.OATHBREAKER
+                      ? "Oathbreaker"
+                      : "Commander"
+                  }
+                  hideImages={hideImages}
+                  itemsExpanded={itemsExpanded}
+                  setItemExpanded={setItemsExpanded}
+                  groupMulticolored={groupMulticolored}
+                  cards={[commander, ...(partner ? [partner] : [])]}
+                />
+              )}
+
+              {[
+                MTGCardTypes.CREATURE,
+                MTGCardTypes.INSTANT,
+                MTGCardTypes.SORCERY,
+                MTGCardTypes.ARTIFACT,
+                MTGCardTypes.ENCHANTMENT,
+              ].map((type, index) => (
+                <CardItemGalleryColumn
+                  key={index}
+                  title={titleCase(type)}
+                  hideImages={hideImages}
+                  itemsExpanded={itemsExpanded}
+                  setItemExpanded={setItemsExpanded}
+                  groupMulticolored={groupMulticolored}
+                  cards={cardsSortedByType[type]}
+                />
+              ))}
+              {cardsSortedByType.planeswalker?.length > 0 && (
+                <CardItemGalleryColumn
+                  title="Planeswalker"
+                  hideImages={hideImages}
+                  itemsExpanded={itemsExpanded}
+                  setItemExpanded={setItemsExpanded}
+                  groupMulticolored={groupMulticolored}
+                  cards={cardsSortedByType.planeswalker}
+                />
+              )}
+              {cardsSortedByType.battle?.length > 0 && (
+                <CardItemGalleryColumn
+                  title="Battle"
+                  hideImages={hideImages}
+                  itemsExpanded={itemsExpanded}
+                  setItemExpanded={setItemsExpanded}
+                  groupMulticolored={groupMulticolored}
+                  cards={cardsSortedByType.battle}
+                />
+              )}
+              <CardItemGalleryColumn
+                title="Land"
+                hideImages={hideImages}
+                itemsExpanded={itemsExpanded}
+                setItemExpanded={setItemsExpanded}
+                groupMulticolored={groupMulticolored}
+                cards={cardsSortedByType.land}
               />
             </View>
+          )}
 
-            {board === "main" && (
-              <>
-                <View className="-mx-1">
-                  <CardSaveAsGraphModal
-                    type={type}
-                    open={saveAsGraphOpen}
-                    setOpen={setSaveAsGraphOpen}
+          {type === "custom" && (
+            <View className="flex flex-row gap-4 w-full min-h-[500px]">
+              {commander && (
+                <CardItemGalleryColumn
+                  title={
+                    format === MTGFormats.OATHBREAKER
+                      ? "Oathbreaker"
+                      : "Commander"
+                  }
+                  hideImages={hideImages}
+                  itemsExpanded={itemsExpanded}
+                  setItemExpanded={setItemsExpanded}
+                  groupMulticolored={groupMulticolored}
+                  cards={[commander, ...(partner ? [partner] : [])]}
+                />
+              )}
+
+              {groupOptions.map((group, index) => (
+                <CardItemGalleryColumn
+                  key={index}
+                  groups={groupOptions}
+                  title={titleCase(group)}
+                  hideImages={hideImages}
+                  itemsExpanded={itemsExpanded}
+                  setItemExpanded={setItemsExpanded}
+                  groupMulticolored={groupMulticolored}
+                  cards={cardsSortedCustom[group]}
+                />
+              ))}
+
+              <View className="flex flex-row mt-2 max-h-[88px] bg-background-300 bg-opacity-30 rounded-xl">
+                <View className="flex flex-row px-4 py-2">
+                  <Input
+                    squareRight
+                    label="Create Group"
+                    placeholder="Group"
+                    value={group}
+                    onChange={setGroup}
+                  />
+
+                  <Button
+                    squareLeft
+                    icon={faPlus}
+                    type="outlined"
+                    className="self-end"
+                    disabled={!group || groupOptions.includes(group)}
+                    onClick={() => {
+                      if (!group || groupOptions.includes(group)) return;
+
+                      setGroupOptions([...groupOptions, group]);
+                    }}
                   />
                 </View>
-
-                <Button
-                  rounded
-                  type="clear"
-                  icon={faChartSimple}
-                  onClick={() => setSaveAsGraphOpen(true)}
-                />
-
-                <View className="-mx-1">
-                  <CardSaveAsChartModal
-                    type={type === "type" ? "type" : "cost"}
-                    open={saveAsChartOpen}
-                    setOpen={setSaveAsChartOpen}
-                  />
-                </View>
-
-                <Button
-                  rounded
-                  type="clear"
-                  icon={faTable}
-                  onClick={() => setSaveAsChartOpen(true)}
-                />
-              </>
-            )}
-          </View>
-        }
-      />
-
-      <View className="overflow-x-scroll overflow-y-hidden">
-        {type === "cost" && cardsSortedByCost.one && (
-          <View className="flex flex-row gap-4 w-full min-h-[500px]">
-            {cardsSortedByCost.zero?.length > 0 && (
-              <CardItemGalleryColumn
-                title="0 Cost"
-                itemsExpanded={itemsExpanded}
-                setItemExpanded={setItemsExpanded}
-                condensed={condensed}
-                hideImages={hideImages}
-                cards={cardsSortedByCost.zero}
-              />
-            )}
-            <CardItemGalleryColumn
-              title="1 Cost"
-              itemsExpanded={itemsExpanded}
-              setItemExpanded={setItemsExpanded}
-              condensed={condensed}
-              hideImages={hideImages}
-              cards={cardsSortedByCost.one}
-            />
-            <CardItemGalleryColumn
-              title="2 Cost"
-              itemsExpanded={itemsExpanded}
-              setItemExpanded={setItemsExpanded}
-              condensed={condensed}
-              hideImages={hideImages}
-              cards={cardsSortedByCost.two}
-            />
-            <CardItemGalleryColumn
-              title="3 Cost"
-              itemsExpanded={itemsExpanded}
-              setItemExpanded={setItemsExpanded}
-              condensed={condensed}
-              hideImages={hideImages}
-              cards={cardsSortedByCost.three}
-            />
-            <CardItemGalleryColumn
-              title="4 Cost"
-              itemsExpanded={itemsExpanded}
-              setItemExpanded={setItemsExpanded}
-              condensed={condensed}
-              hideImages={hideImages}
-              cards={cardsSortedByCost.four}
-            />
-            <CardItemGalleryColumn
-              title="5 Cost"
-              itemsExpanded={itemsExpanded}
-              setItemExpanded={setItemsExpanded}
-              condensed={condensed}
-              hideImages={hideImages}
-              cards={cardsSortedByCost.five}
-            />
-            <CardItemGalleryColumn
-              title="6+ Cost"
-              itemsExpanded={itemsExpanded}
-              setItemExpanded={setItemsExpanded}
-              condensed={condensed}
-              hideImages={hideImages}
-              cards={cardsSortedByCost.six}
-            />
-            {cardsSortedByCost.land?.length > 0 && (
-              <CardItemGalleryColumn
-                title="Lands"
-                itemsExpanded={itemsExpanded}
-                setItemExpanded={setItemsExpanded}
-                condensed={condensed}
-                hideImages={hideImages}
-                cards={cardsSortedByCost.land}
-              />
-            )}
-          </View>
-        )}
-
-        {type === "color" && cardsSortedByColor.white && (
-          <View className="flex flex-row gap-4 w-full min-h-[500px]">
-            <CardItemGalleryColumn
-              title="White"
-              itemsExpanded={itemsExpanded}
-              setItemExpanded={setItemsExpanded}
-              condensed={condensed}
-              hideImages={hideImages}
-              cards={cardsSortedByColor.white}
-            />
-            <CardItemGalleryColumn
-              title="Blue"
-              itemsExpanded={itemsExpanded}
-              setItemExpanded={setItemsExpanded}
-              condensed={condensed}
-              hideImages={hideImages}
-              cards={cardsSortedByColor.blue}
-            />
-            <CardItemGalleryColumn
-              title="Black"
-              itemsExpanded={itemsExpanded}
-              setItemExpanded={setItemsExpanded}
-              condensed={condensed}
-              hideImages={hideImages}
-              cards={cardsSortedByColor.black}
-            />
-            <CardItemGalleryColumn
-              title="Red"
-              itemsExpanded={itemsExpanded}
-              setItemExpanded={setItemsExpanded}
-              condensed={condensed}
-              hideImages={hideImages}
-              cards={cardsSortedByColor.red}
-            />
-            <CardItemGalleryColumn
-              title="Green"
-              itemsExpanded={itemsExpanded}
-              setItemExpanded={setItemsExpanded}
-              condensed={condensed}
-              hideImages={hideImages}
-              cards={cardsSortedByColor.green}
-            />
-            <CardItemGalleryColumn
-              title="Gold"
-              itemsExpanded={itemsExpanded}
-              setItemExpanded={setItemsExpanded}
-              condensed={condensed}
-              hideImages={hideImages}
-              cards={cardsSortedByColor.gold}
-            />
-            <CardItemGalleryColumn
-              title="Colorless"
-              itemsExpanded={itemsExpanded}
-              setItemExpanded={setItemsExpanded}
-              condensed={condensed}
-              hideImages={hideImages}
-              cards={cardsSortedByColor.colorless}
-            />
-            <CardItemGalleryColumn
-              title="Land"
-              itemsExpanded={itemsExpanded}
-              setItemExpanded={setItemsExpanded}
-              condensed={condensed}
-              hideImages={hideImages}
-              cards={cardsSortedByColor.land}
-            />
-          </View>
-        )}
-
-        {type === "type" && cardsSortedByType.creature && (
-          <View className="flex flex-row gap-4 w-full min-h-[500px]">
-            <CardItemGalleryColumn
-              title="Creature"
-              itemsExpanded={itemsExpanded}
-              setItemExpanded={setItemsExpanded}
-              condensed={condensed}
-              hideImages={hideImages}
-              cards={cardsSortedByType.creature}
-            />
-            <CardItemGalleryColumn
-              title="Instant"
-              itemsExpanded={itemsExpanded}
-              setItemExpanded={setItemsExpanded}
-              condensed={condensed}
-              hideImages={hideImages}
-              cards={cardsSortedByType.instant}
-            />
-            <CardItemGalleryColumn
-              title="Sorcery"
-              itemsExpanded={itemsExpanded}
-              setItemExpanded={setItemsExpanded}
-              condensed={condensed}
-              hideImages={hideImages}
-              cards={cardsSortedByType.sorcery}
-            />
-            <CardItemGalleryColumn
-              title="Artifact"
-              itemsExpanded={itemsExpanded}
-              setItemExpanded={setItemsExpanded}
-              condensed={condensed}
-              hideImages={hideImages}
-              cards={cardsSortedByType.artifact}
-            />
-            <CardItemGalleryColumn
-              title="Enchantment"
-              itemsExpanded={itemsExpanded}
-              setItemExpanded={setItemsExpanded}
-              condensed={condensed}
-              hideImages={hideImages}
-              cards={cardsSortedByType.enchantment}
-            />
-            <CardItemGalleryColumn
-              title="Land"
-              itemsExpanded={itemsExpanded}
-              setItemExpanded={setItemsExpanded}
-              condensed={condensed}
-              hideImages={hideImages}
-              cards={cardsSortedByType.land}
-            />
-            {cardsSortedByType.planeswalker?.length > 0 && (
-              <CardItemGalleryColumn
-                title="Colorless"
-                itemsExpanded={itemsExpanded}
-                setItemExpanded={setItemsExpanded}
-                condensed={condensed}
-                hideImages={hideImages}
-                cards={cardsSortedByType.planeswalker}
-              />
-            )}
-            {cardsSortedByType.battle?.length > 0 && (
-              <CardItemGalleryColumn
-                title="Battle"
-                itemsExpanded={itemsExpanded}
-                setItemExpanded={setItemsExpanded}
-                condensed={condensed}
-                hideImages={hideImages}
-                cards={cardsSortedByType.battle}
-              />
-            )}
-          </View>
-        )}
-      </View>
-    </Box>
+              </View>
+            </View>
+          )}
+        </View>
+      </Box>
+    </View>
   );
 }

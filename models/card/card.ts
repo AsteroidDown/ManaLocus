@@ -3,27 +3,53 @@ import { MTGRarity } from "@/constants/mtg/mtg-rarity";
 import { MTGColorSymbol } from "../../constants/mtg/mtg-colors";
 
 export interface Card {
-  id: string;
-  name: string;
+  scryfallId: string;
   count: number;
+  group?: string;
   set: string;
+  setName: string;
   collectorNumber: string;
+  releasedAt: string;
   cardBackId: string;
-  rarity: MTGRarity;
-  cmc: number;
+  artist?: string;
+
+  name: string;
+  colors: MTGColorSymbol[];
   colorIdentity: MTGColorSymbol[];
   manaCost: string;
+  cmc: number;
+  rarity: MTGRarity;
   typeLine: string;
+  power?: string;
+  toughness?: string;
   loyalty?: string;
   defense?: string;
   producedMana?: string[];
   oracleText?: string;
-  images?: CardImageUris;
+  flavorText?: string;
+
+  borderColor: string;
+  fullArt: boolean;
+  frame: string;
+  frameEffects: string[];
+  promo: boolean;
+  finishes: string[];
+  foil: boolean;
+  nonfoil: boolean;
+  lang: string;
+
+  imageURIs?: CardImageUris;
   faces: { front: CardFace; back: CardFace } | null;
   prices: CardPrices;
   priceUris: CardPriceUris;
   legalities: CardLegalities;
+  allParts?: CardPart[];
+  relatedUris: CardRelatedUris;
 }
+
+export type CardBorderColor = "black" | "borderless";
+
+export type CardFrameEffect = "showcase" | "extendedart";
 
 export interface CardImageUris {
   small: string;
@@ -41,8 +67,13 @@ export interface CardFace {
   manaCost: string;
   loyalty?: string;
   defense?: string;
+  power?: string;
+  toughness?: string;
   oracleText: string;
+  flavorText?: string;
   imageUris: CardImageUris;
+  artist: string;
+  frameEffects?: string[];
 }
 
 export interface CardPrices {
@@ -55,9 +86,9 @@ export interface CardPrices {
 }
 
 export interface CardPriceUris {
-  tcgplayer: string;
-  cardmarket: string;
-  cardhoarder: string;
+  tcgplayer?: string;
+  cardmarket?: string;
+  cardhoarder?: string;
 }
 
 export interface CardLegalities {
@@ -89,6 +120,27 @@ export interface CardLegalities {
   oldschool: MTGLegality;
   premodern: MTGLegality;
   pred: MTGLegality;
+}
+
+export interface CardPart {
+  component: string;
+  id: string;
+  name: string;
+  object: string;
+  typeLine: string;
+  uri: string;
+}
+
+export enum CardPartTypes {
+  COMBO_PIECE = "combo_piece",
+  TOKEN = "token",
+}
+
+export interface CardRelatedUris {
+  edhrec: string;
+  gatherer: string;
+  tcgplayerInfiniteArticles: string;
+  tcgplayerInfiniteDecks: string;
 }
 
 export type CardIdentifier =

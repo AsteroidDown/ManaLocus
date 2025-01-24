@@ -1,6 +1,14 @@
+import { faX } from "@fortawesome/free-solid-svg-icons";
 import React, { useEffect } from "react";
-import { Pressable, Modal as ReactModal, View, ViewProps } from "react-native";
+import {
+  Pressable,
+  Modal as ReactModal,
+  ScrollView,
+  View,
+  ViewProps,
+} from "react-native";
 import Box from "../box/box";
+import Button from "../button/button";
 
 export type ModalProps = ViewProps & {
   open: boolean;
@@ -53,10 +61,19 @@ export default function Modal({
                     <Box
                       className={`
                         ${className} ${transParentClasses}
-                        bg-background-200 border-background-100 border-2 transition-all duration-500
+                        !bg-background-100 !border-background-200 max-h-[95vh] lg:mx-0 mx-2 border-2 transition-all duration-500
                         ${animate ? "opacity-0" : "opacity-100"}`}
                     >
-                      {children}
+                      <ScrollView>{children}</ScrollView>
+
+                      <View className="absolute top-4 right-4 lg:hidden">
+                        <Button
+                          rounded
+                          type="clear"
+                          icon={faX}
+                          onClick={() => setOpen(false)}
+                        />
+                      </View>
                     </Box>
                   </Pressable>
                 </View>

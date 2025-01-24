@@ -2,7 +2,8 @@ import Text from "@/components/ui/text/text";
 import { ActionColor } from "@/constants/ui/colors";
 import { Size } from "@/constants/ui/sizes";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
-import { faRotate } from "@fortawesome/free-solid-svg-icons";
+import { IconDefinition as BrandIconDefinition } from "@fortawesome/free-brands-svg-icons";
+import { faRotate, IconDefinition } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect } from "react";
 import { Pressable, View, ViewProps } from "react-native";
@@ -11,7 +12,9 @@ export type ButtonType = "default" | "outlined" | "clear";
 
 export type ButtonProps = ViewProps & {
   text?: string;
-  icon?: IconProp;
+  icon?: IconProp | IconDefinition | BrandIconDefinition;
+  buttonClasses?: string;
+  iconRight?: boolean;
   action?: ActionColor;
   size?: Size;
   type?: ButtonType;
@@ -27,18 +30,22 @@ export type ButtonProps = ViewProps & {
 
   disabled?: boolean;
   tabbable?: boolean;
+  stopPropagation?: boolean;
   onClick?: () => void;
 };
 
 export default function Button({
   text,
   icon,
+  buttonClasses,
   className,
+  iconRight = false,
   action = "primary",
   size = "md",
   type = "default",
   disabled = false,
   tabbable = true,
+  stopPropagation = false,
   onClick,
   children,
   start = false,
@@ -78,9 +85,11 @@ export default function Button({
 
   return (
     <Pressable
-      onPress={() => {
+      onPress={(event) => {
         onClick?.();
         setFocused(false);
+
+        if (stopPropagation) event.stopPropagation();
       }}
       disabled={disabled}
       onBlur={() => setFocused(false)}
@@ -90,7 +99,7 @@ export default function Button({
     >
       <View
         ref={ref}
-        className={`${baseButtonClasses} ${buttonHeight}
+        className={`${buttonClasses} ${baseButtonClasses} ${buttonHeight}
           ${baseColor} ${hoverColor} ${useFocus ? focusColor : ""} ${
           rounded && text
             ? "!rounded-full"
@@ -103,9 +112,9 @@ export default function Button({
           squareRight ? "!rounded-r-none" : ""
         }`}
       >
-        {icon && (
+        {icon && !iconRight && (
           <FontAwesomeIcon
-            icon={icon}
+            icon={icon as any}
             className={`${textColor} ${text || children ? "mr-2" : ""} ${
               icon === faRotate ? "animate-spin" : ""
             }`}
@@ -124,6 +133,16 @@ export default function Button({
         )}
 
         {children}
+
+        {icon && iconRight && (
+          <FontAwesomeIcon
+            icon={icon as any}
+            className={`${textColor} ${
+              children || text ? "pl-2" : ""
+            } ml-auto select-none`}
+            size={size !== "md" ? size : undefined}
+          />
+        )}
       </View>
     </Pressable>
   );
@@ -134,7 +153,7 @@ function getButtonBaseColor(
   type: ButtonType,
   disabled: boolean
 ) {
-  if (type === "clear") return "";
+  if (type === "clear") return "border-2 border-transparent";
   else if (type === "outlined") {
     if (disabled) return "border-2 bg-dark-300 bg-opacity-30";
 

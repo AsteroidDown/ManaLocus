@@ -1,39 +1,41 @@
-import Text from "@/components/ui/text/text";
-import StoredCardsContext from "@/contexts/cards/stored-cards.context";
-import DashboardContext from "@/contexts/dashboard/dashboard.context";
-import { getLocalStorageStoredCards } from "@/functions/local-storage/card-local-storage";
-import { getLocalStorageDashboard } from "@/functions/local-storage/dashboard-local-storage";
+import Header from "@/components/ui/navigation/header";
+import UserPreferencesContext from "@/contexts/user/user-preferences.context";
+import UserContext from "@/contexts/user/user.context";
+import { getLocalStorageUserPreferences } from "@/functions/local-storage/user-preferences-local-storage";
 import "@/global.css";
-import { Card } from "@/models/card/card";
-import { Dashboard } from "@/models/dashboard/dashboard";
+import UserService from "@/hooks/services/user.service";
+import { UserPreferences } from "@/models/preferences/user-preferences";
+import { User } from "@/models/user/user";
 import { Stack } from "expo-router";
 import React, { useEffect } from "react";
 import { SafeAreaView } from "react-native";
 
 export default function RootLayout() {
-  const [storedCards, setStoredCards] = React.useState([] as Card[]);
-
-  const [dashboard, setDashboard] = React.useState(null as Dashboard | null);
+  const [user, setUser] = React.useState(null as User | null);
+  const [preferences, setPreferences] = React.useState(
+    null as UserPreferences | null
+  );
 
   useEffect(() => {
-    setDashboard(getLocalStorageDashboard());
-    setStoredCards(getLocalStorageStoredCards());
+    UserService.getCurrentUser().then((user) => setUser(user));
+
+    setPreferences(getLocalStorageUserPreferences());
   }, []);
 
   return (
-    <SafeAreaView className="flex w-full h-full bg-background-100">
-      <Text size="2xl" thickness="medium" className="px-6 py-4">
-        Chromatic Cube
-      </Text>
+    <UserContext.Provider value={{ user, setUser }}>
+      <UserPreferencesContext.Provider value={{ preferences, setPreferences }}>
+        <Header />
 
-      <StoredCardsContext.Provider value={{ storedCards, setStoredCards }}>
-        <DashboardContext.Provider value={{ dashboard, setDashboard }}>
-          <Stack>
-            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        <SafeAreaView className="flex w-full h-[95vh] bg-background-100">
+          <Stack screenOptions={{ headerShown: false }}>
+            <Stack.Screen name="index" />
+            <Stack.Screen name="users" />
+            <Stack.Screen name="login" />
             <Stack.Screen name="+not-found" />
           </Stack>
-        </DashboardContext.Provider>
-      </StoredCardsContext.Provider>
-    </SafeAreaView>
+        </SafeAreaView>
+      </UserPreferencesContext.Provider>
+    </UserContext.Provider>
   );
 }

@@ -3,12 +3,12 @@ import Text from "@/components/ui/text/text";
 import { MTGColor } from "@/constants/mtg/mtg-colors";
 import { MTGRarity } from "@/constants/mtg/mtg-rarity";
 import { MTGCardType } from "@/constants/mtg/mtg-types";
-import { SortDirection } from "@/constants/sorting";
-import CardPreferencesContext from "@/contexts/cards/card-preferences.context";
+import { SortType } from "@/constants/sorting";
+import BuilderPreferencesContext from "@/contexts/cards/builder-preferences.context";
 import {
-  getLocalStoragePreferences,
-  setLocalStoragePreferences,
-} from "@/functions/local-storage/preferences-local-storage";
+  getLocalStorageBuilderPreferences,
+  setLocalStorageBuilderPreferences,
+} from "@/functions/local-storage/builder-preferences-local-storage";
 import {
   CardFilters,
   CardFilterSortType,
@@ -23,12 +23,13 @@ import TypeFilter from "./filter-types/type-filter";
 import SortingFilter from "./sorting-filter";
 
 export interface FilterBarProps {
-  type: CardFilterSortType;
+  clear?: boolean;
+  type?: CardFilterSortType;
   setFilters: React.Dispatch<React.SetStateAction<CardFilters>>;
 }
 
-export default function FilterBar({ setFilters, type }: FilterBarProps) {
-  const { setPreferences } = useContext(CardPreferencesContext);
+export default function FilterBar({ clear, type, setFilters }: FilterBarProps) {
+  const { setPreferences } = useContext(BuilderPreferencesContext);
 
   const [showFilters, setShowFilters] = React.useState(false);
   const [filterLength, setFilterLength] = React.useState(0);
@@ -44,12 +45,10 @@ export default function FilterBar({ setFilters, type }: FilterBarProps) {
     undefined as MTGRarity[] | undefined
   );
 
-  const [priceSort, setPriceSort] = React.useState(null as SortDirection);
-  const [manaValueSort, setManaValueSort] = React.useState(
-    null as SortDirection
-  );
+  const [priceSort, setPriceSort] = React.useState(null as SortType);
+  const [manaValueSort, setManaValueSort] = React.useState(null as SortType);
   const [alphabeticalSort, setAlphabeticalSort] = React.useState(
-    null as SortDirection
+    null as SortType
   );
 
   useEffect(() => {
@@ -70,8 +69,8 @@ export default function FilterBar({ setFilters, type }: FilterBarProps) {
     setFilterLength(filterLength);
 
     if (filterLength) {
-      setLocalStoragePreferences({ filters });
-      setPreferences(getLocalStoragePreferences() || {});
+      setLocalStorageBuilderPreferences({ filters });
+      setPreferences(getLocalStorageBuilderPreferences() || {});
     }
   }, [
     colorFilter,
@@ -89,10 +88,10 @@ export default function FilterBar({ setFilters, type }: FilterBarProps) {
     setManaValueSort(null);
     setPriceSort(null);
     setResetFilters(!resetFilters);
-    setLocalStoragePreferences({
+    setLocalStorageBuilderPreferences({
       filters: { colorFilter: [], typeFilter: [], rarityFilter: [] },
     });
-    setPreferences(getLocalStoragePreferences() || {});
+    setPreferences(getLocalStorageBuilderPreferences() || {});
   }
 
   return (
@@ -101,7 +100,11 @@ export default function FilterBar({ setFilters, type }: FilterBarProps) {
         showFilters ? "max-w-[1000px]" : "max-w-[8px]"
       }`}
     >
-      <View className="bg-background-200 rounded-l-full z-10">
+      <View
+        className={`rounded-l-full z-10 ${
+          clear ? "bg-background-100" : "bg-background-200"
+        }`}
+      >
         <Button
           rounded
           icon={faFilter}

@@ -2,9 +2,12 @@ import Button from "@/components/ui/button/button";
 import Divider from "@/components/ui/divider/divider";
 import Modal from "@/components/ui/modal/modal";
 import Text from "@/components/ui/text/text";
+import { BoardType, BoardTypes } from "@/constants/boards";
 import { SideBoardLimit } from "@/constants/mtg/limits";
-import BoardContext, { BoardType } from "@/contexts/cards/board.context";
+import BoardContext from "@/contexts/cards/board.context";
 import StoredCardsContext from "@/contexts/cards/stored-cards.context";
+import DeckContext from "@/contexts/deck/deck.context";
+import { evaluateCardLegality } from "@/functions/decks/deck-legality";
 import {
   addToLocalStorageCardCount,
   getLocalStorageStoredCards,
@@ -12,7 +15,9 @@ import {
   removeLocalStorageCard,
   saveLocalStorageCard,
   switchLocalStorageCardPrint,
+  updateLocalStorageCardGroup,
 } from "@/functions/local-storage/card-local-storage";
+import { titleCase } from "@/functions/text-manipulation";
 import { Card } from "@/models/card/card";
 import {
   faCircleInfo,
@@ -30,20 +35,22 @@ import React, { useContext, useEffect } from "react";
 import { Linking, Pressable, View } from "react-native";
 import Box from "../ui/box/box";
 import Dropdown from "../ui/dropdown/dropdown";
+import Select, { SelectOption } from "../ui/input/select";
 import CardCost from "./card-cost";
 import CardDetailedPreview from "./card-detailed-preview";
 import CardImage from "./card-image";
 import CardPrints from "./card-prints";
+import CardText from "./card-text";
 
 export interface CardItemProps {
   card: Card;
-  condensed?: boolean;
+  groups?: string[];
   hideImage?: boolean;
 }
 
 export default function CardItem({
   card,
-  condensed = false,
+  groups,
   hideImage = false,
   itemsExpanded,
   setItemsExpanded,
@@ -51,12 +58,34 @@ export default function CardItem({
   itemsExpanded?: number;
   setItemsExpanded: React.Dispatch<React.SetStateAction<number>>;
 }) {
+  const { deck, format, commander, partner } = useContext(DeckContext);
+
   const [expanded, setExpanded] = React.useState(false);
   const [modalOpen, setModalOpen] = React.useState(false);
   const [focused, setFocused] = React.useState(false);
   const [hovered, setHovered] = React.useState(false);
 
+  const [legal, setLegal] = React.useState(true);
+  const [reasons, setReasons] = React.useState([] as string[]);
+  const [restricted, setRestricted] = React.useState(false);
+
   let leftHover = false;
+
+  useEffect(() => {
+    if (!deck || !format) return;
+
+    const { legal, reasons, restricted } = evaluateCardLegality(
+      card,
+      format,
+      commander
+        ? [...commander?.colorIdentity, ...(partner?.colorIdentity || [])]
+        : undefined
+    );
+
+    setLegal(legal);
+    setReasons(reasons);
+    setRestricted(restricted);
+  }, [deck, card, format, commander, partner]);
 
   useEffect(
     () => (itemsExpanded === 0 ? setExpanded(false) : undefined),
@@ -86,58 +115,67 @@ export default function CardItem({
           setExpanded(!expanded);
         }}
         className={`flex gap-2 rounded-2xl overflow-hidden transition-all duration-300 outline-none ${
-          expanded
-            ? "max-h-[1000px] "
-            : condensed
-            ? "max-h-[24px]"
-            : "max-h-[36px]"
-        } ${
-          expanded
-            ? "bg-background-300"
-            : condensed
-            ? "bg-none"
-            : "bg-background-300"
-        }`}
+          expanded ? "max-h-[1000px] " : "max-h-[24px]"
+        } ${expanded ? "bg-background-300" : "bg-none"}`}
       >
-        <CardItemHeader card={card} condensed={condensed} focused={focused} />
+        <CardItemHeader
+          card={card}
+          focused={focused}
+          legal={legal}
+          restricted={restricted}
+        />
 
-        <Divider thick className="-mt-2" />
-
-        {!hideImage && (
+        {expanded && (
           <>
-            <View className={"flex gap-2 px-2"}>
-              <CardImage
-                card={card}
-                focusable={expanded}
-                onClick={() => setModalOpen(true)}
-              />
-            </View>
+            <Divider thick className="-mt-2" />
 
-            <Divider thick />
+            {!hideImage && (
+              <>
+                <View className={"flex gap-2 px-2"}>
+                  <CardImage
+                    card={card}
+                    focusable={expanded}
+                    onClick={() => setModalOpen(true)}
+                  />
+                </View>
+
+                <Divider thick />
+              </>
+            )}
+
+            {reasons?.length > 0 && (
+              <>
+                <View className="flex mx-4">
+                  <Text size="sm" thickness="semi">
+                    Legality Issues
+                  </Text>
+
+                  <CardText text={reasons.join("\n")} />
+                </View>
+                <Divider thick />
+              </>
+            )}
+
+            <CardItemFooter
+              card={card}
+              groups={groups}
+              expanded={expanded}
+              modalOpen={modalOpen}
+              setModalOpen={setModalOpen}
+              itemsExpanded={itemsExpanded}
+              setItemsExpanded={setItemsExpanded}
+            />
           </>
         )}
-
-        <CardItemFooter
-          card={card}
-          expanded={expanded}
-          modalOpen={modalOpen}
-          setModalOpen={setModalOpen}
-          itemsExpanded={itemsExpanded}
-          setItemsExpanded={setItemsExpanded}
-        />
       </Pressable>
 
-      <Modal transparent open={modalOpen} setOpen={setModalOpen}>
-        <CardDetailedPreview card={card}>
-          <CardItemFooter card={card} />
-        </CardDetailedPreview>
-      </Modal>
+      {expanded && (
+        <Modal open={modalOpen} setOpen={setModalOpen}>
+          <CardDetailedPreview fullHeight card={card} />
+        </Modal>
+      )}
 
-      <View
-        className={`relative w-full h-0 z-10 max-w-full ${
-          !condensed ? "-my-1" : ""
-        }`}
-      >
+      <View className={`relative w-full h-0 z-10 max-w-full`}>
         <View
           className={`absolute top-0 left-0 flex gap-2 w-full !bg-background-100 rounded-xl overflow-hidden transition-all duration-300 z-10 ${
             hovered && !expanded ? "max-h-[412px]" : "max-h-0"
@@ -151,9 +189,11 @@ export default function CardItem({
               action="info"
               className="flex-1"
               icon={faShop}
+              disabled={!card.priceUris?.tcgplayer}
               text={`$${card.prices?.usd}`}
               onClick={async () =>
-                await Linking.openURL(card.priceUris.tcgplayer)
+                card.priceUris?.tcgplayer &&
+                (await Linking.openURL(card.priceUris.tcgplayer))
               }
             />
 
@@ -162,9 +202,11 @@ export default function CardItem({
               action="info"
               className="flex-1"
               icon={faShop}
+              disabled={!card.priceUris?.cardmarket}
               text={`€${card.prices?.eur}`}
               onClick={async () =>
-                await Linking.openURL(card.priceUris.cardmarket)
+                card.priceUris?.cardmarket &&
+                (await Linking.openURL(card.priceUris?.cardmarket))
               }
             />
           </View>
@@ -176,23 +218,18 @@ export default function CardItem({
 
 export function CardItemHeader({
   card,
-  condensed,
   focused,
-}: CardItemProps & { focused: boolean }) {
+  legal,
+  restricted,
+}: CardItemProps & { focused: boolean; legal: boolean; restricted: boolean }) {
   const [hovered, setHovered] = React.useState(false);
 
   return (
     <View
-      className={`flex flex-row gap-1 justify-between items-center transition-all ${
-        condensed ? "px-2 max-h-[24px] h-[24px]" : "px-4 max-h-[36px] h-[36px]"
-      } ${focused ? "bg-primary-300" : ""}
-        ${
-          hovered
-            ? "bg-primary-300"
-            : condensed
-            ? "bg-none"
-            : "bg-background-300"
-        }`}
+      className={`flex flex-row justify-between gap-1 px-2 max-h-[24px] h-[24px] items-center transition-all ${
+        !legal ? "!bg-danger-100" : ""
+      } ${restricted ? "bg-warning-100" : ""} ${focused ? "bg-primary-300" : ""}
+        ${hovered ? "bg-primary-300" : "bg-none"}`}
       onPointerEnter={() => setHovered(true)}
       onPointerLeave={() => setHovered(false)}
     >
@@ -222,6 +259,7 @@ export function CardItemHeader({
 
 export function CardItemFooter({
   card,
+  groups,
   expanded,
   modalOpen,
   setModalOpen,
@@ -232,9 +270,12 @@ export function CardItemFooter({
   const { setStoredCards } = useContext(StoredCardsContext);
 
   const [print, setPrint] = React.useState(undefined as Card | undefined);
+
+  const [groupOptions, setGroupOptions] = React.useState([] as SelectOption[]);
+
   const [moveOpen, setMoveOpen] = React.useState(false);
 
-  const sideboardCount = getLocalStorageStoredCards("side").reduce(
+  const sideboardCount = getLocalStorageStoredCards(BoardTypes.SIDE).reduce(
     (acc, storedCard) => acc + storedCard.count,
     0
   );
@@ -244,6 +285,19 @@ export function CardItemFooter({
 
     switchPrint(print);
   }, [print]);
+
+  useEffect(() => {
+    if (!groups?.length) return;
+
+    setGroupOptions(
+      groups.map((group: string) => ({ label: titleCase(group), value: group }))
+    );
+  }, [groups]);
+
+  function setCardGroup(group: string) {
+    updateLocalStorageCardGroup(card, group, board);
+    setStoredCards(getLocalStorageStoredCards(board));
+  }
 
   function addToCount() {
     addToLocalStorageCardCount(card, board);
@@ -267,14 +321,30 @@ export function CardItemFooter({
     setStoredCards(getLocalStorageStoredCards(board));
   }
 
-  function moveCard(moveToBoard: BoardType) {
+  function moveCard(moveToBoard: BoardType, add?: boolean) {
     saveLocalStorageCard(card, card.count, moveToBoard);
-    removeLocalStorageCard(card, board);
+    if (!add) removeLocalStorageCard(card, board);
     setStoredCards(getLocalStorageStoredCards(board));
+    setMoveOpen(false);
   }
 
   return (
     <View className="flex gap-2">
+      {groups?.length > 0 && (
+        <Pressable
+          className="flex mx-2 bg-background-100 rounded-lg z-10"
+          tabIndex={-1}
+        >
+          <Select
+            value={card.group}
+            placeholder="Group"
+            options={groupOptions}
+            maxHeight="!max-h-[128px]"
+            onChange={(group) => setCardGroup(group)}
+          />
+        </Pressable>
+      )}
+
       <View className="flex flex-row justify-center items-center gap-2 px-2">
         {setItemsExpanded && (
           <Button
@@ -283,7 +353,7 @@ export function CardItemFooter({
             tabbable={expanded}
             icon={faCircleInfo}
             onClick={() => setModalOpen(!modalOpen)}
-          ></Button>
+          />
         )}
 
         <CardPrints
@@ -300,60 +370,74 @@ export function CardItemFooter({
           tabbable={expanded}
           icon={faRightFromBracket}
           onClick={() => setMoveOpen(true)}
-        ></Button>
+        />
 
-        <Dropdown xOffset={-32} expanded={moveOpen} setExpanded={setMoveOpen}>
-          <Box className="flex justify-start items-start !p-0 border-2 border-primary-300 !bg-background-100 !bg-opacity-90 overflow-hidden">
-            {board !== "main" && (
-              <Button
-                start
-                square
-                type="clear"
-                text="Main"
-                className="w-full"
-                icon={faList}
-                onClick={() => moveCard("main")}
-              />
-            )}
+        <View className="-mx-1">
+          <Dropdown xOffset={-32} expanded={moveOpen} setExpanded={setMoveOpen}>
+            <Box className="flex justify-start items-start !p-0 border-2 border-primary-300 !bg-background-100 !bg-opacity-90 overflow-hidden">
+              {board !== BoardTypes.MAIN && (
+                <Button
+                  start
+                  square
+                  type="clear"
+                  text="Main"
+                  className="w-full"
+                  icon={faList}
+                  onClick={() => moveCard(BoardTypes.MAIN)}
+                />
+              )}
 
-            {board !== "side" && (
-              <Button
-                start
-                square
-                type="clear"
-                text="Side"
-                className="w-full"
-                icon={faClipboardList}
-                disabled={sideboardCount >= SideBoardLimit}
-                onClick={() => moveCard("side")}
-              />
-            )}
+              {board !== BoardTypes.SIDE && (
+                <Button
+                  start
+                  square
+                  type="clear"
+                  text="Side"
+                  className="w-full"
+                  icon={faClipboardList}
+                  disabled={sideboardCount >= SideBoardLimit}
+                  onClick={() => moveCard(BoardTypes.SIDE)}
+                />
+              )}
 
-            {board !== "maybe" && (
-              <Button
-                start
-                square
-                type="clear"
-                text="Maybe"
-                className="w-full"
-                icon={faClipboardQuestion}
-                onClick={() => moveCard("maybe")}
-              />
-            )}
+              {board !== BoardTypes.MAYBE && (
+                <Button
+                  start
+                  square
+                  type="clear"
+                  text="Maybe"
+                  className="w-full"
+                  icon={faClipboardQuestion}
+                  onClick={() => moveCard(BoardTypes.MAYBE)}
+                />
+              )}
 
-            {board !== "acquire" && (
-              <Button
-                start
-                square
-                type="clear"
-                text="Acquire"
-                className="w-full"
-                icon={faListCheck}
-                onClick={() => moveCard("acquire")}
-              />
-            )}
-          </Box>
-        </Dropdown>
+              {board !== BoardTypes.ACQUIRE && (
+                <>
+                  <Button
+                    start
+                    square
+                    type="clear"
+                    text="Acquire"
+                    className="w-full"
+                    icon={faListCheck}
+                    onClick={() => moveCard(BoardTypes.ACQUIRE)}
+                  />
+
+                  <Button
+                    start
+                    square
+                    type="clear"
+                    text="Acquire"
+                    className="w-full"
+                    icon={faPlus}
+                    onClick={() => moveCard(BoardTypes.ACQUIRE, true)}
+                  />
+                </>
+              )}
+            </Box>
+          </Dropdown>
+        </View>
 
         <Button
           action="danger"
@@ -388,7 +472,9 @@ export function CardItemFooter({
           className="flex-1"
           icon={faPlus}
           tabbable={expanded}
-          disabled={board === "side" && sideboardCount >= SideBoardLimit}
+          disabled={
+            board === BoardTypes.SIDE && sideboardCount >= SideBoardLimit
+          }
           onClick={() => addToCount()}
         />
       </View>

@@ -1,8 +1,8 @@
-import { filterCards } from "@/functions/card-filtering";
+import { filterCards } from "@/functions/cards/card-filtering";
 import {
   sortCardsAlphabetically,
   sortCardsByManaValue,
-} from "@/functions/card-sorting";
+} from "@/functions/cards/card-sorting";
 import { Card } from "@/models/card/card";
 import { CardFilters } from "@/models/sorted-cards/sorted-cards";
 import React, { ReactNode } from "react";
@@ -25,6 +25,7 @@ export type ChartProps = ViewProps & {
   type: ChartType;
   filters: CardFilters;
   smallTitles?: boolean;
+  readonly?: boolean;
 };
 
 export default function Chart({
@@ -37,6 +38,7 @@ export default function Chart({
   type,
   filters,
   smallTitles = false,
+  readonly = false,
 }: ChartProps) {
   let sortedCards = sortCardsByManaValue(sortCardsAlphabetically(cards));
 
@@ -57,6 +59,7 @@ export default function Chart({
           title={title}
           titleEnd={titleEnd}
           titleStart={titleStart}
+          readonly={readonly}
         />
 
         <CostChartLayout

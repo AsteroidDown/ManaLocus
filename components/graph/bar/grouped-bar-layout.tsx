@@ -1,7 +1,7 @@
 import CardViewMultipleModal from "@/components/cards/card-view-multiple-modal";
 import { MTGColors } from "@/constants/mtg/mtg-colors";
 import { MTGRarity } from "@/constants/mtg/mtg-rarity";
-import { getBarHeight } from "@/functions/card-graphing";
+import { getBarHeight } from "@/functions/cards/card-graphing";
 import React from "react";
 import { Pressable, View } from "react-native";
 import { BarData } from "./bar";

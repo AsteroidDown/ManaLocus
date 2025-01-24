@@ -1,5 +1,5 @@
 import Text from "@/components/ui/text/text";
-import ScryfallService from "@/hooks/scryfall.service";
+import ScryfallService from "@/hooks/services/scryfall.service";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect } from "react";
@@ -9,7 +9,9 @@ import Box from "../box/box";
 export interface SearchBarProps {
   search: string;
   searchChange: React.Dispatch<React.SetStateAction<string>>;
-  searchAction: (search?: string) => void;
+  searchAction?: (search?: string) => void;
+  placeholder?: string;
+  hideAutocomplete?: boolean;
   noSearchResults?: boolean;
 }
 
@@ -17,6 +19,8 @@ export default function SearchBar({
   search,
   searchChange,
   searchAction,
+  placeholder,
+  hideAutocomplete,
   noSearchResults,
 }: SearchBarProps) {
   const [focused, setFocused] = React.useState(false);
@@ -56,7 +60,7 @@ export default function SearchBar({
 
         <View className="relative flex-1">
           <TextInput
-            placeholder="Find a Card"
+            placeholder={placeholder ?? "Find a Card"}
             placeholderTextColor="#8b8b8b"
             className="flex-1 h-10 -my-4 color-white outline-none text-base"
             value={search}
@@ -64,44 +68,46 @@ export default function SearchBar({
             onFocus={onFocus}
             onChangeText={searchChange}
             onKeyPress={(event) =>
-              (event as any)?.code === "Enter" ? searchAction() : null
+              (event as any)?.code === "Enter" ? searchAction?.() : null
             }
           />
 
-          <Box
-            className={`absolute top-[28px] left-0 flex w-full !px-2 rounded-t-none border-t-background-300 overflow-hidden transition-all ease-in-out duration-300 ${
-              hovered
-                ? "border-primary-500"
-                : focused
-                ? focusClasses
-                : "border-background-200"
-            } ${
-              focused && autoComplete.length > 0
-                ? "max-h-40 z-10 !py-2 !border-2"
-                : "max-h-0 -z-10 !py-0 !border-none"
-            }`}
-          >
-            <View className="flex max-h-36 overflow-y-auto">
-              {autoComplete.map((name, index) => (
-                <Pressable
-                  key={name + index}
-                  onFocus={onFocus}
-                  onBlur={onBlur}
-                  className="px-4 py-1 rounded-full hover:bg-background-100 focus:bg-background-100 outline-none"
-                  onPress={() => {
-                    searchChange(name);
-                    searchAction(name);
-                  }}
-                >
-                  <Text className="max-w-full truncate">{name}</Text>
-                </Pressable>
-              ))}
-            </View>
-          </Box>
+          {!hideAutocomplete && (
+            <Box
+              className={`absolute top-[28px] left-0 flex w-full !px-2 rounded-t-none border-t-background-300 overflow-hidden transition-all ease-in-out duration-300 ${
+                hovered
+                  ? "border-primary-500"
+                  : focused
+                  ? focusClasses
+                  : "border-background-200"
+              } ${
+                focused && autoComplete.length > 0
+                  ? "max-h-40 z-10 !py-2 !border-2"
+                  : "max-h-0 -z-10 !py-0 !border-none"
+              }`}
+            >
+              <View className="flex max-h-36 overflow-y-auto">
+                {autoComplete.map((name, index) => (
+                  <Pressable
+                    key={name + index}
+                    onFocus={onFocus}
+                    onBlur={onBlur}
+                    className="px-4 py-1 rounded-full hover:bg-background-100 focus:bg-background-100 outline-none"
+                    onPress={() => {
+                      searchChange(name);
+                      searchAction?.(name);
+                    }}
+                  >
+                    <Text className="max-w-full truncate">{name}</Text>
+                  </Pressable>
+                ))}
+              </View>
+            </Box>
+          )}
         </View>
 
         <Pressable
-          onPress={() => searchAction()}
+          onPress={() => searchAction?.()}
           onBlur={() => setSearchHovered(false)}
           onFocus={() => setSearchHovered(true)}
           onPointerEnter={() => setSearchHovered(true)}

@@ -1,10 +1,10 @@
 import { MTGColor } from "../../constants/mtg/mtg-colors";
 import { MTGRarity } from "../../constants/mtg/mtg-rarity";
 import { MTGCardType } from "../../constants/mtg/mtg-types";
-import { SortDirection } from "../../constants/sorting";
+import { SortType } from "../../constants/sorting";
 import { Card } from "../card/card";
 
-export type CardFilterSortType = "cost" | "color" | "type";
+export type CardFilterSortType = "cost" | "color" | "type" | "custom";
 
 export interface CardsSortedByColor {
   white: Card[];
@@ -15,6 +15,48 @@ export interface CardsSortedByColor {
   gold: Card[];
   colorless: Card[];
   land: Card[];
+}
+
+export interface CardsSortedByColorMulti {
+  white?: Card[];
+  blue?: Card[];
+  black?: Card[];
+  red?: Card[];
+  green?: Card[];
+
+  azorius?: Card[];
+  dimir?: Card[];
+  rakdos?: Card[];
+  gruul?: Card[];
+  selesnya?: Card[];
+
+  orzhov?: Card[];
+  golgari?: Card[];
+  simic?: Card[];
+  izzet?: Card[];
+  boros?: Card[];
+
+  esper?: Card[];
+  grixis?: Card[];
+  jund?: Card[];
+  naya?: Card[];
+  bant?: Card[];
+
+  jeskai?: Card[];
+  sultai?: Card[];
+  mardu?: Card[];
+  temur?: Card[];
+  abzan?: Card[];
+
+  yore?: Card[]; // No green
+  glint?: Card[]; // No white
+  dune?: Card[]; // No blue
+  ink?: Card[]; // No black
+  witch?: Card[]; // No red
+
+  wubrg?: Card[];
+
+  colorless?: Card[];
 }
 
 export interface CardsSortedByCost {
@@ -46,11 +88,16 @@ export interface CardsSortedByRarity {
   mythic: Card[];
 }
 
+export interface CardsSortedCustom {
+  [key: string]: Card[];
+}
+
 export interface CardFilters {
   colorFilter?: MTGColor[];
   typeFilter?: MTGCardType[];
   rarityFilter?: MTGRarity[];
-  manaValueSort?: SortDirection;
-  priceSort?: SortDirection;
-  alphabeticalSort?: SortDirection;
+  manaValueSort?: SortType;
+  priceSort?: SortType;
+  alphabeticalSort?: SortType;
+  colorSort?: boolean;
 }

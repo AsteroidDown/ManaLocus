@@ -1,242 +1,97 @@
-import Divider from "@/components/ui/divider/divider";
 import Text from "@/components/ui/text/text";
-import { Card } from "@/models/card/card";
-import { View } from "react-native";
-import CardCost from "./card-cost";
+import { MTGRarities, MTGRarity } from "@/constants/mtg/mtg-rarity";
+import { titleCase } from "@/functions/text-manipulation";
+import { Card, CardFace } from "@/models/card/card";
+import { Link } from "expo-router";
+import { Pressable, View } from "react-native";
 import CardText from "./card-text";
 
 export interface CardInfoProps {
   card?: Card;
+  face?: CardFace;
+
+  link?: boolean;
+  onLinkPress?: () => any;
 }
 
-export function CardInfo({ card }: CardInfoProps) {
+export function CardInfo({ card, face, link, onLinkPress }: CardInfoProps) {
+  if (!card) return null;
+
+  function getRarityColor(rarity: MTGRarity) {
+    if (rarity === MTGRarities.UNCOMMON) return "text-gray-200";
+    else if (rarity === MTGRarities.RARE) return "text-yellow-400";
+    else if (rarity === MTGRarities.MYTHIC) return "text-orange-500";
+    else return "";
+  }
+
+  function getCollectorNumber(collectorNumber: string) {
+    const number = Number(collectorNumber.replace(/[^0-9]/g, ""));
+
+    if (number < 10) return "00" + collectorNumber;
+    else if (number < 100) return "00" + collectorNumber;
+    else if (number < 100) return "0" + collectorNumber;
+    else return collectorNumber;
+  }
+
   return (
-    <View className="flex gap-3">
-      <View className="flex flex-row gap-2">
-        <Text thickness="bold" className="flex-1">
-          Name
-        </Text>
-        <Text className="flex-[3]">
-          {card?.name || "Something cool probably"}
-        </Text>
-      </View>
-
-      {card?.manaCost && (
-        <>
-          <Divider />
-
-          <View className="flex flex-row gap-2">
-            <Text thickness="bold" className="flex-1">
-              Cost
-            </Text>
-            <View className="flex-[3]">
-              <CardCost cost={card.manaCost} />
-            </View>
-          </View>
-        </>
-      )}
-
-      <Divider />
-
-      <View className="flex flex-row gap-2">
-        <Text thickness="bold" className="flex-1">
-          Type
-        </Text>
-        <Text className="flex-[3]">
-          {card?.typeLine || "Creature - Awesome"}
-        </Text>
-      </View>
-
-      {card?.loyalty && (
-        <>
-          <Divider />
-
-          <View className="flex flex-row gap-2">
-            <Text thickness="bold" className="flex-1">
-              Loyalty
-            </Text>
-            <Text className="flex-[3]">
-              <Text
-                thickness="bold"
-                className="px-2 py-0.5 bg-background-100 rounded"
-              >
-                {card.loyalty}
+    <View className="flex gap-2 max-w-[400px] -mt-1">
+      <View className="flex flex-row justify-between items-center gap-2">
+        {link ? (
+          <Link href={`/cards/${card.set}/${card.collectorNumber}`}>
+            <Pressable tabIndex={-1} onPress={() => onLinkPress?.()}>
+              <Text size="2xl" thickness="bold" className="!text-primary-200">
+                {face?.name || card.name}
               </Text>
-            </Text>
-          </View>
-        </>
-      )}
+            </Pressable>
+          </Link>
+        ) : (
+          <Text size="2xl" thickness="bold">
+            {face?.name || card.name}
+          </Text>
+        )}
 
-      <Divider />
+        <CardText size="lg" text={face?.manaCost || card.manaCost} />
+      </View>
 
-      <View className="flex flex-row gap-2">
-        <Text thickness="bold" className="flex-1">
-          Text
-        </Text>
-        <View className="flex-[3]">
-          <CardText text={card?.oracleText || "{T}: You win the game!"} />
+      <View className="flex gap-2 px-2">
+        <View className="flex flex-row justify-between gap-2">
+          <Text className="!text-gray-300">
+            {face?.typeLine || card.typeLine}
+          </Text>
+
+          <Text className={`${getRarityColor(card.rarity)}`}>
+            {titleCase(card.rarity)}
+          </Text>
         </View>
-      </View>
-    </View>
-  );
-}
 
-export function CardFrontInfo({ card }: CardInfoProps) {
-  return (
-    <View className="flex gap-3">
-      <View className="flex flex-row gap-2">
-        <Text thickness="bold" className="flex-1">
-          Name
-        </Text>
-        <Text className="flex-[3]">{card?.faces?.front.name || ""}</Text>
-      </View>
+        <CardText
+          text={face?.oracleText || card.oracleText || ""}
+          flavor={face?.flavorText || card.flavorText}
+        />
 
-      {!!card?.faces?.front.manaCost && (
-        <>
-          <Divider />
+        <View className="flex flex-row justify-between items-center gap-2 -mb-2">
+          <Text size="sm" className="!text-gray-300 self-end">
+            {titleCase(card.rarity)[0]}{" "}
+            {getCollectorNumber(card.collectorNumber)} {card.set.toUpperCase()}
+          </Text>
 
-          <View className="flex flex-row gap-2">
-            <Text thickness="bold" className="flex-1">
-              Cost
-            </Text>
-            <View className="flex-[3]">
-              <CardCost cost={card?.faces?.front?.manaCost || ""} />
-            </View>
-          </View>
-        </>
-      )}
-
-      <Divider />
-
-      <View className="flex flex-row gap-2">
-        <Text thickness="bold" className="flex-1">
-          Type
-        </Text>
-        <Text className="flex-[3]">{card?.faces?.front.typeLine || ""}</Text>
-      </View>
-
-      {!!card?.faces?.front.loyalty && (
-        <>
-          <Divider />
-
-          <View className="flex flex-row gap-2">
-            <Text thickness="bold" className="flex-1">
-              Loyalty
-            </Text>
-            <Text className="flex-[3]">
-              <Text
-                thickness="bold"
-                className="px-2 py-0.5 bg-background-100 rounded"
-              >
-                {card.faces.front.loyalty}
-              </Text>
-            </Text>
-          </View>
-        </>
-      )}
-
-      {!!card?.faces?.front.defense && (
-        <>
-          <Divider />
-
-          <View className="flex flex-row gap-2">
-            <Text thickness="bold" className="flex-1">
-              Defense
-            </Text>
-            <Text className="flex-[3]">{card.faces.front.defense}</Text>
-          </View>
-        </>
-      )}
-
-      <Divider />
-
-      <View className="flex flex-row gap-2">
-        <Text thickness="bold" className="flex-1">
-          Text
-        </Text>
-        <View className="flex-[3]">
-          <CardText text={card?.faces?.front.oracleText || ""} />
+          <Text size="lg">
+            {face
+              ? face.power
+                ? `${face.power} / ${face.toughness}`
+                : face.loyalty || face.defense
+              : card.power
+              ? `${card.power} / ${card.toughness}`
+              : card.loyalty || card.defense}
+          </Text>
         </View>
-      </View>
-    </View>
-  );
-}
 
-export function CardBackInfo({ card }: CardInfoProps) {
-  return (
-    <View className="flex gap-3">
-      <View className="flex flex-row gap-2">
-        <Text thickness="bold" className="flex-1">
-          Name
-        </Text>
-        <Text className="flex-[3]">{card?.faces?.back.name || ""}</Text>
-      </View>
+        <View className="flex flex-row justify-between items-center gap-2">
+          <Text className="!text-gray-300">{face?.artist || card.artist}</Text>
 
-      {!!card?.faces?.back.manaCost && (
-        <>
-          <Divider />
-
-          <View className="flex flex-row gap-2">
-            <Text thickness="bold" className="flex-1">
-              Cost
-            </Text>
-            <View className="flex-[3]">
-              <CardCost cost={card?.faces?.back?.manaCost || ""} />
-            </View>
-          </View>
-        </>
-      )}
-
-      <Divider />
-
-      <View className="flex flex-row gap-2">
-        <Text thickness="bold" className="flex-1">
-          Type
-        </Text>
-        <Text className="flex-[3]">{card?.faces?.back.typeLine || ""}</Text>
-      </View>
-
-      {!!card?.faces?.back.loyalty && (
-        <>
-          <Divider />
-
-          <View className="flex flex-row gap-2">
-            <Text thickness="bold" className="flex-1">
-              Loyalty
-            </Text>
-            <Text className="flex-[3]">
-              <Text
-                thickness="bold"
-                className="px-2 py-0.5 bg-background-100 rounded"
-              >
-                {card.faces.back.loyalty}
-              </Text>
-            </Text>
-          </View>
-        </>
-      )}
-
-      {!!card?.faces?.back.defense && (
-        <>
-          <Divider />
-
-          <View className="flex flex-row gap-2">
-            <Text thickness="bold" className="flex-1">
-              Defense
-            </Text>
-            <Text className="flex-[3]">{card.faces.back.defense}</Text>
-          </View>
-        </>
-      )}
-
-      <Divider />
-
-      <View className="flex flex-row gap-2">
-        <Text thickness="bold" className="flex-1">
-          Text
-        </Text>
-        <View className="flex-[3]">
-          <CardText text={card?.faces?.back.oracleText || ""} />
+          <Text size="sm" className="!text-gray-300">
+            {card.releasedAt.split("-")[0]}
+          </Text>
         </View>
       </View>
     </View>

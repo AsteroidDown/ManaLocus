@@ -2,12 +2,12 @@ import Graph from "@/components/graph/graph";
 import Box from "@/components/ui/box/box";
 import Button from "@/components/ui/button/button";
 import DashboardContext from "@/contexts/dashboard/dashboard.context";
-import { filterCards } from "@/functions/card-filtering";
+import { filterCards } from "@/functions/cards/card-filtering";
 import {
   graphCardsByColor,
   graphCardsByCost,
   graphCardsByType,
-} from "@/functions/card-graphing";
+} from "@/functions/cards/card-graphing";
 import {
   getLocalStorageDashboard,
   updateLocalStorageDashboardItem,
@@ -34,11 +34,17 @@ import DashboardSectionOptionsMenu from "./dashboard-section-options-menu";
 export type DashboardSectionProps = ViewProps & {
   sectionId: string;
   cards: Card[];
+
+  readonly?: boolean;
+  loadedSection?: DashboardSection;
 };
 
 export default function DashboardSectionView({
   sectionId,
   cards,
+
+  readonly = false,
+  loadedSection,
 }: DashboardSectionProps) {
   const { dashboard, setDashboard } = useContext(DashboardContext);
 
@@ -52,30 +58,51 @@ export default function DashboardSectionView({
   useEffect(
     () =>
       setSection(
-        dashboard?.sections.find((section) => section.id === sectionId) || null
+        loadedSection ??
+          (dashboard?.sections.find((section) => section.id === sectionId) ||
+            null)
       ),
     [dashboard, sectionId]
   );
 
-  function toggleStacked(graphId: string, stacked: boolean) {
+  function toggleStacked(itemId: string, stacked: boolean) {
     if (!section) return;
 
-    updateLocalStorageDashboardItem(graphId, section.id, { stacked });
-    setDashboard(getLocalStorageDashboard());
-  }
+    if (loadedSection) {
+      const itemIndex = loadedSection.items.findIndex(
+        (item) => item.id === itemId
+      );
+      if (itemIndex >= 0) loadedSection.items[itemIndex].stacked = stacked;
 
-  if (!section) return <Placeholder title="No Section Found!" />;
+      setSection({ ...loadedSection });
+    } else {
+      updateLocalStorageDashboardItem(itemId, section.id, { stacked });
+      setDashboard(getLocalStorageDashboard());
+    }
+  }
 
   function setItemTitleSize(itemId: string, smallTitles: boolean) {
     if (!itemId || !sectionId) return;
 
-    updateLocalStorageDashboardItem(itemId, sectionId, { smallTitles });
-    setDashboard(getLocalStorageDashboard());
+    if (loadedSection) {
+      const itemIndex = loadedSection.items.findIndex(
+        (item) => item.id === itemId
+      );
+      if (itemIndex >= 0)
+        loadedSection.items[itemIndex].smallTitles = smallTitles;
+
+      setSection({ ...loadedSection });
+    } else {
+      updateLocalStorageDashboardItem(itemId, sectionId, { smallTitles });
+      setDashboard(getLocalStorageDashboard());
+    }
   }
+
+  if (!section) return <Placeholder title="No Section Found!" />;
 
   return (
     <View className="flex gap-4 justify-center items-center w-full">
-      <DashboardSectionHeader section={section} />
+      <DashboardSectionHeader readonly={readonly} section={section} />
 
       <View className="flex flex-row flex-wrap gap-4 justify-start items-center w-full z-[-1]">
         {section.items.map((item, index) => (
@@ -97,6 +124,7 @@ export default function DashboardSectionView({
                 sectionId={section.id}
                 title={item.title}
                 stacked={item.stacked}
+                readonly={readonly}
                 horizontalTitle={titleCase(item.sortType)}
                 sets={getSets(item.sortType, item.filters, cards)}
                 titleStart={
@@ -109,11 +137,15 @@ export default function DashboardSectionView({
                   />
                 }
                 titleEnd={
-                  <DashboardItemMenu
-                    xOffset={-100}
-                    item={item}
-                    sectionId={section.id}
-                  />
+                  readonly ? (
+                    <View className="w-10 h-10" />
+                  ) : (
+                    <DashboardItemMenu
+                      xOffset={-100}
+                      item={item}
+                      sectionId={section.id}
+                    />
+                  )
                 }
               />
             )}
@@ -127,6 +159,7 @@ export default function DashboardSectionView({
                 type={item.sortType as ChartType}
                 filters={item.filters}
                 smallTitles={item.smallTitles}
+                readonly={readonly}
                 titleStart={
                   <Button
                     rounded
@@ -137,11 +170,15 @@ export default function DashboardSectionView({
                   />
                 }
                 titleEnd={
-                  <DashboardItemMenu
-                    xOffset={-100}
-                    item={item}
-                    sectionId={section.id}
-                  />
+                  readonly ? (
+                    <View className="w-10 h-10" />
+                  ) : (
+                    <DashboardItemMenu
+                      xOffset={-100}
+                      item={item}
+                      sectionId={section.id}
+                    />
+                  )
                 }
               />
             )}
@@ -154,12 +191,14 @@ export default function DashboardSectionView({
             subtitle="Add some to get started"
             icon={faInfoCircle}
           >
-            <Button
-              text="Add Item"
-              className="mt-4"
-              icon={faPlus}
-              onClick={() => setAddItemOpen(true)}
-            />
+            {!readonly && (
+              <Button
+                text="Add Item"
+                className="mt-4"
+                icon={faPlus}
+                onClick={() => setAddItemOpen(true)}
+              />
+            )}
 
             <DashboardSectionOptionsMenu
               addOnly

@@ -1,5 +1,6 @@
 import Text from "@/components/ui/text/text";
 import { CardBackIds } from "@/constants/scryfall/ids";
+import { isOnScreen } from "@/hooks/on-screen";
 import { Card } from "@/models/card/card";
 import { faRotateRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -11,6 +12,8 @@ export interface CardImageProps {
   focusable?: boolean;
   placeHolder?: string;
 
+  enlargeOnHover?: boolean;
+
   onClick?: () => any;
 }
 
@@ -18,6 +21,7 @@ export default function CardImage({
   card,
   focusable,
   placeHolder,
+  enlargeOnHover,
   onClick,
 }: CardImageProps) {
   const [hovered, setHovered] = React.useState(false);
@@ -25,7 +29,12 @@ export default function CardImage({
   const [showFront, setShowFront] = React.useState(true);
 
   const [frontLoading, setFrontLoading] = React.useState(false);
+  const [frontLoaded, setFrontLoaded] = React.useState(false);
   const [backLoading, setBackLoading] = React.useState(false);
+  const [backLoaded, setBackLoaded] = React.useState(false);
+
+  const ref = React.useRef<View>(null);
+  const onScreen = isOnScreen(ref);
 
   const containerClasses =
     "min-w-[228px] max-h-fit border-2 border-primary-200 border-opacity-0 focus:border-opacity-100 rounded-xl overflow-hidden outline-none transition-all duration-300";
@@ -34,56 +43,116 @@ export default function CardImage({
     "flex h-full max-h-[350px] aspect-[2.5/3.5] rounded-lg overflow-hidden";
 
   const imagePlaceHolder = (
-    <View className="h-full max-h-[350px] aspect-[2.5/3.5] rounded-xl transition-all bg-background-100 animate-pulse"></View>
+    <View className="h-full max-h-[350px] aspect-[2.5/3.5] rounded-xl transition-all bg-background-300 animate-pulse"></View>
   );
 
-  const cardImage = useMemo(
-    () => (
+  const cardImage = useMemo(() => {
+    if (frontLoaded) {
+      return (
+        <Image
+          source={{ uri: card?.imageURIs?.png }}
+          style={[{ resizeMode: "contain" }]}
+          className={`max-h-[350px] aspect-[2.5/3.5] rounded-xl h-full`}
+        />
+      );
+    }
+
+    if (!onScreen) return;
+
+    return (
       <Image
-        source={{ uri: card?.images?.png }}
+        source={{ uri: card?.imageURIs?.png }}
         style={[{ resizeMode: "contain" }]}
         className={`max-h-[350px] aspect-[2.5/3.5] rounded-xl ${
           frontLoading ? "!h-0" : "h-full"
         }`}
-        onLoad={() => setFrontLoading(false)}
-        onLoadEnd={() => setFrontLoading(false)}
-        onLoadStart={() => setFrontLoading(true)}
+        onLoad={() => {
+          setFrontLoading(false);
+          setFrontLoaded(true);
+        }}
+        onLoadEnd={() => {
+          setFrontLoading(false);
+          setFrontLoaded(true);
+        }}
+        onLoadStart={() => {
+          setFrontLoading(true);
+          setFrontLoaded(false);
+        }}
       />
-    ),
-    [card?.images?.png]
-  );
+    );
+  }, [card?.imageURIs?.png, onScreen, frontLoaded]);
 
-  const cardFrontImage = useMemo(
-    () => (
+  const cardFrontImage = useMemo(() => {
+    if (frontLoaded) {
+      return (
+        <Image
+          source={{ uri: card?.faces?.front.imageUris?.png }}
+          style={[{ resizeMode: "contain" }]}
+          className={`max-h-[350px] aspect-[2.5/3.5] rounded-xl h-full`}
+        />
+      );
+    }
+
+    if (!onScreen) return;
+
+    return (
       <Image
         source={{ uri: card?.faces?.front.imageUris?.png }}
         style={[{ resizeMode: "contain" }]}
         className={`max-h-[350px] aspect-[2.5/3.5] rounded-xl ${
           frontLoading ? "!h-0" : "h-full"
         }`}
-        onLoad={() => setFrontLoading(false)}
-        onLoadEnd={() => setFrontLoading(false)}
-        onLoadStart={() => setFrontLoading(true)}
+        onLoad={() => {
+          setFrontLoading(false);
+          setFrontLoaded(true);
+        }}
+        onLoadEnd={() => {
+          setFrontLoading(false);
+          setFrontLoaded(true);
+        }}
+        onLoadStart={() => {
+          setFrontLoading(true);
+          setFrontLoaded(false);
+        }}
       />
-    ),
-    [card?.faces?.front.imageUris?.png]
-  );
+    );
+  }, [card?.faces?.front.imageUris?.png, onScreen, frontLoaded]);
 
-  const cardBackImage = useMemo(
-    () => (
+  const cardBackImage = useMemo(() => {
+    if (backLoaded) {
+      return (
+        <Image
+          source={{ uri: card?.faces?.back?.imageUris?.png }}
+          style={[{ resizeMode: "contain" }]}
+          className={`max-h-[350px] aspect-[2.5/3.5] rounded-xl h-full`}
+        />
+      );
+    }
+
+    if (!onScreen) return;
+
+    return (
       <Image
-        source={{ uri: card?.faces?.back.imageUris?.png }}
+        source={{ uri: card?.faces?.back?.imageUris?.png }}
         style={[{ resizeMode: "contain" }]}
         className={`max-h-[350px] aspect-[2.5/3.5] rounded-xl ${
-          frontLoading ? "!h-0" : "h-full"
+          backLoading ? "!h-0" : "h-full"
         }`}
-        onLoad={() => setBackLoading(false)}
-        onLoadEnd={() => setBackLoading(false)}
-        onLoadStart={() => setBackLoading(true)}
+        onLoad={() => {
+          setBackLoading(false);
+          setBackLoaded(true);
+        }}
+        onLoadEnd={() => {
+          setBackLoading(false);
+          setBackLoaded(true);
+        }}
+        onLoadStart={() => {
+          setBackLoading(true);
+          setBackLoaded(false);
+        }}
       />
-    ),
-    [card?.faces?.back.imageUris?.png]
-  );
+    );
+  }, [card?.faces?.back?.imageUris?.png, onScreen, backLoaded]);
 
   useEffect(() => setShowFront(true), [card]);
 
@@ -93,22 +162,22 @@ export default function CardImage({
 
   return (
     <Pressable
-      className={containerClasses}
+      className={`${enlargeOnHover ? "hover:!-m-4" : ""} ${containerClasses}`}
       disabled={!card || !onClick}
-      onBlur={() => setFocused(false)}
-      onFocus={() => setFocused(true)}
       tabIndex={!card ? -1 : focusable ? 0 : -1}
       onPress={() => (focusable ? onClick?.() : null)}
+      onBlur={() => (focusable ? setFocused(false) : null)}
+      onFocus={() => (focusable ? setFocused(true) : null)}
     >
-      <View className={baseClasses}>
-        {card && !card.faces?.back.imageUris.png && (
+      <View ref={ref} className={baseClasses}>
+        {card && !card.faces?.back?.imageUris?.png && (
           <>
             {frontLoading && imagePlaceHolder}
             {cardImage}
           </>
         )}
 
-        {card && card.faces?.back.imageUris.png && (
+        {card && card.faces?.back?.imageUris?.png && (
           <View className="bg-transparent w-full h-full">
             <View
               className="relative w-full h-full transition-all duration-700"
@@ -163,7 +232,10 @@ export default function CardImage({
           onPointerEnter={() => setHovered(true)}
           onPointerLeave={() => setHovered(false)}
           className="absolute bottom-2 left-2"
-          onPress={() => setShowFront(!showFront)}
+          onPress={(event) => {
+            setShowFront(!showFront);
+            event.stopPropagation();
+          }}
         >
           <View
             className={

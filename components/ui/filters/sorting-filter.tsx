@@ -1,5 +1,5 @@
 import Chip from "@/components/ui/chip/chip";
-import { SortDirection } from "@/constants/sorting";
+import { SortType, SortTypes } from "@/constants/sorting";
 import { ActionColor } from "@/constants/ui/colors";
 import {
   faDownLong,
@@ -18,9 +18,9 @@ export type SortingFilterProps = ViewProps & {
   action?: ActionColor;
   disabled?: boolean;
 
-  reset: boolean;
-  sortDirection: SortDirection;
-  setSortDirection: React.Dispatch<React.SetStateAction<SortDirection>>;
+  reset?: boolean;
+  sortDirection: SortType;
+  setSortDirection: React.Dispatch<React.SetStateAction<SortType>>;
 };
 
 export default function SortingFilter({
@@ -38,9 +38,9 @@ export default function SortingFilter({
   const textColor = getFilterTextColor(action, disabled);
 
   function changeDirection() {
-    if (sortDirection === "ASC") setSortDirection("DESC");
-    else if (sortDirection === "DESC") setSortDirection(null);
-    else setSortDirection("ASC");
+    if (sortDirection === SortTypes.ASC) setSortDirection("DESC");
+    else if (sortDirection === SortTypes.DESC) setSortDirection(null);
+    else setSortDirection(SortTypes.ASC);
   }
 
   useEffect(() => setSortDirection(null), [reset]);
@@ -66,9 +66,9 @@ export default function SortingFilter({
         >
           <FontAwesomeIcon
             size="sm"
-            icon={sortDirection === "ASC" ? faUpLong : faDownLong}
+            icon={sortDirection === SortTypes.ASC ? faUpLong : faDownLong}
             className={`${textColor} ${
-              sortDirection === "ASC" ? "rotate-0" : "rotate-[360deg]"
+              sortDirection === SortTypes.ASC ? "rotate-0" : "rotate-[360deg]"
             } transition-all`}
           />
         </View>

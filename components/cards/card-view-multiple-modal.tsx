@@ -17,7 +17,8 @@ import CardImage from "./card-image";
 
 export interface CardViewMultipleModalProps {
   cards: Card[];
-  color: MTGColor;
+  title?: string;
+  color?: MTGColor;
   cost?: number;
   rarity?: MTGRarity;
   type?: string;
@@ -27,6 +28,7 @@ export interface CardViewMultipleModalProps {
 
 export default function CardViewMultipleModal({
   cards,
+  title,
   color,
   cost,
   rarity,
@@ -36,21 +38,23 @@ export default function CardViewMultipleModal({
 }: CardViewMultipleModalProps) {
   const cellType: ChartType = cost ? "cost" : rarity ? "rarity" : "type";
 
-  const title = `${titleCase(color)} ${
-    cellType === "cost"
-      ? cost
-        ? cost === 6
-          ? "6+ Cost "
-          : cost + " Cost "
-        : " "
-      : cellType === "rarity"
-      ? rarity
-        ? titleCase(rarity) + " "
-        : " "
-      : type
-      ? titleCase(type) + " "
-      : ""
-  }Cards`;
+  const modalTitle =
+    title ??
+    `${titleCase(color)} ${
+      cellType === "cost"
+        ? cost
+          ? cost === 6
+            ? "6+ Cost "
+            : cost + " Cost "
+          : " "
+        : cellType === "rarity"
+        ? rarity
+          ? titleCase(rarity) + " "
+          : " "
+        : type
+        ? titleCase(type) + " "
+        : ""
+    }Cards`;
 
   const subtitle = `${cards.reduce((acc, card) => acc + card.count, 0)} Card${
     cards.length !== 1 ? "s" : ""
@@ -63,12 +67,12 @@ export default function CardViewMultipleModal({
 
   return (
     <Modal open={open} setOpen={setOpen}>
-      <BoxHeader title={title} subtitle={subtitle} />
+      <BoxHeader title={modalTitle} subtitle={subtitle} />
 
-      <Box className="flex flex-row justify-center flex-wrap gap-2 min-h-[350px] max-h-[80vh] w-fit min-w-[228px] max-w-[1000px] !px-0 overflow-x-auto">
+      <Box className="flex flex-row flex-wrap gap-2 min-h-[350px] max-h-[75vh] w-fit min-w-[228px] max-w-[1000px] !px-0 overflow-x-auto">
         {cards?.map((card: Card, index: number) => (
           <Box
-            key={card.id + index}
+            key={card.scryfallId + index}
             className="flex gap-1 !bg-background-100 !p-2 max-w-[244px]"
           >
             <View className="flex flex-row gap-2 px-2">
@@ -88,7 +92,8 @@ export default function CardViewMultipleModal({
                 icon={faShop}
                 text={`$${card.prices?.usd}`}
                 onClick={async () =>
-                  await Linking.openURL(card.priceUris.tcgplayer)
+                  card.priceUris?.tcgplayer &&
+                  (await Linking.openURL(card.priceUris.tcgplayer))
                 }
               />
 
@@ -99,7 +104,8 @@ export default function CardViewMultipleModal({
                 icon={faShop}
                 text={`€${card.prices?.eur}`}
                 onClick={async () =>
-                  await Linking.openURL(card.priceUris.cardmarket)
+                  card.priceUris?.cardmarket &&
+                  (await Linking.openURL(card.priceUris.cardmarket))
                 }
               />
             </View>
@@ -109,9 +115,9 @@ export default function CardViewMultipleModal({
         {!cards?.length && (
           <Placeholder
             title="No Cards Found!"
-            subtitle={`Add some ${title.toLowerCase()} and they'll show up here!`}
+            subtitle={`Add some ${modalTitle.toLowerCase()} and they'll show up here!`}
           >
-            <Link href="./(tabs)/main-board">
+            <Link href="./builder/main-board">
               <Button icon={faPlus} text="Add Cards"></Button>
             </Link>
           </Placeholder>

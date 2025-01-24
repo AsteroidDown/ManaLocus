@@ -7,6 +7,7 @@ module.exports = function (api) {
     ],
 
     plugins: [
+      ["module:react-native-dotenv"],
       [
         "module-resolver",
         {

@@ -1,4 +1,7 @@
-import { sortCardsByColor, sortCardsByCost } from "@/functions/card-sorting";
+import {
+  groupCardsByColor,
+  groupCardsByCost,
+} from "@/functions/cards/card-grouping";
 import { titleCase } from "@/functions/text-manipulation";
 import { Card } from "@/models/card/card";
 import { CardFilters } from "@/models/sorted-cards/sorted-cards";
@@ -21,16 +24,16 @@ export default function CostChartLayout({
 }: CostChartLayoutProps) {
   const colors = filters.colorFilter;
 
-  const sortedCards = sortCardsByCost(cards);
-  const cardsSortedByColor = sortCardsByColor(cards);
+  const sortedCards = groupCardsByCost(cards);
+  const cardsSortedByColor = groupCardsByColor(cards);
 
-  const sortedZero = sortCardsByColor(sortedCards.zero);
-  const sortedOne = sortCardsByColor(sortedCards.one);
-  const sortedTwo = sortCardsByColor(sortedCards.two);
-  const sortedThree = sortCardsByColor(sortedCards.three);
-  const sortedFour = sortCardsByColor(sortedCards.four);
-  const sortedFive = sortCardsByColor(sortedCards.five);
-  const sortedSix = sortCardsByColor(sortedCards.six);
+  const sortedZero = groupCardsByColor(sortedCards.zero);
+  const sortedOne = groupCardsByColor(sortedCards.one);
+  const sortedTwo = groupCardsByColor(sortedCards.two);
+  const sortedThree = groupCardsByColor(sortedCards.three);
+  const sortedFour = groupCardsByColor(sortedCards.four);
+  const sortedFive = groupCardsByColor(sortedCards.five);
+  const sortedSix = groupCardsByColor(sortedCards.six);
 
   return (
     <>
