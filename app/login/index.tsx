@@ -20,8 +20,7 @@ export default function Login() {
   function loginUser() {
     if (!username || !password) return;
 
-    localStorage.setItem("user-access", "");
-    localStorage.setItem("user-refresh", "");
+    localStorage.clear();
 
     UserService.login(username, password).then((user) => {
       if (user) {
@@ -34,8 +33,7 @@ export default function Login() {
   function registerUser() {
     if (!username || !password || !email) return;
 
-    localStorage.setItem("user-access", "");
-    localStorage.setItem("user-refresh", "");
+    localStorage.clear();
 
     UserService.register(username, password, email).then(() => {
       UserService.login(username, password).then((user) => {
