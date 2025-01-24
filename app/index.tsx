@@ -22,12 +22,6 @@ export default function RootLayout() {
             Mana Locus
           </Text>
         </View>
-
-        <View className="flex-1 flex items-center justify-center w-full min-h-[100vh] bg-blue-500">
-          <Text size="2xl" thickness="medium" className="px-6 py-4">
-            Second Section
-          </Text>
-        </View>
       </ScrollView>
     </SafeAreaView>
   );
