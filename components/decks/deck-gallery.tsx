@@ -59,7 +59,9 @@ export default function DeckGallery({
   const [page, setPage] = React.useState(1);
   const [loading, setLoading] = React.useState(false);
 
-  const [listView, setListView] = React.useState(false);
+  const [listView, setListView] = React.useState(
+    (preferences?.deckCardViewType as any) === DeckViewType.LIST
+  );
   const [filtersOpen, setFiltersOpen] = React.useState(false);
   const [overflow, setOverflow] = React.useState(false);
 
@@ -91,16 +93,6 @@ export default function DeckGallery({
   const [searchDto, setSearchDto] = React.useState({
     onlyKits: kits,
   } as DeckFiltersDTO);
-
-  useEffect(() => {
-    if (preferences?.decksViewType) {
-      setListView(preferences?.decksViewType === DeckViewType.LIST);
-    }
-
-    if (preferences?.decksSortType) {
-      setSort(preferences.decksSortType);
-    }
-  }, [preferences]);
 
   useEffect(() => {
     if (filtersOpen) setTimeout(() => setOverflow(filtersOpen), 300);
@@ -154,6 +146,8 @@ export default function DeckGallery({
   }, [search]);
 
   useEffect(() => {
+    if (!searchDto.sort) return;
+
     setLoading(true);
 
     if (FormatsWithCommander.includes(format as any)) {
