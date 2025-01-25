@@ -27,7 +27,7 @@ export default function RootLayout() {
       <UserPreferencesContext.Provider value={{ preferences, setPreferences }}>
         <Header />
 
-        <SafeAreaView className="flex w-full h-[95vh] bg-background-100">
+        <SafeAreaView className="flex w-full h-[95dvh] bg-background-100">
           <Stack screenOptions={{ headerShown: false }}>
             <Stack.Screen name="index" />
             <Stack.Screen name="users" />
