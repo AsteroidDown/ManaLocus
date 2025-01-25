@@ -18,7 +18,7 @@ export default function RootLayout() {
     null as UserPreferences | null
   );
 
-  const [loading, setLoading] = React.useState(true);
+  const [loading, setLoading] = React.useState(false);
   const [loaded, setLoaded] = React.useState(false);
 
   useEffect(() => {
