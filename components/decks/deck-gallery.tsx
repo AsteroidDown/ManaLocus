@@ -28,6 +28,7 @@ import {
   faBorderAll,
   faFilter,
   faList,
+  faSearch,
 } from "@fortawesome/free-solid-svg-icons";
 import { Link, router } from "expo-router";
 import React, { useContext, useEffect } from "react";
@@ -54,7 +55,7 @@ export default function DeckGallery({
   const { user } = useContext(UserContext);
   const { userPageUser } = useContext(UserPageContext);
   const { preferences, setPreferences } = useContext(UserPreferencesContext);
-  const { loading, setLoading } = useContext(LoadingContext);
+  const { setLoading } = useContext(LoadingContext);
 
   const [decks, setDecks] = React.useState([] as Deck[]);
   const [meta, setMeta] = React.useState(null as PaginationMeta | null);
@@ -147,10 +148,35 @@ export default function DeckGallery({
   }, [partnerCardSearch]);
 
   useEffect(() => {
-    if (filtersOpen) return;
-
-    searchWithFilters();
-  }, [search]);
+    setSearchDto({
+      ...searchDto,
+      ...(preferences?.decksViewType && { view: preferences.decksViewType }),
+      ...(preferences?.decksSortType
+        ? { sort: preferences.decksSortType }
+        : { sort: DeckSortTypes.CREATED }),
+      ...(preferences?.deckCardViewType && {
+        cardView: preferences.deckCardViewType,
+      }),
+      ...(preferences?.deckCardGrouping && {
+        cardGrouping: preferences.deckCardGrouping,
+      }),
+      ...(preferences?.deckCardSortType && {
+        cardSort: preferences.deckCardSortType,
+      }),
+      ...(preferences?.deckCardSortDirection && {
+        cardSortDirection: preferences.deckCardSortDirection,
+      }),
+      ...(preferences?.deckCardColumnShowPrice && {
+        cardShowPrice: preferences.deckCardColumnShowPrice,
+      }),
+      ...(preferences?.deckCardColumnShowManaValue && {
+        cardShowManaValue: preferences.deckCardColumnShowManaValue,
+      }),
+      ...(preferences?.deckCardColumnGroupMulticolored && {
+        cardGroupMulticolored: preferences.deckCardColumnGroupMulticolored,
+      }),
+    });
+  }, [preferences]);
 
   useEffect(() => {
     if (!searchDto.sort) return;
@@ -221,6 +247,7 @@ export default function DeckGallery({
           placeholder="Search for a deck or card"
           value={search}
           onChange={setSearch}
+          enterAction={searchWithFilters}
         />
 
         <Button
@@ -235,6 +262,15 @@ export default function DeckGallery({
           className="self-end"
           type={filtersOpen ? "default" : "outlined"}
           onClick={() => setFiltersOpen(!filtersOpen)}
+        />
+
+        <Button
+          action="primary"
+          className="self-end"
+          icon={faSearch}
+          disabled={decksLoading}
+          onClick={searchWithFilters}
+          text={decksLoading ? "Searching..." : "Search"}
         />
       </View>
 
@@ -364,10 +400,6 @@ export default function DeckGallery({
             </View>
           )}
         </View>
-
-        <View className="flex flex-row justify-end">
-          <Button text="Search" action="primary" onClick={searchWithFilters} />
-        </View>
       </View>
 
       {!listView && (
@@ -392,7 +424,7 @@ export default function DeckGallery({
             endColumns={endColumns}
           />
 
-          {!decks?.length && (
+          {!decks?.length && !decksLoading && (
             <Placeholder
               title="No Decks Found"
               subtitle="Try adjusting your search filters to find something else!"
