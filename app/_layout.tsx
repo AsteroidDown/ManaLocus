@@ -1,4 +1,6 @@
 import Header from "@/components/ui/navigation/header";
+import LoadingView from "@/components/ui/navigation/loading";
+import LoadingContext from "@/contexts/ui/loading.context";
 import UserPreferencesContext from "@/contexts/user/user-preferences.context";
 import UserContext from "@/contexts/user/user.context";
 import { getLocalStorageUserPreferences } from "@/functions/local-storage/user-preferences-local-storage";
@@ -16,6 +18,9 @@ export default function RootLayout() {
     null as UserPreferences | null
   );
 
+  const [loading, setLoading] = React.useState(true);
+  const [loaded, setLoaded] = React.useState(false);
+
   useEffect(() => {
     UserService.getCurrentUser().then((user) => setUser(user));
 
@@ -25,16 +30,22 @@ export default function RootLayout() {
   return (
     <UserContext.Provider value={{ user, setUser }}>
       <UserPreferencesContext.Provider value={{ preferences, setPreferences }}>
-        <Header />
+        <LoadingContext.Provider
+          value={{ loading, setLoading, loaded, setLoaded }}
+        >
+          <Header />
 
-        <SafeAreaView className="flex w-full h-[95dvh] bg-background-100">
-          <Stack screenOptions={{ headerShown: false }}>
-            <Stack.Screen name="index" />
-            <Stack.Screen name="users" />
-            <Stack.Screen name="login" />
-            <Stack.Screen name="+not-found" />
-          </Stack>
-        </SafeAreaView>
+          <SafeAreaView className="flex w-full h-[95dvh] bg-background-100">
+            <Stack screenOptions={{ headerShown: false }}>
+              <Stack.Screen name="index" />
+              <Stack.Screen name="users" />
+              <Stack.Screen name="login" />
+              <Stack.Screen name="+not-found" />
+            </Stack>
+
+            {!loaded && <LoadingView />}
+          </SafeAreaView>
+        </LoadingContext.Provider>
       </UserPreferencesContext.Provider>
     </UserContext.Provider>
   );

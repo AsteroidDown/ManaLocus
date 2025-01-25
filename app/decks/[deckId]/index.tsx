@@ -24,7 +24,7 @@ import React, { useContext, useEffect } from "react";
 import { ScrollView, View } from "react-native";
 
 export default function DeckPage() {
-  const { deck, setDeck } = useContext(DeckContext);
+  const { deck } = useContext(DeckContext);
 
   const [legalityEvaluation, setLegalityEvaluation] = React.useState(
     {} as LegalityEvaluation

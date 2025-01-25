@@ -5,6 +5,7 @@ import Pagination from "@/components/ui/pagination/pagination";
 import { TableColumn } from "@/components/ui/table/table";
 import { BoardType, BoardTypes } from "@/constants/boards";
 import { FormatsWithCommander, MTGFormats } from "@/constants/mtg/mtg-format";
+import LoadingContext from "@/contexts/ui/loading.context";
 import UserPageContext from "@/contexts/user/user-page.context";
 import UserPreferencesContext from "@/contexts/user/user-preferences.context";
 import UserContext from "@/contexts/user/user.context";
@@ -53,11 +54,12 @@ export default function DeckGallery({
   const { user } = useContext(UserContext);
   const { userPageUser } = useContext(UserPageContext);
   const { preferences, setPreferences } = useContext(UserPreferencesContext);
+  const { loading, setLoading } = useContext(LoadingContext);
 
   const [decks, setDecks] = React.useState([] as Deck[]);
   const [meta, setMeta] = React.useState(null as PaginationMeta | null);
   const [page, setPage] = React.useState(1);
-  const [loading, setLoading] = React.useState(false);
+  const [decksLoading, setDecksLoading] = React.useState(false);
 
   const [listView, setListView] = React.useState(
     (preferences?.deckCardViewType as any) === DeckViewType.LIST
@@ -93,6 +95,11 @@ export default function DeckGallery({
   const [searchDto, setSearchDto] = React.useState({
     onlyKits: kits,
   } as DeckFiltersDTO);
+
+  useEffect(() => {
+    if (!decks?.length && decksLoading) setLoading(true);
+    else setLoading(false);
+  }, [decks, decksLoading]);
 
   useEffect(() => {
     if (filtersOpen) setTimeout(() => setOverflow(filtersOpen), 300);
@@ -148,7 +155,7 @@ export default function DeckGallery({
   useEffect(() => {
     if (!searchDto.sort) return;
 
-    setLoading(true);
+    setDecksLoading(true);
 
     if (FormatsWithCommander.includes(format as any)) {
       setCommanderFormat(true);
@@ -162,14 +169,14 @@ export default function DeckGallery({
         }).then((response) => {
           setDecks(response.data);
           setMeta(response.meta);
-          setLoading(false);
+          setDecksLoading(false);
         });
       } else {
         DeckService.getByUser(userId, searchDto, { page, items: 50 }).then(
           (response) => {
             setDecks(response.data);
             setMeta(response.meta);
-            setLoading(false);
+            setDecksLoading(false);
           }
         );
       }
@@ -177,7 +184,7 @@ export default function DeckGallery({
       DeckService.getMany(searchDto, { page, items: 50 }).then((response) => {
         setDecks(response.data);
         setMeta(response.meta);
-        setLoading(false);
+        setDecksLoading(false);
       });
     }
   }, [user, searchDto]);
@@ -380,7 +387,7 @@ export default function DeckGallery({
         <>
           <DecksTable
             decks={decks}
-            loading={loading}
+            loading={decksLoading}
             rowClick={(deck) => router.push(`decks/${deck.id}`)}
             endColumns={endColumns}
           />
