@@ -64,6 +64,18 @@ async function login(username: string, password: string) {
     .catch((error) => console.error(`Error logging in: ${error}`));
 }
 
+async function refresh() {
+  const refreshToken = localStorage.getItem("user-refresh");
+  if (!refreshToken) return;
+
+  return await API.post(`token/refresh/`, { refresh: refreshToken })
+    .then(
+      (response) =>
+        response?.access && localStorage.setItem("user-access", response.access)
+    )
+    .catch((error) => console.error(`Error refreshing token: ${error}`));
+}
+
 async function logout() {
   localStorage.removeItem("user-access");
   localStorage.removeItem("user-refresh");
@@ -78,6 +90,7 @@ const UserService = {
   getCurrentUser,
   register,
   login,
+  refresh,
   logout,
 };
 

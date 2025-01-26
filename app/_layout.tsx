@@ -22,7 +22,11 @@ export default function RootLayout() {
   const [loaded, setLoaded] = React.useState(false);
 
   useEffect(() => {
-    UserService.getCurrentUser().then((user) => setUser(user));
+    UserService.refresh().then(() => {
+      if (localStorage.getItem("user-access")) {
+        UserService.getCurrentUser().then((user) => user && setUser(user));
+      }
+    });
 
     setPreferences(getLocalStorageUserPreferences());
   }, []);
