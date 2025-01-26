@@ -51,13 +51,15 @@ async function login(username: string, password: string) {
       if (response?.access && response?.refresh) {
         localStorage.setItem("user-access", response.access);
         localStorage.setItem("user-refresh", response.refresh);
+
+        return {
+          id: response?.id,
+          name: response?.name,
+          email: response?.email,
+        };
       }
 
-      return {
-        id: response?.id,
-        name: response?.name,
-        email: response?.email,
-      };
+      return null;
     })
     .catch((error) => console.error(`Error logging in: ${error}`));
 }

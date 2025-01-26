@@ -3,7 +3,7 @@ import Input from "@/components/ui/input/input";
 import UserContext from "@/contexts/user/user.context";
 import UserService from "@/hooks/services/user.service";
 import { router } from "expo-router";
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { ScrollView, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -17,6 +17,12 @@ export default function Login() {
   const [password, setPassword] = React.useState("");
   const [confirmPassword, setConfirmPassword] = React.useState("");
 
+  const [userError, setUserError] = React.useState(false);
+
+  useEffect(() => {
+    if (userError) setUserError(false);
+  }, [username, password]);
+
   function loginUser() {
     if (!username || !password) return;
 
@@ -26,7 +32,7 @@ export default function Login() {
       if (user) {
         setUser(user);
         router.push("../decks");
-      }
+      } else setUserError(true);
     });
   }
 
@@ -78,8 +84,9 @@ export default function Login() {
               <Input
                 label="Username"
                 placeholder="Username or Email"
-                disabled={!login}
                 value={username}
+                error={userError}
+                disabled={!login}
                 onChange={setUsername}
                 enterAction={() => loginUser()}
               />
@@ -88,9 +95,11 @@ export default function Login() {
                 secured
                 label="Password"
                 placeholder="3n7eR Y0ur P4ssw0rd"
-                disabled={!login}
                 value={password}
+                error={userError}
+                disabled={!login}
                 onChange={setPassword}
+                errorMessage="This username and password combination does not exist"
                 enterAction={() => loginUser()}
               />
 
