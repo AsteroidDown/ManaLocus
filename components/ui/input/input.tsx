@@ -97,7 +97,7 @@ export default function Input({
           multiline ? "min-h-24" : "h-10"
         } ${squareLeft ? "rounded-l-none" : ""} ${
           squareRight ? "rounded-r-none" : ""
-        } flex-1 px-3 py-2 color-white rounded-lg text-base border-2  outline-none transition-all`}
+        } flex-1 px-3 py-2 max-h-[40px] min-h-[40px] color-white rounded-lg text-base border-2  outline-none transition-all`}
         onChangeText={setText}
         onFocus={() => setFocused(true)}
         onBlur={() => setFocused(false)}
