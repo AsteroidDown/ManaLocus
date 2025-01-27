@@ -9,10 +9,7 @@ import LoadingContext from "@/contexts/ui/loading.context";
 import UserPageContext from "@/contexts/user/user-page.context";
 import UserPreferencesContext from "@/contexts/user/user-preferences.context";
 import UserContext from "@/contexts/user/user.context";
-import {
-  getLocalStorageUserPreferences,
-  setLocalStorageUserPreferences,
-} from "@/functions/local-storage/user-preferences-local-storage";
+import { setLocalStorageUserPreferences } from "@/functions/local-storage/user-preferences-local-storage";
 import { titleCase } from "@/functions/text-manipulation";
 import { PaginationMeta } from "@/hooks/pagination";
 import DeckService from "@/hooks/services/deck.service";
@@ -32,7 +29,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { Link, router } from "expo-router";
 import React, { useContext, useEffect } from "react";
-import { View } from "react-native";
+import { useWindowDimensions, View } from "react-native";
 import Placeholder from "../ui/placeholder/placeholder";
 import DeckCard from "./deck-card";
 import DecksTable from "./decks-table";
@@ -53,9 +50,11 @@ export default function DeckGallery({
   endColumns,
 }: DeckGalleryProps) {
   const { user } = useContext(UserContext);
+  const { setLoading } = useContext(LoadingContext);
   const { userPageUser } = useContext(UserPageContext);
   const { preferences, setPreferences } = useContext(UserPreferencesContext);
-  const { setLoading } = useContext(LoadingContext);
+
+  const width = useWindowDimensions().width;
 
   const [decks, setDecks] = React.useState([] as Deck[]);
   const [meta, setMeta] = React.useState(null as PaginationMeta | null);
@@ -213,13 +212,12 @@ export default function DeckGallery({
         setDecksLoading(false);
       });
     }
-  }, [user, searchDto]);
+  }, [searchDto]);
 
   function toggleListView() {
     setLocalStorageUserPreferences({
       decksViewType: listView ? DeckViewType.CARD : DeckViewType.LIST,
     });
-    setPreferences(getLocalStorageUserPreferences() || {});
     setListView(!listView);
   }
 
@@ -241,8 +239,9 @@ export default function DeckGallery({
 
   return (
     <View className="flex gap-4">
-      <View className="flex flex-row gap-4">
+      <View className="flex flex-row flex-wrap gap-4">
         <Input
+          squareRight
           label="Search"
           placeholder="Search for a deck or card"
           value={search}
@@ -251,26 +250,28 @@ export default function DeckGallery({
         />
 
         <Button
-          type="outlined"
-          className="max-w-12 self-end"
-          icon={listView ? faBorderAll : faList}
-          onClick={toggleListView}
+          squareLeft
+          action="primary"
+          className="self-end -ml-4"
+          icon={faSearch}
+          disabled={decksLoading}
+          onClick={searchWithFilters}
         />
+
+        {width > 600 && (
+          <Button
+            type="outlined"
+            className="max-w-12 self-end"
+            icon={listView ? faBorderAll : faList}
+            onClick={toggleListView}
+          />
+        )}
 
         <Button
           icon={faFilter}
           className="self-end"
           type={filtersOpen ? "default" : "outlined"}
           onClick={() => setFiltersOpen(!filtersOpen)}
-        />
-
-        <Button
-          action="primary"
-          className="self-end"
-          icon={faSearch}
-          disabled={decksLoading}
-          onClick={searchWithFilters}
-          text={decksLoading ? "Searching..." : "Search"}
         />
       </View>
 
@@ -280,7 +281,7 @@ export default function DeckGallery({
         } flex gap-4 z-[11] transition-all duration-300`}
       >
         <View className="flex flex-row flex-wrap gap-4 z-[12]">
-          <View className="flex-[2] z-[20] min-w-[250px]">
+          <View className="flex flex-row gap-4 flex-[2] z-[20] min-w-[250px]">
             <Select
               label="Format"
               value={format}
@@ -295,6 +296,15 @@ export default function DeckGallery({
                 }),
               ]}
             />
+
+            {width <= 600 && (
+              <Button
+                type="outlined"
+                className="max-w-12 self-end"
+                icon={listView ? faBorderAll : faList}
+                onClick={toggleListView}
+              />
+            )}
           </View>
 
           <View className="flex-1 z-[12] min-w-[250px]">
