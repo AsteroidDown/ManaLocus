@@ -61,7 +61,7 @@ export default function Modal({
                     <Box
                       className={`
                         ${className} ${transParentClasses}
-                        !bg-background-100 !border-background-200 max-h-[95vh] lg:mx-0 mx-2 border-2 transition-all duration-500
+                        !bg-background-100 !border-background-200 max-h-[95dvh] max-w-[95dvw] lg:mx-0 mx-2 border-2 transition-all duration-500
                         ${animate ? "opacity-0" : "opacity-100"}`}
                     >
                       <ScrollView>{children}</ScrollView>
