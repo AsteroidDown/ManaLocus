@@ -522,7 +522,7 @@ export default function DeckCardGallery({
               Column Options
             </Text>
 
-            <View className="flex flex-row gap-4 my-2">
+            <View className="flex flex-row flex-wrap gap-4 my-2">
               <Checkbox
                 label="Price"
                 checked={showPrice}
