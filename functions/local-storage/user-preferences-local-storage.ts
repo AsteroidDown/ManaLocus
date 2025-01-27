@@ -36,7 +36,7 @@ export function setLocalStorageUserPreferences(preferences: UserPreferences) {
     deckCardViewType:
       preferences?.deckCardViewType ??
       storedPreferences?.deckCardViewType ??
-      DeckCardGalleryViewTypes.CARD,
+      DeckCardGalleryViewTypes.LIST,
     deckCardGrouping:
       preferences?.deckCardGrouping ??
       storedPreferences?.deckCardGrouping ??
