@@ -2,9 +2,12 @@ import Button from "@/components/ui/button/button";
 import Input from "@/components/ui/input/input";
 import Select from "@/components/ui/input/select";
 import Pagination from "@/components/ui/pagination/pagination";
+import Placeholder from "@/components/ui/placeholder/placeholder";
 import { TableColumn } from "@/components/ui/table/table";
+import Text from "@/components/ui/text/text";
 import { BoardType, BoardTypes } from "@/constants/boards";
 import { FormatsWithCommander, MTGFormats } from "@/constants/mtg/mtg-format";
+import { SortTypes } from "@/constants/sorting";
 import LoadingContext from "@/contexts/ui/loading.context";
 import UserPageContext from "@/contexts/user/user-page.context";
 import UserPreferencesContext from "@/contexts/user/user-preferences.context";
@@ -30,7 +33,6 @@ import {
 import { Link, router } from "expo-router";
 import React, { useContext, useEffect } from "react";
 import { useWindowDimensions, View } from "react-native";
-import Placeholder from "../ui/placeholder/placeholder";
 import DeckCard from "./deck-card";
 import DecksTable from "./decks-table";
 
@@ -52,7 +54,7 @@ export default function DeckGallery({
   const { user } = useContext(UserContext);
   const { setLoading } = useContext(LoadingContext);
   const { userPageUser } = useContext(UserPageContext);
-  const { preferences, setPreferences } = useContext(UserPreferencesContext);
+  const { preferences } = useContext(UserPreferencesContext);
 
   const width = useWindowDimensions().width;
 
@@ -96,9 +98,13 @@ export default function DeckGallery({
     onlyKits: kits,
   } as DeckFiltersDTO);
 
+  const [resultsText, setResultsText] = React.useState("");
+
   useEffect(() => {
     if (!decks?.length && decksLoading) setLoading(true);
     else setLoading(false);
+
+    updateResultsText();
   }, [decks, decksLoading]);
 
   useEffect(() => {
@@ -118,6 +124,10 @@ export default function DeckGallery({
       else setCardAutoComplete([]);
     });
   }, [cardSearch]);
+
+  useEffect(() => {
+    setCommanderFormat(FormatsWithCommander.includes(format as any));
+  }, [format]);
 
   useEffect(() => {
     if (!commanderCardSearch) {
@@ -147,6 +157,11 @@ export default function DeckGallery({
   }, [partnerCardSearch]);
 
   useEffect(() => {
+    if (preferences?.decksViewType) {
+      setListView(preferences.decksViewType === DeckViewType.LIST);
+    }
+    if (preferences?.decksSortType) setSort(preferences.decksSortType);
+
     setSearchDto({
       ...searchDto,
       ...(preferences?.decksViewType && { view: preferences.decksViewType }),
@@ -221,6 +236,19 @@ export default function DeckGallery({
     setListView(!listView);
   }
 
+  function clearFilters() {
+    console.log("clear");
+    setSearch("");
+    setCards([]);
+    setCommanderSearch("");
+    setCommanderCardSearch("");
+    setPartnerSearch("");
+    setPartnerCardSearch("");
+    setPartnerCardAutoComplete([]);
+    setCommanderCardSearch("");
+    setCommanderCardAutoComplete([]);
+  }
+
   function searchWithFilters() {
     setSearchDto({
       ...(sort && { sort }),
@@ -235,6 +263,81 @@ export default function DeckGallery({
       ...(commanderSearch !== undefined && { commander: commanderSearch }),
       ...(user?.id === userPageUser?.id && { includePrivate: "true" }),
     });
+  }
+
+  function updateResultsText() {
+    let resultsText = "";
+    let where = false;
+
+    resultsText += `Showing ${decks?.length} of ${meta?.totalItems} ${
+      searchDto?.deckFormat ? `${titleCase(searchDto.deckFormat)} ` : ""
+    }deck${decks?.length > 1 || searchDto?.deckFormat ? "s" : ""}`;
+
+    if (search) {
+      where = true;
+
+      resultsText += ` with a name or card containing "${search}"`;
+    }
+
+    if (searchDto.commander) {
+      if (!where) resultsText += " where ";
+      else resultsText += " and ";
+      where = true;
+
+      const oathbreaker = searchDto.deckFormat === MTGFormats.OATHBREAKER;
+      resultsText += `the ${
+        oathbreaker ? "Oathbreaker" : "Commander"
+      } is "${titleCase(searchDto.commander)}"`;
+
+      if (searchDto.partner) {
+        resultsText += ` and the ${
+          oathbreaker ? "Signature Spell" : "Partner"
+        } is "${titleCase(searchDto.partner)}"`;
+      }
+    }
+
+    if (cards?.length) {
+      if (!where) resultsText += " where ";
+      else resultsText += " and ";
+      where = true;
+
+      if (cards?.length) {
+        resultsText += `the deck${
+          board !== BoardTypes.MAIN ? `'s ${board} board` : ""
+        } contains`;
+
+        if (cards.length === 1) resultsText += ` "${cards[0]}"`;
+        if (cards.length === 2) {
+          resultsText += `${
+            !exclusiveCardSearch ? " at least one of " : " both "
+          }"${cards.join(`" ${exclusiveCardSearch ? "and" : "or"} "`)}"`;
+        } else if (cards.length > 2) {
+          resultsText +=
+            `${!exclusiveCardSearch ? " at least one of" : " all of"}` +
+            cards.reduce((acc, card, index) => {
+              if (index === cards.length - 1) {
+                return acc + ` ${exclusiveCardSearch ? "and" : "or"} "${card}"`;
+              } else return `${acc} "${card}",`;
+            }, "");
+        }
+      }
+    }
+
+    if (searchDto.sort) {
+      const sort =
+        searchDto.sort[0] === "-"
+          ? searchDto.sort.substring(1)
+          : searchDto.sort;
+
+      const sortDirection =
+        searchDto.sort[0] === "-" ? SortTypes.DESC : SortTypes.ASC;
+
+      resultsText += ` sorted by ${titleCase(sort)}${
+        sortDirection === SortTypes.DESC ? " (Descending)" : "(Ascending)"
+      }`;
+    }
+
+    setResultsText(resultsText);
   }
 
   return (
@@ -278,10 +381,10 @@ export default function DeckGallery({
       <View
         className={`${filtersOpen ? "max-h-[1000px]" : "max-h-0"} ${
           !overflow && "overflow-hidden"
-        } flex gap-4 z-[11] transition-all duration-300`}
+        } flex gap-4 z-[26] transition-all duration-300`}
       >
-        <View className="flex flex-row flex-wrap gap-4 z-[12]">
-          <View className="flex flex-row gap-4 flex-[2] z-[20] min-w-[250px]">
+        <View className="flex flex-row flex-wrap gap-4 z-[24]">
+          <View className="flex flex-row gap-4 flex-[2] z-[22] min-w-[250px]">
             <Select
               label="Format"
               value={format}
@@ -307,7 +410,7 @@ export default function DeckGallery({
             )}
           </View>
 
-          <View className="flex-1 z-[12] min-w-[250px]">
+          <View className="flex-1 z-[20] min-w-[250px]">
             <Select
               label="Sort"
               value={sort}
@@ -338,9 +441,10 @@ export default function DeckGallery({
           </View>
 
           {!kits && commanderFormat && (
-            <View className="flex-1 z-[12] min-w-[250px]">
+            <View className="flex-1 z-[18] min-w-[250px]">
               <Select
                 label="Commander"
+                value={commanderSearch}
                 onChange={setCommanderSearch}
                 onSearchChange={setCommanderCardSearch}
                 options={commanderCardAutoComplete.map((card) => ({
@@ -352,9 +456,10 @@ export default function DeckGallery({
           )}
 
           {!kits && commanderFormat && (
-            <View className="flex-1 z-[10] min-w-[250px]">
+            <View className="flex-1 z-[16] min-w-[250px]">
               <Select
                 label="Partner"
+                value={partnerSearch}
                 onChange={setPartnerSearch}
                 onSearchChange={setPartnerCardSearch}
                 options={partnerCardAutoComplete.map((card) => ({
@@ -366,11 +471,12 @@ export default function DeckGallery({
           )}
         </View>
 
-        <View className="flex flex-row flex-wrap gap-4 z-[11]">
-          <View className="flex-[3] z-[10] min-w-[250px]">
+        <View className="flex flex-row flex-wrap gap-4 z-[14]">
+          <View className="flex-[3] z-[12] min-w-[250px]">
             <Select
               multiple
               label="Cards"
+              value={cards}
               onChange={setCards}
               onSearchChange={setCardSearch}
               options={cardAutoComplete.map((card) => ({
@@ -410,7 +516,22 @@ export default function DeckGallery({
             </View>
           )}
         </View>
+
+        <View className="flex flex-row justify-end gap-4">
+          {/* <Button text="Clear" type="outlined" onClick={clearFilters} /> */}
+
+          <Button
+            text="Search"
+            icon={faSearch}
+            disabled={decksLoading}
+            onClick={() => searchWithFilters()}
+          />
+        </View>
       </View>
+
+      <Text size="xs" className="!text-dark-600">
+        {resultsText}
+      </Text>
 
       {!listView && (
         <View className="flex flex-row flex-wrap lg:justify-start justify-center gap-4 z-[10]">
