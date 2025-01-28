@@ -28,7 +28,7 @@ export default function LoadingView() {
     return (
       <View
         className={`absolute top-0 left-0 flex-1 flex justify-center items-center w-full h-[100dvh] bg-background-100 ${
-          isLoading && "transition-all duration-500"
+          !isLoading && "transition-all duration-500"
         } ${fade ? "opacity-0" : "opacity-100"}`}
       >
         <Image
