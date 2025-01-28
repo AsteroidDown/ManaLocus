@@ -269,7 +269,7 @@ export default function DeckGallery({
     let resultsText = "";
     let where = false;
 
-    resultsText += `Showing ${decks?.length} of ${meta?.totalItems} ${
+    resultsText += `Showing ${decks?.length || 0} of ${meta?.totalItems || 0} ${
       searchDto?.deckFormat ? `${titleCase(searchDto.deckFormat)} ` : ""
     }deck${decks?.length > 1 || searchDto?.deckFormat ? "s" : ""}`;
 
