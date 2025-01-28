@@ -13,13 +13,11 @@ import React, { useEffect } from "react";
 import { SafeAreaView } from "react-native";
 
 export default function RootLayout() {
+  const [loading, setLoading] = React.useState(false);
   const [user, setUser] = React.useState(null as User | null);
   const [preferences, setPreferences] = React.useState(
     null as UserPreferences | null
   );
-
-  const [loading, setLoading] = React.useState(false);
-  const [loaded, setLoaded] = React.useState(false);
 
   useEffect(() => {
     UserService.refresh().then(() => {
@@ -34,9 +32,7 @@ export default function RootLayout() {
   return (
     <UserContext.Provider value={{ user, setUser }}>
       <UserPreferencesContext.Provider value={{ preferences, setPreferences }}>
-        <LoadingContext.Provider
-          value={{ loading, setLoading, loaded, setLoaded }}
-        >
+        <LoadingContext.Provider value={{ loading, setLoading }}>
           <Header />
 
           <SafeAreaView className="flex w-full h-[95dvh] bg-background-100">
@@ -47,7 +43,7 @@ export default function RootLayout() {
               <Stack.Screen name="+not-found" />
             </Stack>
 
-            {!loaded && <LoadingView />}
+            <LoadingView />
           </SafeAreaView>
         </LoadingContext.Provider>
       </UserPreferencesContext.Provider>

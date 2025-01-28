@@ -102,6 +102,7 @@ export default function DeckGallery({
 
   useEffect(() => {
     if (!decks?.length && decksLoading) setLoading(true);
+    else if (!decksLoading) setLoading(false);
 
     updateResultsText();
   }, [decks, decksLoading]);

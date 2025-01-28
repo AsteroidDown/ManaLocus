@@ -26,6 +26,8 @@ export default function BuilderLayout() {
         if (deck?.format) setFormat(deck.format);
         if (deck?.commander) setCommander(deck.commander);
         if (deck?.partner) setPartner(deck.partner);
+
+        setLoading(false);
       });
     }
   }, [deckId]);
