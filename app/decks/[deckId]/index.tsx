@@ -15,16 +15,20 @@ import Text from "@/components/ui/text/text";
 import { BoardTypes } from "@/constants/boards";
 import { LegalityEvaluation } from "@/constants/mtg/mtg-legality";
 import DeckContext from "@/contexts/deck/deck.context";
+import BodyHeightContext from "@/contexts/ui/body-height.context";
 import { graphCardsByCost } from "@/functions/cards/card-graphing";
 import { evaluateDeckLegality } from "@/functions/decks/deck-legality";
 import { setLocalStorageCards } from "@/functions/local-storage/card-local-storage";
 import { setLocalStorageDashboard } from "@/functions/local-storage/dashboard-local-storage";
 import { faChartSimple, faDatabase } from "@fortawesome/free-solid-svg-icons";
-import React, { useContext, useEffect } from "react";
-import { ScrollView, View } from "react-native";
+import React, { useContext, useEffect, useRef } from "react";
+import { SafeAreaView, View } from "react-native";
 
 export default function DeckPage() {
   const { deck } = useContext(DeckContext);
+  const { setBodyHeight } = useContext(BodyHeightContext);
+
+  const containerRef = useRef<SafeAreaView>(null);
 
   const [legalityEvaluation, setLegalityEvaluation] = React.useState(
     {} as LegalityEvaluation
@@ -47,7 +51,14 @@ export default function DeckPage() {
   if (!deck) return;
 
   return (
-    <ScrollView className="bg-background-100">
+    <SafeAreaView
+      ref={containerRef}
+      onLayout={() => {
+        containerRef.current?.measureInWindow((_x, _y, _width, height) =>
+          setBodyHeight(height)
+        );
+      }}
+    >
       <DeckHeader deck={deck} />
 
       <View className="flex flex-1 gap-8 lg:px-16 px-4 py-8 border-t-2 border-background-200 bg-background-100">
@@ -127,6 +138,6 @@ export default function DeckPage() {
       </View>
 
       <DeckFooter deck={deck} legalityEvaluation={legalityEvaluation} />
-    </ScrollView>
+    </SafeAreaView>
   );
 }

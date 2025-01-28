@@ -5,6 +5,7 @@ import DecksWithCard from "@/components/decks/decks-with-card";
 import Button from "@/components/ui/button/button";
 import Divider from "@/components/ui/divider/divider";
 import Text from "@/components/ui/text/text";
+import BodyHeightContext from "@/contexts/ui/body-height.context";
 import { currency } from "@/functions/text-manipulation";
 import ScryfallService from "@/hooks/services/scryfall.service";
 import { Card } from "@/models/card/card";
@@ -17,11 +18,14 @@ import {
   faTable,
 } from "@fortawesome/free-solid-svg-icons";
 import { useLocalSearchParams } from "expo-router";
-import React, { useEffect } from "react";
-import { Linking, ScrollView, View } from "react-native";
+import React, { useContext, useEffect, useRef } from "react";
+import { Linking, SafeAreaView, View } from "react-native";
 
 export default function SetPage() {
   const { setId, cardNumber } = useLocalSearchParams();
+  const { setBodyHeight } = useContext(BodyHeightContext);
+
+  const containerRef = useRef<SafeAreaView>(null);
 
   const [card, setCard] = React.useState(null as Card | null);
 
@@ -77,7 +81,14 @@ export default function SetPage() {
   if (!card) return;
 
   return (
-    <ScrollView>
+    <SafeAreaView
+      ref={containerRef}
+      onLayout={() =>
+        containerRef.current?.measureInWindow((_x, _y, _width, height) =>
+          setBodyHeight(height)
+        )
+      }
+    >
       <View className="flex flex-1 gap-4 lg:px-48 px-8 py-4 min-h-[100dvh] bg-background-100">
         <View className="flex flex-row flex-wrap justify-center gap-8 max-w-full pt-6">
           <CardDetailedPreview
@@ -286,6 +297,6 @@ export default function SetPage() {
 
         <DecksWithCard card={card} />
       </View>
-    </ScrollView>
+    </SafeAreaView>
   );
 }

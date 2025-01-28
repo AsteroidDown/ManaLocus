@@ -9,6 +9,8 @@ import BoardContext from "@/contexts/cards/board.context";
 import BuilderPreferencesContext from "@/contexts/cards/builder-preferences.context";
 import StoredCardsContext from "@/contexts/cards/stored-cards.context";
 import DeckContext from "@/contexts/deck/deck.context";
+import BodyHeightContext from "@/contexts/ui/body-height.context";
+import BuilderHeightContext from "@/contexts/ui/builder-height.context";
 import {
   getLocalStorageBuilderPreferences,
   setLocalStorageBuilderPreferences,
@@ -21,15 +23,19 @@ import {
   faFileArrowDown,
 } from "@fortawesome/free-solid-svg-icons";
 import React, { useContext, useEffect } from "react";
-import { ScrollView, View } from "react-native";
+import { View } from "react-native";
 
 export default function CardsLayout() {
   const { deck } = useContext(DeckContext);
 
   if (!deck) return;
 
+  const { bodyHeight } = useContext(BodyHeightContext);
+  const { builderHeight, setBuilderHeight } = useContext(BuilderHeightContext);
   const { setStoredCards } = useContext(StoredCardsContext);
   const { setPreferences } = useContext(BuilderPreferencesContext);
+
+  const containerRef = React.useRef<View>(null);
 
   const [board, setBoard] = React.useState(BoardTypes.MAIN as BoardType);
 
@@ -99,51 +105,60 @@ export default function CardsLayout() {
   }
 
   return (
-    <ScrollView className="bg-background-100">
-      <BoardContext.Provider value={{ board, setBoard }}>
-        <View className="flex gap-4 px-6 py-4 w-full h-[100dvh] pb-4">
-          <CardSearch />
+    <BoardContext.Provider value={{ board, setBoard }}>
+      <View
+        ref={containerRef}
+        style={{ minHeight: bodyHeight + 24 }}
+        className="flex gap-4 px-6 py-4 w-full min-h-fit pb-4 bg-background-100"
+        onLayout={() => {
+          if (builderHeight) return;
 
-          <TabBar tabs={tabs} className="z-[-1]">
-            <View className="flex flex-row gap-2 mx-4">
+          containerRef.current?.measureInWindow((_x, _y, _width, height) =>
+            setBuilderHeight(Math.min(height, 518))
+          );
+        }}
+      >
+        <CardSearch />
+
+        <TabBar tabs={tabs} className="z-[-1]">
+          <View className="flex flex-row gap-2 mx-4">
+            <Button
+              rounded
+              type="clear"
+              icon={faFileArrowDown}
+              onClick={() => setOpen(!open)}
+            />
+
+            <Tooltip title="Group Multicolored Cards">
               <Button
                 rounded
-                type="clear"
-                icon={faFileArrowDown}
-                onClick={() => setOpen(!open)}
+                icon={faBars}
+                type={`${groupMulticolored ? "outlined" : "clear"}`}
+                onClick={() =>
+                  groupMulticolored
+                    ? ungroupMulticoloredCards()
+                    : groupMulticoloredCards()
+                }
               />
+            </Tooltip>
 
-              <Tooltip title="Group Multicolored Cards">
-                <Button
-                  rounded
-                  icon={faBars}
-                  type={`${groupMulticolored ? "outlined" : "clear"}`}
-                  onClick={() =>
-                    groupMulticolored
-                      ? ungroupMulticoloredCards()
-                      : groupMulticoloredCards()
-                  }
-                />
-              </Tooltip>
+            <Tooltip
+              title={hideImages ? "Show Card Images" : "Hide Card Images"}
+            >
+              <Button
+                rounded
+                type={hideImages ? "outlined" : "clear"}
+                icon={hideImages ? faEyeSlash : faEye}
+                onClick={() =>
+                  hideImages ? showCardImages() : hideCardImages()
+                }
+              />
+            </Tooltip>
+          </View>
+        </TabBar>
+      </View>
 
-              <Tooltip
-                title={hideImages ? "Show Card Images" : "Hide Card Images"}
-              >
-                <Button
-                  rounded
-                  type={hideImages ? "outlined" : "clear"}
-                  icon={hideImages ? faEyeSlash : faEye}
-                  onClick={() =>
-                    hideImages ? showCardImages() : hideCardImages()
-                  }
-                />
-              </Tooltip>
-            </View>
-          </TabBar>
-        </View>
-
-        <CardImportExportModal open={open} setOpen={setOpen} />
-      </BoardContext.Provider>
-    </ScrollView>
+      <CardImportExportModal open={open} setOpen={setOpen} />
+    </BoardContext.Provider>
   );
 }

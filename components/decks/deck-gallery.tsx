@@ -271,7 +271,7 @@ export default function DeckGallery({
 
     resultsText += `Showing ${decks?.length || 0} of ${meta?.totalItems || 0} ${
       searchDto?.deckFormat ? `${titleCase(searchDto.deckFormat)} ` : ""
-    }deck${decks?.length > 1 || searchDto?.deckFormat ? "s" : ""}`;
+    }deck${decks?.length !== 1 || searchDto?.deckFormat ? "s" : ""}`;
 
     if (search) {
       where = true;

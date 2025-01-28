@@ -1,11 +1,23 @@
-import Footer from "@/components/ui/navigation/footer";
 import Text from "@/components/ui/text/text";
-import React from "react";
+import BodyHeightContext from "@/contexts/ui/body-height.context";
+import React, { useContext, useRef } from "react";
 import { Image, SafeAreaView, View } from "react-native";
 
 export default function RootLayout() {
+  const { setBodyHeight } = useContext(BodyHeightContext);
+
+  const containerRef = useRef<SafeAreaView>(null);
+
   return (
-    <SafeAreaView className="flex w-full bg-background-100">
+    <SafeAreaView
+      ref={containerRef}
+      onLayout={() =>
+        containerRef.current?.measureInWindow((_x, _y, _width, height) =>
+          setBodyHeight(height)
+        )
+      }
+    >
+      {/* <SafeAreaView className="flex w-full bg-background-100"> */}
       <View className="relative flex-1 flex items-center justify-center w-full min-h-[100dvh]">
         <Image
           source={{
@@ -32,8 +44,6 @@ export default function RootLayout() {
           Make a Splash
         </Text>
       </View>
-
-      <Footer />
     </SafeAreaView>
   );
 }

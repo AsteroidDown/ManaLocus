@@ -12,6 +12,7 @@ import Select from "@/components/ui/input/select";
 import Text from "@/components/ui/text/text";
 import { EmailMask } from "@/constants/masks/text-masks";
 import { SortType, SortTypes } from "@/constants/sorting";
+import BodyHeightContext from "@/contexts/ui/body-height.context";
 import UserPageContext from "@/contexts/user/user-page.context";
 import UserPreferencesContext from "@/contexts/user/user-preferences.context";
 import UserContext from "@/contexts/user/user.context";
@@ -28,7 +29,7 @@ import {
 } from "@/models/deck/dtos/deck-filters.dto";
 import { faBorderAll, faList } from "@fortawesome/free-solid-svg-icons";
 import { router } from "expo-router";
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useRef } from "react";
 import { SafeAreaView, View } from "react-native";
 
 interface PasswordErrors {
@@ -42,6 +43,9 @@ export default function UserSettingsPage() {
   const { user, setUser } = useContext(UserContext);
   const { userPageUser } = useContext(UserPageContext);
   const { preferences, setPreferences } = useContext(UserPreferencesContext);
+  const { setBodyHeight } = useContext(BodyHeightContext);
+
+  const containerRef = useRef<View>(null);
 
   if (user?.id !== userPageUser?.id) {
     router.push(`users/${userPageUser?.id}`);
@@ -204,7 +208,15 @@ export default function UserSettingsPage() {
 
   return (
     <SafeAreaView className="flex-1 flex w-full h-full bg-background-100">
-      <View className="z-10">
+      <View
+        ref={containerRef}
+        className="z-10"
+        onLayout={() =>
+          containerRef.current?.measureInWindow((_x, _y, _width, height) =>
+            setBodyHeight(height)
+          )
+        }
+      >
         <CollapsableSection
           title="Preferences"
           expanded={preferencesOpen}

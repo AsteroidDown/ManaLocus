@@ -7,18 +7,22 @@ import Pagination from "@/components/ui/pagination/pagination";
 import Table, { TableColumn } from "@/components/ui/table/table";
 import Text from "@/components/ui/text/text";
 import { MTGSetType, MTGSetTypes } from "@/constants/mtg/mtg-set-types";
+import BodyHeightContext from "@/contexts/ui/body-height.context";
 import LoadingContext from "@/contexts/ui/loading.context";
 import { titleCase } from "@/functions/text-manipulation";
 import { PaginationMeta } from "@/hooks/pagination";
 import ScryfallService from "@/hooks/services/scryfall.service";
 import { faCheck, faFilter } from "@fortawesome/free-solid-svg-icons";
 import { router } from "expo-router";
-import React, { useContext, useEffect } from "react";
-import { Image, ScrollView, View } from "react-native";
+import React, { useContext, useEffect, useRef } from "react";
+import { Image, SafeAreaView, View } from "react-native";
 import { Set } from "../../models/card/set";
 
 export default function CardsPage() {
   const { setLoading } = useContext(LoadingContext);
+  const { setBodyHeight } = useContext(BodyHeightContext);
+
+  const containerRef = useRef<SafeAreaView>(null);
 
   const [allCardsLoading, setAllCardsLoading] = React.useState(false);
 
@@ -72,7 +76,14 @@ export default function CardsPage() {
   }
 
   return (
-    <ScrollView>
+    <SafeAreaView
+      ref={containerRef}
+      onLayout={() =>
+        containerRef.current?.measureInWindow((_x, _y, _width, height) =>
+          setBodyHeight(height)
+        )
+      }
+    >
       <View className="flex flex-1 gap-4 lg:px-16 px-4 py-8 min-h-[100dvh] bg-background-100">
         <BoxHeader
           title="Find Cards"
@@ -142,7 +153,7 @@ export default function CardsPage() {
           <Pagination meta={meta} onChange={(page) => setPage(page)} />
         </View>
       </View>
-    </ScrollView>
+    </SafeAreaView>
   );
 }
 

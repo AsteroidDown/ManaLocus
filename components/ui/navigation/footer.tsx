@@ -1,4 +1,8 @@
-import { faDiscord, faGithub } from "@fortawesome/free-brands-svg-icons";
+import {
+  faBluesky,
+  faDiscord,
+  faGithub,
+} from "@fortawesome/free-brands-svg-icons";
 import { faEnvelope } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "expo-router";
 import moment from "moment";
@@ -42,6 +46,10 @@ export default function Footer() {
       <View className="flex flex-row -my-2">
         <Link target="_blank" href="https://discord.gg/qmsPDd9pva">
           <Button rounded type="clear" icon={faDiscord} />
+        </Link>
+
+        <Link target="_blank" href="https://bsky.app/profile/manalocus.com">
+          <Button rounded type="clear" icon={faBluesky} />
         </Link>
 
         <Link target="_blank" href="https://github.com/asteroiddown/ManaLocus">

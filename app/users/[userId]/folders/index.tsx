@@ -6,6 +6,7 @@ import Pagination from "@/components/ui/pagination/pagination";
 import LoadingTable from "@/components/ui/table/loading-table";
 import Table, { TableColumn } from "@/components/ui/table/table";
 import Text from "@/components/ui/text/text";
+import BodyHeightContext from "@/contexts/ui/body-height.context";
 import UserPageContext from "@/contexts/user/user-page.context";
 import UserContext from "@/contexts/user/user.context";
 import { PaginationMeta } from "@/hooks/pagination";
@@ -18,12 +19,15 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { router } from "expo-router";
 import moment from "moment";
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useRef } from "react";
 import { SafeAreaView, View } from "react-native";
 
 export default function UserFoldersPage() {
   const { user } = useContext(UserContext);
   const { userPageUser } = useContext(UserPageContext);
+  const { setBodyHeight } = useContext(BodyHeightContext);
+
+  const containerRef = useRef<View>(null);
 
   if (!user || !userPageUser) return null;
 
@@ -54,7 +58,15 @@ export default function UserFoldersPage() {
 
   return (
     <SafeAreaView className="flex-1 w-full h-full bg-background-100">
-      <View className="flex my-4">
+      <View
+        ref={containerRef}
+        className="flex my-4"
+        onLayout={() =>
+          containerRef.current?.measureInWindow((_x, _y, _width, height) =>
+            setBodyHeight(height)
+          )
+        }
+      >
         {user.id === userPageUser.id && (
           <View className="flex flex-row justify-between gap-4 mb-6">
             <Input

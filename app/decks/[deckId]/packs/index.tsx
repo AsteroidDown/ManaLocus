@@ -7,10 +7,11 @@ import Input from "@/components/ui/input/input";
 import NumberInput from "@/components/ui/input/number-input";
 import { MTGRarities } from "@/constants/mtg/mtg-rarity";
 import DeckContext from "@/contexts/deck/deck.context";
+import BodyHeightContext from "@/contexts/ui/body-height.context";
 import { groupCardsByRarity } from "@/functions/cards/card-grouping";
 import { Card } from "@/models/card/card";
-import React, { useContext, useEffect } from "react";
-import { ScrollView, View } from "react-native";
+import React, { useContext, useEffect, useRef } from "react";
+import { SafeAreaView, View } from "react-native";
 
 export interface Pack {
   name: string;
@@ -19,6 +20,9 @@ export interface Pack {
 
 export default function PackBuilderPage() {
   const { deck } = useContext(DeckContext);
+  const { setBodyHeight } = useContext(BodyHeightContext);
+
+  const containerRef = useRef<SafeAreaView>(null);
 
   const [commonCount, setCommonCount] = React.useState(0);
   const [uncommonCount, setUncommonCount] = React.useState(0);
@@ -152,7 +156,15 @@ export default function PackBuilderPage() {
   if (!deck) return;
 
   return (
-    <ScrollView className="bg-background-100">
+    <SafeAreaView
+      ref={containerRef}
+      className="bg-background-100"
+      onLayout={() =>
+        containerRef.current?.measureInWindow((_x, _y, _width, height) =>
+          setBodyHeight(height)
+        )
+      }
+    >
       <View className="flex flex-1 gap-4 lg:px-16 px-4 py-8 min-h-[100dvh] bg-background-100 bg-opacity-60 rounded-xl overflow-hidden">
         <BoxHeader
           title="Pack Builder"
@@ -209,6 +221,7 @@ export default function PackBuilderPage() {
           {packs?.map((pack, index) => (
             <DeckColumn
               hideCount
+              showManaValue
               key={index}
               title={pack.name}
               cards={pack.cards}
@@ -217,6 +230,6 @@ export default function PackBuilderPage() {
           ))}
         </View>
       </View>
-    </ScrollView>
+    </SafeAreaView>
   );
 }
