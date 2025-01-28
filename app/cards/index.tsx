@@ -7,17 +7,20 @@ import Pagination from "@/components/ui/pagination/pagination";
 import Table, { TableColumn } from "@/components/ui/table/table";
 import Text from "@/components/ui/text/text";
 import { MTGSetType, MTGSetTypes } from "@/constants/mtg/mtg-set-types";
+import LoadingContext from "@/contexts/ui/loading.context";
 import { titleCase } from "@/functions/text-manipulation";
 import { PaginationMeta } from "@/hooks/pagination";
 import ScryfallService from "@/hooks/services/scryfall.service";
 import { faCheck, faFilter } from "@fortawesome/free-solid-svg-icons";
 import { router } from "expo-router";
-import React, { useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import { Image, ScrollView, View } from "react-native";
 import { Set } from "../../models/card/set";
 
 export default function CardsPage() {
-  const [loading, setLoading] = React.useState(false);
+  const { setLoading } = useContext(LoadingContext);
+
+  const [allCardsLoading, setAllCardsLoading] = React.useState(false);
 
   const [page, setPage] = React.useState(1);
   const [items, setItems] = React.useState(25);
@@ -33,9 +36,12 @@ export default function CardsPage() {
   const [selectedSets, setSelectedSets] = React.useState([] as MTGSetType[]);
 
   useEffect(() => {
-    ScryfallService.getSets().then((sets) =>
-      setSets(sets.filter((set) => set.code.length === 3))
-    );
+    setLoading(true);
+
+    ScryfallService.getSets().then((sets) => {
+      setSets(sets.filter((set) => set.code.length === 3));
+      setLoading(false);
+    });
   }, []);
 
   useEffect(() => {
@@ -61,8 +67,8 @@ export default function CardsPage() {
   }, [sets, selectedSets, page, sets]);
 
   function importAllCards() {
-    setLoading(true);
-    ScryfallService.getAllCards().then(() => setLoading(false));
+    setAllCardsLoading(true);
+    ScryfallService.getAllCards().then(() => setAllCardsLoading(false));
   }
 
   return (

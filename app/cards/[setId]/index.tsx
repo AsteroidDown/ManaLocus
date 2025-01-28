@@ -6,6 +6,7 @@ import Placeholder from "@/components/ui/placeholder/placeholder";
 import SearchBar from "@/components/ui/search-bar/search-bar";
 import { TabProps } from "@/components/ui/tabs/tab";
 import TabBar from "@/components/ui/tabs/tab-bar";
+import LoadingContext from "@/contexts/ui/loading.context";
 import { filterCards } from "@/functions/cards/card-filtering";
 import {
   sortCards,
@@ -18,11 +19,12 @@ import { DeckViewType } from "@/models/deck/dtos/deck-filters.dto";
 import { CardFilters } from "@/models/sorted-cards/sorted-cards";
 import { faBorderAll, faList } from "@fortawesome/free-solid-svg-icons";
 import { useLocalSearchParams } from "expo-router";
-import React, { useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import { ScrollView, View } from "react-native";
 
 export default function SetPage() {
   const { setId } = useLocalSearchParams();
+  const { setLoading } = useContext(LoadingContext);
 
   const [set, setSet] = React.useState(null as Set | null);
   const [cards, setCards] = React.useState([] as Card[]);
@@ -45,6 +47,7 @@ export default function SetPage() {
 
   useEffect(() => {
     if (typeof setId !== "string" || baseCards?.length) return;
+    setLoading(true);
 
     ScryfallService.getSetByCode(setId).then((set) => setSet(set));
   }, [setId]);
@@ -52,7 +55,10 @@ export default function SetPage() {
   useEffect(() => {
     if (!set) return;
 
-    ScryfallService.getSetCards(set.searchUri).then((cards) => setCards(cards));
+    ScryfallService.getSetCards(set.searchUri).then((cards) => {
+      setCards(cards);
+      setLoading(false);
+    });
   }, [set]);
 
   useEffect(() => {
