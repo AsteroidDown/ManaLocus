@@ -39,7 +39,9 @@ export default function SetPage() {
   const showcaseCards: Card[] = [];
   const borderlessCards: Card[] = [];
   const extendedArtCards: Card[] = [];
+  const fullArtCards: Card[] = [];
   const promoCards: Card[] = [];
+  const specialPromos: Card[] = [];
 
   useEffect(() => {
     if (typeof setId !== "string" || baseCards?.length) return;
@@ -50,10 +52,7 @@ export default function SetPage() {
   useEffect(() => {
     if (!set) return;
 
-    ScryfallService.getSetCards(set.searchUri).then((cards) => {
-      setCards(cards);
-      setFilteredCards(cards);
-    });
+    ScryfallService.getSetCards(set.searchUri).then((cards) => setCards(cards));
   }, [set]);
 
   useEffect(() => {
@@ -79,24 +78,30 @@ export default function SetPage() {
     }
 
     setFilteredCards(filterCards(sortedCards, filters));
-  }, [search, filters]);
+  }, [cards, search, filters]);
 
   useEffect(() => {
     if (!cards?.length) return;
 
     filteredCards.forEach((card) => {
       if (
-        card.faces?.front.frameEffects?.includes("showcase") ||
-        card.frameEffects?.includes("showcase")
+        card.frameEffects?.includes("showcase") ||
+        card.faces?.front.frameEffects?.includes("showcase")
       ) {
         showcaseCards.push(card);
       } else if (card.borderColor === "borderless") borderlessCards.push(card);
       else if (
-        card.faces?.front.frameEffects?.includes("extendedart") ||
-        card.frameEffects?.includes("extendedart")
+        card.frameEffects?.includes("extendedart") ||
+        card.faces?.front.frameEffects?.includes("extendedart")
       ) {
         extendedArtCards.push(card);
+      } else if (
+        card.frameEffects?.includes("fullart") ||
+        card.faces?.front.frameEffects?.includes("fullart")
+      ) {
+        fullArtCards.push(card);
       } else if (card.promo) promoCards.push(card);
+      else if (card.promoTypes?.length) specialPromos.push(card);
       else baseCards.push(card);
     });
 
@@ -111,8 +116,14 @@ export default function SetPage() {
       ...(extendedArtCards?.length
         ? getTabContent("Extended Art", extendedArtCards, viewType)
         : []),
+      ...(fullArtCards?.length
+        ? getTabContent("Full Art", fullArtCards, viewType)
+        : []),
       ...(promoCards?.length
         ? getTabContent("Promo", promoCards, viewType)
+        : []),
+      ...(specialPromos?.length
+        ? getTabContent("Special Promos", specialPromos, viewType)
         : []),
     ]);
   }, [filteredCards, viewType]);

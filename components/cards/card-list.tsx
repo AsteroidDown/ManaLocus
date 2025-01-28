@@ -66,6 +66,7 @@ export default function CardList({ cards, viewType }: CardListProps) {
             }
             columns={[
               {
+                fit: true,
                 row: (card) => <Text>{card.collectorNumber}</Text>,
               },
               {
