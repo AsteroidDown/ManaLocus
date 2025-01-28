@@ -7,7 +7,7 @@ import {
   faCircleXmark,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { View } from "react-native";
+import { useWindowDimensions, View } from "react-native";
 import Text from "../ui/text/text";
 
 export interface CardLegalitiesProps {
@@ -17,39 +17,74 @@ export interface CardLegalitiesProps {
 export function CardLegalities({ card }: CardLegalitiesProps) {
   if (!card) return;
 
-  return (
-    <View className="flex-1 flex flex-row justify-center flex-wrap gap-4">
-      <View className="flex-1 flex gap-2 min-w-min">
-        <Legality gameType="Standard" legality={card.legalities.standard} />
-        <Legality gameType="Pioneer" legality={card.legalities.pioneer} />
-        <Legality gameType="Modern" legality={card.legalities.modern} />
-        <Legality gameType="Legacy" legality={card.legalities.legacy} />
-        <Legality gameType="Vintage" legality={card.legalities.vintage} />
-      </View>
+  const width = useWindowDimensions().width;
 
-      <View className="flex-1 flex gap-2 min-w-min">
-        <Legality gameType="Commander" legality={card.legalities.commander} />
-        <Legality
-          gameType="Oathbreaker"
-          legality={card.legalities.oathbreaker}
-        />
-        <Legality gameType="Pauper" legality={card.legalities.pauper} />
-        <Legality
-          gameType="Pauper EDH"
-          legality={card.legalities.paupercommander}
-        />
-        <Legality gameType="Penny" legality={card.legalities.penny} />
-      </View>
+  if (width > 600) {
+    return (
+      <View className="flex-1 flex flex-row justify-center flex-wrap gap-4">
+        <View className="flex-1 flex gap-2 min-w-min">
+          <Legality gameType="Standard" legality={card.legalities.standard} />
+          <Legality gameType="Pioneer" legality={card.legalities.pioneer} />
+          <Legality gameType="Modern" legality={card.legalities.modern} />
+          <Legality gameType="Legacy" legality={card.legalities.legacy} />
+          <Legality gameType="Vintage" legality={card.legalities.vintage} />
+        </View>
 
-      <View className="flex-1 flex gap-2 min-w-min">
-        <Legality gameType="Alchemy" legality={card.legalities.alchemy} />
-        <Legality gameType="Explorer" legality={card.legalities.explorer} />
-        <Legality gameType="Historic" legality={card.legalities.historic} />
-        <Legality gameType="Timeless" legality={card.legalities.timeless} />
-        <Legality gameType="Brawl" legality={card.legalities.brawl} />
+        <View className="flex-1 flex gap-2 min-w-min">
+          <Legality gameType="Commander" legality={card.legalities.commander} />
+          <Legality
+            gameType="Oathbreaker"
+            legality={card.legalities.oathbreaker}
+          />
+          <Legality gameType="Pauper" legality={card.legalities.pauper} />
+          <Legality
+            gameType="Pauper EDH"
+            legality={card.legalities.paupercommander}
+          />
+          <Legality gameType="Penny" legality={card.legalities.penny} />
+        </View>
+
+        <View className="flex-1 flex gap-2 min-w-min">
+          <Legality gameType="Alchemy" legality={card.legalities.alchemy} />
+          <Legality gameType="Explorer" legality={card.legalities.explorer} />
+          <Legality gameType="Historic" legality={card.legalities.historic} />
+          <Legality gameType="Timeless" legality={card.legalities.timeless} />
+          <Legality gameType="Brawl" legality={card.legalities.brawl} />
+        </View>
       </View>
-    </View>
-  );
+    );
+  } else {
+    return (
+      <View className="flex-1 flex flex-row justify-center flex-wrap gap-4">
+        <View className="flex-1 flex gap-2 min-w-min">
+          <Legality gameType="Standard" legality={card.legalities.standard} />
+          <Legality gameType="Pioneer" legality={card.legalities.pioneer} />
+          <Legality gameType="Modern" legality={card.legalities.modern} />
+          <Legality gameType="Legacy" legality={card.legalities.legacy} />
+          <Legality gameType="Vintage" legality={card.legalities.vintage} />
+          <Legality gameType="Alchemy" legality={card.legalities.alchemy} />
+          <Legality gameType="Historic" legality={card.legalities.historic} />
+          <Legality gameType="Timeless" legality={card.legalities.timeless} />
+        </View>
+
+        <View className="flex-1 flex gap-2 min-w-min">
+          <Legality gameType="Commander" legality={card.legalities.commander} />
+          <Legality
+            gameType="Oathbreaker"
+            legality={card.legalities.oathbreaker}
+          />
+          <Legality gameType="Pauper" legality={card.legalities.pauper} />
+          <Legality
+            gameType="Pauper EDH"
+            legality={card.legalities.paupercommander}
+          />
+          <Legality gameType="Explorer" legality={card.legalities.explorer} />
+          <Legality gameType="Penny" legality={card.legalities.penny} />
+          <Legality gameType="Brawl" legality={card.legalities.brawl} />
+        </View>
+      </View>
+    );
+  }
 }
 
 function Legality({
