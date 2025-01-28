@@ -534,10 +534,7 @@ export default function DeckGallery({
       </Text>
 
       {!listView && (
-        <View
-          className="flex flex-row flex-wrap lg:justify-start justify-center gap-4 z-[10]"
-          onLayout={() => setDecksLoading(true)}
-        >
+        <View className="flex flex-row flex-wrap lg:justify-start justify-center gap-4 z-[10]">
           {decks?.map((deck, index) => (
             <Link
               key={deck.id + deck.name + index}
@@ -556,7 +553,6 @@ export default function DeckGallery({
             loading={decksLoading}
             rowClick={(deck) => router.push(`decks/${deck.id}`)}
             endColumns={endColumns}
-            onLayout={() => setDecksLoading(true)}
           />
 
           {!decks?.length && !decksLoading && (
