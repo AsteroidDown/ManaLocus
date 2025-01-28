@@ -10,7 +10,7 @@ import React, { useContext, useEffect } from "react";
 
 export default function BuilderLayout() {
   const { deckId } = useLocalSearchParams();
-  const { loading, setLoading } = useContext(LoadingContext);
+  const { setLoading } = useContext(LoadingContext);
 
   const [deck, setDeck] = React.useState(null as Deck | null);
   const [format, setFormat] = React.useState(null as MTGFormat | null);
@@ -26,8 +26,6 @@ export default function BuilderLayout() {
         if (deck?.format) setFormat(deck.format);
         if (deck?.commander) setCommander(deck.commander);
         if (deck?.partner) setPartner(deck.partner);
-
-        setLoading(false);
       });
     }
   }, [deckId]);
