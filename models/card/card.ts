@@ -33,6 +33,7 @@ export interface Card {
   frame: string;
   frameEffects: string[];
   promo: boolean;
+  promoTypes?: string[];
   finishes: string[];
   foil: boolean;
   nonfoil: boolean;

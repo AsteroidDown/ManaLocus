@@ -32,6 +32,7 @@ export interface ScryfallCard {
   frame: string;
   frame_effects: CardFrameEffect[];
   promo: boolean;
+  promo_types: string[];
   finishes: string[];
   foil: boolean;
   nonfoil: boolean;

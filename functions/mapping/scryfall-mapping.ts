@@ -38,6 +38,7 @@ export function ScryfallToCard(scryfallCard: ScryfallCard): Card {
     frame: scryfallCard.frame,
     frameEffects: scryfallCard.frame_effects,
     promo: scryfallCard.promo,
+    promoTypes: scryfallCard.promo_types,
     finishes: scryfallCard.finishes,
     foil: scryfallCard.foil,
     nonfoil: scryfallCard.nonfoil,
