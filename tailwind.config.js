@@ -10,6 +10,10 @@ module.exports = {
           "0%": { height: "0" },
           "100%": { height: "100%" },
         },
+        spinReverse: {
+          "0%": { transform: "rotate(360deg)" },
+          "100%": { transform: "rotate(0deg)" },
+        },
       },
       animation: {
         bottomToTopGrow: "bottomToTopGrow 1s ease forwards",

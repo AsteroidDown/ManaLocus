@@ -6,7 +6,6 @@ export default function LoadingView() {
   const { loading } = useContext(LoadingContext);
 
   const [fade, setFade] = React.useState(false);
-  const [rotate, setRotate] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(false);
 
   useEffect(() => {
@@ -14,13 +13,10 @@ export default function LoadingView() {
       setFade(true);
       setIsLoading(false);
 
-      setTimeout(() => {
-        setFade(false);
-      }, 500);
+      setTimeout(() => setFade(false), 500);
     } else {
       setFade(false);
       setIsLoading(true);
-      setTimeout(() => setRotate(true), 50);
     }
   }, [loading]);
 
@@ -33,9 +29,7 @@ export default function LoadingView() {
       >
         <Image
           source={require("assets/Logo.png")}
-          className={`max-h-48 max-w-48 transition-all duration-[150s] ease-linear ${
-            rotate ? "rotate-[-30000deg]" : "rotate-0"
-          }`}
+          className={`max-h-48 max-w-48 animate-[spinReverse_1.5s_linear_infinite]`}
         />
       </View>
     );
