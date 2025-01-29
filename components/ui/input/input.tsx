@@ -110,7 +110,7 @@ export default function Input({
 
       <View
         className={`${
-          error && errorMessage ? "max-h-10" : "max-h-0 -mt-2"
+          error && errorMessage ? "max-h-fit" : "max-h-0 -mt-2"
         } overflow-hidden transition-all duration-300`}
       >
         <Text size="sm" action="danger">
