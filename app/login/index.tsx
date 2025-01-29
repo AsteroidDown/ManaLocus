@@ -22,9 +22,43 @@ export default function Login() {
 
   const [userError, setUserError] = React.useState(false);
 
+  const [passwordError, setPasswordError] = React.useState(false);
+  const [passwordLength, setPasswordLength] = React.useState(false);
+  const [passwordUpper, setPasswordUpper] = React.useState(false);
+  const [passwordLower, setPasswordLower] = React.useState(false);
+  const [passwordNumber, setPasswordNumber] = React.useState(false);
+  const [passwordSpecial, setPasswordSpecial] = React.useState(false);
+
+  const [passwordsMatch, setPasswordsMatch] = React.useState(false);
+
   useEffect(() => {
     if (userError) setUserError(false);
   }, [username, password]);
+
+  useEffect(() => {
+    if (
+      passwordLength ||
+      passwordUpper ||
+      passwordLower ||
+      passwordNumber ||
+      passwordSpecial
+    ) {
+      setPasswordError(true);
+    } else setPasswordError(false);
+  }, [
+    passwordLength,
+    passwordUpper,
+    passwordLower,
+    passwordNumber,
+    passwordSpecial,
+  ]);
+
+  useEffect(() => {
+    if (confirmPassword.length < password.length - 2) return;
+
+    if (password !== confirmPassword) setPasswordsMatch(true);
+    else setPasswordsMatch(false);
+  });
 
   function loginUser() {
     if (!username || !password) return;
@@ -40,7 +74,15 @@ export default function Login() {
   }
 
   function registerUser() {
-    if (!username || !password || !email) return;
+    if (
+      !username ||
+      !password ||
+      !email ||
+      password !== confirmPassword ||
+      !validatePassword(password)
+    ) {
+      return;
+    }
 
     localStorage.clear();
 
@@ -53,6 +95,70 @@ export default function Login() {
       });
     });
   }
+
+  function validatePassword(password: string) {
+    let passwordLengthCheck = false;
+    let passwordUpperCheck = false;
+    let passwordLowerCheck = false;
+    let passwordNumberCheck = false;
+    let passwordSpecialCheck = false;
+
+    if (password.length < 8) {
+      passwordLengthCheck = true;
+    } else {
+      passwordLengthCheck = false;
+    }
+
+    if (!password.match(/[A-Z]/g)) {
+      passwordUpperCheck = true;
+    } else {
+      passwordUpperCheck = false;
+    }
+
+    if (!password.match(/[a-z]/g)) {
+      passwordLowerCheck = true;
+    } else {
+      passwordLowerCheck = false;
+    }
+
+    if (!password.match(/[0-9]/g)) {
+      passwordNumberCheck = true;
+    } else {
+      passwordNumberCheck = false;
+    }
+
+    if (!password.match(/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/g)) {
+      passwordSpecialCheck = true;
+    } else {
+      passwordSpecialCheck = false;
+    }
+
+    if (passwordLengthCheck) setPasswordLength(true);
+    else setPasswordLength(false);
+
+    if (passwordUpperCheck) setPasswordUpper(true);
+    else setPasswordUpper(false);
+
+    if (passwordLowerCheck) setPasswordLower(true);
+    else setPasswordLower(false);
+
+    if (passwordNumberCheck) setPasswordNumber(true);
+    else setPasswordNumber(false);
+
+    if (passwordSpecialCheck) setPasswordSpecial(true);
+    else setPasswordSpecial(false);
+
+    const passwordValid =
+      !passwordLengthCheck &&
+      !passwordUpperCheck &&
+      !passwordLowerCheck &&
+      !passwordNumberCheck &&
+      !passwordSpecialCheck;
+
+    return passwordValid;
+  }
+
+  console.log("Password Error", passwordError);
 
   return (
     <SafeAreaView
@@ -145,6 +251,28 @@ export default function Login() {
               value={password}
               disabled={login}
               onChange={setPassword}
+              error={passwordError}
+              errorMessage={`${
+                passwordLength
+                  ? "Password must be at least 8 characters long\n"
+                  : ""
+              }${
+                passwordUpper
+                  ? "Password must contain at least one uppercase letter\n"
+                  : ""
+              }${
+                passwordLower
+                  ? "Password must contain at least one lowercase letter\n"
+                  : ""
+              }${
+                passwordNumber
+                  ? "Password must contain at least one number\n"
+                  : ""
+              }${
+                passwordSpecial
+                  ? "Password must contain at least one special character\n"
+                  : ""
+              }`}
             />
 
             <Input
@@ -154,6 +282,8 @@ export default function Login() {
               value={confirmPassword}
               disabled={login}
               onChange={setConfirmPassword}
+              error={passwordsMatch}
+              errorMessage="Passwords do not match"
             />
 
             <Button
