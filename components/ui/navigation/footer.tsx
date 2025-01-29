@@ -66,14 +66,18 @@ export default function Footer() {
           © {year} ManaLocus LLC
         </Text>
 
-        <View className="flex flex-row flex-wrap gap-2">
-          <Text size="xs" className="!text-primary-300">
-            Terms of Service
-          </Text>
+        <View className="flex flex-row flex-wrap items-center gap-2">
+          <Link href="legal/terms-of-service" className="-mt-px">
+            <Text size="xs" className="!text-primary-300">
+              Terms of Service
+            </Text>
+          </Link>
 
-          <Text size="xs" className="!text-primary-300">
-            Privacy Policy
-          </Text>
+          <Link href="legal/privacy-policy" className="-mt-px">
+            <Text size="xs" className="!text-primary-300">
+              Privacy Policy
+            </Text>
+          </Link>
 
           <Text size="xs" className="!text-primary-300">
             Affiliate Disclosures
