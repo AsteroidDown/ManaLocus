@@ -24,7 +24,7 @@ export default function Modal({
   className,
   children,
 }: ModalProps) {
-  const [animate, setAnimate] = React.useState(false);
+  const [animate, setAnimate] = React.useState(true);
 
   const transParentClasses = transparent
     ? "!bg-opacity-0 !border-none shadow-none"
@@ -37,24 +37,25 @@ export default function Modal({
     }
   }, [open]);
 
+  function fadeOut() {
+    setAnimate(true);
+    setTimeout(() => setOpen(false), 500);
+  }
+
   return (
     <>
       {open && (
-        <Pressable onPress={() => setOpen(false)}>
+        <Pressable onPress={fadeOut}>
           <ReactModal transparent style={[{ opacity: 0 }]}>
             <View
-              className={`flex justify-center items-center bg-dark-100 w-full h-full ${
-                animate
-                  ? "bg-opacity-0"
-                  : "transition-all duration-500 bg-opacity-30 backdrop-blur-sm"
+              className={`flex justify-center items-center bg-dark-100 w-full h-full transition-all duration-500 ${
+                animate ? "bg-opacity-0" : "bg-opacity-30 backdrop-blur-sm"
               }`}
             >
-              <View className={`w-fit h-fit overflow-hidden`}>
+              <View className={`w-fit h-fit`}>
                 <View
-                  className={`${
-                    animate
-                      ? "translate-y-[-110%]"
-                      : "transition-all duration-500 translate-y-[0%]"
+                  className={`transition-all duration-500 ${
+                    animate ? "translate-y-[-110%]" : "translate-y-[0%]"
                   }`}
                 >
                   <Pressable className="!cursor-default" tabIndex={-1}>
@@ -71,7 +72,7 @@ export default function Modal({
                           rounded
                           type="clear"
                           icon={faX}
-                          onClick={() => setOpen(false)}
+                          onClick={fadeOut}
                         />
                       </View>
                     </Box>
