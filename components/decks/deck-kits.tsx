@@ -182,6 +182,10 @@ function KitModal({ kit, open, setOpen }: KitModalProps) {
             data={kitCards}
             columns={[
               {
+                fit: true,
+                row: (card) => <Text>{card.count}</Text>,
+              },
+              {
                 title: "Name",
                 row: (card) => <Text>{card.name}</Text>,
               },
