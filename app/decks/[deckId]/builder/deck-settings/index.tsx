@@ -251,7 +251,7 @@ export default function DeckSettingsPage() {
   }, [featuredCardSearch]);
 
   function saveDeck() {
-    if (!deck || !format) return;
+    if (!deck) return;
 
     setSaving(true);
 
@@ -274,9 +274,9 @@ export default function DeckSettingsPage() {
 
     const dto: DeckDTO = {
       name,
-      format,
       description,
       private: privateView,
+      format: format ?? undefined,
       colors: `{${deckColors.join("}{")}}`,
       featuredArtUrl:
         featuredCard?.imageURIs?.artCrop ??
