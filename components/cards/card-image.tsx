@@ -12,17 +12,21 @@ export interface CardImageProps {
   focusable?: boolean;
   placeHolder?: string;
 
+  shouldLoad?: boolean;
   enlargeOnHover?: boolean;
 
   onClick?: () => any;
+  onLoad?: () => any;
 }
 
 export default function CardImage({
   card,
   focusable,
   placeHolder,
+  shouldLoad,
   enlargeOnHover,
   onClick,
+  onLoad,
 }: CardImageProps) {
   const [hovered, setHovered] = React.useState(false);
   const [focused, setFocused] = React.useState(false);
@@ -57,7 +61,7 @@ export default function CardImage({
       );
     }
 
-    if (!onScreen) return;
+    if (!onScreen && !shouldLoad) return;
 
     return (
       <Image
@@ -69,10 +73,12 @@ export default function CardImage({
         onLoad={() => {
           setFrontLoading(false);
           setFrontLoaded(true);
+          onLoad?.();
         }}
         onLoadEnd={() => {
           setFrontLoading(false);
           setFrontLoaded(true);
+          onLoad?.();
         }}
         onLoadStart={() => {
           setFrontLoading(true);
@@ -80,7 +86,7 @@ export default function CardImage({
         }}
       />
     );
-  }, [card?.imageURIs?.png, onScreen, frontLoaded]);
+  }, [card?.imageURIs?.png, onScreen, frontLoaded, shouldLoad]);
 
   const cardFrontImage = useMemo(() => {
     if (frontLoaded) {
@@ -93,7 +99,7 @@ export default function CardImage({
       );
     }
 
-    if (!onScreen) return;
+    if (!onScreen && !shouldLoad) return;
 
     return (
       <Image
@@ -105,10 +111,12 @@ export default function CardImage({
         onLoad={() => {
           setFrontLoading(false);
           setFrontLoaded(true);
+          onLoad?.();
         }}
         onLoadEnd={() => {
           setFrontLoading(false);
           setFrontLoaded(true);
+          onLoad?.();
         }}
         onLoadStart={() => {
           setFrontLoading(true);
@@ -116,7 +124,7 @@ export default function CardImage({
         }}
       />
     );
-  }, [card?.faces?.front.imageUris?.png, onScreen, frontLoaded]);
+  }, [card?.faces?.front.imageUris?.png, onScreen, frontLoaded, shouldLoad]);
 
   const cardBackImage = useMemo(() => {
     if (backLoaded) {
@@ -129,7 +137,7 @@ export default function CardImage({
       );
     }
 
-    if (!onScreen) return;
+    if (!onScreen && !shouldLoad) return;
 
     return (
       <Image
@@ -141,10 +149,12 @@ export default function CardImage({
         onLoad={() => {
           setBackLoading(false);
           setBackLoaded(true);
+          onLoad?.();
         }}
         onLoadEnd={() => {
           setBackLoading(false);
           setBackLoaded(true);
+          onLoad?.();
         }}
         onLoadStart={() => {
           setBackLoading(true);
@@ -152,7 +162,7 @@ export default function CardImage({
         }}
       />
     );
-  }, [card?.faces?.back?.imageUris?.png, onScreen, backLoaded]);
+  }, [card?.faces?.back?.imageUris?.png, onScreen, backLoaded, shouldLoad]);
 
   useEffect(() => setShowFront(true), [card]);
 
