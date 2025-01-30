@@ -29,6 +29,8 @@ export default function CardList({ cards, viewType }: CardListProps) {
     totalPages: Math.ceil(cards.length / items),
   } as PaginationMeta | null);
 
+  const [loadIndex, setLoadIndex] = React.useState(0);
+
   const [viewedCards, setViewedCards] = React.useState([] as Card[]);
 
   useEffect(() => {
@@ -49,11 +51,16 @@ export default function CardList({ cards, viewType }: CardListProps) {
         <View className="flex flex-row flex-wrap lg:justify-start justify-center gap-2">
           {cards.map((card, index) => (
             <CardImage
-              key={card.scryfallId + index}
               card={card}
+              key={card.scryfallId + index}
+              shouldLoad={loadIndex >= index}
               onClick={() =>
                 router.push(`cards/${setId}/${card.collectorNumber}`)
               }
+              onLoad={() => {
+                if (index < loadIndex) return;
+                setLoadIndex(index + 1);
+              }}
             />
           ))}
         </View>
