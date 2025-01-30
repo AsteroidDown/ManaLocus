@@ -346,10 +346,18 @@ function DeckCard({
           >
             {reasons?.length > 0 && (
               <View className="flex">
-                <Text size="sm" thickness="semi">
+                <Text size="sm" thickness="semi" className="mb-1">
                   Legality Issues
                 </Text>
-                <CardText text={reasons.join("\n")} />
+                {reasons.map((reason, index) => (
+                  <View
+                    key={index}
+                    className="flex flex-row items-center gap-2 ml-1"
+                  >
+                    <View className="w-1 h-1 rounded-full bg-white" />
+                    <CardText size="sm" text={reason} />
+                  </View>
+                ))}
               </View>
             )}
           </CardDetailedPreview>
