@@ -31,6 +31,7 @@ import Divider from "../ui/divider/divider";
 import Input from "../ui/input/input";
 import Modal from "../ui/modal/modal";
 import Pagination from "../ui/pagination/pagination";
+import LoadingTable from "../ui/table/loading-table";
 import Table, { TableColumn } from "../ui/table/table";
 import Text from "../ui/text/text";
 import DecksTable from "./decks-table";
@@ -154,14 +155,16 @@ interface KitModalProps {
 }
 
 function KitModal({ kit, open, setOpen }: KitModalProps) {
+  const [loading, setLoading] = React.useState(false);
   const [kitCards, setKitCards] = React.useState([] as Card[]);
 
   useEffect(() => {
     if (!kit) return;
 
-    DeckService.get(kit.id).then((foundKit) =>
-      setKitCards(foundKit.main.sort((a, b) => a.name.localeCompare(b.name)))
-    );
+    DeckService.get(kit.id).then((foundKit) => {
+      setKitCards(foundKit.main.sort((a, b) => a.name.localeCompare(b.name)));
+      setLoading(false);
+    });
   }, [kit]);
 
   return (
@@ -171,32 +174,36 @@ function KitModal({ kit, open, setOpen }: KitModalProps) {
           {kit.name}
         </Text>
 
-        <Table
-          className="max-h-[500px]"
-          data={kitCards}
-          columns={[
-            {
-              title: "Name",
-              row: (card) => <Text>{card.name}</Text>,
-            },
-            {
-              fit: true,
-              title: "Type",
-              row: (card) => <Text>{titleCase(getCardType(card))}</Text>,
-            },
-            {
-              fit: true,
-              center: true,
-              title: "Mana Cost",
-              row: (card) =>
-                card.manaCost && (
-                  <View className="max-w-fit py-0.5 px-1 bg-background-100 rounded-full overflow-hidden">
-                    <CardText text={card.manaCost} />
-                  </View>
-                ),
-            },
-          ]}
-        />
+        {loading ? (
+          <LoadingTable />
+        ) : (
+          <Table
+            className="max-h-[500px]"
+            data={kitCards}
+            columns={[
+              {
+                title: "Name",
+                row: (card) => <Text>{card.name}</Text>,
+              },
+              {
+                fit: true,
+                title: "Type",
+                row: (card) => <Text>{titleCase(getCardType(card))}</Text>,
+              },
+              {
+                fit: true,
+                center: true,
+                title: "Mana Cost",
+                row: (card) =>
+                  card.manaCost && (
+                    <View className="max-w-fit py-0.5 px-1 bg-background-100 rounded-full overflow-hidden">
+                      <CardText text={card.manaCost} />
+                    </View>
+                  ),
+              },
+            ]}
+          />
+        )}
       </View>
     </Modal>
   );
