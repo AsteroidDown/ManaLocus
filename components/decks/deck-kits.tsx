@@ -24,6 +24,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import React, { useContext, useEffect } from "react";
 import { View } from "react-native";
+import CardDetailedPreview from "../cards/card-detailed-preview";
 import CardText from "../cards/card-text";
 import Button from "../ui/button/button";
 import Checkbox from "../ui/checkbox/checkbox";
@@ -158,14 +159,23 @@ function KitModal({ kit, open, setOpen }: KitModalProps) {
   const [loading, setLoading] = React.useState(false);
   const [kitCards, setKitCards] = React.useState([] as Card[]);
 
+  const [selectedCard, setSelectedCard] = React.useState(null as Card | null);
+  const [cardPreviewModalOpen, setCardPreviewModalOpen] = React.useState(false);
+
   useEffect(() => {
     if (!kit) return;
+    setLoading(true);
 
     DeckService.get(kit.id).then((foundKit) => {
       setKitCards(foundKit.main.sort((a, b) => a.name.localeCompare(b.name)));
       setLoading(false);
     });
   }, [kit]);
+
+  useEffect(() => {
+    if (!selectedCard) return;
+    setCardPreviewModalOpen(true);
+  }, [selectedCard]);
 
   return (
     <Modal open={open} setOpen={setOpen}>
@@ -180,6 +190,7 @@ function KitModal({ kit, open, setOpen }: KitModalProps) {
           <Table
             className="max-h-[500px]"
             data={kitCards}
+            rowClick={(card) => setSelectedCard(card)}
             columns={[
               {
                 fit: true,
@@ -209,6 +220,17 @@ function KitModal({ kit, open, setOpen }: KitModalProps) {
           />
         )}
       </View>
+
+      {selectedCard && (
+        <Modal open={cardPreviewModalOpen} setOpen={setCardPreviewModalOpen}>
+          <CardDetailedPreview
+            link
+            fullHeight
+            onLinkPress={() => setOpen(false)}
+            card={selectedCard}
+          />
+        </Modal>
+      )}
     </Modal>
   );
 }
@@ -241,6 +263,9 @@ function AddKitModal({
   const [saving, setSaving] = React.useState(false);
   const [success, setSuccess] = React.useState(false);
 
+  const [selectedCard, setSelectedCard] = React.useState(null as Card | null);
+  const [cardPreviewModalOpen, setCardPreviewModalOpen] = React.useState(false);
+
   useEffect(() => {
     if (!deck || !open) return;
 
@@ -254,6 +279,11 @@ function AddKitModal({
       setMeta(response.meta);
     });
   }, [deck, open, page, search, userKits]);
+
+  useEffect(() => {
+    if (!selectedCard) return;
+    setCardPreviewModalOpen(true);
+  }, [selectedCard]);
 
   function selectKit(kit: Deck) {
     if (!kit) return;
@@ -360,8 +390,13 @@ function AddKitModal({
             <Table
               className="max-h-[250px]"
               data={selectedKit?.main || []}
+              rowClick={(card) => setSelectedCard(card)}
               columns={
                 [
+                  {
+                    fit: true,
+                    row: (card) => <Text>{card.count}</Text>,
+                  },
                   {
                     title: "Name",
                     row: (card) => <Text>{card.name}</Text>,
@@ -397,6 +432,17 @@ function AddKitModal({
           </View>
         </View>
       </View>
+
+      {selectedCard && (
+        <Modal open={cardPreviewModalOpen} setOpen={setCardPreviewModalOpen}>
+          <CardDetailedPreview
+            link
+            fullHeight
+            onLinkPress={() => setOpen(false)}
+            card={selectedCard}
+          />
+        </Modal>
+      )}
     </Modal>
   );
 }
