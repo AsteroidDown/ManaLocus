@@ -5,6 +5,7 @@ import Button from "@/components/ui/button/button";
 import Modal from "@/components/ui/modal/modal";
 import Placeholder from "@/components/ui/placeholder/placeholder";
 import Text from "@/components/ui/text/text";
+import BodyHeightContext from "@/contexts/ui/body-height.context";
 import UserPageContext from "@/contexts/user/user-page.context";
 import UserContext from "@/contexts/user/user.context";
 import FolderService from "@/hooks/services/folder.service";
@@ -17,7 +18,7 @@ import {
   faTrash,
 } from "@fortawesome/free-solid-svg-icons";
 import { router, useLocalSearchParams } from "expo-router";
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useRef } from "react";
 import { SafeAreaView, View } from "react-native";
 
 export default function FolderPage() {
@@ -25,6 +26,9 @@ export default function FolderPage() {
 
   const { user } = useContext(UserContext);
   const { userPageUser } = useContext(UserPageContext);
+  const { setBodyHeight } = useContext(BodyHeightContext);
+
+  const containerRef = useRef<View>(null);
 
   const [folder, setFolder] = React.useState(null as DeckFolder | null);
   const [deckIds, setDeckIds] = React.useState([] as string[]);
@@ -46,7 +50,15 @@ export default function FolderPage() {
 
   return (
     <SafeAreaView className="flex w-full h-full py-4 bg-background-100">
-      <View className="flex flex-row gap-2 justify-between items-center mb-4">
+      <View
+        ref={containerRef}
+        className="flex flex-row gap-2 justify-between items-center mb-4"
+        onLayout={() =>
+          containerRef.current?.measureInWindow((_x, _y, _width, height) =>
+            setBodyHeight(height)
+          )
+        }
+      >
         <View className="flex flex-row items-center gap-2">
           <Button
             rounded
