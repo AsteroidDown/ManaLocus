@@ -1,14 +1,33 @@
+import { mapDatabaseUser } from "@/functions/mapping/user-mapping";
+import { UserFiltersDTO } from "@/models/user/dtos/user-filters.dto";
 import { User } from "@/models/user/user";
 import API from "../api-methods/api-methods";
+import {
+  DefaultPagination,
+  PaginatedResponse,
+  PaginationOptions,
+} from "../pagination";
+
+async function getMany(
+  filters?: UserFiltersDTO,
+  pagination?: PaginationOptions
+): Promise<PaginatedResponse<User>> {
+  if (!pagination) pagination = DefaultPagination;
+
+  const response: PaginatedResponse<User> = await API.get(`users/`, {
+    ...pagination,
+    ...filters,
+  }).catch((error) => console.error(`Error retrieving users: ${error}`));
+
+  return {
+    meta: response?.meta,
+    data: response?.data.map((user) => mapDatabaseUser(user)),
+  };
+}
 
 async function get(userId: string): Promise<User> {
-  return await API.get(`users/${userId}`).then(
-    (response) =>
-      ({
-        id: response.id,
-        name: response.username,
-        email: response.email,
-      } as User)
+  return await API.get(`users/${userId}`).then((response) =>
+    mapDatabaseUser(response)
   );
 }
 
@@ -16,14 +35,7 @@ async function getCurrentUser(): Promise<User | null> {
   if (!localStorage.getItem("user-access")) return null;
 
   return await API.get(`users/current/`)
-    .then(
-      (response) =>
-        ({
-          id: response.id,
-          name: response.username,
-          email: response.email,
-        } as User)
-    )
+    .then((response) => mapDatabaseUser(response))
     .catch((error) => {
       console.error(`Error retrieving current user: ${error}`);
       return null;
@@ -52,11 +64,7 @@ async function login(username: string, password: string) {
         localStorage.setItem("user-access", response.access);
         localStorage.setItem("user-refresh", response.refresh);
 
-        return {
-          id: response?.id,
-          name: response?.name,
-          email: response?.email,
-        };
+        return mapDatabaseUser(response);
       }
 
       return null;
@@ -86,6 +94,7 @@ async function logout() {
 }
 
 const UserService = {
+  getMany,
   get,
   getCurrentUser,
   register,

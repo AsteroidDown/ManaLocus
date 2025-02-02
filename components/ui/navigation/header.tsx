@@ -1,10 +1,11 @@
 import UserContext from "@/contexts/user/user.context";
-import { faBars } from "@fortawesome/free-solid-svg-icons";
+import { faBars, faToolbox, faUsers } from "@fortawesome/free-solid-svg-icons";
 import { Link, router } from "expo-router";
 import { useContext, useState } from "react";
 import { Image, useWindowDimensions, View } from "react-native";
 import Button from "../button/button";
 import Divider from "../divider/divider";
+import Dropdown from "../dropdown/dropdown";
 import Text from "../text/text";
 
 export default function Header() {
@@ -13,6 +14,7 @@ export default function Header() {
   const width = useWindowDimensions().width;
 
   const [open, setOpen] = useState(false);
+  const [exploreOpen, setExploreOpen] = useState(false);
 
   function navigate(path: string) {
     router.push(path);
@@ -41,7 +43,50 @@ export default function Header() {
                 <Button square type="clear" text="Cards" size="lg" />
               </Link>
 
-              {/* <Button square type="clear" text="Explore" size="lg" /> */}
+              <Button
+                square
+                type="clear"
+                text="Explore"
+                size="lg"
+                onClick={() => setExploreOpen(!exploreOpen)}
+              >
+                <Dropdown
+                  xOffset={-76}
+                  expanded={exploreOpen}
+                  setExpanded={setExploreOpen}
+                >
+                  <View className="flex flex-col gap-2 mt-6 border-2 border-primary-300 !bg-background-100 rounded-xl !bg-opacity-95 overflow-auto max-h-[250px]">
+                    <Button
+                      start
+                      square
+                      size="lg"
+                      type="clear"
+                      text="Builders"
+                      icon={faUsers}
+                      className="w-full"
+                      onClick={() => {
+                        navigate("/users");
+                        setExploreOpen(false);
+                      }}
+                    />
+
+                    <Button
+                      start
+                      square
+                      size="lg"
+                      type="clear"
+                      text="Kits"
+                      icon={faToolbox}
+                      className="w-full"
+                      buttonClasses="gap-1.5"
+                      onClick={() => {
+                        navigate("/kits");
+                        setExploreOpen(false);
+                      }}
+                    />
+                  </View>
+                </Dropdown>
+              </Button>
             </View>
           )}
         </View>
@@ -101,14 +146,28 @@ export default function Header() {
 
             <Divider thick />
 
-            {/* <Button
+            <Button
               start
               square
               size="lg"
               type="clear"
-              text="Explore"
+              text="Builders"
               className="w-full"
-            /> */}
+              onClick={() => navigate("/users")}
+            />
+
+            <Divider thick />
+
+            <Button
+              start
+              square
+              size="lg"
+              type="clear"
+              text="Kits"
+              className="w-full"
+              buttonClasses="gap-1.5"
+              onClick={() => navigate("/kits")}
+            />
 
             <Divider thick />
           </View>
