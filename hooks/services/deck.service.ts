@@ -11,14 +11,13 @@ import {
 } from "../pagination";
 
 async function getMany(
-  filters: DeckFiltersDTO,
+  filters?: DeckFiltersDTO,
   pagination?: PaginationOptions
 ): Promise<PaginatedResponse<Deck>> {
   if (!pagination) pagination = DefaultPagination;
 
   const response: PaginatedResponse<Deck> = await API.get(`decks/`, {
-    ...filters,
-    ...pagination,
+    params: { ...filters, ...pagination },
   }).catch((error) =>
     console.error(`Error retrieving decks.\nError: ${error}`)
   );
