@@ -158,8 +158,6 @@ export default function Login() {
     return passwordValid;
   }
 
-  console.log("Password Error", passwordError);
-
   return (
     <SafeAreaView
       className="flex-1 flex w-full h-full bg-dark-100"
