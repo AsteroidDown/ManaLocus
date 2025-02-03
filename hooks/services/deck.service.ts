@@ -17,7 +17,8 @@ async function getMany(
   if (!pagination) pagination = DefaultPagination;
 
   const response: PaginatedResponse<Deck> = await API.get(`decks/`, {
-    params: { ...filters, ...pagination },
+    ...filters,
+    ...pagination,
   }).catch((error) =>
     console.error(`Error retrieving decks.\nError: ${error}`)
   );
