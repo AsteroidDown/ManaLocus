@@ -212,13 +212,18 @@ export default function DeckGallery({
           setDecksLoading(false);
         });
       } else {
-        DeckService.getByUser(userId, searchDto, { page, items: 50 }).then(
-          (response) => {
-            setDecks(response.data);
-            setMeta(response.meta);
-            setDecksLoading(false);
-          }
-        );
+        DeckService.getByUser(
+          userId,
+          {
+            ...searchDto,
+            includePrivate: user?.id === userPageUser?.id ? "true" : "false",
+          },
+          { page, items: 50 }
+        ).then((response) => {
+          setDecks(response.data);
+          setMeta(response.meta);
+          setDecksLoading(false);
+        });
       }
     } else {
       DeckService.getMany(searchDto, { page, items: 50 }).then((response) => {

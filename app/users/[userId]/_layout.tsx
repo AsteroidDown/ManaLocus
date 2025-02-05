@@ -13,7 +13,7 @@ import { SafeAreaView, View } from "react-native";
 export default function UserLayout() {
   const { userId } = useLocalSearchParams();
 
-  const { user, setUser } = useContext(UserContext);
+  const { user } = useContext(UserContext);
 
   const [userPageUser, setPageUser] = React.useState(null as User | null);
 
@@ -24,7 +24,7 @@ export default function UserLayout() {
     else UserService.get(userId).then((foundUser) => setPageUser(foundUser));
   }, [userId]);
 
-  if (!user || !userPageUser) return null;
+  if (!userPageUser) return null;
 
   const tabs: TabProps[] = [
     {
@@ -49,7 +49,7 @@ export default function UserLayout() {
     },
   ];
 
-  if (user.id === userPageUser.id) {
+  if (user?.id === userPageUser.id) {
     tabs.push({
       title: "Settings",
       link: `users/${userPageUser.id}/settings`,
