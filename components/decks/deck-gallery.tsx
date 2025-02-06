@@ -95,6 +95,7 @@ export default function DeckGallery({
   const [partnerSearch, setPartnerSearch] = React.useState("");
 
   const [searchDto, setSearchDto] = React.useState({
+    includeIds,
     onlyKits: kits,
   } as DeckFiltersDTO);
 
