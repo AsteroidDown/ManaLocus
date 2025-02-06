@@ -20,6 +20,7 @@ export interface DeckDTO {
   partnerId?: string;
 
   isKit?: boolean;
+  isCollection?: boolean;
   inProgress?: boolean;
 
   kits?: string[];
