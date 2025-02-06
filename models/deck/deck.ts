@@ -35,6 +35,7 @@ export interface Deck {
   partner?: Card;
 
   isKit?: boolean;
+  isCollection?: boolean;
   inProgress?: boolean;
 }
 

@@ -1,4 +1,4 @@
-export type BoardType = "main" | "maybe" | "side" | "acquire";
+export type BoardType = "main" | "maybe" | "side" | "acquire" | "trade";
 
 export enum BoardTypes {
   MAIN = "main",

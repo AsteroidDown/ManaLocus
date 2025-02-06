@@ -32,7 +32,6 @@ export default function DeckSettingsPage() {
   const { setBuilderHeight } = useContext(BuilderHeightContext);
   const {
     deck,
-    setDeck,
     format,
     setFormat,
     commander,
@@ -296,6 +295,7 @@ export default function DeckSettingsPage() {
           getLocalStorageStoredCards(BoardTypes.ACQUIRE),
           BoardTypes.ACQUIRE
         ),
+        ...mapCardsToDeckCard(getLocalStorageStoredCards("trade"), "trade"),
       ],
 
       dashboard: getLocalStorageDashboard()?.sections || [],
@@ -332,7 +332,7 @@ export default function DeckSettingsPage() {
         }
       >
         <BoxHeader
-          title="Deck Settings"
+          title={deck?.isCollection ? "Collection Settings" : "Deck Settings"}
           end={
             <Button
               disabled={saving}
@@ -387,30 +387,32 @@ export default function DeckSettingsPage() {
                 </View>
               </View>
 
-              <View className="flex gap-2">
-                <Text size="md" thickness="bold">
-                  Type
-                </Text>
+              {!deck?.isCollection && (
+                <View className="flex gap-2">
+                  <Text size="md" thickness="bold">
+                    Type
+                  </Text>
 
-                <View className="flex flex-row -mt-[0.5px]">
-                  <Button
-                    squareRight
-                    text="Deck"
-                    action="primary"
-                    className="flex-1"
-                    type={isKit ? "outlined" : "default"}
-                    onClick={() => setIsKit(false)}
-                  />
-                  <Button
-                    squareLeft
-                    text="Kit"
-                    action="primary"
-                    className="flex-1"
-                    type={isKit ? "default" : "outlined"}
-                    onClick={() => setIsKit(true)}
-                  />
+                  <View className="flex flex-row -mt-[0.5px]">
+                    <Button
+                      squareRight
+                      text="Deck"
+                      action="primary"
+                      className="flex-1"
+                      type={isKit ? "outlined" : "default"}
+                      onClick={() => setIsKit(false)}
+                    />
+                    <Button
+                      squareLeft
+                      text="Kit"
+                      action="primary"
+                      className="flex-1"
+                      type={isKit ? "default" : "outlined"}
+                      onClick={() => setIsKit(true)}
+                    />
+                  </View>
                 </View>
-              </View>
+              )}
             </View>
 
             <View className="flex flex-row flex-wrap gap-4">
@@ -420,58 +422,60 @@ export default function DeckSettingsPage() {
                 onChange={setFeaturedCardSearch}
               />
 
-              <View className="flex-[2] flex flex-row min-w-min">
-                <Select
-                  label="Format"
-                  placeholder="Format"
-                  value={format}
-                  onChange={setFormat}
-                  squareRight={!isKit && commanderFormat}
-                  options={Object.values(MTGFormats).map((format) => ({
-                    label: titleCase(format),
-                    value: format,
-                  }))}
-                />
+              {!deck?.isCollection && (
+                <View className="flex-[2] flex flex-row min-w-min">
+                  <Select
+                    label="Format"
+                    placeholder="Format"
+                    value={format}
+                    onChange={setFormat}
+                    squareRight={!isKit && commanderFormat}
+                    options={Object.values(MTGFormats).map((format) => ({
+                      label: titleCase(format),
+                      value: format,
+                    }))}
+                  />
 
-                {!isKit && commanderFormat && (
-                  <>
-                    <Select
-                      squareLeft
-                      squareRight={allowedPartner}
-                      value={commander}
-                      property="scryfallId"
-                      onChange={setCommander}
-                      label={
-                        format === MTGFormats.OATHBREAKER
-                          ? "Oathbreaker"
-                          : "Commander"
-                      }
-                      options={commanderOptions.map((option) => ({
-                        label: option.name,
-                        value: option,
-                      }))}
-                    />
-
-                    {allowedPartner && (
+                  {!isKit && commanderFormat && (
+                    <>
                       <Select
                         squareLeft
-                        value={partner}
+                        squareRight={allowedPartner}
+                        value={commander}
                         property="scryfallId"
-                        onChange={setPartner}
+                        onChange={setCommander}
                         label={
                           format === MTGFormats.OATHBREAKER
-                            ? "Signature Spell"
-                            : "Partner"
+                            ? "Oathbreaker"
+                            : "Commander"
                         }
-                        options={partnerOptions.map((option) => ({
+                        options={commanderOptions.map((option) => ({
                           label: option.name,
                           value: option,
                         }))}
                       />
-                    )}
-                  </>
-                )}
-              </View>
+
+                      {allowedPartner && (
+                        <Select
+                          squareLeft
+                          value={partner}
+                          property="scryfallId"
+                          onChange={setPartner}
+                          label={
+                            format === MTGFormats.OATHBREAKER
+                              ? "Signature Spell"
+                              : "Partner"
+                          }
+                          options={partnerOptions.map((option) => ({
+                            label: option.name,
+                            value: option,
+                          }))}
+                        />
+                      )}
+                    </>
+                  )}
+                </View>
+              )}
             </View>
           </View>
         </View>
@@ -484,14 +488,16 @@ export default function DeckSettingsPage() {
           onChange={setDescription}
         />
 
-        <Checkbox
-          label="In Progress"
-          text="Decks in progress will not be visible to other users"
-          checked={inProgress}
-          onChange={setInProgress}
-        />
+        {!deck?.isCollection && (
+          <Checkbox
+            label="In Progress"
+            text="Decks in progress will not be visible to other users"
+            checked={inProgress}
+            onChange={setInProgress}
+          />
+        )}
 
-        {deck && (
+        {!deck?.isCollection && deck && (
           <View className="mt-8">
             <DeckKits deck={deck} />
           </View>

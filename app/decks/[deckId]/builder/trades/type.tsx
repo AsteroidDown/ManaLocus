@@ -5,7 +5,7 @@ import BuilderHeightContext from "@/contexts/ui/builder-height.context";
 import React, { useContext, useRef } from "react";
 import { View } from "react-native";
 
-export default function CardsByCostPage() {
+export default function CardsByTypePage() {
   const { setBodyHeight } = useContext(BodyHeightContext);
   const { builderHeight } = useContext(BuilderHeightContext);
   const { preferences } = useContext(BuilderPreferencesContext);
@@ -28,7 +28,7 @@ export default function CardsByCostPage() {
       }
     >
       <CardItemGallery
-        type="cost"
+        type="type"
         hideImages={preferences.hideCardImages || false}
         groupMulticolored={preferences.groupMulticolored || false}
       />

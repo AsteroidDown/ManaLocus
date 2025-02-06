@@ -148,7 +148,39 @@ export default function TabLayout() {
                               focused ? "" : "color-primary-400"
                             }`}
                           >
-                            Main
+                            {deck?.isCollection ? "Collection" : "Main"}
+                          </Text>
+                        )}
+                      </View>
+                    ),
+                  }}
+                />
+
+                <Tabs.Screen
+                  name="trades"
+                  options={{
+                    ...(!deck?.isCollection && { href: null }),
+                    tabBarLabel: ({ focused }) => (
+                      <View
+                        className={`flex flex-row justify-center items-center gap-2 bg-background-100 ${
+                          !deck?.isCollection ? "hidden" : ""
+                        }`}
+                      >
+                        <FontAwesomeIcon
+                          icon={faClipboardList}
+                          size={"lg"}
+                          className={
+                            focused ? "color-white" : "color-primary-400"
+                          }
+                        />
+
+                        {width > 600 && (
+                          <Text
+                            className={`whitespace-nowrap ${
+                              focused ? "" : "color-primary-400"
+                            }`}
+                          >
+                            Trades
                           </Text>
                         )}
                       </View>
@@ -159,6 +191,7 @@ export default function TabLayout() {
                 <Tabs.Screen
                   name="side-board"
                   options={{
+                    ...(deck?.isCollection && { href: null }),
                     tabBarLabel: ({ focused }) => (
                       <View className="flex flex-row justify-center items-center gap-2 bg-background-100">
                         <FontAwesomeIcon
@@ -186,6 +219,7 @@ export default function TabLayout() {
                 <Tabs.Screen
                   name="maybe-board"
                   options={{
+                    ...(deck?.isCollection && { href: null }),
                     tabBarLabel: ({ focused }) => (
                       <View className="flex flex-row justify-center items-center gap-2 bg-background-100">
                         <FontAwesomeIcon
