@@ -28,6 +28,7 @@ export interface Deck {
   side: Card[];
   maybe: Card[];
   acquire: Card[];
+  trade: Card[];
 
   dashboard?: Dashboard;
 

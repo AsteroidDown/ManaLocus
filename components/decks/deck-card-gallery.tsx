@@ -134,6 +134,7 @@ export default function DeckCardGallery({
       side: sortCardsAlphabetically(deck.side),
       maybe: sortCardsAlphabetically(deck.maybe),
       acquire: sortCardsAlphabetically(deck.acquire),
+      trade: sortCardsAlphabetically(deck.trade),
     });
 
     setBoardType(BoardTypes.MAIN);
@@ -437,10 +438,27 @@ export default function DeckCardGallery({
               value={boardType}
               className="lg:max-w-min"
               onChange={setBoardType}
-              options={Object.values(BoardTypes).map((board) => ({
-                label: titleCase(board),
-                value: board,
-              }))}
+              options={
+                deck.isCollection
+                  ? [
+                      {
+                        label: "Main",
+                        value: BoardTypes.MAIN,
+                      },
+                      {
+                        label: "Trades",
+                        value: "trade",
+                      },
+                      {
+                        label: "Acquire",
+                        value: BoardTypes.ACQUIRE,
+                      },
+                    ]
+                  : Object.values(BoardTypes).map((board) => ({
+                      label: titleCase(board),
+                      value: board,
+                    }))
+              }
             />
           )}
 
@@ -481,10 +499,27 @@ export default function DeckCardGallery({
                 value={boardType}
                 className="lg:max-w-min"
                 onChange={setBoardType}
-                options={Object.values(BoardTypes).map((board) => ({
-                  label: titleCase(board),
-                  value: board,
-                }))}
+                options={
+                  deck.isCollection
+                    ? [
+                        {
+                          label: "Main",
+                          value: BoardTypes.MAIN,
+                        },
+                        {
+                          label: "Trades",
+                          value: "trade",
+                        },
+                        {
+                          label: "Acquire",
+                          value: BoardTypes.ACQUIRE,
+                        },
+                      ]
+                    : Object.values(BoardTypes).map((board) => ({
+                        label: titleCase(board),
+                        value: board,
+                      }))
+                }
               />
             )}
           </View>

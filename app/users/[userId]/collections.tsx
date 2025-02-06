@@ -21,18 +21,20 @@ export default function UserCollectionsPage() {
   function createCollection() {
     if (!user) return;
 
-    DeckService.create({ name: "New Collection", isCollection: true }).then(
-      (response) => {
-        localStorage.removeItem("builderCardsMain");
-        localStorage.removeItem("builderCardsSide");
-        localStorage.removeItem("builderCardsMaybe");
-        localStorage.removeItem("builderCardsAcquire");
-        localStorage.removeItem("builderKits");
-        localStorage.removeItem("dashboard");
+    DeckService.create({
+      name: "New Collection",
+      isCollection: true,
+      format: "Collection" as any,
+    }).then((response) => {
+      localStorage.removeItem("builderCardsMain");
+      localStorage.removeItem("builderCardsSide");
+      localStorage.removeItem("builderCardsMaybe");
+      localStorage.removeItem("builderCardsAcquire");
+      localStorage.removeItem("builderKits");
+      localStorage.removeItem("dashboard");
 
-        router.push(`decks/${response.deckId}/builder/main-board`);
-      }
-    );
+      router.push(`decks/${response.deckId}/builder/main-board`);
+    });
   }
 
   return (

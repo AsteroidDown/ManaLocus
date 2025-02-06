@@ -1,10 +1,11 @@
-import { BoardType } from "@/contexts/cards/board.context";
+import { BoardType } from "@/constants/boards";
 
 export interface DeckChange {
   main: DeckCardChange[];
   side: DeckCardChange[];
   maybe: DeckCardChange[];
   acquire: DeckCardChange[];
+  trade: DeckCardChange[];
 }
 
 export interface DeckCardChange {

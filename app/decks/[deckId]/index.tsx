@@ -92,7 +92,7 @@ export default function DeckPage() {
           <DeckCardGallery deck={deck} />
         )}
 
-        {deck.description && (
+        {!!deck.description && (
           <>
             <Divider thick className="!border-background-200" />
 
@@ -128,13 +128,15 @@ export default function DeckPage() {
           <DeckChangeLog className="flex-1 min-w-[250px]" deck={deck} />
         </View>
 
-        <Divider thick className="!border-background-200" />
+        {!deck.isCollection && (
+          <Divider thick className="!border-background-200" />
+        )}
 
-        {!deck.isKit && <DeckExampleHand deck={deck} />}
+        {!deck.isKit && !deck.isCollection && <DeckExampleHand deck={deck} />}
 
         <DeckTokens deck={deck} />
 
-        <DeckKits readonly deck={deck} />
+        {!deck.isCollection && <DeckKits readonly deck={deck} />}
       </View>
 
       <DeckFooter deck={deck} legalityEvaluation={legalityEvaluation} />
