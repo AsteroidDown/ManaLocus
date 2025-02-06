@@ -33,6 +33,11 @@ export default function UserLayout() {
       name: "decks",
     },
     {
+      title: "Collections",
+      link: `users/${userPageUser.id}/collections`,
+      name: "collections",
+    },
+    {
       title: "Favorites",
       link: `users/${userPageUser.id}/favorites`,
       name: "favorites",

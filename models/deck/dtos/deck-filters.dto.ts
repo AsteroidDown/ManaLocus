@@ -15,6 +15,7 @@ export interface DeckFiltersDTO {
 
   userDecks?: boolean | null;
   onlyKits?: boolean | null;
+  onlyCollections?: boolean | null;
   excludeIds?: string[] | null;
   includeIds?: string[] | null;
 }

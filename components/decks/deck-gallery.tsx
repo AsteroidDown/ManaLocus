@@ -41,6 +41,7 @@ export interface DeckGalleryProps {
   kits?: boolean;
   favorites?: boolean;
   includeIds?: string[];
+  collections?: boolean;
   endColumns?: TableColumn<Deck>[];
 }
 
@@ -49,6 +50,7 @@ export default function DeckGallery({
   includeIds,
   kits = false,
   favorites = false,
+  collections = false,
   endColumns,
 }: DeckGalleryProps) {
   const { user } = useContext(UserContext);
@@ -97,6 +99,7 @@ export default function DeckGallery({
   const [searchDto, setSearchDto] = React.useState({
     includeIds,
     onlyKits: kits,
+    onlyCollections: collections,
   } as DeckFiltersDTO);
 
   const [resultsText, setResultsText] = React.useState("");
