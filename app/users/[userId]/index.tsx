@@ -48,7 +48,7 @@ export default function Login() {
       >
         <View className="flex flex-row justify-end">
           <Button
-            text="Create Collection"
+            text="Create Deck"
             type="outlined"
             icon={faPlus}
             className="self-end"
