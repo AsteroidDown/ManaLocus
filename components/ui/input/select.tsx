@@ -23,6 +23,8 @@ export type InputProps = ViewProps & {
   squareRight?: boolean;
   maxHeight?: string;
 
+  clearOnFocus?: boolean;
+
   value?: any;
   onChange: React.Dispatch<React.SetStateAction<any>>;
   onSearchChange?: React.Dispatch<React.SetStateAction<string>>;
@@ -40,6 +42,8 @@ export default function Select({
   squareLeft,
   squareRight,
   maxHeight,
+
+  clearOnFocus,
 
   value,
   onChange,
@@ -99,6 +103,8 @@ export default function Select({
   function onFocus() {
     setFocused(true);
     setOpen(true);
+
+    if (clearOnFocus && !value) setSearch("");
   }
 
   function onBlur() {
