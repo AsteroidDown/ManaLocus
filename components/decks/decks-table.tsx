@@ -92,7 +92,7 @@ export default function DecksTable({
   if (!hideModified) {
     columns.push({
       title: "Modified",
-      row: (deck) => <Text>{moment(deck.updated).format("MMM D, YYYY")}</Text>,
+      row: (deck) => <Text>{moment(deck.updated).format("MMM Do, YYYY")}</Text>,
     });
   }
 

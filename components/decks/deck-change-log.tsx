@@ -49,7 +49,7 @@ export default function DeckChangeLog({ deck, className }: DeckChangeLogProps) {
           ]
       ).map((boardType) => {
         const timeChanges = changes[boardType]?.reduce((acc, change) => {
-          const time = moment(change.timestamp).format("MMM D, YYYY h:mm A");
+          const time = moment(change.timestamp).format("MMM Do, YYYY h:mm A");
 
           if (!Object.keys(acc).includes(time)) {
             acc[time] = {
@@ -112,7 +112,7 @@ export default function DeckChangeLog({ deck, className }: DeckChangeLogProps) {
                   >
                     <View className="flex-1 flex flex-row justify-between items-center gap-2 px-2 py-1 w-full min-h-8 hover:bg-primary-200 transition-all duration-300">
                       <Text thickness="bold">
-                        {moment(timeChange.time).format("MMM D, YYYY h:mm A")}
+                        {moment(timeChange.time).format("MMM Do, YYYY h:mm A")}
                       </Text>
 
                       <View className="flex flex-row gap-2">

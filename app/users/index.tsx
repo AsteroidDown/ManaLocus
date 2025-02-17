@@ -83,7 +83,7 @@ export default function UsersPage() {
               {
                 title: "Member Since",
                 row: (user) => (
-                  <Text>{moment(user.memberSince).format("MMM D, YYYY")}</Text>
+                  <Text>{moment(user.memberSince).format("MMM Do, YYYY")}</Text>
                 ),
               },
             ] as TableColumn<User>[]

@@ -107,7 +107,7 @@ export default function DeckHeader({ deck }: { deck: Deck }) {
 
       <View className="absolute bottom-4 lg:left-16 left-4">
         <Text size="sm" thickness="semi" className="!text-gray-300">
-          Last Updated: {moment(deck.updated).format("MMM D, YYYY")}
+          Last Updated: {moment(deck.updated).format("MMM Do, YYYY")}
         </Text>
       </View>
 

@@ -73,7 +73,7 @@ export default function CardRulings({ card }: CardRulingsProps) {
                 </Text>
 
                 <Text size="sm" thickness="semi">
-                  {moment(ruling.publishedAt).format("MMM D, YYYY")}
+                  {moment(ruling.publishedAt).format("MMM Do, YYYY")}
                 </Text>
               </View>
             </View>

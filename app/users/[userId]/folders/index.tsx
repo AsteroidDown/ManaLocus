@@ -126,7 +126,7 @@ export default function UserFoldersPage() {
                   fit: true,
                   title: "Last Updated",
                   row: (folder) => (
-                    <Text>{moment(folder.updated).format("MMM D, YYYY")}</Text>
+                    <Text>{moment(folder.updated).format("MMM Do, YYYY")}</Text>
                   ),
                 },
                 ...(user.id === userPageUser.id
