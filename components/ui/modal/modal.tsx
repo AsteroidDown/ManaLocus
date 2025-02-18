@@ -9,18 +9,24 @@ import {
 } from "react-native";
 import Box from "../box/box";
 import Button from "../button/button";
+import Text from "../text/text";
 
 export type ModalProps = ViewProps & {
-  open: boolean;
-  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  title?: string;
+  subtitle?: string;
 
   transparent?: boolean;
+
+  open: boolean;
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 export default function Modal({
+  title,
+  subtitle,
+  transparent = false,
   open,
   setOpen,
-  transparent = false,
   className,
   children,
 }: ModalProps) {
@@ -65,16 +71,42 @@ export default function Modal({
                         !bg-background-100 !border-background-200 max-h-[95dvh] max-w-[95dvw] lg:mx-0 mx-2 border-2 transition-all duration-500
                         ${animate ? "opacity-0" : "opacity-100"}`}
                     >
+                      {!!title && (
+                        <View className="flex flex-row justify-between items-center gap-2">
+                          <View className="flex">
+                            <Text size="lg" thickness="semi">
+                              {title}
+                            </Text>
+
+                            <Text size="sm" thickness="semi">
+                              {subtitle}
+                            </Text>
+                          </View>
+
+                          <Button
+                            rounded
+                            type="clear"
+                            icon={faX}
+                            action="default"
+                            className="lg:hidden -mr-2 ml-auto"
+                            onClick={fadeOut}
+                          />
+                        </View>
+                      )}
+
                       <ScrollView>{children}</ScrollView>
 
-                      <View className="absolute top-4 right-4 lg:hidden">
-                        <Button
-                          rounded
-                          type="clear"
-                          icon={faX}
-                          onClick={fadeOut}
-                        />
-                      </View>
+                      {!title && (
+                        <View className="absolute top-4 right-4 lg:hidden">
+                          <Button
+                            rounded
+                            type="clear"
+                            icon={faX}
+                            action="default"
+                            onClick={fadeOut}
+                          />
+                        </View>
+                      )}
                     </Box>
                   </Pressable>
                 </View>
