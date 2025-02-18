@@ -1,3 +1,4 @@
+import { currency as currencyMask } from "@/functions/text-manipulation";
 import { faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-icons";
 import React, { useEffect } from "react";
 import { TextInput, View } from "react-native";
@@ -8,6 +9,7 @@ export interface NumberInputProps {
   label?: string;
   placeholder?: string;
 
+  currency?: boolean;
   disabled?: boolean;
   secured?: boolean;
 
@@ -21,6 +23,7 @@ export default function NumberInput({
   label,
   placeholder,
 
+  currency,
   disabled,
   secured,
 
@@ -73,7 +76,7 @@ export default function NumberInput({
         } flex-1 flex flex-row justify-between items-center gap-2 min-h-fit min-w-fit border-2 rounded-lg border-background-200 overflow-hidden`}
       >
         <TextInput
-          value={text}
+          value={currency ? currencyMask(Number(text) / 100) : text}
           placeholder={placeholder}
           tabIndex={disabled ? -1 : 0}
           secureTextEntry={secured}
