@@ -2,10 +2,10 @@ import { Size } from "@/constants/ui/sizes";
 import { faCheck } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
-import { Pressable, View } from "react-native";
+import { Pressable, View, ViewProps } from "react-native";
 import Text from "../text/text";
 
-export interface CheckboxProps {
+export interface CheckboxProps extends ViewProps {
   label?: string;
   text?: string;
 
@@ -21,6 +21,7 @@ export default function Checkbox({
   text,
   size,
   disabled,
+  className,
   checked,
   onChange,
 }: CheckboxProps) {
@@ -28,7 +29,7 @@ export default function Checkbox({
 
   return (
     <Pressable
-      className="flex-1 flex flex-row items-center gap-2 max-h-fit z-[-1] min-w-fit outline-none"
+      className={`flex-1 flex flex-row items-center gap-2 max-h-fit z-[-1] min-w-fit outline-none ${className}`}
       onPointerEnter={() => setHovered(true)}
       onPointerLeave={() => setHovered(false)}
       onPress={() => onChange?.(!checked)}
@@ -36,12 +37,12 @@ export default function Checkbox({
       <View
         className={`${hovered ? "bg-primary-300 border-primary-200" : ""} ${
           disabled ? "!border-background-100" : "border-background-200"
-        } flex justify-center items-center w-6 h-6 rounded-lg bg-opacity-35 border-2 overflow-hidden transition-all duration-300`}
+        } flex justify-center items-center w-6 h-6 rounded-lg bg-opacity-35 border-2 overflow-hidden transition-all duration-150`}
       >
         <View
           className={`${
             checked ? "w-6 h-6" : "w-0 h-0"
-          } relative flex justify-center items-center bg-primary-300 rounded-full overflow-hidden transition-all duration-300`}
+          } relative flex justify-center items-center bg-primary-300 rounded-full overflow-hidden transition-all duration-150`}
         >
           <FontAwesomeIcon icon={faCheck} className="text-white" />
         </View>
