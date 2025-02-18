@@ -11,6 +11,8 @@ export interface NumberInputProps {
   disabled?: boolean;
   secured?: boolean;
 
+  inputClasses?: string;
+
   value?: number;
   onChange: React.Dispatch<React.SetStateAction<number | undefined>>;
 }
@@ -21,6 +23,8 @@ export default function NumberInput({
 
   disabled,
   secured,
+
+  inputClasses,
 
   value,
   onChange,
@@ -74,7 +78,7 @@ export default function NumberInput({
           tabIndex={disabled ? -1 : 0}
           secureTextEntry={secured}
           placeholderTextColor="#8b8b8b"
-          className={`flex-1 px-3 py-2 -my-0.5 color-white text-base outline-none transition-all`}
+          className={`flex-1 px-3 py-2 -my-0.5 color-white text-base outline-none transition-all ${inputClasses}`}
           onChangeText={(change) => setText(change.replace(/[^0-9]/g, ""))}
           onFocus={() => setFocused(true)}
           onBlur={() => setFocused(false)}
