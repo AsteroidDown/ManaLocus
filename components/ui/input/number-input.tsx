@@ -1,6 +1,6 @@
 import { currency as currencyMask } from "@/functions/text-manipulation";
 import { faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-icons";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { TextInput, View } from "react-native";
 import Button from "../button/button";
 import Text from "../text/text";
@@ -32,25 +32,19 @@ export default function NumberInput({
   value,
   onChange,
 }: NumberInputProps) {
-  const [text, setText] = React.useState(value ? String(value) : "");
+  const [text, setText] = useState(value ? String(value) : "");
 
-  const [hovered, setHovered] = React.useState(false);
-  const [focused, setFocused] = React.useState(false);
-
-  const [initial, setInitial] = React.useState(true);
+  const [hovered, setHovered] = useState(false);
+  const [focused, setFocused] = useState(false);
 
   useEffect(() => {
-    const delayDebounceFn = setTimeout(() => {
-      if (!text && value && initial) {
-        setText(String(value));
-        setInitial(false);
-      }
+    if (value !== Number(text)) setText(String(value));
+  }, [value]);
 
-      onChange(Number(text));
-    }, 300);
-
+  useEffect(() => {
+    const delayDebounceFn = setTimeout(() => onChange(Number(text)), 300);
     return () => clearTimeout(delayDebounceFn);
-  }, [value, text]);
+  }, [text]);
 
   return (
     <View

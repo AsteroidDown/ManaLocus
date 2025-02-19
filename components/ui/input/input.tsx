@@ -40,31 +40,18 @@ export default function Input({
   enterAction,
 }: InputProps) {
   const [text, setText] = React.useState(value ?? "");
-  const [debouncedText, setDebouncedText] = React.useState(text);
-  const [prevDebouncedText, setPrevDebouncedText] = React.useState(text);
 
   const [hovered, setHovered] = React.useState(false);
   const [focused, setFocused] = React.useState(false);
 
-  const [initial, setInitial] = React.useState(true);
+  useEffect(() => {
+    if (value !== text) setText(String(value));
+  }, [value]);
 
   useEffect(() => {
-    const delayDebounceFn = setTimeout(() => {
-      if (!text && value && initial) {
-        setText(value);
-        setInitial(false);
-      }
-
-      setDebouncedText(text);
-    }, 300);
-
+    const delayDebounceFn = setTimeout(() => onChange(text), 300);
     return () => clearTimeout(delayDebounceFn);
-  }, [value, text]);
-
-  useEffect(() => {
-    if (text !== prevDebouncedText) onChange(debouncedText);
-    setPrevDebouncedText(debouncedText);
-  }, [debouncedText]);
+  }, [text]);
 
   return (
     <View
