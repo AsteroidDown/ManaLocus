@@ -55,11 +55,18 @@ export default function UserLayout() {
   ];
 
   if (user?.id === userPageUser.id) {
-    tabs.push({
-      title: "Settings",
-      link: `users/${userPageUser.id}/settings`,
-      name: "settings",
-    });
+    tabs.push(
+      {
+        title: "Trades",
+        link: `users/${userPageUser.id}/trades`,
+        name: "settings",
+      },
+      {
+        title: "Settings",
+        link: `users/${userPageUser.id}/settings`,
+        name: "settings",
+      }
+    );
   }
 
   return (
