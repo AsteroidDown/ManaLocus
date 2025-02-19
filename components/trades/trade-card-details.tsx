@@ -9,8 +9,8 @@ import {
   faX,
 } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useState } from "react";
-import { Image, useWindowDimensions, View } from "react-native";
-import CardImage from "../cards/card-image";
+import { Image, Pressable, useWindowDimensions, View } from "react-native";
+import CardDetailedPreview from "../cards/card-detailed-preview";
 import Button from "../ui/button/button";
 import Checkbox from "../ui/checkbox/checkbox";
 import NumberInput from "../ui/input/number-input";
@@ -82,14 +82,16 @@ export default function TradeCardDetails({
       style={{ zIndex: zIndex ?? 0 }}
     >
       {width > 600 && (
-        <Image
-          className="min-w-28 max-w-32 aspect-[2.5/3.5]"
-          source={{
-            uri: tradeCard.card?.faces
-              ? tradeCard.card.faces.front.imageUris.png
-              : tradeCard.card.imageURIs?.png,
-          }}
-        />
+        <Pressable onPress={() => setOpen(true)}>
+          <Image
+            className="min-w-28 max-w-32 aspect-[2.5/3.5]"
+            source={{
+              uri: tradeCard.card?.faces
+                ? tradeCard.card.faces.front.imageUris.png
+                : tradeCard.card.imageURIs?.png,
+            }}
+          />
+        </Pressable>
       )}
 
       <View className="flex-1 flex flex-col gap-2">
@@ -109,10 +111,12 @@ export default function TradeCardDetails({
             />
           )}
 
-          <Text truncate size="lg" thickness="semi">
-            {readonly && `${tradeCard.count}  `}
-            {tradeCard.card.name}
-          </Text>
+          <Pressable onPress={() => setOpen(true)}>
+            <Text truncate size="lg" thickness="semi">
+              {readonly && `${tradeCard.count}  `}
+              {tradeCard.card.name}
+            </Text>
+          </Pressable>
 
           {!readonly && (
             <Button
@@ -211,7 +215,11 @@ export default function TradeCardDetails({
 
       <View className="-my-2 -mx-2">
         <Modal title={tradeCard.card.name} open={open} setOpen={setOpen}>
-          <CardImage card={tradeCard.card} />
+          <CardDetailedPreview
+            fullHeight
+            onLinkPress={() => setOpen(false)}
+            card={tradeCard.card}
+          />
         </Modal>
       </View>
     </View>
