@@ -32,7 +32,7 @@ export default function Checkbox({
       className={`flex-1 flex flex-row items-center gap-2 max-h-fit z-[-1] min-w-fit outline-none ${className}`}
       onPointerEnter={() => setHovered(true)}
       onPointerLeave={() => setHovered(false)}
-      onPress={() => onChange?.(!checked)}
+      onPress={() => !disabled && onChange?.(!checked)}
     >
       <View
         className={`${hovered ? "bg-primary-300 border-primary-200" : ""} ${
