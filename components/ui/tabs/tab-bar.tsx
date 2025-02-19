@@ -1,13 +1,7 @@
 import { faBars } from "@fortawesome/free-solid-svg-icons";
 import { Link, router, Stack } from "expo-router";
-import React from "react";
-import {
-  Linking,
-  Pressable,
-  useWindowDimensions,
-  View,
-  ViewProps,
-} from "react-native";
+import React, { useEffect } from "react";
+import { Pressable, useWindowDimensions, View, ViewProps } from "react-native";
 import Box from "../box/box";
 import Button from "../button/button";
 import Dropdown from "../dropdown/dropdown";
@@ -31,15 +25,22 @@ export default function TabBar({
 
   const [expanded, setExpanded] = React.useState(false);
 
-  Linking.getInitialURL().then((url) => {
-    if (!firstLoad || !tabs?.[0]?.link) return;
+  useEffect(() => {
+    if (!tabs?.[0]?.link) return;
+    let tabIndex = 0;
 
     tabs.forEach((tab, index) => {
-      if (url?.includes(tab.name || "")) {
-        setFirstLoad(false);
-        setFocusedIndex(index);
+      if (focusedIndex === index || tabIndex === index) return;
+
+      if (window.location.href?.includes(tab.link?.toString() || "")) {
+        tabIndex = index;
       }
     });
+
+    if (firstLoad && tabIndex !== focusedIndex) {
+      setFocusedIndex(tabIndex);
+      setFirstLoad(false);
+    }
   });
 
   return (
