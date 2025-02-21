@@ -169,7 +169,7 @@ export default function Select({
               : hovered
               ? "border-primary-200"
               : "border-background-200"
-          } ${disabled ? "!border-background-100" : ""} ${
+          } ${disabled ? "!border-dark-200 !bg-dark-100" : ""} ${
             open ? "!rounded-b-none" : ""
           } ${squareLeft ? "!rounded-l-none" : ""} ${
             squareRight ? "!rounded-r-none" : ""
@@ -209,7 +209,7 @@ export default function Select({
             tabIndex={disabled ? -1 : 0}
             placeholderTextColor="#8b8b8b"
             className={`flex-1 color-white text-base outline-none -mt-0.5`}
-            onFocus={() => onFocus()}
+            onFocus={() => (disabled ? null : onFocus())}
             onBlur={() => setTimeout(() => onBlur(), 200)}
             onChangeText={(change) => {
               setSearch(change);
@@ -219,13 +219,15 @@ export default function Select({
 
           <Pressable
             tabIndex={disabled ? -1 : 0}
-            onPress={() => setOpen(!open)}
+            onPress={() => (disabled ? null : setOpen(!open))}
             onBlur={() => setTimeout(() => onBlur(), 200)}
           >
             <FontAwesomeIcon
               icon={faChevronDown}
               className={`${open ? "rotate-180" : ""} ${
-                focused || open
+                disabled
+                  ? "text-dark-300"
+                  : focused || open
                   ? "text-primary-300"
                   : hovered
                   ? "text-primary-200"
