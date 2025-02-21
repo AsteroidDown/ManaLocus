@@ -73,7 +73,7 @@ export default function Modal({
                     >
                       {!!title && (
                         <View className="flex flex-row justify-between items-center gap-2">
-                          <View className="flex">
+                          <View className="flex-1 flex">
                             <Text size="lg" thickness="semi">
                               {title}
                             </Text>
@@ -88,7 +88,7 @@ export default function Modal({
                             type="clear"
                             icon={faX}
                             action="default"
-                            className="lg:hidden -mr-2 ml-auto"
+                            className="lg:hidden -mr-2 ml-auto self-start"
                             onClick={fadeOut}
                           />
                         </View>
