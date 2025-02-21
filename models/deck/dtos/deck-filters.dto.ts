@@ -2,6 +2,7 @@ import { BoardType } from "@/constants/boards";
 import { MTGFormat } from "@/constants/mtg/mtg-format";
 
 export interface DeckFiltersDTO {
+  userId?: string | null;
   search?: string | null;
   deckFormat?: MTGFormat | null;
   sort?: DeckSortType | null;
