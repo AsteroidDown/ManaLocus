@@ -36,10 +36,10 @@ export interface TradeCard {
   id: string;
   userId?: string;
   tradeId: string;
-  scryfallId: string;
+  scryfallId?: string;
 
-  card: Card;
+  card?: Card;
   count: number;
-  price: number;
+  price?: number;
   foil: boolean;
 }

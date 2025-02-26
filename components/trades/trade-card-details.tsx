@@ -1,6 +1,7 @@
 import { currency } from "@/functions/text-manipulation";
 import ScryfallService from "@/hooks/services/scryfall.service";
 import { Card } from "@/models/card/card";
+import { TradeCardDTO } from "@/models/trade/dtos/trade.dto";
 import { TradeCard } from "@/models/trade/trade";
 import {
   faMinus,
@@ -16,16 +17,17 @@ import Checkbox from "../ui/checkbox/checkbox";
 import NumberInput from "../ui/input/number-input";
 import Select from "../ui/input/select";
 import Modal from "../ui/modal/modal";
+import Skeleton from "../ui/skeleton/skeleton";
 import Text from "../ui/text/text";
 
 export interface TradeCardProps {
-  tradeCard: TradeCard;
+  tradeCard: TradeCard | TradeCardDTO;
 
   zIndex?: number;
   readonly?: boolean;
 
-  onChange?: (tradeCard: TradeCard) => void;
-  onDelete?: (tradeCard: TradeCard) => void;
+  onChange?: (tradeCard: TradeCard | TradeCardDTO) => void;
+  onDelete?: (tradeCard: TradeCard | TradeCardDTO) => void;
 }
 
 export default function TradeCardDetails({
@@ -45,8 +47,12 @@ export default function TradeCardDetails({
 
   const [open, setOpen] = useState(false);
 
+  const imageUri = tradeCard.card?.faces
+    ? tradeCard.card.faces.front.imageUris.png
+    : tradeCard.card?.imageURIs?.png;
+
   useEffect(() => {
-    if (prints.length > 1) return;
+    if (!print || prints.length > 1) return;
 
     ScryfallService.getCardPrints(print.name).then((prints) =>
       setPrints(prints)
@@ -69,7 +75,7 @@ export default function TradeCardDetails({
   }, [print]);
 
   useEffect(() => {
-    if (foil !== tradeCard.card.foil) tradeCard.foil = foil;
+    if (foil !== tradeCard.foil) tradeCard.foil = foil;
     if (price !== tradeCard.price) tradeCard.price = price;
     if (count !== tradeCard.count) tradeCard.count = count;
 
@@ -78,25 +84,29 @@ export default function TradeCardDetails({
 
   return (
     <View
-      className="flex lg:flex-row gap-4 bg-dark-100 rounded-lg px-4 py-2"
+      className="flex lg:flex-row gap-4 bg-dark-100 border-background-200 border-2 rounded-lg px-4 pt-2 pb-3"
       style={{ zIndex: zIndex ?? 0 }}
     >
-      {width > 600 && (
-        <Pressable onPress={() => setOpen(true)}>
-          <Image
-            className="min-w-28 max-w-32 aspect-[2.5/3.5]"
-            source={{
-              uri: tradeCard.card?.faces
-                ? tradeCard.card.faces.front.imageUris.png
-                : tradeCard.card.imageURIs?.png,
-            }}
-          />
-        </Pressable>
-      )}
+      <View className="flex justify-center -my-2">
+        {width > 600 ? (
+          imageUri ? (
+            <Pressable onPress={() => setOpen(true)}>
+              <Image
+                className="min-w-28 max-w-32 aspect-[2.5/3.5]"
+                source={{
+                  uri: imageUri,
+                }}
+              />
+            </Pressable>
+          ) : (
+            <Skeleton className="min-w-28 max-w-32 aspect-[2.5/3.5]" />
+          )
+        ) : null}
+      </View>
 
       <View className="flex-1 flex flex-col gap-2">
         <View
-          className={`flex justify-between items-center gap-2 ${
+          className={`flex justify-between items-center gap-2 max-h-8 ${
             readonly && width < 600 ? "flex-row-reverse" : "flex-row"
           }`}
         >
@@ -111,12 +121,16 @@ export default function TradeCardDetails({
             />
           )}
 
-          <Pressable onPress={() => setOpen(true)}>
-            <Text truncate size="lg" thickness="semi">
-              {readonly && `${tradeCard.count}  `}
-              {tradeCard.card.name}
-            </Text>
-          </Pressable>
+          {tradeCard.card ? (
+            <Pressable className="flex-1" onPress={() => setOpen(true)}>
+              <Text truncate size="lg" thickness="semi">
+                {readonly && `${tradeCard.count}  `}
+                {tradeCard.card?.name}
+              </Text>
+            </Pressable>
+          ) : (
+            <Skeleton className="flex-1 h-8 w-[80%]" />
+          )}
 
           {!readonly && (
             <Button
@@ -131,61 +145,77 @@ export default function TradeCardDetails({
         </View>
 
         <View className="flex flex-row items-center gap-2 z-[12]">
-          <Text thickness="semi" className="min-w-10">
-            Print
-          </Text>
-
-          {readonly ? (
-            <Text size="md" thickness="semi">
-              {`${print.set.toUpperCase()} ${print.collectorNumber}`}
+          {print !== undefined && (
+            <Text thickness="semi" className="min-w-10">
+              Print
             </Text>
+          )}
+
+          {print !== undefined ? (
+            readonly ? (
+              <Text size="md" thickness="semi">
+                {`${print.set.toUpperCase()} ${print.collectorNumber}`}
+              </Text>
+            ) : (
+              <Select
+                value={print}
+                onChange={setPrint}
+                options={prints.map((print) => ({
+                  label: `${print.set.toUpperCase()} ${print.collectorNumber}`,
+                  value: print,
+                }))}
+              />
+            )
           ) : (
-            <Select
-              value={print}
-              onChange={setPrint}
-              options={prints.map((print) => ({
-                label: `${print.set.toUpperCase()} ${print.collectorNumber}`,
-                value: print,
-              }))}
-            />
+            <Skeleton className="flex-1 h-10" />
           )}
         </View>
 
         <View className="flex flex-row items-center gap-2 z-[10]">
-          <Text thickness="semi" className="min-w-10">
-            Price
-          </Text>
-
-          {readonly ? (
-            <Text size="md" thickness="semi">
-              {currency((price || 0) / 100)}
+          {price !== undefined && (
+            <Text thickness="semi" className="min-w-10">
+              Price
             </Text>
+          )}
+
+          {price !== undefined ? (
+            readonly ? (
+              <Text size="md" thickness="semi">
+                {currency((price || 0) / 100)}
+              </Text>
+            ) : (
+              <NumberInput
+                currency
+                value={price}
+                inputClasses="max-w-[176px]"
+                onChange={(change) => setPrice(change ? Number(change) : 0)}
+              />
+            )
           ) : (
-            <NumberInput
-              currency
-              value={price}
-              inputClasses="max-w-[176px]"
-              onChange={(change) => setPrice(change ? Number(change) : 0)}
-            />
+            <Skeleton className="flex-1 h-10" />
           )}
         </View>
 
         <View className="flex flex-row justify-end items-center gap-4">
-          {readonly ? (
-            <Text thickness="semi" className="mr-auto">
-              {tradeCard.foil ? "Foil" : "Non-Foil"}
-            </Text>
+          {print !== undefined ? (
+            readonly ? (
+              <Text thickness="semi" className="mr-auto">
+                {tradeCard.foil ? "Foil" : "Non-Foil"}
+              </Text>
+            ) : (
+              <Checkbox
+                label="Foil"
+                checked={foil}
+                onChange={setFoil}
+                disabled={readonly}
+                className="!flex-row-reverse gap-[22px] !max-w-fit mr-auto"
+              />
+            )
           ) : (
-            <Checkbox
-              label="Foil"
-              checked={foil}
-              onChange={setFoil}
-              disabled={readonly}
-              className="!flex-row-reverse gap-[22px] !max-w-fit mr-auto"
-            />
+            <Skeleton className="w-24 h-10 mr-auto" />
           )}
 
-          {!readonly && (
+          {!readonly && tradeCard.card ? (
             <View className="flex flex-row">
               <Button
                 squareRight
@@ -209,18 +239,22 @@ export default function TradeCardDetails({
                 onClick={() => setCount((count || 0) + 1)}
               />
             </View>
+          ) : (
+            <Skeleton className="w-36 h-10" />
           )}
         </View>
       </View>
 
       <View className="-my-2 -mx-2">
-        <Modal title={tradeCard.card.name} open={open} setOpen={setOpen}>
-          <CardDetailedPreview
-            fullHeight
-            onLinkPress={() => setOpen(false)}
-            card={tradeCard.card}
-          />
-        </Modal>
+        {tradeCard.card && (
+          <Modal title={tradeCard.card.name} open={open} setOpen={setOpen}>
+            <CardDetailedPreview
+              fullHeight
+              onLinkPress={() => setOpen(false)}
+              card={tradeCard.card}
+            />
+          </Modal>
+        )}
       </View>
     </View>
   );

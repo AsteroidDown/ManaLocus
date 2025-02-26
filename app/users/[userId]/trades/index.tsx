@@ -14,7 +14,7 @@ import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { router } from "expo-router";
 import moment from "moment";
 import React, { useContext, useEffect, useRef, useState } from "react";
-import { SafeAreaView, View } from "react-native";
+import { SafeAreaView, useWindowDimensions, View } from "react-native";
 
 export default function UserFoldersPage() {
   const { user } = useContext(UserContext);
@@ -25,6 +25,8 @@ export default function UserFoldersPage() {
   const { setBodyHeight } = useContext(BodyHeightContext);
 
   const containerRef = useRef<View>(null);
+
+  const width = useWindowDimensions().width;
 
   const [page, setPage] = useState(1);
   const [meta, setMeta] = useState(null as PaginationMeta | null);
@@ -99,11 +101,15 @@ export default function UserFoldersPage() {
                     </Text>
                   ),
                 },
-                {
-                  center: true,
-                  title: "Total Trades",
-                  row: (trade) => <Text>{trade.tradeCount}</Text>,
-                },
+                ...(width > 600
+                  ? [
+                      {
+                        center: true,
+                        title: "Total Trades",
+                        row: (trade) => <Text>{trade.tradeCount}</Text>,
+                      } as TableColumn<TradeSummary>,
+                    ]
+                  : []),
                 {
                   title: "Last Trade",
                   row: (trade) => (

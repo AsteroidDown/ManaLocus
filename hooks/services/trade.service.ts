@@ -28,6 +28,13 @@ async function getBetweenUsers(
   });
 }
 
+async function getTotalBetweenUsers(
+  userId: string,
+  tradedToUserId: string
+): Promise<{ total: number }> {
+  return await API.get(`trades/${userId}/${tradedToUserId}/total/`);
+}
+
 async function get(
   userId: string,
   tradedToUserId: string,
@@ -52,6 +59,7 @@ const TradeService = {
   get,
   getUserSummaries,
   getBetweenUsers,
+  getTotalBetweenUsers,
   create,
   update,
   remove,
