@@ -1,6 +1,7 @@
 import Footer from "@/components/ui/navigation/footer";
 import Header from "@/components/ui/navigation/header";
 import LoadingView from "@/components/ui/navigation/loading";
+import ToastProvider from "@/components/ui/toast/toast-provider";
 import BodyHeightContext from "@/contexts/ui/body-height.context";
 import LoadingContext from "@/contexts/ui/loading.context";
 import UserPreferencesContext from "@/contexts/user/user-preferences.context";
@@ -11,14 +12,14 @@ import UserService from "@/hooks/services/user.service";
 import { UserPreferences } from "@/models/preferences/user-preferences";
 import { User } from "@/models/user/user";
 import { Stack } from "expo-router";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { ScrollView, View } from "react-native";
 
 export default function RootLayout() {
-  const [bodyHeight, setBodyHeight] = React.useState(0);
-  const [loading, setLoading] = React.useState(false);
-  const [user, setUser] = React.useState(null as User | null);
-  const [preferences, setPreferences] = React.useState(
+  const [bodyHeight, setBodyHeight] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const [user, setUser] = useState(null as User | null);
+  const [preferences, setPreferences] = useState(
     null as UserPreferences | null
   );
 
@@ -37,22 +38,24 @@ export default function RootLayout() {
       <UserPreferencesContext.Provider value={{ preferences, setPreferences }}>
         <BodyHeightContext.Provider value={{ bodyHeight, setBodyHeight }}>
           <LoadingContext.Provider value={{ loading, setLoading }}>
-            <Header />
+            <ToastProvider>
+              <Header />
 
-            <ScrollView className="flex w-full bg-background-100">
-              <View className="min-h-[100dvh]" style={{ height: bodyHeight }}>
-                <Stack screenOptions={{ headerShown: false }}>
-                  <Stack.Screen name="index" />
-                  <Stack.Screen name="users" />
-                  <Stack.Screen name="login" />
-                  <Stack.Screen name="+not-found" />
-                </Stack>
-              </View>
+              <ScrollView className="flex w-full bg-background-100">
+                <View className="min-h-[100dvh]" style={{ height: bodyHeight }}>
+                  <Stack screenOptions={{ headerShown: false }}>
+                    <Stack.Screen name="index" />
+                    <Stack.Screen name="users" />
+                    <Stack.Screen name="login/index" />
+                    <Stack.Screen name="+not-found" />
+                  </Stack>
+                </View>
 
-              <LoadingView />
+                <LoadingView />
 
-              <Footer />
-            </ScrollView>
+                <Footer />
+              </ScrollView>
+            </ToastProvider>
           </LoadingContext.Provider>
         </BodyHeightContext.Provider>
       </UserPreferencesContext.Provider>
