@@ -56,7 +56,7 @@ export default function Login() {
           />
         </View>
 
-        <DeckGallery userId={userPageUser.id} />
+        <DeckGallery noLoadScreen userId={userPageUser.id} />
       </View>
     </SafeAreaView>
   );

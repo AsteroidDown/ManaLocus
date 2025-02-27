@@ -17,6 +17,11 @@ import {
 import { titleCase } from "@/functions/text-manipulation";
 import { Card } from "@/models/card/card";
 import { Deck } from "@/models/deck/deck";
+import {
+  DeckCardGalleryGroupTypes,
+  DeckCardGallerySortTypes,
+  DeckCardGalleryViewTypes,
+} from "@/models/deck/deck-gallery-filters";
 import { faFilter } from "@fortawesome/free-solid-svg-icons";
 import React, { useContext, useEffect } from "react";
 import { useWindowDimensions, View, ViewProps } from "react-native";
@@ -25,35 +30,6 @@ import Checkbox from "../ui/checkbox/checkbox";
 import Select from "../ui/input/select";
 import Text from "../ui/text/text";
 import DeckColumn from "./deck-column";
-
-export type DeckCardGalleryViewType = "list" | "card";
-
-export enum DeckCardGalleryViewTypes {
-  LIST = "list",
-  CARD = "card",
-}
-
-export type DeckCardGallerySortType = "name" | "mana-value" | "price";
-
-export enum DeckCardGallerySortTypes {
-  NAME = "name",
-  MANA_VALUE = "mana-value",
-  PRICE = "price",
-}
-
-export type DeckCardGalleryGroupType =
-  | "type"
-  | "color"
-  | "mana-value"
-  | "rarity";
-
-export enum DeckCardGalleryGroupTypes {
-  TYPE = "type",
-  COLOR = "color",
-  MANA_VALUE = "mana-value",
-  RARITY = "rarity",
-  CUSTOM = "custom",
-}
 
 export type DeckCardGalleryProps = ViewProps & {
   deck: Deck;

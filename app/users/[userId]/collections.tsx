@@ -58,7 +58,7 @@ export default function UserCollectionsPage() {
           />
         </View>
 
-        <DeckGallery collections userId={userPageUser.id} />
+        <DeckGallery noLoadScreen collections userId={userPageUser.id} />
       </View>
     </SafeAreaView>
   );

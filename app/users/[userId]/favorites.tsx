@@ -25,7 +25,7 @@ export default function UserFavoritesPage() {
           )
         }
       >
-        <DeckGallery favorites userId={userPageUser.id} />
+        <DeckGallery noLoadScreen favorites userId={userPageUser.id} />
       </View>
     </SafeAreaView>
   );

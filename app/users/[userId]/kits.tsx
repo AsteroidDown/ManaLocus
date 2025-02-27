@@ -25,7 +25,7 @@ export default function UserKitsPage() {
           )
         }
       >
-        <DeckGallery kits userId={userPageUser.id} />
+        <DeckGallery noLoadScreen kits userId={userPageUser.id} />
       </View>
     </SafeAreaView>
   );
