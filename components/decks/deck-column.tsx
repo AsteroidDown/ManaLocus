@@ -4,6 +4,10 @@ import { groupCardsByColorMulti } from "@/functions/cards/card-grouping";
 import { evaluateCardLegality } from "@/functions/decks/deck-legality";
 import { currency, titleCase } from "@/functions/text-manipulation";
 import { Card } from "@/models/card/card";
+import {
+  DeckCardGalleryViewType,
+  DeckCardGalleryViewTypes,
+} from "@/models/deck/deck-gallery-filters";
 import React, { useEffect } from "react";
 import { Pressable, View } from "react-native";
 import CardDetailedPreview from "../cards/card-detailed-preview";
@@ -13,10 +17,6 @@ import CardViewMultipleModal from "../cards/card-view-multiple-modal";
 import Divider from "../ui/divider/divider";
 import Modal from "../ui/modal/modal";
 import Text from "../ui/text/text";
-import {
-  DeckCardGalleryViewType,
-  DeckCardGalleryViewTypes,
-} from "./deck-card-gallery";
 
 export interface DeckColumnCardGrouping {
   title: string;

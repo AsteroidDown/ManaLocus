@@ -42,6 +42,7 @@ export interface DeckGalleryProps {
   favorites?: boolean;
   includeIds?: string[];
   collections?: boolean;
+  noLoadScreen?: boolean;
   endColumns?: TableColumn<Deck>[];
 }
 
@@ -51,6 +52,7 @@ export default function DeckGallery({
   kits = false,
   favorites = false,
   collections = false,
+  noLoadScreen = false,
   endColumns,
 }: DeckGalleryProps) {
   const { user } = useContext(UserContext);
@@ -105,6 +107,8 @@ export default function DeckGallery({
   const [resultsText, setResultsText] = React.useState("");
 
   useEffect(() => {
+    if (noLoadScreen) return;
+
     if (!decks?.length && decksLoading) setLoading(true);
     else if (!decksLoading) setLoading(false);
 
