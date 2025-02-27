@@ -38,7 +38,7 @@ export default function NumberInput({
   const [focused, setFocused] = useState(false);
 
   useEffect(() => {
-    if (value !== Number(text)) setText(String(value));
+    if (value !== Number(text)) setText(String(value ?? 0));
   }, [value]);
 
   useEffect(() => {

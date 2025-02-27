@@ -45,7 +45,7 @@ export default function Input({
   const [focused, setFocused] = React.useState(false);
 
   useEffect(() => {
-    if (value !== text) setText(String(value));
+    if (value !== text) setText(String(value ?? ""));
   }, [value]);
 
   useEffect(() => {
