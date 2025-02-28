@@ -24,6 +24,7 @@ import { titleCase } from "@/functions/text-manipulation";
 import DeckService from "@/hooks/services/deck.service";
 import { Card } from "@/models/card/card";
 import { DeckDTO } from "@/models/deck/dtos/deck.dto";
+import { router } from "expo-router";
 import React, { useContext, useEffect, useRef } from "react";
 import { Image, SafeAreaView, View } from "react-native";
 
@@ -321,6 +322,15 @@ export default function DeckSettingsPage() {
           subtitle: `Your ${
             isKit ? "kit" : deck.isCollection ? "collection" : "deck"
           } has been saved`,
+          content: (
+            <Button
+              size="xs"
+              type="clear"
+              text="View Deck"
+              className="ml-auto"
+              onClick={() => router.push(`decks/${deck.id}`)}
+            />
+          ),
         });
       })
       .catch();

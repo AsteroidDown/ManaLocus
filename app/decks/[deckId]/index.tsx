@@ -1,6 +1,7 @@
 import DashboardSectionView from "@/components/dashboard/dashboard-section";
 import DeckCardGallery from "@/components/decks/deck-card-gallery";
 import DeckChangeLog from "@/components/decks/deck-change-log";
+import DeckDescription from "@/components/decks/deck-description";
 import DeckExampleHand from "@/components/decks/deck-example-hand";
 import DeckFooter from "@/components/decks/deck-footer";
 import DeckHeader from "@/components/decks/deck-header";
@@ -11,7 +12,6 @@ import Box from "@/components/ui/box/box";
 import Button from "@/components/ui/button/button";
 import Divider from "@/components/ui/divider/divider";
 import TabBar from "@/components/ui/tabs/tab-bar";
-import Text from "@/components/ui/text/text";
 import { BoardTypes } from "@/constants/boards";
 import { LegalityEvaluation } from "@/constants/mtg/mtg-legality";
 import DeckContext from "@/contexts/deck/deck.context";
@@ -96,7 +96,7 @@ export default function DeckPage() {
           <>
             <Divider thick className="!border-background-200" />
 
-            <Text>{deck.description}</Text>
+            <DeckDescription deck={deck} />
           </>
         )}
 
