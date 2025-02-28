@@ -93,7 +93,7 @@ export default function Header() {
 
         {width > 600 && (
           <View className="flex flex-row items-center gap-2">
-            {user ? (
+            {user?.name ? (
               <Link href={`/users/${user.id}`}>
                 <Button square type="clear" size="lg" text={user.name} />
               </Link>

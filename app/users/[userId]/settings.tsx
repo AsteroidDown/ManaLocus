@@ -8,6 +8,7 @@ import Text from "@/components/ui/text/text";
 import { EmailMask } from "@/constants/masks/text-masks";
 import { SortType, SortTypes } from "@/constants/sorting";
 import BodyHeightContext from "@/contexts/ui/body-height.context";
+import ToastContext from "@/contexts/ui/toast.context";
 import UserPageContext from "@/contexts/user/user-page.context";
 import UserPreferencesContext from "@/contexts/user/user-preferences.context";
 import UserContext from "@/contexts/user/user.context";
@@ -40,6 +41,7 @@ interface PasswordErrors {
 }
 
 export default function UserSettingsPage() {
+  const { addToast } = useContext(ToastContext);
   const { user, setUser } = useContext(UserContext);
   const { userPageUser } = useContext(UserPageContext);
   const { preferences, setPreferences } = useContext(UserPreferencesContext);
@@ -201,8 +203,14 @@ export default function UserSettingsPage() {
 
   function logout() {
     UserService.logout().then(() => {
-      setUser(null);
-      router.push("../..");
+      router.push("");
+      setUser(user ? { ...user, name: "" } : null);
+
+      addToast({
+        action: "success",
+        title: "Logged Out!",
+        subtitle: "You have successfully been logged out",
+      });
     });
   }
 

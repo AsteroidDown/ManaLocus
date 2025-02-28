@@ -85,12 +85,12 @@ async function refresh() {
 }
 
 async function logout() {
-  localStorage.removeItem("user-access");
-  localStorage.removeItem("user-refresh");
-
-  return await API.delete(`users/logout/`).catch((error) =>
-    console.error(`Error logging out: ${error}`)
-  );
+  return await API.post(`users/logout/`)
+    .then(() => {
+      localStorage.removeItem("user-access");
+      localStorage.removeItem("user-refresh");
+    })
+    .catch((error) => console.error(`Error logging out: ${error}`));
 }
 
 const UserService = {
