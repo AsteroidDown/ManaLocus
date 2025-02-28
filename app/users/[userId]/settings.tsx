@@ -1,8 +1,3 @@
-import {
-  DeckCardGalleryGroupTypes,
-  DeckCardGallerySortTypes,
-  DeckCardGalleryViewTypes,
-} from "@/components/decks/deck-card-gallery";
 import Button from "@/components/ui/button/button";
 import Checkbox from "@/components/ui/checkbox/checkbox";
 import CollapsableSection from "@/components/ui/collapsable-section/collapsable-section";
@@ -22,6 +17,11 @@ import {
 } from "@/functions/local-storage/user-preferences-local-storage";
 import { titleCase } from "@/functions/text-manipulation";
 import UserService from "@/hooks/services/user.service";
+import {
+  DeckCardGalleryGroupTypes,
+  DeckCardGallerySortTypes,
+  DeckCardGalleryViewTypes,
+} from "@/models/deck/deck-gallery-filters";
 import {
   DeckSortType,
   DeckSortTypes,

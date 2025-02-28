@@ -1,4 +1,3 @@
-import { DeckCardGalleryViewTypes } from "@/components/decks/deck-card-gallery";
 import DeckColumn from "@/components/decks/deck-column";
 import BoxHeader from "@/components/ui/box/box-header";
 import Button from "@/components/ui/button/button";
@@ -10,6 +9,7 @@ import DeckContext from "@/contexts/deck/deck.context";
 import BodyHeightContext from "@/contexts/ui/body-height.context";
 import { groupCardsByRarity } from "@/functions/cards/card-grouping";
 import { Card } from "@/models/card/card";
+import { DeckCardGalleryViewTypes } from "@/models/deck/deck-gallery-filters";
 import React, { useContext, useEffect, useRef } from "react";
 import { SafeAreaView, View } from "react-native";
 

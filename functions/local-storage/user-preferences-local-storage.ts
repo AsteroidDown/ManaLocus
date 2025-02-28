@@ -1,9 +1,9 @@
+import { SortTypes } from "@/constants/sorting";
 import {
   DeckCardGalleryGroupTypes,
   DeckCardGallerySortTypes,
   DeckCardGalleryViewTypes,
-} from "@/components/decks/deck-card-gallery";
-import { SortTypes } from "@/constants/sorting";
+} from "@/models/deck/deck-gallery-filters";
 import {
   DeckSortTypes,
   DeckViewType,
