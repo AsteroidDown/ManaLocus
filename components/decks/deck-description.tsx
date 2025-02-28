@@ -62,7 +62,7 @@ export default function DeckDescription({ deck }: DeckDescriptionProps) {
   }, [card]);
 
   return (
-    <View className="flex">
+    <View className="flex px-4">
       <Text>
         {sections.map((section, index) => (
           <Text key={index}>
