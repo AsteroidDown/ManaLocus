@@ -9,6 +9,7 @@ import { MTGColor, MTGColors } from "@/constants/mtg/mtg-colors";
 import { MTGRarities, MTGRarity } from "@/constants/mtg/mtg-rarity";
 import { MTGCardType, MTGCardTypes } from "@/constants/mtg/mtg-types";
 import DashboardContext from "@/contexts/dashboard/dashboard.context";
+import ToastContext from "@/contexts/ui/toast.context";
 import {
   addLocalStorageDashboardItem,
   getLocalStorageDashboard,
@@ -19,7 +20,6 @@ import { DashboardItem } from "@/models/dashboard/dashboard";
 import { CardFilterSortType } from "@/models/sorted-cards/sorted-cards";
 import {
   faChartSimple,
-  faCheck,
   faInfoCircle,
   faRotate,
 } from "@fortawesome/free-solid-svg-icons";
@@ -42,11 +42,11 @@ export default function CardSaveAsGraphModal({
   open,
   setOpen,
 }: CardSaveAsGraphModalProps) {
+  const { addToast } = useContext(ToastContext);
   const { setDashboard } = useContext(DashboardContext);
 
   const [disabled, setDisabled] = React.useState(false);
   const [error, setError] = React.useState(false);
-  const [success, setSuccess] = React.useState(false);
 
   const [sortType, setSortType] = React.useState(
     (item ? item.sortType : type) as CardFilterSortType
@@ -96,15 +96,17 @@ export default function CardSaveAsGraphModal({
 
     setDashboard(getLocalStorageDashboard());
 
-    setTimeout(() => {
-      setSuccess(true);
-      setDisabled(false);
-    }, 500);
+    setDisabled(false);
 
-    setTimeout(() => {
-      setSuccess(false);
-      if (item) setOpen(false);
-    }, 2000);
+    if (item) setOpen(false);
+
+    addToast({
+      action: "success",
+      title: `${item ? "Graph Updated" : "Graph Created"}!`,
+      subtitle: `${
+        item ? "Your graph has been updated" : "Your graph has been created"
+      }`,
+    });
   }
 
   return (
@@ -210,25 +212,13 @@ export default function CardSaveAsGraphModal({
           type="outlined"
           className="mt-4"
           disabled={disabled}
-          action={success ? "success" : error ? "danger" : "primary"}
-          icon={
-            disabled
-              ? faRotate
-              : success
-              ? faCheck
-              : error
-              ? faInfoCircle
-              : faChartSimple
-          }
+          action={error ? "danger" : "primary"}
+          icon={disabled ? faRotate : error ? faInfoCircle : faChartSimple}
           text={
             disabled
               ? item
                 ? "Updating Graph..."
                 : "Creating Graph..."
-              : success
-              ? item
-                ? "Graph Updated! Closing..."
-                : "Graph Created!"
               : error
               ? "Error Creating Graph!"
               : item

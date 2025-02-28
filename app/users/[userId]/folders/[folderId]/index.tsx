@@ -6,6 +6,7 @@ import Modal from "@/components/ui/modal/modal";
 import Placeholder from "@/components/ui/placeholder/placeholder";
 import Text from "@/components/ui/text/text";
 import BodyHeightContext from "@/contexts/ui/body-height.context";
+import ToastContext from "@/contexts/ui/toast.context";
 import UserPageContext from "@/contexts/user/user-page.context";
 import UserContext from "@/contexts/user/user.context";
 import FolderService from "@/hooks/services/folder.service";
@@ -94,6 +95,7 @@ export default function FolderPage() {
 
       {deckIds?.length > 0 ? (
         <DeckGallery
+          noLoadScreen
           includeIds={deckIds}
           endColumns={[
             {
@@ -146,25 +148,26 @@ export function FolderRemoveDeckModal({
   setDeckIds,
 }: FolderRemoveDeckModalProps) {
   const { user } = useContext(UserContext);
+  const { addToast } = useContext(ToastContext);
 
   const [open, setOpen] = React.useState(false);
 
   const [saving, setSaving] = React.useState(false);
-  const [success, setSuccess] = React.useState(false);
 
   function removeDeck() {
     if (!user) return;
 
     setSaving(true);
     FolderService.removeDeck(user.id, folder.id, deck.id).then(() => {
+      setOpen(false);
       setSaving(false);
-      setSuccess(true);
       setDeckIds(deckIds.filter((id) => id !== deck.id));
 
-      setTimeout(() => {
-        setSuccess(false);
-        setOpen(false);
-      }, 2000);
+      addToast({
+        action: "info",
+        title: `${deck.name} removed from ${folder.name}`,
+        subtitle: "Your deck has been removed from the folder",
+      });
     });
   }
 
@@ -190,11 +193,9 @@ export function FolderRemoveDeckModal({
 
           <View className="flex flex-row justify-end">
             <Button
+              action="danger"
               disabled={saving}
-              action={success ? "success" : "danger"}
-              text={
-                saving ? "Removing..." : success ? "Deck Removed" : "Remove"
-              }
+              text={saving ? "Removing..." : "Remove"}
               onClick={removeDeck}
             />
           </View>

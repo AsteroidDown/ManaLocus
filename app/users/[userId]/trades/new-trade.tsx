@@ -6,6 +6,7 @@ import Divider from "@/components/ui/divider/divider";
 import Select from "@/components/ui/input/select";
 import Text from "@/components/ui/text/text";
 import BodyHeightContext from "@/contexts/ui/body-height.context";
+import ToastContext from "@/contexts/ui/toast.context";
 import UserContext from "@/contexts/user/user.context";
 import { currency } from "@/functions/text-manipulation";
 import DeckService from "@/hooks/services/deck.service";
@@ -22,6 +23,7 @@ import { SafeAreaView, View } from "react-native";
 export default function NewTradePage() {
   const { user } = useContext(UserContext);
   const { setBodyHeight } = useContext(BodyHeightContext);
+  const { addToast } = useContext(ToastContext);
 
   const buffer = 164;
 
@@ -78,7 +80,6 @@ export default function NewTradePage() {
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
-  const [success, setSuccess] = useState(false);
 
   useEffect(() => {
     if (!tradedToUser) return;
@@ -284,15 +285,17 @@ export default function NewTradePage() {
       setLoading(false);
 
       if ((response as any).message === "Trade created!") {
-        setSuccess(true);
-        setTimeout(() => {
-          setSuccess(false);
-          if (tradedToUser) {
-            router.push(`users/${user.id}/trades/${tradedToUser.id}`);
-          } else {
-            router.push(`users/${user.id}/trades`);
-          }
-        }, 2000);
+        addToast({
+          action: "success",
+          title: "Trade Created!",
+          subtitle: "You can now view the details of your trade.",
+        });
+
+        if (tradedToUser) {
+          router.push(`users/${user.id}/trades/${tradedToUser.id}`);
+        } else {
+          router.push(`users/${user.id}/trades`);
+        }
       } else {
         setError(true);
         setTimeout(() => setError(false), 2000);
@@ -498,7 +501,7 @@ export default function NewTradePage() {
         <Divider thick className="!border-background-200" />
 
         <View className="flex flex-row gap-4 justify-end mt-4">
-          <View className="lg: flex-[0] flex-1 flex gap-4 lg:min-w-fit min-w-full">
+          <View className="lg:flex-[0] flex-1 flex gap-4 lg:min-w-fit min-w-full">
             <Text size="md" thickness="medium" className="ml-auto">
               {tradingUserCards?.length > 0 || tradedToUserCards?.length > 0
                 ? evenTrade
@@ -541,16 +544,8 @@ export default function NewTradePage() {
 
               <Button
                 className="lg:max-w-fit lg:self-end"
-                action={error ? "danger" : success ? "success" : "primary"}
-                text={
-                  loading
-                    ? "Saving..."
-                    : error
-                    ? "Error"
-                    : success
-                    ? "Trade Saved!"
-                    : "Save Trade"
-                }
+                action={error ? "danger" : "primary"}
+                text={loading ? "Saving..." : error ? "Error" : "Save Trade"}
                 disabled={
                   loading ||
                   (!tradingUserCards?.length && !tradedToUserCards?.length)

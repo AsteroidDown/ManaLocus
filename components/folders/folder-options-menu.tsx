@@ -5,6 +5,7 @@ import Button from "@/components/ui/button/button";
 import Dropdown from "@/components/ui/dropdown/dropdown";
 import Modal from "@/components/ui/modal/modal";
 import Text from "@/components/ui/text/text";
+import ToastContext from "@/contexts/ui/toast.context";
 import UserContext from "@/contexts/user/user.context";
 import FolderService from "@/hooks/services/folder.service";
 import { DeckFolder } from "@/models/folder/folder";
@@ -29,6 +30,7 @@ export function FolderOptionsMenu({
   setSelectedFolderId,
 }: FolderOptionsMenuProps) {
   const { user } = useContext(UserContext);
+  const { addToast } = useContext(ToastContext);
 
   const [dropdownOpen, setDropdownOpen] = React.useState(false);
   const [addDeckOpen, setAddDeckOpen] = React.useState(false);
@@ -36,7 +38,6 @@ export function FolderOptionsMenu({
   const [removeFolderOpen, setRemoveFolderOpen] = React.useState(false);
 
   const [saving, setSaving] = React.useState(false);
-  const [success, setSuccess] = React.useState(false);
 
   function removeFolder() {
     if (!user) return;
@@ -44,12 +45,14 @@ export function FolderOptionsMenu({
 
     FolderService.remove(user.id, folder.id).then(() => {
       setSaving(false);
-      setSuccess(true);
+      setRemoveFolderOpen(false);
+      setSelectedFolderId("-1");
 
-      setTimeout(() => {
-        setSuccess(false);
-        setSelectedFolderId(folder.id);
-      }, 2000);
+      addToast({
+        action: "info",
+        title: `${folder.name} Removed`,
+        subtitle: "Your folder has been removed",
+      });
     });
   }
 
@@ -139,12 +142,10 @@ export function FolderOptionsMenu({
 
             <View className="flex flex-row justify-end">
               <Button
+                action="danger"
                 icon={faTrash}
                 disabled={saving}
-                action={success ? "success" : "danger"}
-                text={
-                  saving ? "Removing..." : success ? "Folder Removed" : "Remove"
-                }
+                text={saving ? "Removing..." : "Remove"}
                 onClick={removeFolder}
               />
             </View>

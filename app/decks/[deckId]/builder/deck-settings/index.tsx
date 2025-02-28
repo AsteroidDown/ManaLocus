@@ -13,6 +13,7 @@ import StoredCardsContext from "@/contexts/cards/stored-cards.context";
 import DeckContext from "@/contexts/deck/deck.context";
 import BodyHeightContext from "@/contexts/ui/body-height.context";
 import BuilderHeightContext from "@/contexts/ui/builder-height.context";
+import ToastContext from "@/contexts/ui/toast.context";
 import { getCardType } from "@/functions/cards/card-information";
 import { getLocalStorageStoredCards } from "@/functions/local-storage/card-local-storage";
 import { getLocalStorageDashboard } from "@/functions/local-storage/dashboard-local-storage";
@@ -27,6 +28,7 @@ import React, { useContext, useEffect, useRef } from "react";
 import { Image, SafeAreaView, View } from "react-native";
 
 export default function DeckSettingsPage() {
+  const { addToast } = useContext(ToastContext);
   const { storedCards } = useContext(StoredCardsContext);
   const { setBodyHeight } = useContext(BodyHeightContext);
   const { setBuilderHeight } = useContext(BuilderHeightContext);
@@ -309,14 +311,19 @@ export default function DeckSettingsPage() {
       kits: getLocalStorageKits().map((kit) => kit.id),
     };
 
-    DeckService.update(deck.id, dto).then(() => {
-      setSaved(true);
-      setSaving(false);
+    DeckService.update(deck.id, dto)
+      .then(() => {
+        setSaving(false);
 
-      setTimeout(() => {
-        setSaved(false);
-      }, 2000);
-    });
+        addToast({
+          action: "success",
+          title: `${name ?? "Deck"} Saved!`,
+          subtitle: `Your ${
+            isKit ? "kit" : deck.isCollection ? "collection" : "deck"
+          } has been saved`,
+        });
+      })
+      .catch();
   }
 
   return (
@@ -336,8 +343,7 @@ export default function DeckSettingsPage() {
           end={
             <Button
               disabled={saving}
-              action={saved ? "success" : "primary"}
-              text={saving ? "Saving..." : saved ? "Saved!" : "Save"}
+              text={saving ? "Saving..." : "Save"}
               onClick={() => saveDeck()}
             />
           }

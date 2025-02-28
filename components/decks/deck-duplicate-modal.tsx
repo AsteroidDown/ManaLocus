@@ -1,9 +1,10 @@
 import Text from "@/components/ui/text/text";
 import { BoardTypes } from "@/constants/boards";
+import ToastContext from "@/contexts/ui/toast.context";
 import DeckService from "@/hooks/services/deck.service";
 import { Deck } from "@/models/deck/deck";
 import { router } from "expo-router";
-import React from "react";
+import React, { useContext } from "react";
 import { View } from "react-native";
 import Button from "../ui/button/button";
 import Input from "../ui/input/input";
@@ -22,10 +23,11 @@ export default function DeckDuplicateModal({
   open,
   setOpen,
 }: DeckDuplicateModalProps) {
+  const { addToast } = useContext(ToastContext);
+
   const [name, setName] = React.useState(deck.name);
 
   const [saving, setSaving] = React.useState(false);
-  const [success, setSuccess] = React.useState(false);
 
   function copyDeck() {
     if (!name) return;
@@ -80,14 +82,18 @@ export default function DeckDuplicateModal({
 
     DeckService.create(dto).then((response) => {
       setSaving(false);
-      setSuccess(true);
 
-      setTimeout(() => {
-        setSuccess(false);
-        setOpen(false);
+      setOpen(false);
 
-        router.push(`decks/${response.deckId}/builder/main-board`);
-      }, 2000);
+      router.push(`decks/${response.deckId}/builder/main-board`);
+
+      addToast({
+        action: "success",
+        title: `${name ?? deck.name ?? "Deck"} Duplicated!`,
+        subtitle: `Your ${
+          deck.isKit ? "kit" : deck.isCollection ? "collection" : "deck"
+        } is ready to be built!`,
+      });
     });
   }
 
@@ -113,8 +119,7 @@ export default function DeckDuplicateModal({
         <View className="flex flex-row justify-end">
           <Button
             disabled={!deck.name || saving}
-            action={success ? "success" : "primary"}
-            text={saving ? "Saving..." : success ? "Saved!" : "Save"}
+            text={saving ? "Saving..." : "Save"}
             onClick={() => copyDeck()}
           />
         </View>

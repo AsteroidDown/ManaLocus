@@ -8,6 +8,7 @@ import { SortType } from "@/constants/sorting";
 import BoardContext from "@/contexts/cards/board.context";
 import StoredCardsContext from "@/contexts/cards/stored-cards.context";
 import DeckContext from "@/contexts/deck/deck.context";
+import ToastContext from "@/contexts/ui/toast.context";
 import { filterCards } from "@/functions/cards/card-filtering";
 import { sortCards } from "@/functions/cards/card-sorting";
 import {
@@ -18,7 +19,6 @@ import {
 import ScryfallService from "@/hooks/services/scryfall.service";
 import { Card, CardIdentifier } from "@/models/card/card";
 import {
-  faCheck,
   faFileArrowDown,
   faFileArrowUp,
   faFilter,
@@ -64,6 +64,7 @@ export default function CardImportExportModal({
     setPartner,
   } = useContext(DeckContext);
   const { board } = useContext(BoardContext);
+  const { addToast } = useContext(ToastContext);
   const { setStoredCards } = useContext(StoredCardsContext);
 
   const [filtersOpen, setFiltersOpen] = React.useState(false);
@@ -87,10 +88,8 @@ export default function CardImportExportModal({
   const [cards, setCards] = React.useState("");
   const [disabled, setDisabled] = React.useState(false);
   const [error, setError] = React.useState(false);
-  const [success, setSuccess] = React.useState(false);
 
   const [copyDisabled, setCopyDisabled] = React.useState(false);
-  const [copySuccess, setCopySuccess] = React.useState(false);
 
   useEffect(() => {
     setCards(getCardsForExport());
@@ -281,8 +280,11 @@ export default function CardImportExportModal({
 
           setStoredCards(newCards);
           setDisabled(false);
-          setSuccess(true);
-          setTimeout(() => setSuccess(false), 3000);
+          addToast({
+            action: "success",
+            title: "Cards Imported!",
+            subtitle: "Your cards have been imported",
+          });
         }
       );
     }
@@ -465,21 +467,13 @@ export default function CardImportExportModal({
               type="outlined"
               className="flex-1 min-w-[250px]"
               disabled={disabled}
-              action={success ? "success" : error ? "danger" : "primary"}
+              action={error ? "danger" : "primary"}
               icon={
-                disabled
-                  ? faRotate
-                  : success
-                  ? faCheck
-                  : error
-                  ? faInfoCircle
-                  : faFileArrowDown
+                disabled ? faRotate : error ? faInfoCircle : faFileArrowDown
               }
               text={
                 disabled
                   ? "Importing..."
-                  : success
-                  ? "Cards Imported!"
                   : error
                   ? "Error Importing Cards!"
                   : "Import from Clipboard"
@@ -495,29 +489,21 @@ export default function CardImportExportModal({
             type="outlined"
             className="flex-1 min-w-[250px]"
             disabled={copyDisabled}
-            action={copySuccess ? "success" : "primary"}
-            icon={
-              copySuccess ? faCheck : copyDisabled ? faRotate : faFileArrowUp
-            }
-            text={
-              copySuccess
-                ? "Copied to Clipboard!"
-                : copyDisabled
-                ? "Copying..."
-                : "Copy to Clipboard"
-            }
+            icon={copyDisabled ? faRotate : faFileArrowUp}
+            text={copyDisabled ? "Copying..." : "Copy to Clipboard"}
             onClick={() => {
               setCopyDisabled(true);
 
               setTimeout(() => {
                 setCopyDisabled(false);
-                setCopySuccess(true);
                 navigator.clipboard.writeText(cards);
-              }, 500);
 
-              setTimeout(() => {
-                setCopySuccess(false);
-              }, 2000);
+                addToast({
+                  action: "success",
+                  title: "Cards Copied!",
+                  subtitle: "Your cards have been copied to the clipboard",
+                });
+              }, 500);
             }}
           />
         </View>

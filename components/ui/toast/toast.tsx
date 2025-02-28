@@ -112,7 +112,7 @@ export default function Toast({
           size="sm"
           action="default"
           className="self-start !p-0"
-          onClick={() => onClose?.()}
+          onClick={fadeOut}
         />
       </View>
 

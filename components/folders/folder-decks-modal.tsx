@@ -3,6 +3,7 @@ import Input from "@/components/ui/input/input";
 import Modal from "@/components/ui/modal/modal";
 import Pagination from "@/components/ui/pagination/pagination";
 import Text from "@/components/ui/text/text";
+import ToastContext from "@/contexts/ui/toast.context";
 import UserContext from "@/contexts/user/user.context";
 import { PaginationMeta } from "@/hooks/pagination";
 import DeckService from "@/hooks/services/deck.service";
@@ -31,6 +32,7 @@ export default function FolderDecksModal({
   setOpen,
 }: FolderDecksModalProps) {
   const { user } = useContext(UserContext);
+  const { addToast } = useContext(ToastContext);
 
   const [page, setPage] = React.useState(1);
   const [search, setSearch] = React.useState("");
@@ -51,18 +53,30 @@ export default function FolderDecksModal({
     });
   }, [search, page]);
 
-  function toggleDeckInFolder(deckId: string) {
+  function toggleDeckInFolder(deck: Deck) {
     if (!user) return;
 
-    if (folder.deckIds.includes(deckId)) {
-      FolderService.removeDeck(user.id, folder.id, deckId).then(() => {
-        setSelectedFolderId?.(deckId);
-        folder.deckIds.splice(folder.deckIds.indexOf(deckId), 1);
+    if (folder.deckIds.includes(deck.id)) {
+      FolderService.removeDeck(user.id, folder.id, deck.id).then(() => {
+        setSelectedFolderId?.(deck.id);
+        folder.deckIds.splice(folder.deckIds.indexOf(deck.id), 1);
+
+        addToast({
+          action: "info",
+          title: `${deck.name} Removed from ${folder.name}`,
+          subtitle: "Your deck has been removed from the folder",
+        });
       });
     } else {
-      FolderService.addDeck(user.id, folder.id, deckId).then(() => {
-        setSelectedFolderId?.(deckId);
-        folder.deckIds.push(deckId);
+      FolderService.addDeck(user.id, folder.id, deck.id).then(() => {
+        setSelectedFolderId?.(deck.id);
+        folder.deckIds.push(deck.id);
+
+        addToast({
+          action: "success",
+          title: `${deck.name} Added to ${folder.name}`,
+          subtitle: "Your deck has been added to the folder",
+        });
       });
     }
   }
@@ -86,7 +100,7 @@ export default function FolderDecksModal({
           hideFavorites
           hideViews
           decks={decks}
-          rowClick={(deck) => toggleDeckInFolder(deck.id)}
+          rowClick={(deck) => toggleDeckInFolder(deck)}
           endColumns={[
             {
               fit: true,

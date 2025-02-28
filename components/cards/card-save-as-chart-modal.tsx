@@ -9,6 +9,7 @@ import { MTGColor, MTGColors } from "@/constants/mtg/mtg-colors";
 import { MTGRarities, MTGRarity } from "@/constants/mtg/mtg-rarity";
 import { MTGCardType, MTGCardTypes } from "@/constants/mtg/mtg-types";
 import DashboardContext from "@/contexts/dashboard/dashboard.context";
+import ToastContext from "@/contexts/ui/toast.context";
 import {
   addLocalStorageDashboardItem,
   getLocalStorageDashboard,
@@ -17,7 +18,6 @@ import {
 import { titleCase } from "@/functions/text-manipulation";
 import { DashboardItem } from "@/models/dashboard/dashboard";
 import {
-  faCheck,
   faInfoCircle,
   faRotate,
   faTable,
@@ -42,11 +42,11 @@ export default function CardSaveAsChartModal({
   open,
   setOpen,
 }: CardSaveAsChartModalProps) {
+  const { addToast } = useContext(ToastContext);
   const { setDashboard } = useContext(DashboardContext);
 
   const [disabled, setDisabled] = React.useState(false);
   const [error, setError] = React.useState(false);
-  const [success, setSuccess] = React.useState(false);
 
   const [sortType, setSortType] = React.useState(
     (item ? item.sortType : type) as ChartType
@@ -92,15 +92,16 @@ export default function CardSaveAsChartModal({
 
     setDashboard(getLocalStorageDashboard());
 
-    setTimeout(() => {
-      setSuccess(true);
-      setDisabled(false);
-    }, 500);
+    setDisabled(false);
 
-    setTimeout(() => {
-      setSuccess(false);
-      if (item) setOpen(false);
-    }, 2000);
+    if (item) setOpen(false);
+    addToast({
+      action: "success",
+      title: `${item ? "Chart Updated" : "Chart Created"}!`,
+      subtitle: `${
+        item ? "Your chart has been updated" : "Your chart has been created"
+      }`,
+    });
   }
 
   return (
@@ -206,25 +207,13 @@ export default function CardSaveAsChartModal({
           type="outlined"
           className="mt-4"
           disabled={disabled || colorFilter?.length === 0}
-          action={success ? "success" : error ? "danger" : "primary"}
-          icon={
-            disabled
-              ? faRotate
-              : success
-              ? faCheck
-              : error
-              ? faInfoCircle
-              : faTable
-          }
+          action={error ? "danger" : "primary"}
+          icon={disabled ? faRotate : error ? faInfoCircle : faTable}
           text={
             disabled
               ? item
                 ? "Updating Chart..."
                 : "Creating Chart..."
-              : success
-              ? item
-                ? "Chart Updated! Closing..."
-                : "Chart Created!"
               : error
               ? "Error Creating Chart!"
               : item

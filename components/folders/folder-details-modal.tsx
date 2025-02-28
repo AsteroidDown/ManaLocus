@@ -1,9 +1,11 @@
 import Input from "@/components/ui/input/input";
 import Modal from "@/components/ui/modal/modal";
 import Text from "@/components/ui/text/text";
+import ToastContext from "@/contexts/ui/toast.context";
 import UserContext from "@/contexts/user/user.context";
 import FolderService from "@/hooks/services/folder.service";
 import { DeckFolder } from "@/models/folder/folder";
+import { router } from "expo-router";
 import React, { useContext, useEffect } from "react";
 import { View } from "react-native";
 import Button from "../ui/button/button";
@@ -24,11 +26,11 @@ export default function FolderDetailsModal({
   setOpen,
 }: FolderDetailsModalProps) {
   const { user } = useContext(UserContext);
+  const { addToast } = useContext(ToastContext);
 
   const [name, setName] = React.useState("");
 
   const [saving, setSaving] = React.useState(false);
-  const [success, setSuccess] = React.useState(false);
 
   useEffect(() => {
     if (!folder) return;
@@ -41,15 +43,30 @@ export default function FolderDetailsModal({
     setSaving(true);
 
     FolderService.create(user.id, name ?? "New Folder").then((response) => {
+      setName("");
+      setOpen(false);
       setSaving(false);
-      setSuccess(true);
       setSelectedFolderId?.((response as any).folderId);
 
-      setTimeout(() => {
-        setSuccess(false);
-        setName("");
-        setOpen(false);
-      }, 2000);
+      addToast({
+        action: "success",
+        duration: 5000,
+        title: `${name ?? "Folder"} Created!`,
+        subtitle: "You can now view the details of your folder",
+        content: (
+          <Button
+            size="xs"
+            type="clear"
+            text="View Folder"
+            className="ml-auto"
+            onClick={() =>
+              router.push(
+                `users/${user.id}/folders/${(response as any).folderId}`
+              )
+            }
+          />
+        ),
+      });
     });
   }
 
@@ -58,15 +75,16 @@ export default function FolderDetailsModal({
     setSaving(true);
 
     FolderService.update(user.id, folder.id, name).then(() => {
+      setName("");
+      setOpen(false);
       setSaving(false);
-      setSuccess(true);
       setSelectedFolderId?.(folder.id);
 
-      setTimeout(() => {
-        setSuccess(false);
-        setName("");
-        setOpen(false);
-      }, 2000);
+      addToast({
+        action: "info",
+        title: `${name ?? "Folder"} Updated!`,
+        subtitle: "Your folder has been updated",
+      });
     });
   }
 
@@ -87,18 +105,7 @@ export default function FolderDetailsModal({
         <View className="flex flex-row justify-end">
           <Button
             disabled={!name || saving}
-            action={success ? "success" : "primary"}
-            text={
-              saving
-                ? "Saving..."
-                : success
-                ? folder
-                  ? "Updated!"
-                  : "Created!"
-                : folder
-                ? "Update"
-                : "Create"
-            }
+            text={saving ? "Saving..." : folder ? "Update" : "Create"}
             onClick={() => (!folder ? createFolder() : updateFolder())}
           />
         </View>

@@ -1,8 +1,9 @@
 import Text from "@/components/ui/text/text";
+import ToastContext from "@/contexts/ui/toast.context";
 import DeckService from "@/hooks/services/deck.service";
 import { Deck } from "@/models/deck/deck";
 import { router } from "expo-router";
-import React from "react";
+import React, { useContext } from "react";
 import { View } from "react-native";
 import Button from "../ui/button/button";
 import Modal from "../ui/modal/modal";
@@ -20,8 +21,8 @@ export default function DeckDeleteModal({
   open,
   setOpen,
 }: DeckDeleteModalProps) {
+  const { addToast } = useContext(ToastContext);
   const [saving, setSaving] = React.useState(false);
-  const [success, setSuccess] = React.useState(false);
 
   function deleteDeck() {
     if (!deck.userId) return;
@@ -30,13 +31,14 @@ export default function DeckDeleteModal({
 
     DeckService.remove(deck.id).then(() => {
       setSaving(false);
-      setSuccess(true);
+      setOpen(false);
+      router.push(`decks`);
 
-      setTimeout(() => {
-        setSuccess(false);
-        setOpen(false);
-        router.push(`decks`);
-      }, 2000);
+      addToast({
+        action: "info",
+        title: `${deck.name} Deleted`,
+        subtitle: "Your deck has been deleted",
+      });
     });
   }
 
@@ -60,9 +62,9 @@ export default function DeckDeleteModal({
           />
 
           <Button
+            action="danger"
             disabled={!deck.name || saving}
-            action={success ? "success" : "danger"}
-            text={saving ? "Deleting..." : success ? "Deck Deleted" : "Delete"}
+            text={saving ? "Deleting..." : "Delete"}
             onClick={() => deleteDeck()}
           />
         </View>
