@@ -36,6 +36,8 @@ export default function CardViewMultipleModal({
   open,
   setOpen,
 }: CardViewMultipleModalProps) {
+  const [loadIndex, setLoadIndex] = React.useState(0);
+
   const cellType: ChartType = cost ? "cost" : rarity ? "rarity" : "type";
 
   const modalTitle =
@@ -69,12 +71,24 @@ export default function CardViewMultipleModal({
     <Modal open={open} setOpen={setOpen}>
       <BoxHeader title={modalTitle} subtitle={subtitle} />
 
-      <Box className="flex flex-row flex-wrap gap-2 min-h-[350px] max-h-[75vh] w-fit min-w-[228px] max-w-[1000px] !px-0 overflow-x-auto">
-        {cards?.map((card: Card, index: number) => (
+      <Box className="flex flex-row lg:justify-start justify-center gap-2 flex-wrap min-h-[350px] max-h-[75vh] w-fit min-w-[228px] max-w-[1000px] !p-0 !bg-background-100 overflow-x-auto">
+        {cards?.map((card, index) => (
           <Box
             key={card.scryfallId + index}
-            className="flex gap-1 !bg-background-100 !p-2 max-w-[244px]"
+            className="flex gap-2 !p-0 min-w-[244px] max-w-[244px] border-2 border-dark-100 !bg-dark-200 !rounded-lg"
           >
+            <View className="-m-1">
+              <CardImage
+                card={card}
+                shouldLoad={loadIndex >= index}
+                onLoad={() => {
+                  console.log(loadIndex);
+                  if (index < loadIndex) return;
+                  setLoadIndex(index + 1);
+                }}
+              />
+            </View>
+
             <View className="flex flex-row gap-2 px-2">
               <Text thickness="bold">{card.count}</Text>
               <Text truncate thickness="bold">
@@ -82,12 +96,11 @@ export default function CardViewMultipleModal({
               </Text>
             </View>
 
-            <CardImage card={card} />
-
-            <View className="flex flex-row gap-2 px-2 pb-1">
+            <View className="flex flex-row gap-2 px-2 pb-2">
               <Button
                 size="xs"
                 action="info"
+                type="outlined"
                 className="flex-1"
                 icon={faShop}
                 text={`$${card.prices?.usd}`}
@@ -100,6 +113,7 @@ export default function CardViewMultipleModal({
               <Button
                 size="xs"
                 action="info"
+                type="outlined"
                 className="flex-1"
                 icon={faShop}
                 text={`€${card.prices?.eur}`}
