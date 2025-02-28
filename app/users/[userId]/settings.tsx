@@ -207,7 +207,7 @@ export default function UserSettingsPage() {
       setUser(user ? { ...user, name: "" } : null);
 
       addToast({
-        action: "success",
+        action: "info",
         title: "Logged Out!",
         subtitle: "You have successfully been logged out",
       });

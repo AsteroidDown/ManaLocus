@@ -1,6 +1,7 @@
 import Button from "@/components/ui/button/button";
 import Input from "@/components/ui/input/input";
 import BodyHeightContext from "@/contexts/ui/body-height.context";
+import ToastContext from "@/contexts/ui/toast.context";
 import UserContext from "@/contexts/user/user.context";
 import UserService from "@/hooks/services/user.service";
 import { router } from "expo-router";
@@ -9,6 +10,7 @@ import { SafeAreaView, View } from "react-native";
 
 export default function Login() {
   const { setUser } = useContext(UserContext);
+  const { addToast } = useContext(ToastContext);
   const { setBodyHeight } = useContext(BodyHeightContext);
 
   const containerRef = useRef<SafeAreaView>(null);
@@ -69,6 +71,12 @@ export default function Login() {
       if (user) {
         setUser(user);
         router.push("../decks");
+
+        addToast({
+          action: "success",
+          title: "Logged In!",
+          subtitle: `Welcome back, ${username}!`,
+        });
       } else setUserError(true);
     });
   }
@@ -91,6 +99,12 @@ export default function Login() {
         if (user) {
           setUser(user);
           router.push(`../users/${user.id}`);
+
+          addToast({
+            action: "success",
+            title: "Registered!",
+            subtitle: `Welcome to Mana Locus, ${username}!`,
+          });
         }
       });
     });
