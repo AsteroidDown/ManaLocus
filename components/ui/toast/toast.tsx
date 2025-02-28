@@ -77,8 +77,10 @@ export default function Toast({
   }
 
   function fadeOut() {
-    setFadingOut(true);
-    setTimeout(() => onClose?.(), 500);
+    setTimeout(() => {
+      setFadingOut(true);
+      setTimeout(() => onClose?.(), 300);
+    }, 150);
   }
 
   return (
