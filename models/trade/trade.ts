@@ -39,6 +39,7 @@ export interface TradeCard {
   scryfallId?: string;
 
   card?: Card;
+  name?: string;
   count: number;
   price?: number;
   foil: boolean;

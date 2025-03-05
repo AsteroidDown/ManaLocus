@@ -16,7 +16,7 @@ import UserService from "@/hooks/services/user.service";
 import { Deck } from "@/models/deck/deck";
 import { TradeCardDTO, TradeDTO } from "@/models/trade/dtos/trade.dto";
 import { User } from "@/models/user/user";
-import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
+import { faArrowLeft, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { router, useLocalSearchParams } from "expo-router";
 import { useContext, useEffect, useRef, useState } from "react";
 import { SafeAreaView, View } from "react-native";
@@ -264,6 +264,38 @@ export default function NewTradePage() {
     );
   }, [tradedToUser]);
 
+  function addTradingUserItem() {
+    if (!user) return;
+
+    setTradingUserCards([
+      ...tradingUserCards,
+      {
+        name: "",
+        count: 1,
+        card: undefined,
+        foil: false,
+        userId: user.id,
+        scryfallId: undefined,
+        price: 0,
+      },
+    ]);
+  }
+
+  function addTradedToUserItem() {
+    setTradedToUserCards([
+      ...tradedToUserCards,
+      {
+        name: "",
+        count: 1,
+        card: undefined,
+        foil: false,
+        userId: tradedToUser?.id,
+        scryfallId: undefined,
+        price: 0,
+      },
+    ]);
+  }
+
   function create() {
     if (!user) return;
 
@@ -361,10 +393,22 @@ export default function NewTradePage() {
 
         <View className="flex lg:flex-row gap-6 z-[30]">
           <View className="flex-1 flex justify-between gap-2 min-h-fit z-[28]">
-            <View className="flex gap-2 min-w-[250px] z-[26] ">
-              <Text size="lg" thickness="semi">
-                Your Cards
-              </Text>
+            <View className="flex gap-2 min-w-[250px] z-[26]">
+              <View className="flex flex-row flex-wrap gap-2 justify-between items-center">
+                <Text size="lg" thickness="semi">
+                  Your Cards
+                </Text>
+
+                <Button
+                  size="sm"
+                  type="clear"
+                  icon={faPlus}
+                  className="-my-2"
+                  text="Add Non-Card"
+                  buttonClasses="!px-2"
+                  onClick={addTradingUserItem}
+                />
+              </View>
 
               <View className="z-[24]">
                 <Select
@@ -442,9 +486,21 @@ export default function NewTradePage() {
 
           <View className="flex-1 flex justify-between gap-2 min-h-fit z-[18]">
             <View className="flex gap-2 min-w-[250px] z-[16]">
-              <Text size="lg" thickness="semi">
-                {tradedToUser ? tradedToUser.name + "'s" : "Their"} Cards
-              </Text>
+              <View className="flex flex-row flex-wrap gap-2 justify-between items-center">
+                <Text size="lg" thickness="semi">
+                  {tradedToUser ? tradedToUser.name + "'s" : "Their"} Cards
+                </Text>
+
+                <Button
+                  size="sm"
+                  type="clear"
+                  icon={faPlus}
+                  className="-my-2"
+                  text="Add Non-Card"
+                  buttonClasses="!px-2"
+                  onClick={addTradedToUserItem}
+                />
+              </View>
 
               <View className="z-[14]">
                 <Select

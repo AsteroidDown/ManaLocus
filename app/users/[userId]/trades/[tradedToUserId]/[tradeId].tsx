@@ -55,7 +55,7 @@ export default function TradePage() {
       tradedToUserId === "anonymous" ? "0" : tradedToUserId,
       tradeId
     ).then((trade) => {
-      if (trade.tradedToUser?.id === userPageUser.id) {
+      if (trade?.tradedToUser?.id === userPageUser.id) {
         const tradingUserTotal = trade.tradingUserTotal;
         trade.tradingUserTotal = trade.tradedToUserTotal;
         trade.tradedToUserTotal = tradingUserTotal;
