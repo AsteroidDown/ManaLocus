@@ -16,7 +16,8 @@ import UserService from "@/hooks/services/user.service";
 import { Deck } from "@/models/deck/deck";
 import { TradeCardDTO, TradeDTO } from "@/models/trade/dtos/trade.dto";
 import { User } from "@/models/user/user";
-import { router } from "expo-router";
+import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
+import { router, useLocalSearchParams } from "expo-router";
 import { useContext, useEffect, useRef, useState } from "react";
 import { SafeAreaView, View } from "react-native";
 
@@ -28,6 +29,8 @@ export default function NewTradePage() {
   const buffer = 164;
 
   const containerRef = useRef<View>(null);
+
+  const { tradedToUserId } = useLocalSearchParams();
 
   const [tradedToUser, setTradedToUser] = useState(null as User | null);
   const [tradedToUserSearch, setTradedToUserSearch] = useState("");
@@ -80,6 +83,17 @@ export default function NewTradePage() {
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
+
+  useEffect(() => {
+    if (tradedToUser || !tradedToUserId || typeof tradedToUserId !== "string") {
+      return;
+    }
+
+    UserService.get(tradedToUserId).then((user) => {
+      setTradedToUser(user);
+      setTradedToUserOptions([user]);
+    });
+  }, [tradedToUserId]);
 
   useEffect(() => {
     if (!tradedToUser) return;
@@ -317,6 +331,17 @@ export default function NewTradePage() {
         <BoxHeader
           className="!pb-0"
           title={`New Trade ${tradedToUser ? `with ${tradedToUser.name}` : ""}`}
+          start={
+            <Button
+              rounded
+              size="lg"
+              type="clear"
+              action="default"
+              className="-mx-2"
+              icon={faArrowLeft}
+              onClick={() => router.back()}
+            />
+          }
         />
 
         <View className="z-[32]">

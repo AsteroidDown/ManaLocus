@@ -1,3 +1,4 @@
+import BoxHeader from "@/components/ui/box/box-header";
 import Button from "@/components/ui/button/button";
 import Pagination from "@/components/ui/pagination/pagination";
 import LoadingTable from "@/components/ui/table/loading-table";
@@ -61,21 +62,20 @@ export default function UserFoldersPage() {
         }
       >
         {user.id === userPageUser.id && (
-          <View className="flex flex-row justify-between items-center gap-4 mb-6">
-            <Text size="xl" thickness="semi">
-              Your Trades
-            </Text>
-
-            <Button
-              type="outlined"
-              text="New Trade"
-              className="self-end"
-              icon={faPlus}
-              onClick={() =>
-                router.push(`users/${userPageUser.id}/trades/new-trade`)
-              }
-            />
-          </View>
+          <BoxHeader
+            title="Your Trades"
+            end={
+              <Button
+                type="outlined"
+                text="New Trade"
+                className="self-end"
+                icon={faPlus}
+                onClick={() =>
+                  router.push(`users/${userPageUser.id}/trades/new-trade`)
+                }
+              />
+            }
+          />
         )}
 
         {loading ? (

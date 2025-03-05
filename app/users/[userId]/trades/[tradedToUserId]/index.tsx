@@ -1,3 +1,4 @@
+import BoxHeader from "@/components/ui/box/box-header";
 import Button from "@/components/ui/button/button";
 import Pagination from "@/components/ui/pagination/pagination";
 import LoadingTable from "@/components/ui/table/loading-table";
@@ -12,7 +13,7 @@ import TradeService from "@/hooks/services/trade.service";
 import UserService from "@/hooks/services/user.service";
 import { Trade } from "@/models/trade/trade";
 import { User } from "@/models/user/user";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faArrowLeft, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { router, useLocalSearchParams } from "expo-router";
 import moment from "moment";
 import { useContext, useEffect, useRef, useState } from "react";
@@ -91,22 +92,39 @@ export default function TradedToUserPage() {
         }
       >
         {user.id === userPageUser.id && (
-          <View className="flex flex-row justify-between items-center gap-4 mb-6">
-            <Text size="xl" thickness="semi">
-              Your Trades{" "}
-              {tradedToUser?.name ? `with ${tradedToUser.name}` : ""}
-            </Text>
-
-            <Button
-              type="outlined"
-              text="New Trade"
-              className="self-end"
-              icon={faPlus}
-              onClick={() =>
-                router.push(`users/${userPageUser.id}/trades/new-trade`)
-              }
-            />
-          </View>
+          <BoxHeader
+            title={`Your Trades ${
+              tradedToUser?.name ? `with ${tradedToUser.name}` : ""
+            }`}
+            start={
+              <Button
+                rounded
+                size="lg"
+                type="clear"
+                action="default"
+                className="-mx-2"
+                icon={faArrowLeft}
+                onClick={() => router.back()}
+              />
+            }
+            end={
+              <Button
+                type="outlined"
+                text="New Trade"
+                className="self-end"
+                icon={faPlus}
+                onClick={() =>
+                  router.push(
+                    `users/${userPageUser.id}/trades/new-trade${
+                      tradedToUserId
+                        ? `?tradedToUserId=${tradedToUser?.id}`
+                        : ""
+                    }`
+                  )
+                }
+              />
+            }
+          />
         )}
 
         {loading ? (
