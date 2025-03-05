@@ -371,7 +371,11 @@ export default function NewTradePage() {
               action="default"
               className="-mx-2"
               icon={faArrowLeft}
-              onClick={() => router.back()}
+              onClick={() =>
+                tradedToUserId
+                  ? router.push(`users/${user!.id}/trades/${tradedToUserId}`)
+                  : router.push(`users/${user!.id}/trades`)
+              }
             />
           }
         />

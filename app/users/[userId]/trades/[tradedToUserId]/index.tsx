@@ -1,3 +1,4 @@
+import SettleUpModal from "@/components/trades/settle-up-modal";
 import BoxHeader from "@/components/ui/box/box-header";
 import Button from "@/components/ui/button/button";
 import Pagination from "@/components/ui/pagination/pagination";
@@ -13,7 +14,11 @@ import TradeService from "@/hooks/services/trade.service";
 import UserService from "@/hooks/services/user.service";
 import { Trade } from "@/models/trade/trade";
 import { User } from "@/models/user/user";
-import { faArrowLeft, faPlus } from "@fortawesome/free-solid-svg-icons";
+import {
+  faArrowLeft,
+  faPlus,
+  faReceipt,
+} from "@fortawesome/free-solid-svg-icons";
 import { router, useLocalSearchParams } from "expo-router";
 import moment from "moment";
 import { useContext, useEffect, useRef, useState } from "react";
@@ -32,6 +37,9 @@ export default function TradedToUserPage() {
   const containerRef = useRef<View>(null);
 
   const [tradedToUser, setTradedToUser] = useState(null as User | null);
+  const [tradesTotal, setTradesTotal] = useState(0);
+
+  const [settleUpOpen, setSettleUpOpen] = useState(false);
 
   const [page, setPage] = useState(1);
   const [meta, setMeta] = useState(null as PaginationMeta | null);
@@ -51,6 +59,15 @@ export default function TradedToUserPage() {
     setLoading(true);
 
     UserService.get(tradedToUserId).then((user) => setTradedToUser(user));
+  }, [tradedToUserId]);
+
+  useEffect(() => {
+    if (!tradedToUserId || typeof tradedToUserId !== "string") return;
+
+    TradeService.getTotalBetweenUsers(
+      userPageUser.id,
+      tradedToUserId === "anonymous" ? "0" : tradedToUserId
+    ).then((response) => setTradesTotal(response?.total ?? 0));
   }, [tradedToUserId]);
 
   useEffect(() => {
@@ -96,6 +113,26 @@ export default function TradedToUserPage() {
             title={`Your Trades ${
               tradedToUser?.name ? `with ${tradedToUser.name}` : ""
             }`}
+            subtitle={
+              tradedToUser ? (
+                <>
+                  {tradesTotal === 0 ? (
+                    `You and ${tradedToUser.name} are even!`
+                  ) : (
+                    <>
+                      {`${tradesTotal > 0 ? tradedToUser.name : "You"} owe${
+                        tradesTotal > 0 ? "s You" : `${tradedToUser.name}`
+                      }: `}
+                      <Text action={tradesTotal > 0 ? "success" : "danger"}>
+                        {currency(tradesTotal / 100)}
+                      </Text>
+                    </>
+                  )}
+                </>
+              ) : (
+                ""
+              )
+            }
             start={
               <Button
                 rounded
@@ -104,25 +141,36 @@ export default function TradedToUserPage() {
                 action="default"
                 className="-mx-2"
                 icon={faArrowLeft}
-                onClick={() => router.back()}
+                onClick={() => router.push(`users/${userPageUser.id}/trades`)}
               />
             }
             end={
-              <Button
-                type="outlined"
-                text="New Trade"
-                className="self-end"
-                icon={faPlus}
-                onClick={() =>
-                  router.push(
-                    `users/${userPageUser.id}/trades/new-trade${
-                      tradedToUserId
-                        ? `?tradedToUserId=${tradedToUser?.id}`
-                        : ""
-                    }`
-                  )
-                }
-              />
+              <View className="flex flex-row gap-2">
+                {tradesTotal !== 0 && (
+                  <Button
+                    type="outlined"
+                    text="Settle Up"
+                    icon={faReceipt}
+                    onClick={() => setSettleUpOpen(true)}
+                  />
+                )}
+
+                <Button
+                  type="outlined"
+                  text="New Trade"
+                  className="self-end"
+                  icon={faPlus}
+                  onClick={() =>
+                    router.push(
+                      `users/${userPageUser.id}/trades/new-trade${
+                        tradedToUserId
+                          ? `?tradedToUserId=${tradedToUser?.id}`
+                          : ""
+                      }`
+                    )
+                  }
+                />
+              </View>
             }
           />
         )}
@@ -185,6 +233,17 @@ export default function TradedToUserPage() {
 
         {meta && <Pagination meta={meta} onChange={setPage} />}
       </View>
+
+      {tradedToUser && (
+        <SettleUpModal
+          open={settleUpOpen}
+          setOpen={setSettleUpOpen}
+          total={tradesTotal}
+          user={userPageUser}
+          tradedToUser={tradedToUser}
+          setPage={setPage}
+        />
+      )}
     </SafeAreaView>
   );
 }

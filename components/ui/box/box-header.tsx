@@ -7,7 +7,7 @@ import Divider from "../divider/divider";
 
 export type BoxHeaderProps = ViewProps & {
   title?: string;
-  subtitle?: string;
+  subtitle?: string | ReactNode;
 
   start?: ReactNode;
   startIcon?: IconProp;
