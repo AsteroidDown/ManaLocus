@@ -32,7 +32,7 @@ export default function BoxHeader({
       <View
         className={`flex flex-row flex-wrap gap-2 justify-between items-center px-6 pb-4 ${className}`}
       >
-        <View className="flex flex-row items-center gap-4">
+        <View className="flex-1 flex flex-row items-center gap-4 min-w-fit">
           {start}
           {startIcon && (
             <FontAwesomeIcon
@@ -42,7 +42,7 @@ export default function BoxHeader({
             />
           )}
 
-          <View className="flex flex-1">
+          <View className="flex-1 flex">
             {title && (
               <Text size="2xl" thickness="bold">
                 {title}
@@ -55,7 +55,7 @@ export default function BoxHeader({
           {titleEnd}
         </View>
 
-        {end && <View className="flex">{end}</View>}
+        {end && <View className="flex-1 flex min-w-fit">{end}</View>}
       </View>
 
       {!hideDivider && <Divider thick />}
