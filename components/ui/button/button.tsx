@@ -124,9 +124,11 @@ export default function Button({
 
         {text && (
           <Text
-            thickness="bold"
             size={size}
-            className={`${textColor} ${children ? "mr-2" : ""} select-none`}
+            thickness="bold"
+            className={`select-none min-w-fit ${textColor} ${
+              children ? "mr-2" : ""
+            }`}
           >
             {text}
           </Text>
