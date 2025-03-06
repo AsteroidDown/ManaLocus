@@ -119,7 +119,7 @@ export default function TradedToUserPage() {
               tradedToUser ? (
                 <>
                   {tradesTotal === 0 ? (
-                    `You and ${tradedToUser.name} are even!`
+                    `You and ${tradedToUser.name} are settled up!`
                   ) : (
                     <>
                       {`${tradesTotal > 0 ? tradedToUser.name : "You"} owe${
