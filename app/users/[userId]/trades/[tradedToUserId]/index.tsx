@@ -22,7 +22,7 @@ import {
 import { router, useLocalSearchParams } from "expo-router";
 import moment from "moment";
 import { useContext, useEffect, useRef, useState } from "react";
-import { SafeAreaView, View } from "react-native";
+import { SafeAreaView, useWindowDimensions, View } from "react-native";
 
 export default function TradedToUserPage() {
   const { user } = useContext(UserContext);
@@ -31,6 +31,8 @@ export default function TradedToUserPage() {
   if (user?.id !== userPageUser?.id) return null;
 
   const { tradedToUserId } = useLocalSearchParams();
+
+  const width = useWindowDimensions().width;
 
   const { setBodyHeight } = useContext(BodyHeightContext);
 
@@ -121,10 +123,10 @@ export default function TradedToUserPage() {
                   ) : (
                     <>
                       {`${tradesTotal > 0 ? tradedToUser.name : "You"} owe${
-                        tradesTotal > 0 ? "s You" : `${tradedToUser.name}`
+                        tradesTotal > 0 ? "s You" : ` ${tradedToUser.name}`
                       }: `}
                       <Text action={tradesTotal > 0 ? "success" : "danger"}>
-                        {currency(tradesTotal / 100)}
+                        {currency(Math.abs(tradesTotal) / 100)}
                       </Text>
                     </>
                   )}
@@ -145,12 +147,13 @@ export default function TradedToUserPage() {
               />
             }
             end={
-              <View className="flex flex-row gap-2">
-                {tradesTotal !== 0 && (
+              <View className="flex flex-row gap-2 lg:ml-auto lg:mt-0 mt-2 min-w-fit">
+                {tradedToUser && tradesTotal !== 0 && (
                   <Button
                     type="outlined"
                     text="Settle Up"
                     icon={faReceipt}
+                    className="flex-1 lg:max-w-fit"
                     onClick={() => setSettleUpOpen(true)}
                   />
                 )}
@@ -158,7 +161,7 @@ export default function TradedToUserPage() {
                 <Button
                   type="outlined"
                   text="New Trade"
-                  className="self-end"
+                  className="flex-1 lg:max-w-fit"
                   icon={faPlus}
                   onClick={() =>
                     router.push(
@@ -191,18 +194,29 @@ export default function TradedToUserPage() {
             columns={
               [
                 {
-                  title: "Your Total",
+                  title: "Date",
+                  row: (trade) => (
+                    <Text>
+                      {moment(trade.created).format(
+                        `${width > 600 ? "MMM Do, YYYY" : "MMM Do"}`
+                      )}
+                    </Text>
+                  ),
+                },
+                {
+                  title: `${width > 600 ? "You " : ""}Traded`,
                   row: (trade) => (
                     <Text>{currency(trade.tradingUserTotal / 100)}</Text>
                   ),
                 },
                 {
-                  title: "Their Total",
+                  title: `${width > 600 ? "You " : ""}Received`,
                   row: (trade) => (
                     <Text>{currency(trade.tradedToUserTotal / 100)}</Text>
                   ),
                 },
                 {
+                  fit: true,
                   title: "Total",
                   row: (trade) => (
                     <Text
@@ -217,13 +231,6 @@ export default function TradedToUserPage() {
                     >
                       {currency(trade.total / 100)}
                     </Text>
-                  ),
-                },
-                {
-                  fit: true,
-                  title: "Date",
-                  row: (trade) => (
-                    <Text>{moment(trade.created).format("MMM Do, YYYY")}</Text>
                   ),
                 },
               ] as TableColumn<Trade>[]

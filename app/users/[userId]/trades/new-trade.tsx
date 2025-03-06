@@ -19,7 +19,7 @@ import { User } from "@/models/user/user";
 import { faArrowLeft, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { router, useLocalSearchParams } from "expo-router";
 import { useContext, useEffect, useRef, useState } from "react";
-import { SafeAreaView, View } from "react-native";
+import { SafeAreaView, useWindowDimensions, View } from "react-native";
 
 export default function NewTradePage() {
   const { user } = useContext(UserContext);
@@ -27,6 +27,8 @@ export default function NewTradePage() {
   const { addToast } = useContext(ToastContext);
 
   const buffer = 164;
+
+  const width = useWindowDimensions().width;
 
   const containerRef = useRef<View>(null);
 
@@ -362,7 +364,9 @@ export default function NewTradePage() {
       >
         <BoxHeader
           className="!pb-0"
-          title={`New Trade ${tradedToUser ? `with ${tradedToUser.name}` : ""}`}
+          title={`${width > 600 ? "New " : !tradedToUser ? "New " : ""}Trade ${
+            tradedToUser ? `with ${tradedToUser.name}` : ""
+          }`}
           start={
             <Button
               rounded
@@ -393,7 +397,7 @@ export default function NewTradePage() {
           />
         </View>
 
-        <Divider thick className="!border-background-200" />
+        <Divider thick className="!border-background-200 lg:my-0 my-4" />
 
         <View className="flex lg:flex-row gap-6 z-[30]">
           <View className="flex-1 flex justify-between gap-2 min-h-fit z-[28]">
@@ -487,6 +491,10 @@ export default function NewTradePage() {
               </View>
             </View>
           </View>
+
+          {width < 600 && (
+            <Divider thick className="!border-background-200 mt-8 mb-6" />
+          )}
 
           <View className="flex-1 flex justify-between gap-2 min-h-fit z-[18]">
             <View className="flex gap-2 min-w-[250px] z-[16]">
@@ -583,7 +591,10 @@ export default function NewTradePage() {
           </View>
         </View>
 
-        <Divider thick className="!border-background-200" />
+        <Divider
+          thick
+          className="!border-background-200 lg:mt-0 mt-8 lg:mb-0 mb-4"
+        />
 
         <View className="flex flex-row gap-4 justify-end mt-4">
           <View className="lg:flex-[0] flex-1 flex gap-4 lg:min-w-fit min-w-full">

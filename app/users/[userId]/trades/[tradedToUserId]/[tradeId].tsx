@@ -1,4 +1,6 @@
 import TradeCardDetails from "@/components/trades/trade-card-details";
+import BoxHeader from "@/components/ui/box/box-header";
+import Button from "@/components/ui/button/button";
 import Divider from "@/components/ui/divider/divider";
 import Text from "@/components/ui/text/text";
 import BodyHeightContext from "@/contexts/ui/body-height.context";
@@ -9,7 +11,8 @@ import TradeService from "@/hooks/services/trade.service";
 import UserService from "@/hooks/services/user.service";
 import { Trade } from "@/models/trade/trade";
 import { User } from "@/models/user/user";
-import { useLocalSearchParams } from "expo-router";
+import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
+import { router, useLocalSearchParams } from "expo-router";
 import moment from "moment";
 import { useContext, useEffect, useRef, useState } from "react";
 import { SafeAreaView, View } from "react-native";
@@ -67,6 +70,30 @@ export default function TradePage() {
         trade.total *= -1;
       }
 
+      if (!trade.tradingUserCards?.length) {
+        trade.tradingUserCards = [
+          {
+            count: 1,
+            name: "No Cards Traded",
+            foil: false,
+            id: "",
+            tradeId: "",
+          },
+        ];
+      }
+
+      if (!trade.tradedToUserCards?.length) {
+        trade.tradedToUserCards = [
+          {
+            count: 1,
+            name: "No Cards Traded",
+            foil: false,
+            id: "",
+            tradeId: "",
+          },
+        ];
+      }
+
       setTrade(trade);
     });
   }, [tradeId, tradedToUserId]);
@@ -84,14 +111,30 @@ export default function TradePage() {
           )
         }
       >
-        <View className="flex flex-row justify-between items-center gap-4 mb-4">
-          <Text size="xl" thickness="semi">
-            Trade with
-            {tradedToUser?.name
-              ? ` with ${tradedToUser.name} on `
-              : " Anonymous on "}
-            {moment(trade.created).format("MMM Do, YYYY")}
-          </Text>
+        <View className="flex flex-row justify-between items-center gap-4">
+          <BoxHeader
+            title={`Trade with${
+              tradedToUser?.name ? ` ${tradedToUser.name}` : " Anonymous"
+            }`}
+            subtitle={moment(trade.created).format("MMM Do, YYYY")}
+            start={
+              <Button
+                rounded
+                size="lg"
+                type="clear"
+                action="default"
+                className="-mx-2"
+                icon={faArrowLeft}
+                onClick={() =>
+                  router.push(
+                    `users/${userPageUser.id}/trades${
+                      tradedToUserId ? `/${tradedToUserId}` : "anonymous"
+                    }`
+                  )
+                }
+              />
+            }
+          />
         </View>
 
         <View className="flex lg:flex-row gap-4 mb-6 min-h-fit">
@@ -101,10 +144,10 @@ export default function TradePage() {
             </Text>
 
             <View className="flex gap-2 min-h-fit mb-2">
-              {trade.tradingUserCards?.map((card) => (
+              {trade.tradingUserCards?.map((card, index) => (
                 <TradeCardDetails
                   readonly
-                  key={card.scryfallId}
+                  key={`${card.scryfallId}-${index}`}
                   tradeCard={card}
                 />
               ))}

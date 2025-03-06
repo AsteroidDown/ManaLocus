@@ -40,7 +40,7 @@ export default function SettleUpModal({
       TradeService.create(user.id, {
         tradingUserId: user.id,
         tradedToUserId: tradedToUser.id,
-        tradingUserTotal: total * -1,
+        tradingUserTotal: total,
         tradedToUserTotal: 0,
         total: total * -1,
         tradingUserCards: [
@@ -68,7 +68,7 @@ export default function SettleUpModal({
         tradingUserId: user.id,
         tradedToUserId: tradedToUser.id,
         tradingUserTotal: 0,
-        tradedToUserTotal: total * -1,
+        tradedToUserTotal: total,
         total: total * -1,
         tradedToUserCards: [
           {

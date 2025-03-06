@@ -89,25 +89,22 @@ export default function TradeCardDetails({
 
   return (
     <View
-      className="flex lg:flex-row gap-4 bg-dark-100 border-background-200 border-2 rounded-lg px-4 pt-2 pb-3"
+      className="flex lg:flex-row gap-4 bg-dark-100 border-background-200 border-2 rounded-lg px-4 py-2"
       style={{ zIndex: zIndex ?? 0 }}
     >
-      {!cardIsItem && (
-        <View className="flex justify-center -my-2">
-          {width > 600 ? (
-            imageUri ? (
-              <Pressable onPress={() => setOpen(true)}>
-                <Image
-                  className="min-w-28 max-w-32 aspect-[2.5/3.5]"
-                  source={{
-                    uri: imageUri,
-                  }}
-                />
-              </Pressable>
-            ) : (
-              <Skeleton className="min-w-28 max-w-32 aspect-[2.5/3.5]" />
-            )
-          ) : null}
+      {!cardIsItem && width > 600 && (
+        <View className="flex justify-center">
+          imageUri ? (
+          <Pressable onPress={() => setOpen(true)}>
+            <Image
+              className="min-w-28 max-w-32 aspect-[2.5/3.5]"
+              source={{
+                uri: imageUri,
+              }}
+            />
+          </Pressable>
+          ) : (
+          <Skeleton className="min-w-28 max-w-32 aspect-[2.5/3.5]" />)
         </View>
       )}
 
@@ -117,7 +114,7 @@ export default function TradeCardDetails({
             cardIsItem && !readonly ? "gap-2 -mx-2" : "max-h-8"
           } ${readonly && width < 600 ? "flex-row-reverse" : "flex-row"}`}
         >
-          {width < 600 && (
+          {!cardIsItem && width < 600 && (
             <Button
               rounded
               type="clear"
@@ -141,11 +138,17 @@ export default function TradeCardDetails({
                 {tradeCard.name}
               </Text>
             ) : (
-              <Input
-                value={tradeCard.name}
-                onChange={setName}
-                placeholder="Name the Trade Item"
-              />
+              <View className="flex-1 flex flex-row items-center gap-2 pl-2">
+                <Text thickness="semi" className="min-w-10">
+                  Name
+                </Text>
+
+                <Input
+                  value={tradeCard.name}
+                  onChange={setName}
+                  placeholder="Name the Trade Item"
+                />
+              </View>
             )
           ) : (
             <Skeleton className="flex-1 h-8 w-[80%]" />
@@ -194,30 +197,30 @@ export default function TradeCardDetails({
           </View>
         )}
 
-        <View className="flex flex-row items-center gap-2 z-[10]">
-          {price !== undefined && (
-            <Text thickness="semi" className="min-w-10">
-              Price
-            </Text>
-          )}
+        {price !== undefined && (
+          <View className="flex flex-row items-center gap-2 z-[10]">
+            {price !== undefined && (
+              <Text thickness="semi" className="min-w-10">
+                Price
+              </Text>
+            )}
 
-          {price !== undefined ? (
-            readonly ? (
+            {readonly ? (
               <Text size="md" thickness="semi">
                 {currency((price || 0) / 100)}
               </Text>
-            ) : (
+            ) : price !== undefined ? (
               <NumberInput
                 currency
                 value={price}
                 inputClasses="max-w-[176px]"
                 onChange={(change) => setPrice(change ? Number(change) : 0)}
               />
-            )
-          ) : (
-            <Skeleton className="flex-1 h-10" />
-          )}
-        </View>
+            ) : (
+              <Skeleton className="flex-1 h-10" />
+            )}
+          </View>
+        )}
 
         {!cardIsItem && (
           <View className="flex flex-row justify-end items-center gap-4">
