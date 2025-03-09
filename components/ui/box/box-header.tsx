@@ -34,6 +34,7 @@ export default function BoxHeader({
       >
         <View className="flex-1 flex flex-row items-center gap-4 min-w-fit">
           {start}
+
           {startIcon && (
             <FontAwesomeIcon
               size="2xl"
@@ -55,7 +56,9 @@ export default function BoxHeader({
           {titleEnd}
         </View>
 
-        {end && <View className="flex-1 flex min-w-fit">{end}</View>}
+        {end && (
+          <View className="flex-1 flex lg:max-w-fit min-w-fit">{end}</View>
+        )}
       </View>
 
       {!hideDivider && <Divider thick />}
