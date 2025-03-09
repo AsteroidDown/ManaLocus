@@ -454,10 +454,16 @@ export default function CardImportExportModal({
             </View>
           </View>
 
-          <Text className="pl-3">For importing use one of the standards:</Text>
-          <Text mono className="-mt-2 px-2.5 py-1.5 bg-dark-100 rounded-lg">
-            1 id {"\n"}1 name {"\n"}1 name (set) collection_number
-          </Text>
+          {!exportOnly && (
+            <>
+              <Text className="pl-3">
+                For importing use one of the standards:
+              </Text>
+              <Text mono className="-mt-2 px-2.5 py-1.5 bg-dark-100 rounded-lg">
+                1 id {"\n"}1 name {"\n"}1 name (set) collection_number
+              </Text>
+            </>
+          )}
         </View>
 
         <View className="flex flex-row flex-wrap justify-center gap-3">
