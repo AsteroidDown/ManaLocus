@@ -93,35 +93,39 @@ export default function DeckFooter({
   return (
     <View className="sticky bottom-[-1px] flex flex-row gap-4 justify-between items-center lg:px-16 px-4 py-4 max-h-14 bg-gradient-to-b from-primary-200 to-primary-100 shadow-[0_0_16px] shadow-background-100">
       <View className="flex flex-row lg:justify-start justify-around lg:w-fit w-full items-center gap-2">
-        <View className="flex flex-row items-center gap-2">
-          <Text thickness="bold">{titleCase(deck.format)}</Text>
+        {!deck.isCollection && !deck.isKit && (
+          <>
+            <View className="flex flex-row items-center gap-2">
+              <Text thickness="bold">{titleCase(deck.format)}</Text>
 
-          <Button
-            rounded
-            type="clear"
-            action="default"
-            className="-ml-3.5 -mr-2"
-            icon={legalityEvaluation.legal ? faCheckCircle : faCircleXmark}
-            onClick={() => setLegalityOpen(!legalityOpen)}
-          >
-            <View className="-mx-1.5 -mb-6">
-              <Dropdown
-                xOffset={-132}
-                expanded={legalityOpen}
-                setExpanded={setLegalityOpen}
+              <Button
+                rounded
+                type="clear"
+                action="default"
+                className="-ml-3.5 -mr-2"
+                icon={legalityEvaluation.legal ? faCheckCircle : faCircleXmark}
+                onClick={() => setLegalityOpen(!legalityOpen)}
               >
-                <Box className="flex justify-start items-start border-2 border-primary-300 !bg-background-100 !bg-opacity-90 overflow-auto max-w-[450px]">
-                  <DeckLegalityInfo
-                    format={deck.format}
-                    legalityEvaluation={legalityEvaluation}
-                  />
-                </Box>
-              </Dropdown>
+                <View className="-mx-1.5 -mb-6">
+                  <Dropdown
+                    xOffset={-132}
+                    expanded={legalityOpen}
+                    setExpanded={setLegalityOpen}
+                  >
+                    <Box className="flex justify-start items-start border-2 border-primary-300 !bg-background-100 !bg-opacity-90 overflow-auto max-w-[450px]">
+                      <DeckLegalityInfo
+                        format={deck.format}
+                        legalityEvaluation={legalityEvaluation}
+                      />
+                    </Box>
+                  </Dropdown>
+                </View>
+              </Button>
             </View>
-          </Button>
-        </View>
 
-        <View className="h-5 border-r rounded-lg border-white" />
+            <View className="h-5 border-r rounded-lg border-white" />
+          </>
+        )}
 
         <Text>
           {mainCards} {width > 600 ? "Card Mainboard" : "Main"}
