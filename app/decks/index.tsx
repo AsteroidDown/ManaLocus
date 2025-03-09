@@ -4,6 +4,7 @@ import Button from "@/components/ui/button/button";
 import BodyHeightContext from "@/contexts/ui/body-height.context";
 import UserContext from "@/contexts/user/user.context";
 import DeckService from "@/hooks/services/deck.service";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { router } from "expo-router";
 import React, { useContext, useRef } from "react";
 import { SafeAreaView, View } from "react-native";
@@ -42,7 +43,16 @@ export default function DecksPage() {
         <BoxHeader
           title="Find Decks"
           className="!pb-0"
-          end={user && <Button text="Create Deck" onClick={createDeck} />}
+          end={
+            user && (
+              <Button
+                icon={faPlus}
+                type="outlined"
+                text="Create Deck"
+                onClick={createDeck}
+              />
+            )
+          }
         />
 
         <DeckGallery />
