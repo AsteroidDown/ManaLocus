@@ -96,15 +96,15 @@ APIAxiosConfig.interceptors.request.use(
 
     return config;
   },
-  (error) => {
-    return Promise.reject(error);
-  }
+  (error) => Promise.reject(error)
 );
 
 // Refresh access token upon expiry, logout users with expired refresh token
 APIAxiosConfig.interceptors.response.use(
   (res) => res,
   async (err) => {
+    console.log("Response Error");
+    console.log(err);
     const originalRequest = err.config;
 
     // Access Token was expired
@@ -113,28 +113,35 @@ APIAxiosConfig.interceptors.response.use(
       err.response?.status === 401 &&
       !originalRequest._retry
     ) {
+      console.log("Refreshing Token");
       originalRequest._retry = true;
 
       try {
-        const refreshToken = getLocalStorageJwt()?.refresh;
-        if (!refreshToken) return;
+        const refresh = getLocalStorageJwt()?.refresh;
+        console.log("Current Token", refresh);
+        if (!refresh) return;
 
         const response = await axios.post(
           REFRESH,
-          { refresh: getLocalStorageJwt()?.refresh },
+          { refresh },
           {
             headers: getApiHeaders(),
             withCredentials: true,
           }
         );
+        console.log("New Token", response);
 
         // Don't use axios instance that already configured for refresh token api call
         const newAccessToken = response.data.access;
 
+        console.log("Setting New Token", newAccessToken);
         localStorage.setItem("user-access", newAccessToken);
         originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+
+        console.log("Recalling Request");
         return axios(originalRequest); //recall Api with new token
       } catch (error) {
+        console.log("Error Refreshing Token", error);
         // Handle token refresh failure - user session has expired (configured in Django)
         removeLocalStorageJwt();
       }

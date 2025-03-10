@@ -11,6 +11,7 @@ import BodyHeightContext from "@/contexts/ui/body-height.context";
 import LoadingContext from "@/contexts/ui/loading.context";
 import UserPreferencesContext from "@/contexts/user/user-preferences.context";
 import UserContext from "@/contexts/user/user.context";
+import { getLocalStorageJwt } from "@/functions/local-storage/auth-token-local-storage";
 import { getLocalStorageUserPreferences } from "@/functions/local-storage/user-preferences-local-storage";
 import "@/global.css";
 import UserService from "@/hooks/services/user.service";
@@ -29,11 +30,9 @@ export default function RootLayout() {
   );
 
   useEffect(() => {
-    UserService.refresh().then(() => {
-      if (localStorage.getItem("user-access")) {
-        UserService.getCurrentUser().then((user) => user && setUser(user));
-      }
-    });
+    if (!user && getLocalStorageJwt()?.access) {
+      UserService.getCurrentUser().then((user) => setUser(user));
+    }
 
     const preferences = getLocalStorageUserPreferences();
     setPreferences(preferences);
@@ -46,7 +45,7 @@ export default function RootLayout() {
         );
       });
     }
-  }, []);
+  }, [user]);
 
   return (
     <UserContext.Provider value={{ user, setUser }}>
