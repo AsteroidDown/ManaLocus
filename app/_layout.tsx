@@ -2,6 +2,11 @@ import Footer from "@/components/ui/navigation/footer";
 import Header from "@/components/ui/navigation/header";
 import LoadingView from "@/components/ui/navigation/loading";
 import ToastProvider from "@/components/ui/toast/toast-provider";
+import {
+  PreferenceColor,
+  PreferenceColorHues,
+  PreferenceColorMap,
+} from "@/constants/ui/colors";
 import BodyHeightContext from "@/contexts/ui/body-height.context";
 import LoadingContext from "@/contexts/ui/loading.context";
 import UserPreferencesContext from "@/contexts/user/user-preferences.context";
@@ -30,7 +35,17 @@ export default function RootLayout() {
       }
     });
 
-    setPreferences(getLocalStorageUserPreferences());
+    const preferences = getLocalStorageUserPreferences();
+    setPreferences(preferences);
+
+    if (preferences?.color) {
+      Object.values(PreferenceColorHues).forEach((hue) => {
+        document.documentElement.style.setProperty(
+          `--${hue}`,
+          PreferenceColorMap[preferences.color ?? PreferenceColor.DEFAULT][hue]
+        );
+      });
+    }
   }, []);
 
   return (

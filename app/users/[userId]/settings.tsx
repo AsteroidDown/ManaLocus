@@ -7,6 +7,11 @@ import Select from "@/components/ui/input/select";
 import Text from "@/components/ui/text/text";
 import { EmailMask } from "@/constants/masks/text-masks";
 import { SortType, SortTypes } from "@/constants/sorting";
+import {
+  PreferenceColor,
+  PreferenceColorHues,
+  PreferenceColorMap,
+} from "@/constants/ui/colors";
 import BodyHeightContext from "@/contexts/ui/body-height.context";
 import ToastContext from "@/contexts/ui/toast.context";
 import UserPageContext from "@/contexts/user/user-page.context";
@@ -30,8 +35,8 @@ import {
 } from "@/models/deck/dtos/deck-filters.dto";
 import { faBorderAll, faList } from "@fortawesome/free-solid-svg-icons";
 import { router } from "expo-router";
-import React, { useContext, useEffect, useRef } from "react";
-import { SafeAreaView, View } from "react-native";
+import React, { useContext, useEffect, useRef, useState } from "react";
+import { Pressable, SafeAreaView, View } from "react-native";
 
 interface PasswordErrors {
   lowercase?: boolean;
@@ -54,48 +59,59 @@ export default function UserSettingsPage() {
     return null;
   }
 
-  const [preferencesOpen, setPreferencesOpen] = React.useState(false);
-  const [emailOpen, setEmailOpen] = React.useState(false);
-  const [passwordOpen, setPasswordOpen] = React.useState(false);
+  const [colorKey, setColorKey] = useState(PreferenceColor.DEFAULT);
 
-  const [decksSort, setDecksSort] = React.useState(
+  const [preferencesOpen, setPreferencesOpen] = useState(false);
+  const [emailOpen, setEmailOpen] = useState(false);
+  const [passwordOpen, setPasswordOpen] = useState(false);
+
+  const [decksSort, setDecksSort] = useState(
     preferences?.decksSortType ?? (DeckSortTypes.CREATED as DeckSortType)
   );
-  const [decksView, setDecksView] = React.useState(
+  const [decksView, setDecksView] = useState(
     preferences?.decksViewType ?? (DeckViewType.CARD as DeckViewType)
   );
 
-  const [deckCardViewType, setDeckCardViewType] = React.useState(
+  const [deckCardViewType, setDeckCardViewType] = useState(
     preferences?.deckCardViewType ?? DeckCardGalleryViewTypes.LIST
   );
-  const [deckCardGrouping, setDeckCardGrouping] = React.useState(
+  const [deckCardGrouping, setDeckCardGrouping] = useState(
     preferences?.deckCardGrouping ?? DeckCardGalleryGroupTypes.TYPE
   );
-  const [deckCardSortType, setDeckCardSortType] = React.useState(
+  const [deckCardSortType, setDeckCardSortType] = useState(
     preferences?.deckCardSortType ?? DeckCardGallerySortTypes.NAME
   );
-  const [deckCardSortDirection, setDeckCardSortDirection] = React.useState(
+  const [deckCardSortDirection, setDeckCardSortDirection] = useState(
     preferences?.deckCardSortDirection ?? (SortTypes.ASC as SortType)
   );
-  const [deckCardColumnShowPrice, setDeckCardColumnShowPrice] = React.useState(
+  const [deckCardColumnShowPrice, setDeckCardColumnShowPrice] = useState(
     preferences?.deckCardColumnShowPrice ?? false
   );
   const [deckCardColumnShowManaValue, setDeckCardColumnShowManaValue] =
-    React.useState(preferences?.deckCardColumnShowManaValue ?? true);
+    useState(preferences?.deckCardColumnShowManaValue ?? true);
   const [deckCardColumnGroupMulticolored, setDeckCardColumnGroupMulticolored] =
-    React.useState(preferences?.deckCardColumnGroupMulticolored ?? false);
+    useState(preferences?.deckCardColumnGroupMulticolored ?? false);
 
-  const [email, setEmail] = React.useState("");
-  const [emailError, setEmailError] = React.useState(false);
+  const [email, setEmail] = useState("");
+  const [emailError, setEmailError] = useState(false);
 
-  const [currentPassword, setCurrentPassword] = React.useState("");
-  const [newPassword, setNewPassword] = React.useState("");
-  const [confirmNewPassword, setConfirmNewPassword] = React.useState("");
-  const [passwordErrors, setPasswordErrors] = React.useState(
-    {} as PasswordErrors
-  );
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmNewPassword, setConfirmNewPassword] = useState("");
+  const [passwordErrors, setPasswordErrors] = useState({} as PasswordErrors);
 
   if (!user) return null;
+
+  useEffect(() => {
+    Object.values(PreferenceColorHues).forEach((hue) => {
+      document.documentElement.style.setProperty(
+        `--${hue}`,
+        PreferenceColorMap[colorKey][hue]
+      );
+    });
+
+    setLocalStorageUserPreferences({ color: colorKey });
+  }, [colorKey]);
 
   useEffect(() => {
     setEmail(user.email);
@@ -230,6 +246,23 @@ export default function UserSettingsPage() {
           expanded={preferencesOpen}
           setExpanded={setPreferencesOpen}
         >
+          <Text size="lg" thickness="bold">
+            Color
+          </Text>
+
+          <View className="flex flex-row flex-wrap gap-4">
+            {Object.values(PreferenceColor).map((key) => (
+              <Pressable
+                key={key}
+                className="hover:w-12 w-10 hover:h-12 h-10 hover:-m-1 rounded-lg transition-all duration-300"
+                style={{
+                  backgroundColor: `rgb(${PreferenceColorMap[key]["primary-200"]})`,
+                }}
+                onPress={() => setColorKey(key)}
+              />
+            ))}
+          </View>
+
           <Text size="lg" thickness="bold">
             Decks Page
           </Text>

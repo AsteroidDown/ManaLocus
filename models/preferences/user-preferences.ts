@@ -1,4 +1,5 @@
 import { SortType } from "@/constants/sorting";
+import { PreferenceColor } from "@/constants/ui/colors";
 import { DeckSortType } from "@/models/deck/dtos/deck-filters.dto";
 import {
   DeckCardGalleryGroupTypes,
@@ -19,4 +20,6 @@ export interface UserPreferences {
   deckCardColumnShowPrice?: boolean;
   deckCardColumnShowManaValue?: boolean;
   deckCardColumnGroupMulticolored?: boolean;
+
+  color?: PreferenceColor;
 }

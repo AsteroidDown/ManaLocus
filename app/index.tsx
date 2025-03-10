@@ -17,7 +17,6 @@ export default function RootLayout() {
         )
       }
     >
-      {/* <SafeAreaView className="flex w-full bg-background-100"> */}
       <View className="relative flex-1 flex items-center justify-center w-full min-h-[100dvh]">
         <Image
           source={{

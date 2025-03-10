@@ -18,15 +18,6 @@ module.exports = {
       animation: {
         bottomToTopGrow: "bottomToTopGrow 1s ease forwards",
       },
-      gridTemplateAreas: {
-        graphLayout: ["title title", "verticalAxis plot", ". horizontalAxis"],
-      },
-      gridTemplateColumns: {
-        graphLayout: "1fr auto",
-      },
-      gridTemplateRows: {
-        graphLayout: "1fr 5fr 1fr",
-      },
       colors: {
         "mtg-white": "#f9faf4",
         "mtg-white-secondary": "#f8e7b9",
@@ -45,12 +36,12 @@ module.exports = {
         "mtg-land": "#592b14",
         "mtg-land-secondary": "#784228",
 
-        "primary-100": "#382bf0",
-        "primary-200": "#5e43f3",
-        "primary-300": "#7a5af5",
-        "primary-400": "#9171f8",
-        "primary-500": "#a688fa",
-        "primary-600": "#ba9ffb",
+        "primary-100": "rgba(var(--primary-100) / <alpha-value>)",
+        "primary-200": "rgba(var(--primary-200) / <alpha-value>)",
+        "primary-300": "rgba(var(--primary-300) / <alpha-value>)",
+        "primary-400": "rgba(var(--primary-400) / <alpha-value>)",
+        "primary-500": "rgba(var(--primary-500) / <alpha-value>)",
+        "primary-600": "rgba(var(--primary-600) / <alpha-value>)",
 
         "secondary-100": "#9c27b0",
         "secondary-200": "#a945b9",
@@ -66,12 +57,12 @@ module.exports = {
         "dark-500": "#717171",
         "dark-600": "#8b8b8b",
 
-        "background-100": "#1a1625",
-        "background-200": "#2f2b3a",
-        "background-300": "#46424f",
-        "background-400": "#5e5a66",
-        "background-500": "#76737e",
-        "background-600": "#908d96",
+        "background-100": "rgba(var(--background-100) / <alpha-value>)",
+        "background-200": "rgba(var(--background-200) / <alpha-value>)",
+        "background-300": "rgba(var(--background-300) / <alpha-value>)",
+        "background-400": "rgba(var(--background-400) / <alpha-value>)",
+        "background-500": "rgba(var(--background-500) / <alpha-value>)",
+        "background-600": "rgba(var(--background-600) / <alpha-value>)",
 
         "success-100": "#4caf50",
         "success-200": "#63b863",

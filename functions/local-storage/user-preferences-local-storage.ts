@@ -1,4 +1,5 @@
 import { SortTypes } from "@/constants/sorting";
+import { PreferenceColor } from "@/constants/ui/colors";
 import {
   DeckCardGalleryGroupTypes,
   DeckCardGallerySortTypes,
@@ -61,6 +62,8 @@ export function setLocalStorageUserPreferences(preferences: UserPreferences) {
       preferences?.deckCardColumnGroupMulticolored ??
       storedPreferences?.deckCardColumnGroupMulticolored ??
       false,
+    color:
+      preferences?.color ?? storedPreferences?.color ?? PreferenceColor.DEFAULT,
   };
 
   return localStorage.setItem(
