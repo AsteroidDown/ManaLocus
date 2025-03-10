@@ -59,7 +59,9 @@ export default function UserSettingsPage() {
     return null;
   }
 
-  const [colorKey, setColorKey] = useState(PreferenceColor.DEFAULT);
+  const [colorKey, setColorKey] = useState(
+    preferences?.color ?? PreferenceColor.DEFAULT
+  );
 
   const [preferencesOpen, setPreferencesOpen] = useState(false);
   const [emailOpen, setEmailOpen] = useState(false);
