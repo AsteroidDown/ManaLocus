@@ -104,7 +104,6 @@ APIAxiosConfig.interceptors.request.use(
 APIAxiosConfig.interceptors.response.use(
   (response) => response,
   async (error) => {
-    console.log("Response Error", error);
     const originalRequest = error.config;
     const refreshToken = getLocalStorageJwt()?.refresh;
 
@@ -117,7 +116,6 @@ APIAxiosConfig.interceptors.response.use(
     ) {
       try {
         originalRequest._retry = true;
-        console.log("Refreshing Token");
 
         const response = await fetch(REFRESH, {
           method: "POST",
@@ -127,21 +125,18 @@ APIAxiosConfig.interceptors.response.use(
           }),
         }).then((res) => res.json());
 
-        console.log("Refresh Response", response);
         const access = response.access;
         if (!access) {
           removeLocalStorageJwt();
           return Promise.reject(error);
         }
 
-        console.log("Setting New Token", access);
         setLocalStorageJwt({ access, refresh: refreshToken });
 
         originalRequest.headers.Authorization = `Bearer ${access}`;
-        console.log("Recalling Request", originalRequest);
         return axios(originalRequest);
       } catch (err) {
-        console.log("Error Refreshing Token", err);
+        console.error("Error Refreshing Token", err);
         removeLocalStorageJwt();
         return Promise.reject(err);
       }
