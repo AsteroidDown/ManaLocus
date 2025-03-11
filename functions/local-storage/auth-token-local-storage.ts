@@ -12,6 +12,11 @@ export function getLocalStorageJwt(): JWT | null {
   return jwt;
 }
 
+export function setLocalStorageJwt({ access, refresh }: JWT) {
+  if (access) localStorage.setItem("user-access", access);
+  if (refresh) localStorage.setItem("user-refresh", refresh);
+}
+
 export function removeLocalStorageJwt(): void {
   localStorage.removeItem("user-access");
   localStorage.removeItem("user-refresh");

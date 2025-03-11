@@ -1,6 +1,7 @@
 import {
   getLocalStorageJwt,
   removeLocalStorageJwt,
+  setLocalStorageJwt,
 } from "@/functions/local-storage/auth-token-local-storage";
 import axios, { AxiosResponse } from "axios";
 import { APIbaseURL } from "../../constants/urls";
@@ -101,49 +102,48 @@ APIAxiosConfig.interceptors.request.use(
 
 // Refresh access token upon expiry, logout users with expired refresh token
 APIAxiosConfig.interceptors.response.use(
-  (res) => res,
-  async (err) => {
-    console.log("Response Error");
-    console.log(err);
-    const originalRequest = err.config;
+  (response) => response,
+  async (error) => {
+    console.log("Response Error", error);
+    const originalRequest = error.config;
+    const refreshToken = getLocalStorageJwt()?.refresh;
 
-    // Access Token was expired
     if (
-      !REFRESH_TOKEN_BLACKLIST.includes(originalRequest.url) &&
-      err.response?.status === 401 &&
-      !originalRequest._retry
+      error.response &&
+      error.response.status === 401 &&
+      error.config &&
+      !error.config.__isRetryRequest &&
+      refreshToken
     ) {
-      console.log("Refreshing Token");
-      originalRequest._retry = true;
-
       try {
-        const refresh = getLocalStorageJwt()?.refresh;
-        console.log("Current Token", refresh);
-        if (!refresh) return;
+        originalRequest._retry = true;
+        console.log("Refreshing Token");
 
-        const response = await axios.post(
-          REFRESH,
-          { refresh },
-          {
-            headers: getApiHeaders(),
-            withCredentials: true,
-          }
-        );
-        console.log("New Token", response);
+        const response = await fetch(REFRESH, {
+          method: "POST",
+          headers: getApiHeaders(),
+          body: JSON.stringify({
+            refresh: refreshToken,
+          }),
+        }).then((res) => res.json());
 
-        // Don't use axios instance that already configured for refresh token api call
-        const newAccessToken = response.data.access;
+        console.log("Refresh Response", response);
+        const access = response.access;
+        if (!access) {
+          removeLocalStorageJwt();
+          return Promise.reject(error);
+        }
 
-        console.log("Setting New Token", newAccessToken);
-        localStorage.setItem("user-access", newAccessToken);
-        originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+        console.log("Setting New Token", access);
+        setLocalStorageJwt({ access, refresh: refreshToken });
 
-        console.log("Recalling Request");
-        return axios(originalRequest); //recall Api with new token
-      } catch (error) {
-        console.log("Error Refreshing Token", error);
-        // Handle token refresh failure - user session has expired (configured in Django)
+        originalRequest.headers.Authorization = `Bearer ${access}`;
+        console.log("Recalling Request", originalRequest);
+        return axios(originalRequest);
+      } catch (err) {
+        console.log("Error Refreshing Token", err);
         removeLocalStorageJwt();
+        return Promise.reject(err);
       }
     }
   }
