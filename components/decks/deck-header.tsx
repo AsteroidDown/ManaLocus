@@ -1,5 +1,6 @@
 import { LostURL } from "@/constants/urls";
 import DeckContext from "@/contexts/deck/deck.context";
+import ToastContext from "@/contexts/ui/toast.context";
 import UserContext from "@/contexts/user/user.context";
 import { titleCase } from "@/functions/text-manipulation";
 import DeckService from "@/hooks/services/deck.service";
@@ -23,6 +24,7 @@ import DeckDeleteModal from "./deck-delete-modal";
 export default function DeckHeader({ deck }: { deck: Deck }) {
   const { user } = useContext(UserContext);
   const { setDeck } = useContext(DeckContext);
+  const { addToast } = useContext(ToastContext);
 
   const [deckFavorited, setDeckFavorited] = React.useState(false);
   const [deckViewed, setDeckViewed] = React.useState(null as boolean | null);
@@ -57,6 +59,9 @@ export default function DeckHeader({ deck }: { deck: Deck }) {
       if (response) {
         setDeckFavorited(true);
         setDeck({ ...deck, favorites: deck.favorites + 1 });
+        addToast({
+          title: `Added ${deck?.name} to favorites!`,
+        });
       }
     });
   }
@@ -68,6 +73,10 @@ export default function DeckHeader({ deck }: { deck: Deck }) {
       if (response) {
         setDeckFavorited(false);
         setDeck({ ...deck, favorites: deck.favorites - 1 });
+        addToast({
+          title: `Removed ${deck?.name} from favorites`,
+          action: "danger",
+        });
       }
     });
   }

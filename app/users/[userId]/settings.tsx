@@ -105,6 +105,8 @@ export default function UserSettingsPage() {
   if (!user) return null;
 
   useEffect(() => {
+    if (colorKey === preferences?.color) return;
+
     Object.values(PreferenceColorHues).forEach((hue) => {
       document.documentElement.style.setProperty(
         `--${hue}`,
@@ -113,6 +115,10 @@ export default function UserSettingsPage() {
     });
 
     setLocalStorageUserPreferences({ color: colorKey });
+
+    addToast({
+      title: `Color set to ${titleCase(colorKey)}!`,
+    });
   }, [colorKey]);
 
   useEffect(() => {
