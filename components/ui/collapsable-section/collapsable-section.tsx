@@ -1,7 +1,8 @@
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
-import React, { ReactNode, useEffect } from "react";
+import React, { ReactNode, useEffect, useState } from "react";
 import { Pressable, View, ViewProps } from "react-native";
 import Button from "../button/button";
+import Divider from "../divider/divider";
 import Text from "../text/text";
 
 export type DividerProps = ViewProps & {
@@ -23,17 +24,17 @@ export default function CollapsableSection({
   className,
   children,
 }: DividerProps) {
-  const [collapsed, setCollapsed] = React.useState(true);
+  const [collapsed, setCollapsed] = useState(true);
 
   useEffect(() => {
-    if (expanded) setCollapsed(false);
-    else setTimeout(() => setCollapsed(!expanded), 150);
+    if (expanded) setTimeout(() => setCollapsed(false), 300);
+    else setCollapsed(true);
   }, [expanded]);
 
   return (
-    <View className="flex w-full">
+    <View className="flex w-full border-2 border-background-200 rounded-lg">
       <Pressable
-        className="flex flex-row justify-between items-center gap-2 px-2 max-h-16 min-h-16 w-full overflow-hidden"
+        className="flex flex-row justify-between items-center gap-2 px-4 max-h-16 min-h-16 w-full overflow-hidden"
         onPress={() => setExpanded(!expanded)}
       >
         <View className="flex flex-row items-center gap-2 h-full">
@@ -62,10 +63,12 @@ export default function CollapsableSection({
 
       <View
         className={`${expanded ? "max-h-[1000px]" : "max-h-0"} ${
-          collapsed ? "!border-b-0 overflow-hidden" : ""
-        } border-2 border-background-200 rounded-b-lg transition-all duration-300`}
+          collapsed ? "overflow-hidden" : ""
+        } transition-all duration-300`}
       >
-        <View className={`${className} flex gap-4 px-4 py-6`}>{children}</View>
+        <Divider thick className="!border-background-200" />
+
+        <View className={`${className} flex gap-2 px-4 py-6`}>{children}</View>
       </View>
     </View>
   );
