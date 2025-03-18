@@ -71,3 +71,7 @@ export function setLocalStorageUserPreferences(preferences: UserPreferences) {
     JSON.stringify(updatedPreferences)
   );
 }
+
+export function removeLocalStorageUserPreferences() {
+  localStorage.removeItem("user-preferences");
+}

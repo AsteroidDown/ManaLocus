@@ -19,6 +19,7 @@ import UserPreferencesContext from "@/contexts/user/user-preferences.context";
 import UserContext from "@/contexts/user/user.context";
 import {
   getLocalStorageUserPreferences,
+  removeLocalStorageUserPreferences,
   setLocalStorageUserPreferences,
 } from "@/functions/local-storage/user-preferences-local-storage";
 import { titleCase } from "@/functions/text-manipulation";
@@ -228,6 +229,8 @@ export default function UserSettingsPage() {
   function logout() {
     UserService.logout().then(() => {
       router.push("");
+      setPreferences(null);
+      removeLocalStorageUserPreferences();
       setUser(user ? { ...user, name: "" } : null);
 
       addToast({

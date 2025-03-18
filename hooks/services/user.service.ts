@@ -1,3 +1,5 @@
+import { setLocalStorageJwt } from "@/functions/local-storage/auth-token-local-storage";
+import { setLocalStorageUser } from "@/functions/local-storage/user-local-storage";
 import { mapDatabaseUser } from "@/functions/mapping/user-mapping";
 import { UserFiltersDTO } from "@/models/user/dtos/user-filters.dto";
 import { User } from "@/models/user/user";
@@ -61,10 +63,15 @@ async function login(username: string, password: string) {
   })
     .then((response) => {
       if (response?.access && response?.refresh) {
-        localStorage.setItem("user-access", response.access);
-        localStorage.setItem("user-refresh", response.refresh);
+        setLocalStorageJwt({
+          access: response.access,
+          refresh: response.refresh,
+        });
 
-        return mapDatabaseUser(response);
+        const user = mapDatabaseUser(response);
+        setLocalStorageUser(user, password);
+
+        return user;
       }
 
       return null;
@@ -77,10 +84,13 @@ async function refresh() {
   if (!refreshToken) return;
 
   return await API.post(`token/refresh/`, { refresh: refreshToken })
-    .then(
-      (response) =>
-        response?.access && localStorage.setItem("user-access", response.access)
-    )
+    .then((response) => {
+      if (response) {
+        localStorage.setItem("user-access", response.access);
+      }
+
+      return response;
+    })
     .catch((error) => console.error(`Error refreshing token: ${error}`));
 }
 

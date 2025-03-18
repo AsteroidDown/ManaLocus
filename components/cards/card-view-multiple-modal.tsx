@@ -82,7 +82,6 @@ export default function CardViewMultipleModal({
                 card={card}
                 shouldLoad={loadIndex >= index}
                 onLoad={() => {
-                  console.log(loadIndex);
                   if (index < loadIndex) return;
                   setLoadIndex(index + 1);
                 }}
