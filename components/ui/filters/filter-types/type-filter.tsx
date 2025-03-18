@@ -204,7 +204,7 @@ export default function TypeFilter({
           }`}
         >
           <Text
-            thickness="semi"
+            weight="semi"
             className={`!text-dark-100 rounded-full px-[9px] py-[3px] bg-primary-200`}
           >
             {appliedFilters.length}

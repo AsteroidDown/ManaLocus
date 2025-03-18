@@ -40,7 +40,7 @@ export default function Tab({
     >
       <Text
         size="lg"
-        thickness="semi"
+        weight="semi"
         className={`${focused ? "!text-primary-200" : "!text-background-400"}`}
       >
         {title}

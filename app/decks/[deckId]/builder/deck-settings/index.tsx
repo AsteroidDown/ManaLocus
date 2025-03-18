@@ -379,7 +379,7 @@ export default function DeckSettingsPage() {
               />
 
               <View className="flex gap-2">
-                <Text size="md" thickness="bold">
+                <Text size="md" weight="bold">
                   Visibility
                 </Text>
 
@@ -405,7 +405,7 @@ export default function DeckSettingsPage() {
 
               {!deck?.isCollection && (
                 <View className="flex gap-2">
-                  <Text size="md" thickness="bold">
+                  <Text size="md" weight="bold">
                     Type
                   </Text>
 

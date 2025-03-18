@@ -83,7 +83,7 @@ export default function DeckExampleHand({ deck }: DeckTestHandProps) {
       }
     >
       <View className="flex lg:flex-row justify-between lg:items-center gap-4">
-        <Text size="lg" thickness="bold">
+        <Text size="lg" weight="bold">
           Example Hand
         </Text>
 

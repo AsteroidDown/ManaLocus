@@ -80,7 +80,7 @@ export default function DeckChangeLog({ deck, className }: DeckChangeLogProps) {
 
   return (
     <View className={`${className} flex`}>
-      <Text size="lg" thickness="bold" className="mb-2">
+      <Text size="lg" weight="bold" className="mb-2">
         Change Log
       </Text>
 
@@ -111,16 +111,16 @@ export default function DeckChangeLog({ deck, className }: DeckChangeLogProps) {
                     }}
                   >
                     <View className="flex-1 flex flex-row justify-between items-center gap-2 px-2 py-1 w-full min-h-8 hover:bg-primary-200 transition-all duration-300">
-                      <Text thickness="bold">
+                      <Text weight="bold">
                         {moment(timeChange.time).format("MMM Do, YYYY h:mm A")}
                       </Text>
 
                       <View className="flex flex-row gap-2">
-                        <Text mono action="success" thickness="semi">
+                        <Text mono action="success" weight="semi">
                           + {timeChange.added}
                         </Text>
 
-                        <Text mono action="danger" thickness="semi">
+                        <Text mono action="danger" weight="semi">
                           - {timeChange.removed}
                         </Text>
                       </View>
@@ -141,7 +141,7 @@ export default function DeckChangeLog({ deck, className }: DeckChangeLogProps) {
                             : "bg-background-200"
                         } flex flex-row justify-between items-center pl-6 pr-2 py-1 w-full min-h-8 hover:bg-primary-200 transition-all duration-300`}
                       >
-                        <Text size="sm" thickness="semi">
+                        <Text size="sm" weight="semi">
                           {change.name}
                         </Text>
 

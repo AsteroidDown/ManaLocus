@@ -74,7 +74,7 @@ export default function UserLayout() {
       <SafeAreaView className="flex w-full h-full bg-background-100">
         <View className="flex-1 flex gap-4 w-full min-h-[100dvh] lg:px-16 px-4 py-8 bg-background-100">
           <View className="flex flex-row justify-between">
-            <Text size="2xl" thickness="medium">
+            <Text size="2xl" weight="medium">
               {userPageUser?.name}
             </Text>
           </View>

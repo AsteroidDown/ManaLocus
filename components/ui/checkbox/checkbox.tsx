@@ -57,7 +57,7 @@ export default function Checkbox({
         {label && (
           <Text
             size={size ?? "md"}
-            thickness="medium"
+            weight="medium"
             className={disabled ? "text-dark-300" : "text-white"}
           >
             {label}

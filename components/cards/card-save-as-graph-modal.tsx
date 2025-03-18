@@ -118,7 +118,7 @@ export default function CardSaveAsGraphModal({
             size="2xl"
             className="color-white"
           />
-          <Text size="2xl" thickness="bold">
+          <Text size="2xl" weight="bold">
             {item ? "Update Graph" : "Save As Graph"}
           </Text>
         </View>
@@ -131,7 +131,7 @@ export default function CardSaveAsGraphModal({
           </Text>
 
           <View className="flex gap-2 max-w-96">
-            <Text size="md" thickness="bold">
+            <Text size="md" weight="bold">
               Sort Type
             </Text>
 
@@ -165,7 +165,7 @@ export default function CardSaveAsGraphModal({
           </View>
 
           <View className="flex gap-2 max-w-96">
-            <Text size="md" thickness="bold">
+            <Text size="md" weight="bold">
               Color
             </Text>
 
@@ -179,7 +179,7 @@ export default function CardSaveAsGraphModal({
           </View>
 
           <View className="flex gap-2 max-w-96">
-            <Text size="md" thickness="bold">
+            <Text size="md" weight="bold">
               Type
             </Text>
 
@@ -193,7 +193,7 @@ export default function CardSaveAsGraphModal({
           </View>
 
           <View className="flex gap-2 max-w-96">
-            <Text size="md" thickness="bold">
+            <Text size="md" weight="bold">
               Rarity
             </Text>
 

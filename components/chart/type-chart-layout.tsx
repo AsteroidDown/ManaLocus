@@ -77,7 +77,7 @@ export default function TypeChartLayout({
               color
             )}`}
           >
-            <Text thickness="semi">{titleCase(color)}</Text>
+            <Text weight="semi">{titleCase(color)}</Text>
           </View>
 
           <ChartCell

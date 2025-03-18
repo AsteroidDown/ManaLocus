@@ -36,7 +36,7 @@ export default function CardRulings({ card }: CardRulingsProps) {
         className="flex flex-row justify-between items-center gap-2"
         onPress={() => setOpen(!open)}
       >
-        <Text size="lg" thickness="bold">
+        <Text size="lg" weight="bold">
           Rulings
         </Text>
 
@@ -65,14 +65,14 @@ export default function CardRulings({ card }: CardRulingsProps) {
               <CardText text={ruling.comment} />
 
               <View className="flex flex-row justify-between items-center gap-2">
-                <Text size="sm" thickness="semi">
+                <Text size="sm" weight="semi">
                   Source:{" "}
                   {ruling.source === "wotc"
                     ? "Wizards of the Coast"
                     : titleCase(ruling.source)}
                 </Text>
 
-                <Text size="sm" thickness="semi">
+                <Text size="sm" weight="semi">
                   {moment(ruling.publishedAt).format("MMM Do, YYYY")}
                 </Text>
               </View>

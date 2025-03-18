@@ -139,7 +139,7 @@ export default function TradePage() {
 
         <View className="flex lg:flex-row gap-4 mb-6 min-h-fit">
           <View className="flex-1 flex gap-2">
-            <Text size="lg" thickness="semi">
+            <Text size="lg" weight="semi">
               Your Cards
             </Text>
 
@@ -155,13 +155,13 @@ export default function TradePage() {
 
             <Divider thick className="!border-background-200 mt-auto" />
 
-            <Text size="lg" thickness="semi">
+            <Text size="lg" weight="semi">
               Your Total: {currency(trade.tradingUserTotal / 100)}
             </Text>
           </View>
 
           <View className="flex-1 flex gap-2 min-h-fit">
-            <Text size="lg" thickness="semi">
+            <Text size="lg" weight="semi">
               {trade.tradedToUser
                 ? (trade.tradedToUser as any)?.username + "'s"
                 : "Their"}{" "}
@@ -180,7 +180,7 @@ export default function TradePage() {
 
             <Divider thick className="!border-background-200 mt-auto" />
 
-            <Text size="lg" thickness="semi">
+            <Text size="lg" weight="semi">
               {trade.tradedToUser
                 ? (trade.tradedToUser as any)?.username + "'s"
                 : "Their"}{" "}
@@ -191,7 +191,7 @@ export default function TradePage() {
 
         <Divider thick className="!border-background-200 mb-4" />
 
-        <Text size="lg" thickness="semi">
+        <Text size="lg" weight="semi">
           {trade.total > 0
             ? `${tradedToUser ? tradedToUser.name + " owes" : "They owe"} you`
             : trade.total === 0
@@ -199,7 +199,7 @@ export default function TradePage() {
             : `You owe ${tradedToUser ? tradedToUser.name : "them"}`}
           <Text
             size="lg"
-            thickness="semi"
+            weight="semi"
             action={trade.total > 0 ? "success" : "danger"}
           >
             {trade.total !== 0 && " " + currency(Math.abs(trade.total / 100))}

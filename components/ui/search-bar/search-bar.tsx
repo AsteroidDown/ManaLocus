@@ -118,7 +118,7 @@ export default function SearchBar({
         >
           <Text
             size="md"
-            thickness="medium"
+            weight="medium"
             className={
               "!text-background-500 " +
               (searchHovered ? "!text-primary-500" : "")

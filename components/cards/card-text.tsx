@@ -79,7 +79,7 @@ export default function CardText({ text, flavor, size = "md" }: CardTextProps) {
             {line.value && (
               <View className="flex flex-row items-center gap-2">
                 <Text
-                  thickness="bold"
+                  weight="bold"
                   className="px-2 py-0.5 min-w-10 text-center bg-dark-300 rounded"
                 >
                   {line.value !== "0"

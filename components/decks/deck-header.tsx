@@ -99,23 +99,23 @@ export default function DeckHeader({ deck }: { deck: Deck }) {
       <View className="absolute flex justify-center gap-1 w-full h-full lg:px-16 px-4 top-0 left-0">
         <Text
           size="sm"
-          thickness="bold"
+          weight="bold"
           className={`px-2 py-1 bg-dark-200 bg-opacity-85 rounded-xl w-fit h-fit`}
         >
           {deck.format?.length ? titleCase(deck.format) : "TBD"}
         </Text>
 
-        <Text thickness="bold" className="lg:!text-5xl !text-3xl">
+        <Text weight="bold" className="lg:!text-5xl !text-3xl">
           {deck.name}
         </Text>
 
-        <Text size="lg" thickness="medium">
+        <Text size="lg" weight="medium">
           By <Link href={`/users/${deck.userId}`}>{deck.user?.name}</Link>
         </Text>
       </View>
 
       <View className="absolute bottom-4 lg:left-16 left-4">
-        <Text size="sm" thickness="semi" className="!text-gray-300">
+        <Text size="sm" weight="semi" className="!text-gray-300">
           Last Updated: {moment(deck.updated).format("MMM Do, YYYY")}
         </Text>
       </View>

@@ -75,7 +75,7 @@ export default function DeckTokens({ deck }: DeckTokensProps) {
           className="flex flex-row justify-between items-center gap-4"
           onPress={() => setOpen(!open)}
         >
-          <Text size="lg" thickness="bold">
+          <Text size="lg" weight="bold">
             Tokens
           </Text>
 
@@ -122,7 +122,7 @@ export function Token({ creator, token }: { creator: Card; token: Card }) {
       <CardImage card={token} />
 
       <View className="flex px-2 max-w-full">
-        <Text thickness="bold">{token.name}</Text>
+        <Text weight="bold">{token.name}</Text>
 
         <Text size="xs" className="!text-gray-200">
           {token.typeLine}

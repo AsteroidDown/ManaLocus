@@ -53,7 +53,7 @@ export default function Filter({
           }`}
         >
           <Text
-            thickness="semi"
+            weight="semi"
             className={`!text-dark-100 rounded-full px-[7px] py-[3px] ${textColor}`}
           >
             {appliedFilterCount}

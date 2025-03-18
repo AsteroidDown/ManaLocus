@@ -73,7 +73,7 @@ export default function DashboardItemHeader({
           {!editingItem && (
             <Text
               size="xl"
-              thickness="bold"
+              weight="bold"
               className="max-h-fit text-center mx-4 my-2"
             >
               {title}

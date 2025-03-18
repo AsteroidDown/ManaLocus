@@ -403,7 +403,7 @@ export default function NewTradePage() {
           <View className="flex-1 flex justify-between gap-2 min-h-fit z-[28]">
             <View className="flex gap-2 min-w-[250px] z-[26]">
               <View className="flex flex-row flex-wrap gap-2 justify-between items-center">
-                <Text size="lg" thickness="semi">
+                <Text size="lg" weight="semi">
                   Your Cards
                 </Text>
 
@@ -458,7 +458,7 @@ export default function NewTradePage() {
               <Divider thick className="!border-background-200" />
 
               <View className="flex flex-row flex-wrap gap-2 justify-between items-center">
-                <Text size="lg" thickness="semi">
+                <Text size="lg" weight="semi">
                   Your Total: {currency(tradingUserTotal / 100)}
                 </Text>
 
@@ -499,7 +499,7 @@ export default function NewTradePage() {
           <View className="flex-1 flex justify-between gap-2 min-h-fit z-[18]">
             <View className="flex gap-2 min-w-[250px] z-[16]">
               <View className="flex flex-row flex-wrap gap-2 justify-between items-center">
-                <Text size="lg" thickness="semi">
+                <Text size="lg" weight="semi">
                   {tradedToUser ? tradedToUser.name + "'s" : "Their"} Cards
                 </Text>
 
@@ -554,7 +554,7 @@ export default function NewTradePage() {
               <Divider thick className="!border-background-200" />
 
               <View className="flex flex-row flex-wrap gap-2 justify-between items-center">
-                <Text size="lg" thickness="semi">
+                <Text size="lg" weight="semi">
                   {tradedToUser ? tradedToUser.name + "'s" : "Their"} Total:{" "}
                   {currency(tradedToUserTotal / 100)}
                 </Text>
@@ -598,7 +598,7 @@ export default function NewTradePage() {
 
         <View className="flex flex-row gap-4 justify-end mt-4">
           <View className="lg:flex-[0] flex-1 flex gap-4 lg:min-w-fit min-w-full">
-            <Text size="md" thickness="medium" className="ml-auto">
+            <Text size="md" weight="medium" className="ml-auto">
               {tradingUserCards?.length > 0 || tradedToUserCards?.length > 0
                 ? evenTrade
                   ? "The trade is even!"
@@ -616,7 +616,7 @@ export default function NewTradePage() {
               {!evenTrade && total !== 0 && (
                 <Text
                   size="md"
-                  thickness="semi"
+                  weight="semi"
                   action={total > 0 ? "success" : "danger"}
                 >
                   {total !== 0 && " " + currency(Math.abs(total / 100))}
@@ -671,7 +671,7 @@ export default function NewTradePage() {
                   : `You owe ${tradedToUser?.name}: `}
                 {previousTradesTotal + (evenTrade ? 0 : total) !== 0 && (
                   <Text
-                    thickness="medium"
+                    weight="medium"
                     action={
                       previousTradesTotal + (evenTrade ? 0 : total) > 0
                         ? "success"

@@ -91,7 +91,7 @@ export default function FolderDetailsModal({
   return (
     <Modal open={open} setOpen={setOpen}>
       <View className="flex gap-4 min-w-96 max-w-2xl max-h-[80vh]">
-        <Text size="xl" thickness="bold">
+        <Text size="xl" weight="bold">
           {folder ? `Update ${folder.name}` : "Create Folder"}
         </Text>
 

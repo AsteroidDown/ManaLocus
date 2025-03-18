@@ -89,8 +89,8 @@ export default function CardViewMultipleModal({
             </View>
 
             <View className="flex flex-row gap-2 px-2">
-              <Text thickness="bold">{card.count}</Text>
-              <Text truncate thickness="bold">
+              <Text weight="bold">{card.count}</Text>
+              <Text truncate weight="bold">
                 {card.name}
               </Text>
             </View>

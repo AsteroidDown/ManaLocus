@@ -35,7 +35,7 @@ export default function RootLayout() {
           source={require("assets/Logo.png")}
         />
 
-        <Text size="2xl" thickness="medium" className="px-6 pt-4">
+        <Text size="2xl" weight="medium" className="px-6 pt-4">
           Mana Locus
         </Text>
 

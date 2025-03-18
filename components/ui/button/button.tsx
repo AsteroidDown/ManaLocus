@@ -125,7 +125,7 @@ export default function Button({
         {text && (
           <Text
             size={size}
-            thickness="bold"
+            weight="bold"
             className={`select-none min-w-fit ${textColor} ${
               children ? "mr-2" : ""
             }`}

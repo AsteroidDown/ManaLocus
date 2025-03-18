@@ -39,13 +39,13 @@ export function CardInfo({ card, face, link, onLinkPress }: CardInfoProps) {
         {link ? (
           <Link href={`/cards/${card.set}/${card.collectorNumber}`}>
             <Pressable tabIndex={-1} onPress={() => onLinkPress?.()}>
-              <Text size="2xl" thickness="bold" className="!text-primary-200">
+              <Text size="2xl" weight="bold" className="!text-primary-200">
                 {face?.name || card.name}
               </Text>
             </Pressable>
           </Link>
         ) : (
-          <Text size="2xl" thickness="bold">
+          <Text size="2xl" weight="bold">
             {face?.name || card.name}
           </Text>
         )}

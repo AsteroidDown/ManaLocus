@@ -84,7 +84,7 @@ export default function FolderDecksModal({
   return (
     <Modal open={open} setOpen={setOpen}>
       <View className="flex gap-4 max-w-2xl max-h-[80vh]">
-        <Text size="xl" thickness="bold">
+        <Text size="xl" weight="bold">
           Add Deck to {folder.name}
         </Text>
 

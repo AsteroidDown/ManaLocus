@@ -13,7 +13,7 @@ export type TextThickness =
 export type TextProps = ViewProps & {
   size?: Size;
   action?: ActionColor | "default";
-  thickness?: TextThickness;
+  weight?: TextThickness;
   mono?: boolean;
   center?: boolean;
   noWrap?: boolean;
@@ -23,7 +23,7 @@ export type TextProps = ViewProps & {
 export default function Text({
   size = "sm",
   action = "default",
-  thickness = "normal",
+  weight = "normal",
   mono = false,
   center = false,
   noWrap = false,
@@ -33,11 +33,11 @@ export default function Text({
 }: TextProps) {
   const textSize = getTextSize(size);
   const textColor = getTextColor(action);
-  const textThickness = getTextThickness(thickness);
+  const textWeight = getTextThickness(weight);
 
   return (
     <ReactText
-      className={`${className} ${textSize} ${textColor} ${textThickness} ${
+      className={`${className} ${textSize} ${textColor} ${textWeight} ${
         mono ? "font-mono" : ""
       } ${noWrap ? "text-nowrap" : ""} ${truncate ? "truncate" : ""} ${
         center ? "text-center" : ""

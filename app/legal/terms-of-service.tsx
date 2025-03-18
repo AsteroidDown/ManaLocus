@@ -21,7 +21,7 @@ export default function TermsOfService() {
       }
     >
       <View className="flex gap-4 min-h-fit">
-        <Text size="2xl" thickness="bold">
+        <Text size="2xl" weight="bold">
           Terms of Service for ManaLocus
         </Text>
 
@@ -43,7 +43,7 @@ export default function TermsOfService() {
           Site.
         </Text>
 
-        <Text size="lg" thickness="semi" className="mt-4 -mb-2">
+        <Text size="lg" weight="semi" className="mt-4 -mb-2">
           1. Acceptance of Terms
         </Text>
 
@@ -55,7 +55,7 @@ export default function TermsOfService() {
           from time to time.
         </Text>
 
-        <Text size="lg" thickness="semi" className="mt-4 -mb-2">
+        <Text size="lg" weight="semi" className="mt-4 -mb-2">
           2. No Affiliation with Wizards of the Coast
         </Text>
 
@@ -76,7 +76,7 @@ export default function TermsOfService() {
           do the same.
         </Text>
 
-        <Text size="lg" thickness="semi" className="mt-4 -mb-2">
+        <Text size="lg" weight="semi" className="mt-4 -mb-2">
           3. Intellectual Property Rights
         </Text>
 
@@ -112,7 +112,7 @@ export default function TermsOfService() {
           </View>
         </View>
 
-        <Text size="lg" thickness="semi" className="mt-4 -mb-2" id="4">
+        <Text size="lg" weight="semi" className="mt-4 -mb-2" id="4">
           4. License
         </Text>
 
@@ -127,7 +127,7 @@ export default function TermsOfService() {
           consent of ManaLocus.
         </Text>
 
-        <Text size="lg" thickness="semi" className="mt-4 -mb-2">
+        <Text size="lg" weight="semi" className="mt-4 -mb-2">
           5. User Conduct
         </Text>
 
@@ -195,7 +195,7 @@ export default function TermsOfService() {
           .
         </Text>
 
-        <Text size="lg" thickness="semi" className="mt-4 -mb-2">
+        <Text size="lg" weight="semi" className="mt-4 -mb-2">
           6. Community Guidelines
         </Text>
 
@@ -245,7 +245,7 @@ export default function TermsOfService() {
           </View>
         </View>
 
-        <Text size="lg" thickness="semi" className="mt-4 -mb-2">
+        <Text size="lg" weight="semi" className="mt-4 -mb-2">
           7. Third-Party Links and Content
         </Text>
 
@@ -266,7 +266,7 @@ export default function TermsOfService() {
           the Privacy Policy.
         </Text>
 
-        <Text size="lg" thickness="semi" className="mt-4 -mb-2" id="8">
+        <Text size="lg" weight="semi" className="mt-4 -mb-2" id="8">
           8. Security and Restrictions
         </Text>
 
@@ -347,7 +347,7 @@ export default function TermsOfService() {
           </View>
         </View>
 
-        <Text size="lg" thickness="semi" className="mt-4 -mb-2">
+        <Text size="lg" weight="semi" className="mt-4 -mb-2">
           9. Privacy
         </Text>
 
@@ -361,7 +361,7 @@ export default function TermsOfService() {
           Policy.
         </Text>
 
-        <Text size="lg" thickness="semi" className="mt-4 -mb-2">
+        <Text size="lg" weight="semi" className="mt-4 -mb-2">
           10. Disclaimer of Warranties
         </Text>
 
@@ -373,7 +373,7 @@ export default function TermsOfService() {
           your own risk.
         </Text>
 
-        <Text size="lg" thickness="semi" className="mt-4 -mb-2">
+        <Text size="lg" weight="semi" className="mt-4 -mb-2">
           11. Limitation of Liability
         </Text>
 
@@ -404,7 +404,7 @@ export default function TermsOfService() {
           occurred.
         </Text>
 
-        <Text size="lg" thickness="semi" className="mt-4 -mb-2">
+        <Text size="lg" weight="semi" className="mt-4 -mb-2">
           12. Indemnification
         </Text>
 
@@ -416,7 +416,7 @@ export default function TermsOfService() {
           third-party rights.
         </Text>
 
-        <Text size="lg" thickness="semi" className="mt-4 -mb-2">
+        <Text size="lg" weight="semi" className="mt-4 -mb-2">
           13. Modification of Terms
         </Text>
 
@@ -429,7 +429,7 @@ export default function TermsOfService() {
           you are aware of our current Terms.
         </Text>
 
-        <Text size="lg" thickness="semi" className="mt-4 -mb-2">
+        <Text size="lg" weight="semi" className="mt-4 -mb-2">
           14. Governing Law
         </Text>
 
@@ -440,7 +440,7 @@ export default function TermsOfService() {
           of the courts in Ontario.
         </Text>
 
-        <Text size="lg" thickness="semi" className="mt-4 -mb-2" id="15">
+        <Text size="lg" weight="semi" className="mt-4 -mb-2" id="15">
           15. Miscellaneous
         </Text>
 
@@ -475,7 +475,7 @@ export default function TermsOfService() {
           Terms shall not be construed as a waiver of any right.
         </Text>
 
-        <Text size="lg" thickness="semi" className="mt-4 -mb-2">
+        <Text size="lg" weight="semi" className="mt-4 -mb-2">
           15. Contact Information
         </Text>
 

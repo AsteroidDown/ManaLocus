@@ -66,11 +66,11 @@ export default function CardItemGalleryColumn({
   return (
     <View className={`${columnClasses}`}>
       <View className="flex justify-center items-center mx-2">
-        <Text size="lg" thickness="bold">
+        <Text size="lg" weight="bold">
           {title}
         </Text>
 
-        <Text thickness="semi">
+        <Text weight="semi">
           {cardCount} Card{cardCount !== 1 ? "s" : ""}
         </Text>
       </View>
@@ -98,7 +98,7 @@ export default function CardItemGalleryColumn({
             <View key={index + group.title} className="mt-1">
               {group.title !== title && (
                 <View className="flex flex-row justify-between items-center px-2">
-                  <Text thickness="semi">{titleCase(group.title)}</Text>
+                  <Text weight="semi">{titleCase(group.title)}</Text>
 
                   <Text>{group.count}</Text>
                 </View>

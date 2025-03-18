@@ -26,11 +26,11 @@ export default function DeckLegalityInfo({
 
   return (
     <View className="flex">
-      <Text size="lg" thickness="semi">
+      <Text size="lg" weight="semi">
         This deck is
         <Text
           size="lg"
-          thickness="semi"
+          weight="semi"
           action={legalityEvaluation.legal ? "success" : "danger"}
         >
           {legalityEvaluation.legal ? " " : " not "}legal

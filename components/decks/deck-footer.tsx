@@ -96,7 +96,7 @@ export default function DeckFooter({
         {!deck.isCollection && !deck.isKit && (
           <>
             <View className="flex flex-row items-center gap-2">
-              <Text thickness="bold">{titleCase(deck.format)}</Text>
+              <Text weight="bold">{titleCase(deck.format)}</Text>
 
               <Button
                 rounded

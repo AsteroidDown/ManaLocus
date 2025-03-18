@@ -54,7 +54,7 @@ export default function DashboardSectionHeader({
     >
       <View className="flex flex-row gap-2 items-center">
         {!editingSection && (
-          <Text size="2xl" thickness="bold" className="py-1 pr-auto">
+          <Text size="2xl" weight="bold" className="py-1 pr-auto">
             {section.title}
           </Text>
         )}

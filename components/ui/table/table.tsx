@@ -45,7 +45,7 @@ export default function Table({
                 column.center ? "justify-center" : "justify-start"
               } `}
             >
-              <Text key={index} thickness="semi">
+              <Text key={index} weight="semi">
                 {column.title}
               </Text>
 

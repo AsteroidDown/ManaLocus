@@ -43,7 +43,7 @@ export default function KitModal({ kit, open, setOpen }: KitModalProps) {
   return (
     <Modal open={open} setOpen={setOpen}>
       <View className="flex gap-4 min-w-[400px] max-w-2xl max-h-[80vh]">
-        <Text size="xl" thickness="bold">
+        <Text size="xl" weight="bold">
           {kit.name}
         </Text>
 

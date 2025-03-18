@@ -57,7 +57,7 @@ export default function RarityChartLayout({
               color
             )}`}
           >
-            <Text thickness="semi">{titleCase(color)}</Text>
+            <Text weight="semi">{titleCase(color)}</Text>
           </View>
 
           <ChartCell

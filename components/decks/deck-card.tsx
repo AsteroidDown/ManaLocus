@@ -44,7 +44,7 @@ export default function DeckCard({ deck, hideFormat }: DeckCardProps) {
           {!hideFormat && (
             <Text
               size="xs"
-              thickness="bold"
+              weight="bold"
               className={`px-2 py-1 bg-primary-200 bg-opacity-85 rounded-xl w-fit h-fit`}
             >
               {deck.format?.length ? titleCase(deck.format) : "TBD"}
@@ -59,12 +59,12 @@ export default function DeckCard({ deck, hideFormat }: DeckCardProps) {
         </View>
 
         <View className="flex">
-          <Text size="lg" thickness="bold">
+          <Text size="lg" weight="bold">
             {deck.name}
           </Text>
 
           <View className="flex flex-row justify-between items-center gap-2">
-            <Text size="xs" thickness="medium">
+            <Text size="xs" weight="medium">
               By {deck.user?.name}
             </Text>
 
@@ -76,7 +76,7 @@ export default function DeckCard({ deck, hideFormat }: DeckCardProps) {
                   className="text-white"
                 />
 
-                <Text size="xs" thickness="medium">
+                <Text size="xs" weight="medium">
                   {deck.views}
                 </Text>
               </View>
@@ -88,7 +88,7 @@ export default function DeckCard({ deck, hideFormat }: DeckCardProps) {
                   className="text-white"
                 />
 
-                <Text size="xs" thickness="medium">
+                <Text size="xs" weight="medium">
                   {deck.favorites}
                 </Text>
               </View>

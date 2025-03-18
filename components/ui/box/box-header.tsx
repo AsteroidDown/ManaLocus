@@ -45,7 +45,7 @@ export default function BoxHeader({
 
           <View className="flex-1 flex">
             {title && (
-              <Text size="2xl" thickness="bold">
+              <Text size="2xl" weight="bold">
                 {title}
               </Text>
             )}

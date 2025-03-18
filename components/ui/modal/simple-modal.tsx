@@ -43,12 +43,12 @@ export default function SimpleModal({
   return (
     <Modal open={open} setOpen={setOpen}>
       <View className="flex gap-2">
-        <Text size="2xl" thickness="bold">
+        <Text size="2xl" weight="bold">
           {title}
         </Text>
 
         {subtitle && (
-          <Text size="lg" thickness="medium">
+          <Text size="lg" weight="medium">
             {subtitle}
           </Text>
         )}

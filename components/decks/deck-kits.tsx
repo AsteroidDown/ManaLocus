@@ -56,7 +56,7 @@ export default function DeckKits({ deck, readonly }: DeckKitProps) {
   return (
     <View className="flex">
       <View className="flex flex-row justify-between items-center gap-4">
-        <Text size="lg" thickness="bold">
+        <Text size="lg" weight="bold">
           {readonly ? "Kits in Deck" : "Kits"}
         </Text>
 

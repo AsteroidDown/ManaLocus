@@ -110,7 +110,7 @@ export default function CardSaveAsChartModal({
         <View className="flex flex-row gap-4">
           <FontAwesomeIcon icon={faTable} size="2xl" className="color-white" />
 
-          <Text size="2xl" thickness="bold">
+          <Text size="2xl" weight="bold">
             {item ? "Update Chart" : "Save As Chart"}
           </Text>
         </View>
@@ -123,7 +123,7 @@ export default function CardSaveAsChartModal({
           </Text>
 
           <View className="flex gap-2 max-w-96">
-            <Text size="md" thickness="bold">
+            <Text size="md" weight="bold">
               Sort Type
             </Text>
 
@@ -157,7 +157,7 @@ export default function CardSaveAsChartModal({
           </View>
 
           <View className="flex gap-2 max-w-96">
-            <Text size="md" thickness="bold">
+            <Text size="md" weight="bold">
               Colors to Include
             </Text>
 
@@ -172,7 +172,7 @@ export default function CardSaveAsChartModal({
           </View>
 
           <View className="flex gap-2 max-w-96">
-            <Text size="md" thickness="bold">
+            <Text size="md" weight="bold">
               Types to Filter By
             </Text>
 
@@ -187,7 +187,7 @@ export default function CardSaveAsChartModal({
           </View>
 
           <View className="flex gap-2 max-w-96">
-            <Text size="md" thickness="bold">
+            <Text size="md" weight="bold">
               Rarities to Filter By
             </Text>
 

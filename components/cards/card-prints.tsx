@@ -59,7 +59,7 @@ export default function CardPrints({
         setExpanded={setExpanded}
       >
         <Box className="pb-6 overflow-hidden">
-          <Text size="lg" thickness="bold" className="mb-2">
+          <Text size="lg" weight="bold" className="mb-2">
             {`Available Prints (${cardPrints.length})`}
           </Text>
 
@@ -86,7 +86,7 @@ export default function CardPrints({
                 />
 
                 <View className="flex flex-row justify-center items-center gap-2">
-                  <Text thickness="semi">
+                  <Text weight="semi">
                     {print.set.toUpperCase()}{" "}
                     {print.collectorNumber.toUpperCase()}
                   </Text>

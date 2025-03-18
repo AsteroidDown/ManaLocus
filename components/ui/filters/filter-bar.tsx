@@ -118,7 +118,7 @@ export default function FilterBar({ clear, type, setFilters }: FilterBarProps) {
           } absolute -bottom-1.5 -right-1.5 overflow-hidden transition-all duration-300`}
         >
           <Text
-            thickness="bold"
+            weight="bold"
             className={`!text-dark-100 bg-primary-200 py-px px-[7px] rounded-full`}
           >
             {filterLength}

@@ -127,19 +127,19 @@ export default function TradeCardDetails({
 
           {tradeCard.card ? (
             <Pressable className="flex-1" onPress={() => setOpen(true)}>
-              <Text truncate size="lg" thickness="semi">
+              <Text truncate size="lg" weight="semi">
                 {readonly && `${tradeCard.count}  `}
                 {tradeCard.card?.name}
               </Text>
             </Pressable>
           ) : cardIsItem ? (
             readonly ? (
-              <Text truncate size="lg" thickness="semi">
+              <Text truncate size="lg" weight="semi">
                 {tradeCard.name}
               </Text>
             ) : (
               <View className="flex-1 flex flex-row items-center gap-2 pl-2">
-                <Text thickness="semi" className="min-w-10">
+                <Text weight="semi" className="min-w-10">
                   Name
                 </Text>
 
@@ -169,14 +169,14 @@ export default function TradeCardDetails({
         {!cardIsItem && (
           <View className="flex flex-row items-center gap-2 z-[12]">
             {print !== undefined && (
-              <Text thickness="semi" className="min-w-10">
+              <Text weight="semi" className="min-w-10">
                 Print
               </Text>
             )}
 
             {print !== undefined ? (
               readonly ? (
-                <Text size="md" thickness="semi">
+                <Text size="md" weight="semi">
                   {`${print.set.toUpperCase()} ${print.collectorNumber}`}
                 </Text>
               ) : (
@@ -200,13 +200,13 @@ export default function TradeCardDetails({
         {price !== undefined && (
           <View className="flex flex-row items-center gap-2 z-[10]">
             {price !== undefined && (
-              <Text thickness="semi" className="min-w-10">
+              <Text weight="semi" className="min-w-10">
                 Price
               </Text>
             )}
 
             {readonly ? (
-              <Text size="md" thickness="semi">
+              <Text size="md" weight="semi">
                 {currency((price || 0) / 100)}
               </Text>
             ) : price !== undefined ? (
@@ -227,7 +227,7 @@ export default function TradeCardDetails({
             <>
               {print !== undefined ? (
                 readonly ? (
-                  <Text thickness="semi" className="mr-auto">
+                  <Text weight="semi" className="mr-auto">
                     {tradeCard.foil ? "Foil" : "Non-Foil"}
                   </Text>
                 ) : (

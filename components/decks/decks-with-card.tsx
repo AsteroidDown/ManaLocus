@@ -27,7 +27,7 @@ export default function DecksWithCard({ card }: DecksWithCardProps) {
 
   return (
     <View className="flex gap-4 w-full">
-      <Text size="lg" thickness="bold">
+      <Text size="lg" weight="bold">
         Decks Featuring {card.name}
       </Text>
 

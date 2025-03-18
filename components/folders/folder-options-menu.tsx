@@ -132,7 +132,7 @@ export function FolderOptionsMenu({
 
         <Modal open={removeFolderOpen} setOpen={setRemoveFolderOpen}>
           <View className="flex gap-4 max-w-2xl max-h-[80vh]">
-            <Text size="xl" thickness="bold">
+            <Text size="xl" weight="bold">
               Remove {folder.name}?
             </Text>
 

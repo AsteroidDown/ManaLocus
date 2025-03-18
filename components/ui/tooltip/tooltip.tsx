@@ -37,7 +37,7 @@ export function Tooltip({
       {message && active && (
         <View className="flex gap-1 absolute -top-2 left-[50%] bg-background-100 p-2 rounded-lg bg-opacity-85 translate-x-[-50%] translate-y-[-100%] z-10">
           {title && (
-            <Text noWrap thickness="bold">
+            <Text noWrap weight="bold">
               {title}
             </Text>
           )}

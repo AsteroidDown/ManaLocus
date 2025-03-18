@@ -146,7 +146,7 @@ export default function CardItem({
             {reasons?.length > 0 && (
               <>
                 <View className="flex mx-4">
-                  <Text size="sm" thickness="semi">
+                  <Text size="sm" weight="semi">
                     Legality Issues
                   </Text>
 
@@ -461,7 +461,7 @@ export function CardItemFooter({
         />
 
         <View className="flex justify-center items-center px-4 h-full border-2 border-x-0 border-dark-500">
-          <Text thickness="bold">{card.count}</Text>
+          <Text weight="bold">{card.count}</Text>
         </View>
 
         <Button

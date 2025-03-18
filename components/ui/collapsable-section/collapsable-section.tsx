@@ -39,7 +39,7 @@ export default function CollapsableSection({
         <View className="flex flex-row items-center gap-2 h-full">
           {start}
 
-          <Text size="lg" thickness="bold">
+          <Text size="lg" weight="bold">
             {title}
           </Text>
         </View>

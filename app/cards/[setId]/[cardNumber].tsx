@@ -103,7 +103,7 @@ export default function SetPage() {
 
         <View className="flex flex-row gap-6 flex-wrap lg:mt-12 mt-2 lg:mb-6 mb-2">
           <View className="flex-1 flex gap-2 min-w-max">
-            <Text size="lg" thickness="semi">
+            <Text size="lg" weight="semi">
               From the Web
             </Text>
 
@@ -159,7 +159,7 @@ export default function SetPage() {
           </View>
 
           <View className="flex-1 flex gap-2 min-w-max">
-            <Text size="lg" thickness="semi">
+            <Text size="lg" weight="semi">
               Buy Card
             </Text>
 
@@ -202,7 +202,7 @@ export default function SetPage() {
           </View>
 
           <View className="flex-1 flex gap-2 min-w-max">
-            <Text size="lg" thickness="semi">
+            <Text size="lg" weight="semi">
               Card Data
             </Text>
 

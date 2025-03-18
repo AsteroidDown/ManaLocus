@@ -82,7 +82,7 @@ export default function CostChartLayout({
               color
             )}`}
           >
-            <Text thickness="semi">{titleCase(color)}</Text>
+            <Text weight="semi">{titleCase(color)}</Text>
           </View>
 
           {sortedCards.zero.length > 0 && (

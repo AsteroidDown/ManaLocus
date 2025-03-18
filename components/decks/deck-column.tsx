@@ -106,7 +106,7 @@ export default function DeckColumn({
         className="flex flex-row justify-between items-center px-2"
         onPress={() => setCardPreviewModalOpen(true)}
       >
-        <Text size="lg" thickness="bold">
+        <Text size="lg" weight="bold">
           {titleCase(title)}
         </Text>
 
@@ -146,7 +146,7 @@ export default function DeckColumn({
             <View key={index + group.title} className="mt-1">
               {!commander && group.title !== title && (
                 <View className="flex flex-row justify-between items-center px-2">
-                  <Text thickness="semi">{titleCase(group.title)}</Text>
+                  <Text weight="semi">{titleCase(group.title)}</Text>
 
                   <View className="flex flex-row gap-2">
                     {!commander && <Text>{group.count}</Text>}
@@ -281,7 +281,7 @@ function DeckCard({
 
               <Text
                 truncate
-                thickness="medium"
+                weight="medium"
                 className={`${
                   banned
                     ? "!text-red-500"
@@ -346,7 +346,7 @@ function DeckCard({
           >
             {reasons?.length > 0 && (
               <View className="flex">
-                <Text size="sm" thickness="semi" className="mb-1">
+                <Text size="sm" weight="semi" className="mb-1">
                   Legality Issues
                 </Text>
                 {reasons.map((reason, index) => (

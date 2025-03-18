@@ -123,7 +123,7 @@ export default function AddKitModal({
               selectedKit ? "-ml-[450px]" : ""
             } transition-all duration-300`}
           >
-            <Text size="xl" thickness="bold">
+            <Text size="xl" weight="bold">
               Add Kit
             </Text>
 
@@ -180,7 +180,7 @@ export default function AddKitModal({
                 onClick={() => setSelectedKit(null)}
               />
 
-              <Text size="xl" thickness="bold">
+              <Text size="xl" weight="bold">
                 {selectedKit?.name} Cards
               </Text>
             </View>

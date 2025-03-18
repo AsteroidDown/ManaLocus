@@ -529,7 +529,7 @@ export default function DeckCardGallery({
           </View>
 
           <View className="flex-1 flex gap-2 max-h-fit min-w-fit">
-            <Text size="md" thickness="bold">
+            <Text size="md" weight="bold">
               Column Options
             </Text>
 

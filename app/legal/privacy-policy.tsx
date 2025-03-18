@@ -20,7 +20,7 @@ export default function PrivacyPolicy() {
       }
     >
       <View className="flex gap-4 min-h-fit">
-        <Text size="2xl" thickness="bold">
+        <Text size="2xl" weight="bold">
           Privacy Policy for ManaLocus
         </Text>
 
@@ -50,7 +50,7 @@ export default function PrivacyPolicy() {
           authorized to use the Site.
         </Text>
 
-        <Text size="lg" thickness="semi" className="mt-4 -mb-2">
+        <Text size="lg" weight="semi" className="mt-4 -mb-2">
           1. Information We Collect
         </Text>
 
@@ -59,7 +59,7 @@ export default function PrivacyPolicy() {
           Site:
         </Text>
 
-        <Text thickness="semi">a. Personal Information</Text>
+        <Text weight="semi">a. Personal Information</Text>
 
         <Text>
           Personal information is data that can be used to identify you directly
@@ -88,7 +88,7 @@ export default function PrivacyPolicy() {
           </View>
         </View>
 
-        <Text thickness="semi">a. Personal Information</Text>
+        <Text weight="semi">a. Personal Information</Text>
 
         <Text>
           Non-personal information is data that cannot be used to directly
@@ -132,7 +132,7 @@ export default function PrivacyPolicy() {
           </View>
         </View>
 
-        <Text size="lg" thickness="semi" className="mt-4 -mb-2">
+        <Text size="lg" weight="semi" className="mt-4 -mb-2">
           2. How We Use Your Information
         </Text>
 
@@ -143,7 +143,7 @@ export default function PrivacyPolicy() {
         <View className="flex gap-2 ml-4">
           <View className="flex flex-row gap-4">
             <View className="w-1.5 h-1.5 mt-2 rounded-full bg-white" />
-            <Text thickness="semi" className="mt-px">
+            <Text weight="semi" className="mt-px">
               To provide and maintain the Site:{" "}
               <Text>
                 We use your information to offer you a personalized experience,
@@ -155,7 +155,7 @@ export default function PrivacyPolicy() {
 
           <View className="flex flex-row gap-4">
             <View className="w-1.5 h-1.5 mt-2 rounded-full bg-white" />
-            <Text thickness="semi" className="mt-px">
+            <Text weight="semi" className="mt-px">
               To communicate with you:{" "}
               <Text>
                 We may use your email address to send you updates, newsletters,
@@ -168,7 +168,7 @@ export default function PrivacyPolicy() {
 
           <View className="flex flex-row gap-4">
             <View className="w-1.5 h-1.5 mt-2 rounded-full bg-white" />
-            <Text thickness="semi" className="mt-px">
+            <Text weight="semi" className="mt-px">
               To improve the Site:{" "}
               <Text>
                 We may analyze usage data to understand how users interact with
@@ -180,7 +180,7 @@ export default function PrivacyPolicy() {
 
           <View className="flex flex-row gap-4">
             <View className="w-1.5 h-1.5 mt-2 rounded-full bg-white" />
-            <Text thickness="semi" className="mt-px">
+            <Text weight="semi" className="mt-px">
               To comply with legal obligations:{" "}
               <Text>
                 If required by law, we may use or disclose your information to
@@ -191,7 +191,7 @@ export default function PrivacyPolicy() {
           </View>
         </View>
 
-        <Text size="lg" thickness="semi" className="mt-4 -mb-2">
+        <Text size="lg" weight="semi" className="mt-4 -mb-2">
           3. How We Share Your Information
         </Text>
 
@@ -204,7 +204,7 @@ export default function PrivacyPolicy() {
         <View className="flex gap-2 ml-4">
           <View className="flex flex-row gap-4">
             <View className="w-1.5 h-1.5 mt-2 rounded-full bg-white" />
-            <Text thickness="semi" className="mt-px">
+            <Text weight="semi" className="mt-px">
               Service Providers:{" "}
               <Text>
                 We may share your information with third-party service providers
@@ -218,7 +218,7 @@ export default function PrivacyPolicy() {
 
           <View className="flex flex-row gap-4">
             <View className="w-1.5 h-1.5 mt-2 rounded-full bg-white" />
-            <Text thickness="semi" className="mt-px">
+            <Text weight="semi" className="mt-px">
               Legal Requirements:{" "}
               <Text>
                 We may disclose your personal information if required to do so
@@ -230,7 +230,7 @@ export default function PrivacyPolicy() {
 
           <View className="flex flex-row gap-4">
             <View className="w-1.5 h-1.5 mt-2 rounded-full bg-white" />
-            <Text thickness="semi" className="mt-px">
+            <Text weight="semi" className="mt-px">
               Business Transfers:{" "}
               <Text>
                 In the event of a merger, acquisition, or sale of assets, your
@@ -242,7 +242,7 @@ export default function PrivacyPolicy() {
           </View>
         </View>
 
-        <Text size="lg" thickness="semi" className="mt-4 -mb-2">
+        <Text size="lg" weight="semi" className="mt-4 -mb-2">
           4. Data Retention
         </Text>
 
@@ -261,7 +261,7 @@ export default function PrivacyPolicy() {
           .
         </Text>
 
-        <Text size="lg" thickness="semi" className="mt-4 -mb-2">
+        <Text size="lg" weight="semi" className="mt-4 -mb-2">
           5. Your Data Protection Rights
         </Text>
 
@@ -273,7 +273,7 @@ export default function PrivacyPolicy() {
         <View className="flex gap-2 ml-4">
           <View className="flex flex-row gap-4">
             <View className="w-1.5 h-1.5 mt-2 rounded-full bg-white" />
-            <Text thickness="semi" className="mt-px">
+            <Text weight="semi" className="mt-px">
               Access:{" "}
               <Text>
                 You have the right to request a copy of the personal information
@@ -284,7 +284,7 @@ export default function PrivacyPolicy() {
 
           <View className="flex flex-row gap-4">
             <View className="w-1.5 h-1.5 mt-2 rounded-full bg-white" />
-            <Text thickness="semi" className="mt-px">
+            <Text weight="semi" className="mt-px">
               Correction:{" "}
               <Text>
                 You have the right to request corrections to any inaccurate or
@@ -295,7 +295,7 @@ export default function PrivacyPolicy() {
 
           <View className="flex flex-row gap-4">
             <View className="w-1.5 h-1.5 mt-2 rounded-full bg-white" />
-            <Text thickness="semi" className="mt-px">
+            <Text weight="semi" className="mt-px">
               Deletion:{" "}
               <Text>
                 You can request the deletion of your personal information,
@@ -306,7 +306,7 @@ export default function PrivacyPolicy() {
 
           <View className="flex flex-row gap-4">
             <View className="w-1.5 h-1.5 mt-2 rounded-full bg-white" />
-            <Text thickness="semi" className="mt-px">
+            <Text weight="semi" className="mt-px">
               Objection:{" "}
               <Text>
                 You may object to the processing of your personal information
@@ -317,7 +317,7 @@ export default function PrivacyPolicy() {
 
           <View className="flex flex-row gap-4">
             <View className="w-1.5 h-1.5 mt-2 rounded-full bg-white" />
-            <Text thickness="semi" className="mt-px">
+            <Text weight="semi" className="mt-px">
               Portability:{" "}
               <Text>
                 You have the right to request a copy of your data in a
@@ -338,7 +338,7 @@ export default function PrivacyPolicy() {
           .
         </Text>
 
-        <Text size="lg" thickness="semi" className="mt-4 -mb-2">
+        <Text size="lg" weight="semi" className="mt-4 -mb-2">
           6. Security of Your Information
         </Text>
 
@@ -351,7 +351,7 @@ export default function PrivacyPolicy() {
           absolute security.
         </Text>
 
-        <Text size="lg" thickness="semi" className="mt-4 -mb-2">
+        <Text size="lg" weight="semi" className="mt-4 -mb-2">
           7. Links to Third-Party Websites
         </Text>
 
@@ -362,7 +362,7 @@ export default function PrivacyPolicy() {
           policies of any websites you visit through links on our Site.
         </Text>
 
-        <Text size="lg" thickness="semi" className="mt-4 -mb-2">
+        <Text size="lg" weight="semi" className="mt-4 -mb-2">
           8. Children’s Privacy
         </Text>
 
@@ -375,7 +375,7 @@ export default function PrivacyPolicy() {
           collected such information, please contact us immediately.
         </Text>
 
-        <Text size="lg" thickness="semi" className="mt-4 -mb-2">
+        <Text size="lg" weight="semi" className="mt-4 -mb-2">
           9. International Data Transfers
         </Text>
 
@@ -388,7 +388,7 @@ export default function PrivacyPolicy() {
           residence.
         </Text>
 
-        <Text size="lg" thickness="semi" className="mt-4 -mb-2">
+        <Text size="lg" weight="semi" className="mt-4 -mb-2">
           10. Changes to This Privacy Policy
         </Text>
 
@@ -400,7 +400,7 @@ export default function PrivacyPolicy() {
           information.
         </Text>
 
-        <Text size="lg" thickness="semi" className="mt-4 -mb-2">
+        <Text size="lg" weight="semi" className="mt-4 -mb-2">
           11. Contact Us
         </Text>
 

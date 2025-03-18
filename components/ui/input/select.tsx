@@ -145,7 +145,7 @@ export default function Select({
       onPointerLeave={() => setHovered(false)}
     >
       {label && (
-        <Text size="md" thickness="bold">
+        <Text size="md" weight="bold">
           {label}
         </Text>
       )}

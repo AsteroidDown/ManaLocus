@@ -213,7 +213,7 @@ function Logo() {
       <View className="flex flex-col">
         <Text
           size="2xl"
-          thickness="medium"
+          weight="medium"
           className="hover:text-primary-200 transition-all duration-300"
         >
           Mana Locus

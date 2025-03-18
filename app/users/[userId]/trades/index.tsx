@@ -123,7 +123,7 @@ export default function UserFoldersPage() {
                   title: "Total",
                   row: (trade) => (
                     <Text
-                      thickness="semi"
+                      weight="semi"
                       action={
                         trade.total < 0
                           ? "danger"

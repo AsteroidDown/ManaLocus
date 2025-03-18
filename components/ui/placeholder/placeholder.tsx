@@ -32,7 +32,7 @@ export default function Placeholder({
         />
       </View>
 
-      <Text size="xl" thickness="bold">
+      <Text size="xl" weight="bold">
         {title}
       </Text>
 

@@ -49,7 +49,7 @@ export default function Pagination({
         onClick={backPage}
       />
 
-      <Text size="sm" thickness="semi">
+      <Text size="sm" weight="semi">
         {`${meta.page} of ${meta.totalPages}`}
       </Text>
 

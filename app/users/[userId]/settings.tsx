@@ -257,7 +257,7 @@ export default function UserSettingsPage() {
           expanded={preferencesOpen}
           setExpanded={setPreferencesOpen}
         >
-          <Text size="lg" thickness="bold">
+          <Text size="lg" weight="bold">
             Color
           </Text>
 
@@ -274,7 +274,7 @@ export default function UserSettingsPage() {
             ))}
           </View>
 
-          <Text size="lg" thickness="bold">
+          <Text size="lg" weight="bold">
             Decks Page
           </Text>
 
@@ -311,7 +311,7 @@ export default function UserSettingsPage() {
             />
 
             <View className={`flex gap-2 max-h-fit min-w-fit z-[-1]`}>
-              <Text size="md" thickness="bold">
+              <Text size="md" weight="bold">
                 Default Decks View
               </Text>
 
@@ -339,7 +339,7 @@ export default function UserSettingsPage() {
             </View>
           </View>
 
-          <Text size="lg" thickness="bold" className="mt-4">
+          <Text size="lg" weight="bold" className="mt-4">
             Deck Page
           </Text>
 
@@ -399,7 +399,7 @@ export default function UserSettingsPage() {
             </View>
 
             <View className="flex-1 flex gap-2 max-h-fit min-w-fit z-[-1]">
-              <Text size="md" thickness="bold">
+              <Text size="md" weight="bold">
                 Default Column Options
               </Text>
 

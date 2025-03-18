@@ -355,7 +355,7 @@ export default function CardImportExportModal({
     <Modal open={open} setOpen={setOpen}>
       <View className="flex gap-4 max-w-2xl max-h-[80vh]">
         <View className="flex flex-row justify-between gap-2">
-          <Text size="xl" thickness="bold">
+          <Text size="xl" weight="bold">
             {!exportOnly && "Import/"}Export Cards
           </Text>
 
@@ -374,7 +374,7 @@ export default function CardImportExportModal({
             } flex gap-3 overflow-hidden transition-all duration-300`}
           >
             <View className="flex gap-2 ">
-              <Text size="md" thickness="bold">
+              <Text size="md" weight="bold">
                 Colors to Include
               </Text>
 
@@ -389,7 +389,7 @@ export default function CardImportExportModal({
             </View>
 
             <View className="flex gap-2 ">
-              <Text size="md" thickness="bold">
+              <Text size="md" weight="bold">
                 Types to Filter By
               </Text>
 
@@ -403,7 +403,7 @@ export default function CardImportExportModal({
             </View>
 
             <View className="flex gap-2 ">
-              <Text size="md" thickness="bold">
+              <Text size="md" weight="bold">
                 Rarities to Filter By
               </Text>
 
@@ -417,7 +417,7 @@ export default function CardImportExportModal({
             </View>
 
             <View className="flex gap-2 ">
-              <Text size="md" thickness="bold">
+              <Text size="md" weight="bold">
                 Sort By
               </Text>
 

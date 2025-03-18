@@ -70,7 +70,7 @@ export default function FolderPage() {
             onClick={() => router.push(`users/${userPageUser?.id}/folders`)}
           />
 
-          <Text size="2xl" thickness="bold">
+          <Text size="2xl" weight="bold">
             {folder.name}
           </Text>
         </View>
@@ -183,7 +183,7 @@ export function FolderRemoveDeckModal({
 
       <Modal open={open} setOpen={setOpen}>
         <View className="flex gap-4 max-w-2xl max-h-[80vh]">
-          <Text size="xl" thickness="bold">
+          <Text size="xl" weight="bold">
             Remove {deck.name} from {folder.name}?
           </Text>
 

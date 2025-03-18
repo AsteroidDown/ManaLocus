@@ -60,7 +60,7 @@ export default function Input({
       onPointerLeave={() => setHovered(false)}
     >
       {label && (
-        <Text size="md" thickness="bold">
+        <Text size="md" weight="bold">
           {label}
         </Text>
       )}
