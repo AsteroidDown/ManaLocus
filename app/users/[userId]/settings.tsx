@@ -2,7 +2,6 @@ import Button from "@/components/ui/button/button";
 import Checkbox from "@/components/ui/checkbox/checkbox";
 import CollapsableSection from "@/components/ui/collapsable-section/collapsable-section";
 import Divider from "@/components/ui/divider/divider";
-import Input from "@/components/ui/input/input";
 import Select from "@/components/ui/input/select";
 import Text from "@/components/ui/text/text";
 import { EmailMask } from "@/constants/masks/text-masks";
@@ -52,6 +51,8 @@ export default function UserSettingsPage() {
   const { userPageUser } = useContext(UserPageContext);
   const { preferences, setPreferences } = useContext(UserPreferencesContext);
   const { setBodyHeight } = useContext(BodyHeightContext);
+
+  const buffer = 164;
 
   const containerRef = useRef<View>(null);
 
@@ -106,7 +107,7 @@ export default function UserSettingsPage() {
   if (!user) return null;
 
   useEffect(() => {
-    if (colorKey === preferences?.color) return;
+    if (!colorKey || colorKey === preferences?.color) return;
 
     Object.values(PreferenceColorHues).forEach((hue) => {
       document.documentElement.style.setProperty(
@@ -242,14 +243,14 @@ export default function UserSettingsPage() {
   }
 
   return (
-    <SafeAreaView className="flex-1 flex w-full h-full bg-background-100">
+    <SafeAreaView className="flex-1 flex gap-4 w-full h-full py-4 bg-background-100">
       <View
         ref={containerRef}
-        className="z-10"
+        className="flex gap-4 z-10"
         onLayout={() =>
-          containerRef.current?.measureInWindow((_x, _y, _width, height) =>
-            setBodyHeight(height)
-          )
+          containerRef.current?.measureInWindow((_x, _y, _width, height) => {
+            setBodyHeight(height + buffer);
+          })
         }
       >
         <CollapsableSection
@@ -261,7 +262,9 @@ export default function UserSettingsPage() {
             Color
           </Text>
 
-          <View className="flex flex-row flex-wrap gap-4">
+          <Divider thick className="!border-background-200" />
+
+          <View className="flex flex-row flex-wrap gap-4 mt-2">
             {Object.values(PreferenceColor).map((key) => (
               <Pressable
                 key={key}
@@ -274,7 +277,7 @@ export default function UserSettingsPage() {
             ))}
           </View>
 
-          <Text size="lg" weight="bold">
+          <Text size="lg" weight="bold" className="mt-4">
             Decks Page
           </Text>
 
@@ -345,7 +348,7 @@ export default function UserSettingsPage() {
 
           <Divider thick className="!border-background-200" />
 
-          <View className="flex flex-row flex-wrap gap-4">
+          <View className="flex flex-row flex-wrap gap-4 max-w-full">
             <Select
               label="Default View"
               className="max-w-min"
@@ -372,38 +375,34 @@ export default function UserSettingsPage() {
               })}
             />
 
-            <View className="flex flex-row">
-              <Select
-                squareRight
-                className="max-w-min"
-                label="Default Card Sorting"
-                value={deckCardSortType}
-                onChange={updateDeckCardSortType}
-                options={Object.values(DeckCardGallerySortTypes).map((key) => ({
-                  label: titleCase(key.replace("-", " ")),
-                  value: key,
-                }))}
-              />
+            <Select
+              className="max-w-min"
+              label="Default Card Sorting"
+              value={deckCardSortType}
+              onChange={updateDeckCardSortType}
+              options={Object.values(DeckCardGallerySortTypes).map((key) => ({
+                label: titleCase(key.replace("-", " ")),
+                value: key,
+              }))}
+            />
 
-              <Select
-                squareLeft
-                label="Direction"
-                className="mr-4 max-w-min"
-                value={deckCardSortDirection}
-                onChange={updateDeckCardSortDirection}
-                options={[
-                  { label: "Ascending", value: SortTypes.ASC },
-                  { label: "Descending", value: SortTypes.DESC },
-                ]}
-              />
-            </View>
+            <Select
+              label="Card Sort Direction"
+              className="mr-4 max-w-min"
+              value={deckCardSortDirection}
+              onChange={updateDeckCardSortDirection}
+              options={[
+                { label: "Ascending", value: SortTypes.ASC },
+                { label: "Descending", value: SortTypes.DESC },
+              ]}
+            />
 
-            <View className="flex-1 flex gap-2 max-h-fit min-w-fit z-[-1]">
+            <View className="flex-1 flex gap-2 max-h-fit min-w-[200px] z-[-1]">
               <Text size="md" weight="bold">
                 Default Column Options
               </Text>
 
-              <View className="flex flex-row gap-4 my-2 max-w-fit">
+              <View className="flex flex-row flex-wrap gap-4 my-2 max-w-fit">
                 <Checkbox
                   label="Show Price"
                   checked={deckCardColumnShowPrice}
@@ -425,101 +424,102 @@ export default function UserSettingsPage() {
             </View>
           </View>
         </CollapsableSection>
-      </View>
 
-      <CollapsableSection
-        title="Email"
-        expanded={emailOpen}
-        setExpanded={setEmailOpen}
-      >
-        <View className="flex flex-row -mb-9 justify-end">
-          <Button
-            text="Update"
-            disabled={
-              user.email === email ||
-              !email.match(EmailMask) ||
-              !email.includes("@") ||
-              !email.includes(".") ||
-              emailError
+        {/* <CollapsableSection
+          title="Email"
+          expanded={emailOpen}
+          setExpanded={setEmailOpen}
+        >
+          <View className="flex flex-row -mb-9 justify-end">
+            <Button
+              text="Update"
+              disabled={
+                user.email === email ||
+                !email.match(EmailMask) ||
+                !email.includes("@") ||
+                !email.includes(".") ||
+                emailError
+              }
+              onClick={() => {}}
+            />
+          </View>
+
+          <Input
+            label="Update Your Email"
+            placeholder="you@example.com"
+            value={email}
+            error={emailError}
+            onChange={setEmail}
+            errorMessage={
+              email === user.email
+                ? "Email can't be updated to your current email!"
+                : emailError
+                ? "Email must be valid"
+                : ""
             }
-            onClick={() => {}}
           />
-        </View>
+        </CollapsableSection>
 
-        <Input
-          label="Update Your Email"
-          placeholder="you@example.com"
-          value={email}
-          error={emailError}
-          onChange={setEmail}
-          errorMessage={
-            email === user.email
-              ? "Email can't be updated to your current email!"
-              : emailError
-              ? "Email must be valid"
-              : ""
-          }
-        />
-      </CollapsableSection>
+        <CollapsableSection
+          title="Password"
+          expanded={passwordOpen}
+          setExpanded={setPasswordOpen}
+        >
+          <View className="flex flex-row -mb-9 justify-end">
+            <Button
+              text="Update"
+              disabled={
+                Object.keys(passwordErrors).length > 0 ||
+                newPassword.length < 8 ||
+                newPassword !== confirmNewPassword
+              }
+              onClick={() => {}}
+            />
+          </View>
 
-      <CollapsableSection
-        title="Password"
-        expanded={passwordOpen}
-        setExpanded={setPasswordOpen}
-      >
-        <View className="flex flex-row -mb-9 justify-end">
-          <Button
-            text="Update"
-            disabled={
-              Object.keys(passwordErrors).length > 0 ||
-              newPassword.length < 8 ||
+          <Input
+            secured
+            label="Current Password"
+            placeholder="Current Password"
+            value={currentPassword}
+            onChange={setCurrentPassword}
+          />
+
+          <Input
+            secured
+            label="New Password"
+            placeholder="New Password"
+            value={newPassword}
+            onChange={setNewPassword}
+            error={Object.keys(passwordErrors).length > 0}
+            errorMessage="Passwords must be at least 8 characters long and contain at least one lowercase letter, one uppercase letter, one number, and one special character"
+          />
+
+          <Input
+            secured
+            label="Confirm New Password"
+            placeholder="Confirm New Password"
+            value={confirmNewPassword}
+            onChange={setConfirmNewPassword}
+            error={
+              confirmNewPassword.length > 8 &&
               newPassword !== confirmNewPassword
             }
-            onClick={() => {}}
+            errorMessage="Passwords must match!"
           />
-        </View>
+        </CollapsableSection> */}
 
-        <Input
-          secured
-          label="Current Password"
-          placeholder="Current Password"
-          value={currentPassword}
-          onChange={setCurrentPassword}
-        />
-
-        <Input
-          secured
-          label="New Password"
-          placeholder="New Password"
-          value={newPassword}
-          onChange={setNewPassword}
-          error={Object.keys(passwordErrors).length > 0}
-          errorMessage="Passwords must be at least 8 characters long and contain at least one lowercase letter, one uppercase letter, one number, and one special character"
-        />
-
-        <Input
-          secured
-          label="Confirm New Password"
-          placeholder="Confirm New Password"
-          value={confirmNewPassword}
-          onChange={setConfirmNewPassword}
-          error={
-            confirmNewPassword.length > 8 && newPassword !== confirmNewPassword
-          }
-          errorMessage="Passwords must match!"
-        />
-      </CollapsableSection>
-
-      {user.id === userPageUser?.id && (
-        <View className="flex flex-row justify-end m-4">
-          <Button
-            text="Logout"
-            action="danger"
-            type="clear"
-            onClick={() => logout()}
-          />
-        </View>
-      )}
+        {user.id === userPageUser?.id && (
+          <View className="flex flex-row justify-end">
+            <Button
+              text="Logout"
+              action="danger"
+              type="outlined"
+              onClick={() => logout()}
+            />
+          </View>
+        )}
+      </View>
     </SafeAreaView>
   );
 }
