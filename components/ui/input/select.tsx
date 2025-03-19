@@ -1,6 +1,12 @@
 import { faChevronDown, faX } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useEffect, useRef } from "react";
+import React, {
+  Dispatch,
+  SetStateAction,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { Pressable, TextInput, View, ViewProps } from "react-native";
 import Button from "../button/button";
 import Text from "../text/text";
@@ -15,6 +21,7 @@ export type InputProps = ViewProps & {
 
   label?: string;
   placeholder?: string;
+  notFoundText?: string;
   multiple?: boolean;
   disabled?: boolean;
   property?: string;
@@ -26,8 +33,8 @@ export type InputProps = ViewProps & {
   clearOnFocus?: boolean;
 
   value?: any;
-  onChange: React.Dispatch<React.SetStateAction<any>>;
-  onSearchChange?: React.Dispatch<React.SetStateAction<string>>;
+  onChange: Dispatch<SetStateAction<any>>;
+  onSearchChange?: Dispatch<SetStateAction<string>>;
 };
 
 export default function Select({
@@ -35,6 +42,7 @@ export default function Select({
 
   label,
   placeholder,
+  notFoundText,
   multiple,
   disabled,
   property,
@@ -53,16 +61,16 @@ export default function Select({
 }: InputProps) {
   const inputRef = useRef<View>(null);
 
-  const [offsetHeight, setOffsetHeight] = React.useState(0);
+  const [offsetHeight, setOffsetHeight] = useState(0);
 
-  const [hovered, setHovered] = React.useState(false);
-  const [focused, setFocused] = React.useState(false);
+  const [hovered, setHovered] = useState(false);
+  const [focused, setFocused] = useState(false);
 
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
 
-  const [search, setSearch] = React.useState("");
-  const [selectedOptions, setSelectedOptions] = React.useState([] as any[]);
-  const [filteredOptions, setFilteredOptions] = React.useState(options);
+  const [search, setSearch] = useState("");
+  const [selectedOptions, setSelectedOptions] = useState([] as any[]);
+  const [filteredOptions, setFilteredOptions] = useState(options);
 
   useEffect(() => setFilteredOptions(options), [options]);
 
@@ -80,24 +88,31 @@ export default function Select({
   }, [value, options]);
 
   useEffect(() => {
-    if (!search) {
-      setFilteredOptions(options);
-      if (!multiple) onChange(null);
-      return;
-    }
+    const delayDebounceFn = setTimeout(() => {
+      onSearchChange?.(search);
 
-    const foundOption = options.find(
-      (option) => option.label.toLowerCase() === search.toLowerCase()
-    );
+      if (!search) {
+        setFilteredOptions(options);
+        if (!multiple) onChange(null);
+        return;
+      }
 
-    if (!multiple && foundOption) selectOption(foundOption);
-    else {
-      const filteredOptions = options.filter((option) =>
-        option.label.toLowerCase().includes(search.toLowerCase())
+      const foundOption = options.find(
+        (option) => option.label.toLowerCase() === search.toLowerCase()
       );
 
-      setFilteredOptions(filteredOptions);
-    }
+      if (!multiple && options.length === 1 && foundOption) {
+        selectOption(foundOption);
+      } else {
+        const filteredOptions = options.filter((option) =>
+          option.label.toLowerCase().includes(search.toLowerCase())
+        );
+
+        setFilteredOptions(filteredOptions);
+      }
+    }, 300);
+
+    return () => clearTimeout(delayDebounceFn);
   }, [search]);
 
   function onFocus() {
@@ -211,10 +226,7 @@ export default function Select({
             className={`flex-1 color-white text-base outline-none -mt-0.5`}
             onFocus={() => (disabled ? null : onFocus())}
             onBlur={() => setTimeout(() => onBlur(), 200)}
-            onChangeText={(change) => {
-              setSearch(change);
-              onSearchChange?.(change);
-            }}
+            onChangeText={(change) => setSearch(change)}
           />
 
           <Pressable
@@ -253,24 +265,30 @@ export default function Select({
             disabled ? "!border-background-100" : ""
           } z-10 left-0 flex w-full h-fit px-2 py-1 border-2 bg-background-100 rounded-b-lg overflow-y-auto transition-all`}
         >
-          {filteredOptions.map((option, index) => (
-            <Pressable
-              key={index + option.label}
-              tabIndex={disabled || !open ? -1 : 0}
-              onPress={() => selectOption(option)}
-            >
-              <Text
-                size="md"
-                className="px-3 py-2 rounded-lg hover:bg-background-300 transition-all"
+          {filteredOptions?.length ? (
+            filteredOptions.map((option, index) => (
+              <Pressable
+                key={index + option.label}
+                tabIndex={disabled || !open ? -1 : 0}
+                onPress={() => selectOption(option)}
               >
-                {typeof option === "object" && option?.label
-                  ? option.label
-                  : typeof option === "string"
-                  ? option
-                  : null}
-              </Text>
-            </Pressable>
-          ))}
+                <Text
+                  size="md"
+                  className="px-3 py-2 rounded-lg hover:bg-background-300 transition-all"
+                >
+                  {typeof option === "object" && option?.label
+                    ? option.label
+                    : typeof option === "string"
+                    ? option
+                    : null}
+                </Text>
+              </Pressable>
+            ))
+          ) : (
+            <Text className="px-3 py-2 rounded-lg !text-dark-600 !italic">
+              {notFoundText ?? "No Options Found"}
+            </Text>
+          )}
         </View>
       </View>
     </View>
