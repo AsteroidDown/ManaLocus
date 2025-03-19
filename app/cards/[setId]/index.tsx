@@ -21,7 +21,7 @@ import { CardFilters } from "@/models/sorted-cards/sorted-cards";
 import { faBorderAll, faList } from "@fortawesome/free-solid-svg-icons";
 import { useLocalSearchParams } from "expo-router";
 import React, { useContext, useEffect, useRef } from "react";
-import { SafeAreaView, View } from "react-native";
+import { Image, SafeAreaView, View } from "react-native";
 
 export default function SetPage() {
   const { setId } = useLocalSearchParams();
@@ -154,6 +154,12 @@ export default function SetPage() {
           className="!pb-0"
           title={set.name}
           subtitle={set.cardCount + " Cards | Released " + set.releasedAt}
+          start={
+            <Image
+              source={{ uri: set.iconSvgUri }}
+              className="h-10 w-10 fill-white invert-[1]"
+            />
+          }
           end={<FilterBar clear setFilters={setFilters} />}
         />
 
