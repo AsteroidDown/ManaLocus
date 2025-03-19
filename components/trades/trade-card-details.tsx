@@ -139,7 +139,7 @@ export default function TradeCardDetails({
               </Text>
             ) : (
               <View className="flex-1 flex flex-row items-center gap-2 pl-2">
-                <Text weight="semi" className="min-w-10">
+                <Text weight="semi" className="min-w-fit">
                   Name
                 </Text>
 
