@@ -1,3 +1,4 @@
+import CardAllPartsList from "@/components/cards/card-all-parts";
 import CardDetailedPreview from "@/components/cards/card-detailed-preview";
 import CardPrintsList from "@/components/cards/card-prints-list";
 import CardRulings from "@/components/cards/card-rulings";
@@ -6,9 +7,10 @@ import Button from "@/components/ui/button/button";
 import Divider from "@/components/ui/divider/divider";
 import Text from "@/components/ui/text/text";
 import BodyHeightContext from "@/contexts/ui/body-height.context";
-import { currency } from "@/functions/text-manipulation";
+import { currency, titleCase } from "@/functions/text-manipulation";
 import ScryfallService from "@/hooks/services/scryfall.service";
 import { Card } from "@/models/card/card";
+import { Set } from "@/models/card/set";
 import {
   faFileLines,
   faImage,
@@ -17,9 +19,9 @@ import {
   faShop,
   faTable,
 } from "@fortawesome/free-solid-svg-icons";
-import { useLocalSearchParams } from "expo-router";
-import React, { useContext, useEffect, useRef } from "react";
-import { Linking, SafeAreaView, View } from "react-native";
+import { Link, useLocalSearchParams } from "expo-router";
+import React, { useContext, useEffect, useRef, useState } from "react";
+import { Image, Linking, SafeAreaView, View } from "react-native";
 
 export default function SetPage() {
   const { setId, cardNumber } = useLocalSearchParams();
@@ -27,13 +29,15 @@ export default function SetPage() {
 
   const containerRef = useRef<SafeAreaView>(null);
 
-  const [card, setCard] = React.useState(null as Card | null);
+  const [card, setCard] = useState(null as Card | null);
+  const [set, setSet] = useState(null as Set | null);
 
-  const [copiedText, setCopiedText] = React.useState(false);
+  const [copiedText, setCopiedText] = useState(false);
 
   useEffect(() => {
     if (typeof setId !== "string" || typeof cardNumber !== "string") return;
 
+    ScryfallService.getSetByCode(setId).then((set) => setSet(set));
     ScryfallService.getCardByNumber(setId, cardNumber).then((card) =>
       setCard(card)
     );
@@ -98,7 +102,32 @@ export default function SetPage() {
             className="flex-[2] max-h-fit lg:min-w-max min-w-fit !bg-transparent !p-0"
           />
 
-          <CardPrintsList card={card} />
+          <View className="flex gap-2 min-w-max">
+            <Link
+              href={`cards/${set?.code}`}
+              className="flex flex-row items-center gap-4 px-4 pt-1 pb-2 max-w-[350px] border-2 border-primary-200 border-opacity-30 rounded-md"
+            >
+              <Image
+                source={{ uri: set?.iconSvgUri }}
+                style={[{ resizeMode: "contain" }]}
+                className="h-8 w-8 fill-white invert-[1]"
+              />
+
+              <View className="flex-1">
+                <Text size="lg" weight="semi">
+                  {set?.name}
+                </Text>
+                <Text>
+                  {set?.code.toUpperCase()} | #{card.collectorNumber} |{" "}
+                  {titleCase(card.rarity)}
+                </Text>
+              </View>
+            </Link>
+
+            {card.allParts && <CardAllPartsList parts={card.allParts} />}
+
+            <CardPrintsList card={card} />
+          </View>
         </View>
 
         <View className="flex flex-row gap-6 flex-wrap lg:mt-12 mt-2 lg:mb-6 mb-2">

@@ -4,7 +4,6 @@ import { Card } from "@/models/card/card";
 import { Link, useLocalSearchParams } from "expo-router";
 import React, { useEffect } from "react";
 import { ScrollView, View } from "react-native";
-import Divider from "../ui/divider/divider";
 import Text from "../ui/text/text";
 
 export interface CardPrintsListProps {
@@ -25,50 +24,30 @@ export default function CardPrintsList({ card }: CardPrintsListProps) {
   }, [card]);
 
   return (
-    <View className="flex lg:w-[400px] w-full max-h-fit border-2 border-dark-200 rounded-lg overflow-hidden">
-      <View className="flex flex-row gap-2 p-2 max-w-full bg-dark-200">
-        <Text weight="semi">Print</Text>
-
-        <View className="flex flex-row gap-2 ml-auto">
-          <Text size="sm" className="w-16">
-            Number
-          </Text>
-          <Text size="sm" className="w-14">
-            Price
-          </Text>
-        </View>
+    <View className="flex lg:w-[350px] w-full max-h-fit overflow-hidden">
+      <View className="flex flex-row gap-2 p-2 max-w-full border-opacity-30">
+        <Text weight="semi">Prints</Text>
       </View>
 
-      <ScrollView className="flex max-h-[264px]">
+      <ScrollView className="flex max-h-[132px] border-2 border-primary-200 border-opacity-30 rounded-md">
         {cardPrints.map((print, index) => (
           <View key={index}>
             <Link
-              key={print.scryfallId + index}
               href={`cards/${print.set}/${print.collectorNumber}`}
-              className={`flex flex-row gap-2 p-2 max-w-full hover:bg-primary-300 transition-all duration-300 ${
-                print.set === setId && print.collectorNumber === cardNumber
-                  ? "bg-background-300"
-                  : "border-background-100"
+              className={`flex flex-row gap-2 p-2 max-w-full hover:bg-primary-300 hover:bg-opacity-50 transition-all duration-300 ${
+                index % 2 === 1 ? "bg-background-200" : "border-background-100"
               }`}
             >
-              <Text truncate size="sm">
-                {print.setName}
+              <Text truncate size="xs">
+                {print.setName} #{print.collectorNumber}
               </Text>
 
               <View className="flex flex-row gap-2 ml-auto">
-                <Text size="sm" className="w-16">
-                  {print.collectorNumber}
-                </Text>
-
-                <Text size="sm" className="w-14">
+                <Text size="xs" className="w-16">
                   {currency(print.prices?.usd)}
                 </Text>
               </View>
             </Link>
-
-            {index < cardPrints.length - 1 && (
-              <Divider thick className="!border-background-200" />
-            )}
           </View>
         ))}
       </ScrollView>
