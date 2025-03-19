@@ -33,16 +33,20 @@ export default function SearchBar({
   const onBlur = () => setFocused(false);
 
   const baseClasses =
-    "relative flex flex-row gap-3 items-center border-2 border-background-200 !px-6 !py-4 w-full rounded-full color-background-500 transition-colors ease-in-out duration-200";
-  const hoverClasses = "border-primary-500";
+    "relative flex flex-row gap-3 items-center border-2 border-background-200 !px-4 !py-2 w-full !bg-background-100 rounded-full !bg-none color-background-500 transition-colors ease-in-out duration-300";
+  const hoverClasses = "border-primary-200";
   const focusClasses = "border-primary-300";
   const noSearchResultClasses = "border-red-500";
 
   useEffect(() => {
-    ScryfallService.autocomplete(search).then((names) => {
-      if (!names.includes(search)) setAutoComplete(names);
-      else setAutoComplete([]);
-    });
+    const debounceFn = setTimeout(() => {
+      ScryfallService.autocomplete(search).then((names) => {
+        if (!names.includes(search)) setAutoComplete(names);
+        else setAutoComplete([]);
+      });
+    }, 300);
+
+    return () => clearTimeout(debounceFn);
   }, [search]);
 
   return (
@@ -56,7 +60,16 @@ export default function SearchBar({
           noSearchResults ? noSearchResultClasses : hovered ? hoverClasses : ""
         }`}
       >
-        <FontAwesomeIcon className="color-white" icon={faSearch} />
+        <FontAwesomeIcon
+          className={`${
+            focused
+              ? "color-primary-300"
+              : hovered
+              ? "color-primary-200"
+              : "color-background-500"
+          } transition-colors duration-300`}
+          icon={faSearch}
+        />
 
         <View className="relative flex-1">
           <TextInput
@@ -74,9 +87,9 @@ export default function SearchBar({
 
           {!hideAutocomplete && (
             <Box
-              className={`absolute top-[28px] left-0 flex w-full !px-2 rounded-t-none border-t-background-300 overflow-hidden transition-all ease-in-out duration-300 ${
+              className={`absolute top-[20px] left-0 flex w-full !px-2 !bg-background-100 rounded-t-none border-t-background-300 overflow-hidden transition-all ease-in-out duration-300 ${
                 hovered
-                  ? "border-primary-500"
+                  ? "border-primary-300"
                   : focused
                   ? focusClasses
                   : "border-background-200"
@@ -92,7 +105,7 @@ export default function SearchBar({
                     key={name + index}
                     onFocus={onFocus}
                     onBlur={onBlur}
-                    className="px-4 py-1 rounded-full hover:bg-background-100 focus:bg-background-100 outline-none"
+                    className="px-4 py-1 rounded-full hover:bg-background-200 focus:bg-background-100 outline-none"
                     onPress={() => {
                       searchChange(name);
                       searchAction?.(name);
@@ -113,15 +126,15 @@ export default function SearchBar({
           onPointerEnter={() => setSearchHovered(true)}
           onPointerLeave={() => setSearchHovered(false)}
           className={`${
-            searchHovered ? "bg-background-100" : ""
-          } rounded-full px-4 py-2 -mx-3 -my-2 outline-none transition-all`}
+            searchHovered ? "bg-background-200" : ""
+          } rounded-full px-4 py-2 -mx-4 -my-2 outline-none transition-all`}
         >
           <Text
             size="md"
             weight="medium"
             className={
               "!text-background-500 " +
-              (searchHovered ? "!text-primary-500" : "")
+              (searchHovered ? "!text-primary-300" : "")
             }
           >
             Search
