@@ -5,7 +5,7 @@ import ToastContext from "@/contexts/ui/toast.context";
 import UserContext from "@/contexts/user/user.context";
 import UserService from "@/hooks/services/user.service";
 import { router } from "expo-router";
-import React, { useContext, useEffect, useRef } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { SafeAreaView, View } from "react-native";
 
 export default function Login() {
@@ -15,23 +15,25 @@ export default function Login() {
 
   const containerRef = useRef<SafeAreaView>(null);
 
-  const [login, setLogin] = React.useState(true);
+  const [login, setLogin] = useState(true);
 
-  const [username, setUsername] = React.useState("");
-  const [email, setEmail] = React.useState("");
-  const [password, setPassword] = React.useState("");
-  const [confirmPassword, setConfirmPassword] = React.useState("");
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
-  const [userError, setUserError] = React.useState(false);
+  const [userError, setUserError] = useState(false);
 
-  const [passwordError, setPasswordError] = React.useState(false);
-  const [passwordLength, setPasswordLength] = React.useState(false);
-  const [passwordUpper, setPasswordUpper] = React.useState(false);
-  const [passwordLower, setPasswordLower] = React.useState(false);
-  const [passwordNumber, setPasswordNumber] = React.useState(false);
-  const [passwordSpecial, setPasswordSpecial] = React.useState(false);
+  const [passwordError, setPasswordError] = useState(false);
+  const [passwordLength, setPasswordLength] = useState(false);
+  const [passwordUpper, setPasswordUpper] = useState(false);
+  const [passwordLower, setPasswordLower] = useState(false);
+  const [passwordNumber, setPasswordNumber] = useState(false);
+  const [passwordSpecial, setPasswordSpecial] = useState(false);
 
-  const [passwordsMatch, setPasswordsMatch] = React.useState(false);
+  const [passwordsMatch, setPasswordsMatch] = useState(false);
+
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (userError) setUserError(false);
@@ -65,9 +67,12 @@ export default function Login() {
   function loginUser() {
     if (!username || !password) return;
 
+    setLoading(true);
     localStorage.clear();
 
     UserService.login(username, password).then((user) => {
+      setLoading(false);
+
       if (user) {
         setUser(user);
         router.push("../decks");
@@ -92,10 +97,13 @@ export default function Login() {
       return;
     }
 
+    setLoading(true);
     localStorage.clear();
 
     UserService.register(username, password, email).then(() => {
       UserService.login(username, password).then((user) => {
+        setLoading(false);
+
         if (user) {
           setUser(user);
           router.push(`../users/${user.id}`);
@@ -235,6 +243,7 @@ export default function Login() {
               text="Login"
               action="primary"
               className="flex-1 mt-2"
+              disabled={loading}
               onClick={() => loginUser()}
             />
           </View>
@@ -302,6 +311,7 @@ export default function Login() {
               text="Register"
               action="primary"
               className="flex-1 mt-2"
+              disabled={loading}
               onClick={() => registerUser()}
             />
           </View>
