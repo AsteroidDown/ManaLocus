@@ -102,10 +102,10 @@ export default function SetPage() {
             className="flex-[2] max-h-fit lg:min-w-max min-w-fit !bg-transparent !p-0"
           />
 
-          <View className="flex gap-2 min-w-max">
+          <View className="lg:flex-[0] flex-1 flex gap-2 lg:min-w-max">
             <Link
               href={`cards/${set?.code}`}
-              className="flex flex-row items-center gap-4 px-4 pt-1 pb-2 max-w-[350px] border-2 border-primary-200 border-opacity-30 rounded-md"
+              className="flex flex-row items-center gap-4 px-4 pt-1 pb-2 lg:max-w-[350px] border-2 border-primary-200 border-opacity-30 rounded-md"
             >
               <Image
                 source={{ uri: set?.iconSvgUri }}

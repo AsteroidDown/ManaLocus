@@ -19,7 +19,7 @@ export default function CardAllPartsList({ parts }: CardAllPartsProps) {
   }, [parts]);
 
   return (
-    <View className="flex lg:w-[350px] w-full max-h-fit overflow-hidden">
+    <View className="flex lg:max-w-[350px] w-full max-h-fit overflow-hidden">
       <View className="flex flex-row gap-2 p-2 max-w-full">
         <Text weight="semi">Related Cards, Parts, and Tokens</Text>
       </View>

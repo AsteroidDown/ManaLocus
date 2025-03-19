@@ -1,7 +1,7 @@
 import { currency } from "@/functions/text-manipulation";
 import ScryfallService from "@/hooks/services/scryfall.service";
 import { Card } from "@/models/card/card";
-import { Link, useLocalSearchParams } from "expo-router";
+import { Link } from "expo-router";
 import React, { useEffect } from "react";
 import { ScrollView, View } from "react-native";
 import Text from "../ui/text/text";
@@ -11,8 +11,6 @@ export interface CardPrintsListProps {
 }
 
 export default function CardPrintsList({ card }: CardPrintsListProps) {
-  const { setId, cardNumber } = useLocalSearchParams();
-
   const [cardPrints, setCardPrints] = React.useState([] as Card[]);
 
   useEffect(() => {
@@ -24,7 +22,7 @@ export default function CardPrintsList({ card }: CardPrintsListProps) {
   }, [card]);
 
   return (
-    <View className="flex lg:w-[350px] w-full max-h-fit overflow-hidden">
+    <View className="flex lg:max-w-[350px] w-full max-h-fit overflow-hidden">
       <View className="flex flex-row gap-2 p-2 max-w-full border-opacity-30">
         <Text weight="semi">Prints</Text>
       </View>
