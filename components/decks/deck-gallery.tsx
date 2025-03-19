@@ -31,7 +31,7 @@ import {
   faSearch,
 } from "@fortawesome/free-solid-svg-icons";
 import { Link, router } from "expo-router";
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useWindowDimensions, View } from "react-native";
 import DeckCard from "./deck-card";
 import DecksTable from "./decks-table";
@@ -62,49 +62,48 @@ export default function DeckGallery({
 
   const width = useWindowDimensions().width;
 
-  const [decks, setDecks] = React.useState([] as Deck[]);
-  const [meta, setMeta] = React.useState(null as PaginationMeta | null);
-  const [page, setPage] = React.useState(1);
-  const [decksLoading, setDecksLoading] = React.useState(false);
+  const [decks, setDecks] = useState([] as Deck[]);
+  const [meta, setMeta] = useState(null as PaginationMeta | null);
+  const [page, setPage] = useState(1);
+  const [decksLoading, setDecksLoading] = useState(false);
 
-  const [listView, setListView] = React.useState(
+  const [listView, setListView] = useState(
     (preferences?.deckCardViewType as any) === DeckViewType.LIST
   );
-  const [filtersOpen, setFiltersOpen] = React.useState(false);
-  const [overflow, setOverflow] = React.useState(false);
+  const [filtersOpen, setFiltersOpen] = useState(false);
+  const [overflow, setOverflow] = useState(false);
 
-  const [search, setSearch] = React.useState("");
-  const [format, setFormat] = React.useState(null as MTGFormats | null);
-  const [commanderFormat, setCommanderFormat] = React.useState(false);
-  const [sort, setSort] = React.useState(
+  const [search, setSearch] = useState("");
+  const [format, setFormat] = useState(null as MTGFormats | null);
+  const [commanderFormat, setCommanderFormat] = useState(false);
+  const [sort, setSort] = useState(
     preferences?.decksSortType ?? (DeckSortTypes.CREATED as DeckSortType)
   );
-  const [cardSearch, setCardSearch] = React.useState("");
-  const [cardAutoComplete, setCardAutoComplete] = React.useState(
+  const [cardSearch, setCardSearch] = useState("");
+  const [cardAutoComplete, setCardAutoComplete] = useState([] as string[]);
+  const [cards, setCards] = useState([] as string[]);
+  const [board, setBoard] = useState(BoardTypes.MAIN as BoardType);
+  const [exclusiveCardSearch, setSearchType] = useState(false);
+
+  const [commanderCardSearch, setCommanderCardSearch] = useState("");
+  const [commanderCardAutoComplete, setCommanderCardAutoComplete] = useState(
     [] as string[]
   );
-  const [cards, setCards] = React.useState([] as string[]);
-  const [board, setBoard] = React.useState(BoardTypes.MAIN as BoardType);
-  const [exclusiveCardSearch, setSearchType] = React.useState(false);
+  const [commanderSearch, setCommanderSearch] = useState("");
 
-  const [commanderCardSearch, setCommanderCardSearch] = React.useState("");
-  const [commanderCardAutoComplete, setCommanderCardAutoComplete] =
-    React.useState([] as string[]);
-  const [commanderSearch, setCommanderSearch] = React.useState("");
-
-  const [partnerCardSearch, setPartnerCardSearch] = React.useState("");
-  const [partnerCardAutoComplete, setPartnerCardAutoComplete] = React.useState(
+  const [partnerCardSearch, setPartnerCardSearch] = useState("");
+  const [partnerCardAutoComplete, setPartnerCardAutoComplete] = useState(
     [] as string[]
   );
-  const [partnerSearch, setPartnerSearch] = React.useState("");
+  const [partnerSearch, setPartnerSearch] = useState("");
 
-  const [searchDto, setSearchDto] = React.useState({
+  const [searchDto, setSearchDto] = useState({
     includeIds,
     onlyKits: kits,
     onlyCollections: collections,
   } as DeckFiltersDTO);
 
-  const [resultsText, setResultsText] = React.useState("");
+  const [resultsText, setResultsText] = useState("");
 
   useEffect(() => {
     if (noLoadScreen) return;
@@ -464,6 +463,16 @@ export default function DeckGallery({
                   label: card,
                   value: card,
                 }))}
+                placeholder={`Find a ${
+                  format === MTGFormats.OATHBREAKER
+                    ? "Oathbreaker"
+                    : "Commander"
+                }`}
+                notFoundText={
+                  commanderSearch
+                    ? "No cards found with that name"
+                    : "Enter a card name"
+                }
               />
             </View>
           )}
@@ -479,6 +488,16 @@ export default function DeckGallery({
                   label: card,
                   value: card,
                 }))}
+                placeholder={`Find a ${
+                  format === MTGFormats.OATHBREAKER
+                    ? "Signature Spell"
+                    : "Partner"
+                }`}
+                notFoundText={
+                  partnerSearch
+                    ? "No cards found with that name"
+                    : "Enter a card name"
+                }
               />
             </View>
           )}
@@ -491,11 +510,17 @@ export default function DeckGallery({
               label="Cards"
               value={cards}
               onChange={setCards}
+              placeholder="Find a card"
               onSearchChange={setCardSearch}
               options={cardAutoComplete.map((card) => ({
                 label: card,
                 value: card,
               }))}
+              notFoundText={
+                cardSearch
+                  ? "No cards found with that name"
+                  : "Enter a card name"
+              }
             />
           </View>
 
