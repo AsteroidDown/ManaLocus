@@ -3,9 +3,12 @@ import { titleCase } from "@/functions/text-manipulation";
 import DeckService from "@/hooks/services/deck.service";
 import { Deck } from "@/models/deck/deck";
 import { DeckCardChange, DeckChange } from "@/models/deck/deck-change";
+import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import moment from "moment";
 import React, { useEffect } from "react";
 import { Pressable, View, ViewProps } from "react-native";
+import Divider from "../ui/divider/divider";
 import TabBar from "../ui/tabs/tab-bar";
 import Text from "../ui/text/text";
 
@@ -97,71 +100,89 @@ export default function DeckChangeLog({ deck, className }: DeckChangeLogProps) {
           title: titleCase(title),
           onClick: () => setOpenIndex(-1),
           children: (
-            <View className="flex min-h-[300px] max-h-[300px] bg-dark-100 border-2 border-background-200 rounded-b-xl rounded-tr-xl overflow-x-hidden overflow-y-auto">
-              {boardChanges[boardIndex]?.map((timeChange, timeIndex) => (
-                <View key={timeIndex}>
-                  <Pressable
-                    key={timeChange.time.toString()}
-                    className={`${
-                      timeIndex % 2 === 0 ? "bg-dark-100" : "bg-dark-200"
-                    } flex-1 flex max-h-8 transition-all duration-300`}
-                    onPress={() => {
-                      if (openIndex === timeIndex) setOpenIndex(-1);
-                      else setOpenIndex(timeIndex);
-                    }}
-                  >
-                    <View className="flex-1 flex flex-row justify-between items-center gap-2 px-2 py-1 w-full min-h-8 hover:bg-primary-200 transition-all duration-300">
-                      <Text weight="bold">
-                        {moment(timeChange.time).format("MMM Do, YYYY h:mm A")}
-                      </Text>
+            <View className="flex min-h-[300px] max-h-[300px] overflow-x-hidden overflow-y-auto">
+              {boardChanges[boardIndex]?.length ? (
+                boardChanges[boardIndex].map((timeChange, timeIndex) => (
+                  <View key={timeIndex}>
+                    <Pressable
+                      key={timeChange.time.toString()}
+                      className={`flex-1 flex max-h-8 transition-all duration-300`}
+                      onPress={() => {
+                        if (openIndex === timeIndex) setOpenIndex(-1);
+                        else setOpenIndex(timeIndex);
+                      }}
+                    >
+                      <View className="flex-1 flex flex-row justify-between items-center gap-2 px-2 py-1 w-full min-h-8 hover:bg-primary-200 hover:bg-opacity-30 transition-all duration-300">
+                        <View className="flex flex-row items-center gap-4 pl-2">
+                          <FontAwesomeIcon
+                            size="sm"
+                            icon={faChevronRight}
+                            className={`text-white transition-all duration-300 ${
+                              openIndex === timeIndex ? "rotate-[450deg]" : ""
+                            }`}
+                          />
 
-                      <View className="flex flex-row gap-2">
-                        <Text mono action="success" weight="semi">
-                          + {timeChange.added}
-                        </Text>
+                          <Text weight="medium">
+                            {moment(timeChange.time).format(
+                              "MMM Do, YYYY h:mm A"
+                            )}
+                          </Text>
+                        </View>
 
-                        <Text mono action="danger" weight="semi">
-                          - {timeChange.removed}
-                        </Text>
+                        <View className="flex flex-row gap-2">
+                          <Text mono action="success" weight="semi">
+                            + {timeChange.added}
+                          </Text>
+
+                          <Text mono action="danger" weight="semi">
+                            - {timeChange.removed}
+                          </Text>
+                        </View>
                       </View>
+                    </Pressable>
+
+                    <Divider thick className="!border-background-200" />
+
+                    <View
+                      className={`${
+                        openIndex === timeIndex ? "max-h-[232px]" : "max-h-0"
+                      } flex w-full cursor-default overflow-y-scroll transition-all duration-300`}
+                    >
+                      {timeChange.changes.map((change, changeIndex) => (
+                        <View key={change.id + changeIndex}>
+                          <View
+                            className={`flex flex-row justify-between items-center pl-12 pr-6 py-1 w-full min-h-8 hover:bg-primary-200 transition-all duration-300`}
+                          >
+                            <Text size="sm" weight="semi">
+                              {change.name}
+                            </Text>
+
+                            <Text
+                              mono
+                              size="sm"
+                              action={change.count > 0 ? "success" : "danger"}
+                            >
+                              {change.count > 0 ? "+" : "-"}
+                              {Math.abs(change.count)}
+                            </Text>
+                          </View>
+
+                          <Divider thick className="!border-background-200" />
+                        </View>
+                      ))}
                     </View>
-                  </Pressable>
-
-                  <View
-                    className={`${
-                      openIndex === timeIndex ? "max-h-[232px] mb-2" : "max-h-0"
-                    } flex w-full cursor-default overflow-y-scroll transition-all duration-300`}
-                  >
-                    {timeChange.changes.map((change, changeIndex) => (
-                      <View
-                        key={change.id + changeIndex}
-                        className={`${
-                          (timeIndex + changeIndex) % 2
-                            ? "bg-background-100"
-                            : "bg-background-200"
-                        } flex flex-row justify-between items-center pl-6 pr-2 py-1 w-full min-h-8 hover:bg-primary-200 transition-all duration-300`}
-                      >
-                        <Text size="sm" weight="semi">
-                          {change.name}
-                        </Text>
-
-                        <Text
-                          mono
-                          size="sm"
-                          action={change.count > 0 ? "success" : "danger"}
-                        >
-                          {change.count > 0 ? "+" : "-"}
-                          {Math.abs(change.count)}
-                        </Text>
-                      </View>
-                    ))}
                   </View>
-                </View>
-              ))}
+                ))
+              ) : (
+                <Text className="italic px-3 py-2">
+                  No changes have been made to this board!
+                </Text>
+              )}
             </View>
           ),
         }))}
       />
+      <Divider thick className="!border-background-200" />
     </View>
   );
 }
