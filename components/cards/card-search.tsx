@@ -2,9 +2,9 @@ import Box from "@/components/ui/box/box";
 import Button from "@/components/ui/button/button";
 import SearchBar from "@/components/ui/search-bar/search-bar";
 import { SideBoardLimit } from "@/constants/mtg/limits";
-import { ActionColor } from "@/constants/ui/colors";
 import BoardContext from "@/contexts/cards/board.context";
 import StoredCardsContext from "@/contexts/cards/stored-cards.context";
+import ToastContext from "@/contexts/ui/toast.context";
 import {
   getLocalStorageStoredCards,
   saveLocalStorageCard,
@@ -29,6 +29,7 @@ export default function CardSearch({
   hideCardPreview,
   linkToCardPage,
 }: CardSearchProps) {
+  const { addToast } = useContext(ToastContext);
   const { board } = useContext(BoardContext);
   const { setStoredCards } = useContext(StoredCardsContext);
 
@@ -36,9 +37,6 @@ export default function CardSearch({
 
   const [card, setCard] = useState(undefined as Card | undefined);
   const [searchedCards, setSearchedCards] = useState([] as Card[]);
-
-  const [buttonText, setButtonText] = useState("Add Card");
-  const [buttonAction, setButtonAction] = useState("primary" as ActionColor);
 
   const [noSearchResults, setNoSearchResults] = useState(false);
   const [noSearchResultsTimer, setNoSearchResultsTimer] =
@@ -88,13 +86,13 @@ export default function CardSearch({
     const storedCards = saveLocalStorageCard(card, count, board);
     if (storedCards) setStoredCards(storedCards);
 
-    setButtonText("Card Added!");
-    setButtonAction("success");
-
-    setTimeout(() => {
-      setButtonText("Add Card");
-      setButtonAction("primary");
-    }, 3000);
+    addToast({
+      action: "success",
+      title: `Card${count > 1 ? "s" : ""} Added!`,
+      subtitle: `${count} ${card.name} ${
+        count > 1 ? "have" : "has"
+      } been added to the ${board} board`,
+    });
   }
 
   return (
@@ -108,10 +106,10 @@ export default function CardSearch({
         />
 
         <Box
-          className={`flex-[2] z-[-1] transition-all duration-300 ${
-            hideCardPreview && !searchedCards?.length
+          className={`flex-[2] !bg-background-100 border-background-200 rounded-xl z-[-1] transition-all duration-300 ${
+            !searchedCards?.length
               ? "max-h-0 !p-0"
-              : "min-h-[350px] h-full"
+              : "min-h-[350px] h-full !px-4 !py-2 border-2"
           }`}
         >
           <View className="h-full rounded-xl overflow-x-auto overflow-y-hidden">
@@ -154,34 +152,35 @@ export default function CardSearch({
             card ? "max-w-[1000px]" : "max-w-0"
           } max-h-[490px] transition-all duration-300 overflow-hidden`}
         >
-          <Box>
+          <Box className="!bg-background-100 border-2 border-background-200">
             <CardDetailedPreview hidePrices card={card}>
-              <CardPrints card={card} setCard={setCard} />
+              <View className="flex flex-row justify-center items-end w-full gap-1">
+                <CardPrints card={card} setCard={setCard} />
 
-              <View className="flex flex-row justify-center items-end w-full gap-0.5">
-                <Button
-                  squareRight
-                  className="flex-1"
-                  icon={faPlus}
-                  text={buttonText}
-                  action={buttonAction}
-                  disabled={
-                    !card ||
-                    (board === "side" && sideboardCount >= SideBoardLimit)
-                  }
-                  onClick={() => saveCard(card)}
-                />
+                <View className="flex flex-row gap-0.5">
+                  <Button
+                    squareRight
+                    size="sm"
+                    text="Add"
+                    icon={faPlus}
+                    disabled={
+                      !card ||
+                      (board === "side" && sideboardCount >= SideBoardLimit)
+                    }
+                    onClick={() => saveCard(card)}
+                  />
 
-                <Button
-                  squareLeft
-                  icon={faEllipsisV}
-                  action={buttonAction}
-                  disabled={
-                    !card ||
-                    (board === "side" && sideboardCount >= SideBoardLimit)
-                  }
-                  onClick={() => setAddMultipleOpen(true)}
-                />
+                  <Button
+                    squareLeft
+                    size="sm"
+                    icon={faEllipsisV}
+                    disabled={
+                      !card ||
+                      (board === "side" && sideboardCount >= SideBoardLimit)
+                    }
+                    onClick={() => setAddMultipleOpen(true)}
+                  />
+                </View>
 
                 <View className="-mx-px">
                   <Dropdown
@@ -193,6 +192,7 @@ export default function CardSearch({
                       <Button
                         start
                         square
+                        size="sm"
                         type="clear"
                         text="Add 2"
                         className="w-full"
@@ -208,6 +208,7 @@ export default function CardSearch({
                       <Button
                         start
                         square
+                        size="sm"
                         type="clear"
                         text="Add 3"
                         className="w-full"
@@ -223,6 +224,7 @@ export default function CardSearch({
                       <Button
                         start
                         square
+                        size="sm"
                         type="clear"
                         text="Add 4"
                         className="w-full"
