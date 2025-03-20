@@ -171,9 +171,10 @@ export default function SetPage() {
         />
 
         {filteredCards?.length > 0 && (
-          <TabBar hideBorder tabs={tabs}>
+          <TabBar tabs={tabs}>
             <View className="flex flex-row">
               <Button
+                size="sm"
                 squareRight
                 icon={faBorderAll}
                 type={viewType === DeckViewType.CARD ? "default" : "outlined"}
@@ -181,6 +182,7 @@ export default function SetPage() {
               />
 
               <Button
+                size="sm"
                 squareLeft
                 icon={faList}
                 type={viewType === DeckViewType.LIST ? "default" : "outlined"}

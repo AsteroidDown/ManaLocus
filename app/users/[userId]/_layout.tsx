@@ -79,7 +79,7 @@ export default function UserLayout() {
             </Text>
           </View>
 
-          <TabBar hideBorder tabs={tabs} />
+          <TabBar tabs={tabs} />
         </View>
       </SafeAreaView>
     </UserPageContext.Provider>

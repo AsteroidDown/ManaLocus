@@ -64,7 +64,6 @@ export default function DeckPage() {
       <View className="flex flex-1 gap-8 lg:px-16 px-4 py-8 border-t-2 border-background-200 bg-background-100">
         {(deck.dashboard?.sections?.length || 0) > 0 ? (
           <TabBar
-            hideBorder
             tabs={[
               {
                 title: "Deck",

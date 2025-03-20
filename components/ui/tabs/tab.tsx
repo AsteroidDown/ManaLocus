@@ -1,45 +1,43 @@
 import Text from "@/components/ui/text/text";
 import { Href } from "expo-router";
-import React from "react";
+import React, { useRef } from "react";
 import { View, ViewProps } from "react-native";
 
 export type TabProps = ViewProps & {
   title: string;
   link?: Href;
   name?: string;
-  hideBorder?: boolean;
   index?: number;
   focused?: boolean;
-  focusedIndex?: number;
 
   onClick?: () => void;
+  setTabDetails?: (index: number, width: number, offset: number) => void;
 };
 
 export default function Tab({
   title,
   index,
-  hideBorder = false,
-  focusedIndex,
   focused = false,
   className,
+  setTabDetails,
 }: TabProps) {
-  const baseClasses =
-    "px-8 py-2 -ml-[2px] rounded-t-xl border-t-2 border-x-2 transition-all duration-300";
+  const containerRef = useRef<View>(null);
 
-  const focusedClasses =
-    "border-background-200 bg-background-200 hover:bg-primary-300 hover:bg-opacity-30";
-  const unfocusedClasses =
-    "border-b-2 border-t-background-200 border-x-background-200 border-b-primary-200 bg-opacity-0 hover:bg-opacity-50 bg-primary-200";
+  const baseClasses =
+    "px-6 py-1.5 rounded-t-xl transition-all duration-300 hover:bg-primary-300 hover:bg-opacity-30";
 
   return (
     <View
-      style={{ zIndex: index === focusedIndex ? 2 : 1 }}
-      className={`${className} ${baseClasses} ${
-        focused ? focusedClasses : unfocusedClasses
-      } ${hideBorder ? "!border-transparent !ml-0" : ""}`}
+      ref={containerRef}
+      className={`${className} ${baseClasses}`}
+      onLayout={() =>
+        containerRef.current?.measureInWindow((x, _y, width) =>
+          setTabDetails?.(index ?? 0, width, x)
+        )
+      }
     >
       <Text
-        size="lg"
+        size="md"
         weight="semi"
         className={`${focused ? "!text-primary-200" : "!text-background-400"}`}
       >
