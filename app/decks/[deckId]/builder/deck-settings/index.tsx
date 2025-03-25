@@ -11,8 +11,6 @@ import { FormatsWithCommander, MTGFormats } from "@/constants/mtg/mtg-format";
 import { MTGCardTypes } from "@/constants/mtg/mtg-types";
 import StoredCardsContext from "@/contexts/cards/stored-cards.context";
 import DeckContext from "@/contexts/deck/deck.context";
-import BodyHeightContext from "@/contexts/ui/body-height.context";
-import BuilderHeightContext from "@/contexts/ui/builder-height.context";
 import ToastContext from "@/contexts/ui/toast.context";
 import { getCardType } from "@/functions/cards/card-information";
 import { getLocalStorageStoredCards } from "@/functions/local-storage/card-local-storage";
@@ -24,15 +22,14 @@ import { titleCase } from "@/functions/text-manipulation";
 import DeckService from "@/hooks/services/deck.service";
 import { Card } from "@/models/card/card";
 import { DeckDTO } from "@/models/deck/dtos/deck.dto";
+import { faSave } from "@fortawesome/free-solid-svg-icons";
 import { router } from "expo-router";
-import React, { useContext, useEffect, useRef } from "react";
-import { Image, SafeAreaView, View } from "react-native";
+import React, { useContext, useEffect, useRef, useState } from "react";
+import { Image, SafeAreaView, useWindowDimensions, View } from "react-native";
 
 export default function DeckSettingsPage() {
   const { addToast } = useContext(ToastContext);
   const { storedCards } = useContext(StoredCardsContext);
-  const { setBodyHeight } = useContext(BodyHeightContext);
-  const { setBuilderHeight } = useContext(BuilderHeightContext);
   const {
     deck,
     format,
@@ -43,23 +40,24 @@ export default function DeckSettingsPage() {
     setPartner,
   } = useContext(DeckContext);
 
-  const containerRef = useRef<View>(null);
+  const width = useWindowDimensions().width;
 
-  const [saving, setSaving] = React.useState(false);
-  const [saved, setSaved] = React.useState(false);
+  const kitContainerRef = useRef<View>(null);
 
-  const [name, setName] = React.useState("");
-  const [privateView, setPrivateView] = React.useState(false);
-  const [isKit, setIsKit] = React.useState(false);
-  const [description, setDescription] = React.useState("");
-  const [inProgress, setInProgress] = React.useState(false);
+  const [saving, setSaving] = useState(false);
 
-  const [featuredCardSearch, setFeaturedCardSearch] = React.useState("");
-  const [featuredCard, setFeaturedCard] = React.useState(null as Card | null);
+  const [name, setName] = useState("");
+  const [privateView, setPrivateView] = useState(false);
+  const [isKit, setIsKit] = useState(false);
+  const [description, setDescription] = useState("");
+  const [inProgress, setInProgress] = useState(false);
 
-  const [commanderOptions, setCommanderOptions] = React.useState([] as Card[]);
-  const [allowedPartner, setAllowedPartner] = React.useState(false);
-  const [partnerOptions, setPartnerOptions] = React.useState([] as Card[]);
+  const [featuredCardSearch, setFeaturedCardSearch] = useState("");
+  const [featuredCard, setFeaturedCard] = useState(null as Card | null);
+
+  const [commanderOptions, setCommanderOptions] = useState([] as Card[]);
+  const [allowedPartner, setAllowedPartner] = useState(false);
+  const [partnerOptions, setPartnerOptions] = useState([] as Card[]);
 
   const mainBoardCards = getLocalStorageStoredCards(BoardTypes.MAIN);
 
@@ -337,30 +335,24 @@ export default function DeckSettingsPage() {
   }
 
   return (
-    <SafeAreaView className="flex-1 bg-background-100">
-      <View
-        ref={containerRef}
-        className="flex gap-4"
-        onLayout={() =>
-          containerRef.current?.measureInWindow((_x, _y, _width, height) => {
-            setBodyHeight(height);
-            setBuilderHeight(0);
-          })
-        }
-      >
+    <SafeAreaView className="flex-1 px-6 py-4 min-h-[100dvh] bg-background-100">
+      <View className="flex gap-4">
         <BoxHeader
           title={deck?.isCollection ? "Collection Settings" : "Deck Settings"}
           end={
             <Button
+              type="outlined"
+              icon={faSave}
               disabled={saving}
+              className="max-w-fit ml-auto"
               text={saving ? "Saving..." : "Save"}
-              onClick={() => saveDeck()}
+              onClick={saveDeck}
             />
           }
         />
 
-        <View className="flex flex-row gap-6 z-10">
-          <View className="w-64 h-[172px] bg-dark-100 rounded-xl overflow-hidden">
+        <View className="flex lg:flex-row gap-6 z-10">
+          <View className="w-64 h-[172px] lg:mx-0 mx-auto bg-dark-100 rounded-xl overflow-hidden">
             {featuredCard && (
               <Image
                 className="w-full h-full rounded-xl"
@@ -370,21 +362,39 @@ export default function DeckSettingsPage() {
           </View>
 
           <View className="flex-1 flex gap-4">
-            <View className="flex flex-row flex-wrap gap-4">
+            {width <= 600 && (
               <Input
                 label="Name"
                 placeholder="Name"
                 value={name}
                 onChange={setName}
               />
+            )}
+
+            <View className="flex flex-row flex-wrap gap-4">
+              {width > 600 && (
+                <Input
+                  label="Name"
+                  placeholder="Name"
+                  value={name}
+                  onChange={setName}
+                />
+              )}
+
+              {width <= 600 && (
+                <Input
+                  label="Featured Card"
+                  value={featuredCardSearch}
+                  onChange={setFeaturedCardSearch}
+                />
+              )}
 
               <View className="flex gap-2">
-                <Text size="md" weight="bold">
-                  Visibility
-                </Text>
+                <Text weight="medium">Visibility</Text>
 
                 <View className="flex flex-row -mt-[0.5px]">
                   <Button
+                    size="sm"
                     squareRight
                     text="Public"
                     action="primary"
@@ -393,6 +403,7 @@ export default function DeckSettingsPage() {
                     onClick={() => setPrivateView(false)}
                   />
                   <Button
+                    size="sm"
                     squareLeft
                     text="Private"
                     action="primary"
@@ -405,12 +416,11 @@ export default function DeckSettingsPage() {
 
               {!deck?.isCollection && (
                 <View className="flex gap-2">
-                  <Text size="md" weight="bold">
-                    Type
-                  </Text>
+                  <Text weight="medium">Type</Text>
 
                   <View className="flex flex-row -mt-[0.5px]">
                     <Button
+                      size="sm"
                       squareRight
                       text="Deck"
                       action="primary"
@@ -419,6 +429,7 @@ export default function DeckSettingsPage() {
                       onClick={() => setIsKit(false)}
                     />
                     <Button
+                      size="sm"
                       squareLeft
                       text="Kit"
                       action="primary"
@@ -432,20 +443,22 @@ export default function DeckSettingsPage() {
             </View>
 
             <View className="flex flex-row flex-wrap gap-4">
-              <Input
-                label="Featured Card"
-                value={featuredCardSearch}
-                onChange={setFeaturedCardSearch}
-              />
+              {width > 600 && (
+                <Input
+                  label="Featured Card"
+                  value={featuredCardSearch}
+                  onChange={setFeaturedCardSearch}
+                />
+              )}
 
               {!deck?.isCollection && (
-                <View className="flex-[2] flex flex-row min-w-min">
+                <View className="flex-[2] flex lg:flex-row lg:gap-0 gap-4 lg:min-w-min">
                   <Select
                     label="Format"
                     placeholder="Format"
                     value={format}
                     onChange={setFormat}
-                    squareRight={!isKit && commanderFormat}
+                    squareRight={width > 600 && !isKit && commanderFormat}
                     options={Object.values(MTGFormats).map((format) => ({
                       label: titleCase(format),
                       value: format,
@@ -455,8 +468,8 @@ export default function DeckSettingsPage() {
                   {!isKit && commanderFormat && (
                     <>
                       <Select
-                        squareLeft
-                        squareRight={allowedPartner}
+                        squareLeft={width > 600}
+                        squareRight={width > 600 && allowedPartner}
                         value={commander}
                         property="scryfallId"
                         onChange={setCommander}
@@ -473,7 +486,7 @@ export default function DeckSettingsPage() {
 
                       {allowedPartner && (
                         <Select
-                          squareLeft
+                          squareLeft={width > 600}
                           value={partner}
                           property="scryfallId"
                           onChange={setPartner}
@@ -513,11 +526,7 @@ export default function DeckSettingsPage() {
           />
         )}
 
-        {!deck?.isCollection && deck && (
-          <View className="mt-8">
-            <DeckKits deck={deck} />
-          </View>
-        )}
+        {deck && <DeckKits deck={deck} />}
       </View>
     </SafeAreaView>
   );

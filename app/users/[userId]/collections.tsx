@@ -1,20 +1,18 @@
 import DeckGallery from "@/components/decks/deck-gallery";
+import BoxHeader from "@/components/ui/box/box-header";
 import Button from "@/components/ui/button/button";
-import BodyHeightContext from "@/contexts/ui/body-height.context";
+import Footer from "@/components/ui/navigation/footer";
 import UserPageContext from "@/contexts/user/user-page.context";
 import UserContext from "@/contexts/user/user.context";
 import DeckService from "@/hooks/services/deck.service";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { router } from "expo-router";
-import { useContext, useRef } from "react";
+import { useContext } from "react";
 import { SafeAreaView, View } from "react-native";
 
 export default function UserCollectionsPage() {
   const { user } = useContext(UserContext);
   const { userPageUser } = useContext(UserPageContext);
-  const { setBodyHeight } = useContext(BodyHeightContext);
-
-  const containerRef = useRef<View>(null);
 
   if (!user || !userPageUser) return null;
 
@@ -39,27 +37,25 @@ export default function UserCollectionsPage() {
 
   return (
     <SafeAreaView className="flex-1 flex w-full h-full bg-background-100">
-      <View
-        ref={containerRef}
-        className="my-4"
-        onLayout={() =>
-          containerRef.current?.measureInWindow((_x, _y, _width, height) =>
-            setBodyHeight(height)
-          )
-        }
-      >
-        <View className="flex flex-row justify-end">
-          <Button
-            text="Create Collection"
-            type="outlined"
-            icon={faPlus}
-            className="self-end"
-            onClick={createCollection}
-          />
-        </View>
+      <View className="lg:px-16 px-4 py-4 min-h-[100dvh] bg-background-100">
+        <BoxHeader
+          title="Collections"
+          subtitle="View and manage your collections"
+          end={
+            <Button
+              text="Create Collection"
+              type="outlined"
+              icon={faPlus}
+              className="self-end"
+              onClick={createCollection}
+            />
+          }
+        />
 
         <DeckGallery noLoadScreen collections userId={userPageUser.id} />
       </View>
+
+      <Footer />
     </SafeAreaView>
   );
 }

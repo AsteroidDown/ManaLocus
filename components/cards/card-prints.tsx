@@ -44,58 +44,65 @@ export default function CardPrints({
   return (
     <>
       <Button
+        size="sm"
+        type="outlined"
         className="flex-1"
         icon={faPalette}
         tabbable={tabbable}
-        text={iconOnly ? undefined : "Select Print"}
+        text={!iconOnly ? "Print" : ""}
         disabled={disabled || !card || (cardPrints.length || 0) < 2}
         onClick={() => setExpanded(!expanded)}
-      ></Button>
+      />
 
-      <Dropdown
-        className={`!max-w-[412px] border-2 border-primary-200 rounded-2xl shadow-xl`}
-        xOffset={iconOnly ? -160 : -80}
-        expanded={expanded}
-        setExpanded={setExpanded}
-      >
-        <Box className="pb-6 overflow-hidden">
-          <Text size="lg" weight="bold" className="mb-2">
-            {`Available Prints (${cardPrints.length})`}
-          </Text>
+      <View className="-my-2 -mx-1">
+        <Dropdown
+          className={`!max-w-[392px] border-2 border-primary-200 rounded-2xl shadow-xl`}
+          xOffset={iconOnly ? -160 : -200}
+          expanded={expanded}
+          setExpanded={setExpanded}
+        >
+          <Box className="pb-6 overflow-hidden !bg-background-100">
+            <Text size="lg" weight="bold" className="mb-2">
+              {`Available Prints (${cardPrints.length})`}
+            </Text>
 
-          <View className="flex flex-row flex-wrap gap-2 max-h-[300px] rounded-xl overflow-y-auto ">
-            {cardPrints.map((print, index) => (
-              <Pressable
-                className={`flex gap-2 p-2 rounded-lg transition-all duration-300 ${
-                  hoverIndex === index ? "bg-primary-300" : "bg-background-300"
-                }`}
-                key={print.scryfallId + index}
-                onPointerEnter={() => setHoverIndex(index)}
-                onPointerLeave={() => setHoverIndex(null)}
-                onPress={() => {
-                  setCard(print);
-                  setExpanded(false);
-                }}
-              >
-                <Image
-                  className="h-56 w-40"
-                  source={{
-                    uri:
-                      print.imageURIs?.png || print.faces?.front.imageUris.png,
+            <View className="flex flex-row flex-wrap gap-2 max-h-[300px] rounded-xl overflow-y-auto ">
+              {cardPrints.map((print, index) => (
+                <Pressable
+                  className={`flex gap-1 p-2 pb-1 rounded-lg transition-all duration-300 ${
+                    hoverIndex === index
+                      ? "bg-primary-300"
+                      : "bg-background-200"
+                  }`}
+                  key={print.scryfallId + index}
+                  onPointerEnter={() => setHoverIndex(index)}
+                  onPointerLeave={() => setHoverIndex(null)}
+                  onPress={() => {
+                    setCard(print);
+                    setExpanded(false);
                   }}
-                />
+                >
+                  <Image
+                    className="h-32 aspect-[2.5/3.5]"
+                    source={{
+                      uri:
+                        print.imageURIs?.png ||
+                        print.faces?.front.imageUris.png,
+                    }}
+                  />
 
-                <View className="flex flex-row justify-center items-center gap-2">
-                  <Text weight="semi">
-                    {print.set.toUpperCase()}{" "}
-                    {print.collectorNumber.toUpperCase()}
-                  </Text>
-                </View>
-              </Pressable>
-            ))}
-          </View>
-        </Box>
-      </Dropdown>
+                  <View className="flex flex-row justify-center items-center gap-2">
+                    <Text weight="medium">
+                      {print.set.toUpperCase()}{" "}
+                      {print.collectorNumber.toUpperCase()}
+                    </Text>
+                  </View>
+                </Pressable>
+              ))}
+            </View>
+          </Box>
+        </Dropdown>
+      </View>
     </>
   );
 }

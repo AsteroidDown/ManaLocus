@@ -9,8 +9,6 @@ import BoardContext from "@/contexts/cards/board.context";
 import BuilderPreferencesContext from "@/contexts/cards/builder-preferences.context";
 import StoredCardsContext from "@/contexts/cards/stored-cards.context";
 import DeckContext from "@/contexts/deck/deck.context";
-import BodyHeightContext from "@/contexts/ui/body-height.context";
-import BuilderHeightContext from "@/contexts/ui/builder-height.context";
 import {
   getLocalStorageBuilderPreferences,
   setLocalStorageBuilderPreferences,
@@ -22,7 +20,7 @@ import {
   faEyeSlash,
   faFileArrowDown,
 } from "@fortawesome/free-solid-svg-icons";
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { View } from "react-native";
 
 export default function AcquireBoardLayout() {
@@ -30,19 +28,15 @@ export default function AcquireBoardLayout() {
 
   if (!deck) return;
 
-  const { bodyHeight } = useContext(BodyHeightContext);
-  const { builderHeight, setBuilderHeight } = useContext(BuilderHeightContext);
   const { setStoredCards } = useContext(StoredCardsContext);
   const { setPreferences } = useContext(BuilderPreferencesContext);
 
-  const containerRef = React.useRef<View>(null);
+  const [board, setBoard] = useState("trade" as BoardType);
 
-  const [board, setBoard] = React.useState("trade" as BoardType);
+  const [open, setOpen] = useState(false);
 
-  const [open, setOpen] = React.useState(false);
-
-  const [groupMulticolored, setGroupMulticolored] = React.useState(false);
-  const [hideImages, setHideImages] = React.useState(false);
+  const [groupMulticolored, setGroupMulticolored] = useState(false);
+  const [hideImages, setHideImages] = useState(false);
 
   const tabs: TabProps[] = [
     {
@@ -101,24 +95,15 @@ export default function AcquireBoardLayout() {
 
   return (
     <BoardContext.Provider value={{ board, setBoard }}>
-      <View
-        ref={containerRef}
-        style={{ minHeight: bodyHeight + 24 }}
-        className="flex gap-4 px-6 py-4 w-full min-h-fit pb-4 bg-background-100"
-        onLayout={() => {
-          if (builderHeight) return;
+      <View className="flex gap-4 py-4 w-full min-h-fit pb-4 bg-background-100">
+        <View className="px-4">
+          <CardSearch />
+        </View>
 
-          containerRef.current?.measureInWindow((_x, _y, _width, height) =>
-            setBuilderHeight(Math.min(height, 518))
-          );
-        }}
-      >
-        <CardSearch />
-
-        <TabBar tabs={tabs} className="z-[-1]">
-          <View className="flex flex-row gap-2 mx-4">
+        <TabBar tabs={tabs} className="z-[-1]" containerClasses="px-6">
+          <View className="flex flex-row">
             <Button
-              rounded
+              size="sm"
               type="clear"
               icon={faFileArrowDown}
               onClick={() => setOpen(!open)}
@@ -126,7 +111,7 @@ export default function AcquireBoardLayout() {
 
             <Tooltip title="Group Multicolored Cards">
               <Button
-                rounded
+                size="sm"
                 icon={faBars}
                 type={`${groupMulticolored ? "outlined" : "clear"}`}
                 onClick={() =>
@@ -141,7 +126,7 @@ export default function AcquireBoardLayout() {
               title={hideImages ? "Show Card Images" : "Hide Card Images"}
             >
               <Button
-                rounded
+                size="sm"
                 type={hideImages ? "outlined" : "clear"}
                 icon={hideImages ? faEyeSlash : faEye}
                 onClick={() =>

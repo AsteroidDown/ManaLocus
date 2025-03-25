@@ -1,11 +1,14 @@
+import Footer from "@/components/ui/navigation/footer";
 import React from "react";
-import { SafeAreaView } from "react-native";
+import { View } from "react-native";
 import DeckSettingsPage from "./index";
 
-export default function AcquireBoardLayout() {
+export default function DeckSettingsLayout() {
   return (
-    <SafeAreaView className="px-10 py-4 min-h-[100dvh] bg-background-100">
-      <DeckSettingsPage></DeckSettingsPage>
-    </SafeAreaView>
+    <View className="flex">
+      <DeckSettingsPage />
+
+      <Footer />
+    </View>
   );
 }

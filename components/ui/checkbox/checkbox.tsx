@@ -56,7 +56,7 @@ export default function Checkbox({
       <View className="flex">
         {label && (
           <Text
-            size={size ?? "md"}
+            size={size ?? "sm"}
             weight="medium"
             className={disabled ? "text-dark-300" : "text-white"}
           >

@@ -365,6 +365,7 @@ export default function DeckGallery({
         />
 
         <Button
+          size="sm"
           squareLeft
           action="primary"
           className="self-end -ml-4"
@@ -375,6 +376,7 @@ export default function DeckGallery({
 
         {width > 600 && (
           <Button
+            size="sm"
             type="outlined"
             className="max-w-12 self-end"
             icon={listView ? faBorderAll : faList}
@@ -383,6 +385,7 @@ export default function DeckGallery({
         )}
 
         <Button
+          size="sm"
           icon={faFilter}
           className="self-end"
           type={filtersOpen ? "default" : "outlined"}
@@ -414,6 +417,7 @@ export default function DeckGallery({
 
             {width <= 600 && (
               <Button
+                size="sm"
                 type="outlined"
                 className="max-w-12 self-end"
                 icon={listView ? faBorderAll : faList}
@@ -559,15 +563,16 @@ export default function DeckGallery({
           {/* <Button text="Clear" type="outlined" onClick={clearFilters} /> */}
 
           <Button
+            size="sm"
             text="Search"
             icon={faSearch}
             disabled={decksLoading}
-            onClick={() => searchWithFilters()}
+            onClick={searchWithFilters}
           />
         </View>
       </View>
 
-      <Text size="xs" className="!text-dark-600">
+      <Text size="xs" className="!text-dark-600 -mt-4">
         {resultsText}
       </Text>
 

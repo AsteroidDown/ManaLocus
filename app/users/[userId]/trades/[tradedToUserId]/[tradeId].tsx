@@ -2,8 +2,8 @@ import TradeCardDetails from "@/components/trades/trade-card-details";
 import BoxHeader from "@/components/ui/box/box-header";
 import Button from "@/components/ui/button/button";
 import Divider from "@/components/ui/divider/divider";
+import Footer from "@/components/ui/navigation/footer";
 import Text from "@/components/ui/text/text";
-import BodyHeightContext from "@/contexts/ui/body-height.context";
 import UserPageContext from "@/contexts/user/user-page.context";
 import UserContext from "@/contexts/user/user.context";
 import { currency } from "@/functions/text-manipulation";
@@ -14,23 +14,17 @@ import { User } from "@/models/user/user";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { router, useLocalSearchParams } from "expo-router";
 import moment from "moment";
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { SafeAreaView, View } from "react-native";
 
 export default function TradePage() {
+  const { tradeId } = useLocalSearchParams();
+  const { tradedToUserId } = useLocalSearchParams();
+
   const { user } = useContext(UserContext);
   const { userPageUser } = useContext(UserPageContext);
   if (!user || !userPageUser) return null;
   if (user?.id !== userPageUser?.id) return null;
-
-  const buffer = 164;
-
-  const { tradeId } = useLocalSearchParams();
-  const { tradedToUserId } = useLocalSearchParams();
-
-  const { setBodyHeight } = useContext(BodyHeightContext);
-
-  const containerRef = useRef<View>(null);
 
   const [tradedToUser, setTradedToUser] = useState(null as User | null);
 
@@ -102,15 +96,7 @@ export default function TradePage() {
 
   return (
     <SafeAreaView className="flex-1 w-full h-full bg-background-100">
-      <View
-        ref={containerRef}
-        className="flex my-4"
-        onLayout={() =>
-          containerRef.current?.measureInWindow((_x, _y, _width, height) =>
-            setBodyHeight(height + buffer)
-          )
-        }
-      >
+      <View className="flex my-4 lg:px-16 px-4 min-h-[100dvh]">
         <View className="flex flex-row justify-between items-center gap-4">
           <BoxHeader
             title={`Trade with${
@@ -207,6 +193,8 @@ export default function TradePage() {
           {trade.total !== 0 && " for this trade"}
         </Text>
       </View>
+
+      <Footer />
     </SafeAreaView>
   );
 }

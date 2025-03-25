@@ -20,7 +20,7 @@ import {
   useEffect,
   useState,
 } from "react";
-import { View } from "react-native";
+import { Pressable, useWindowDimensions, View } from "react-native";
 import CardDetailedPreview from "../cards/card-detailed-preview";
 import CardText from "../cards/card-text";
 import DecksTable from "../decks/decks-table";
@@ -48,6 +48,8 @@ export default function AddKitModal({
 }: AddKitModalProps) {
   const { addToast } = useContext(ToastContext);
   const { setStoredCards } = useContext(StoredCardsContext);
+
+  const width = useWindowDimensions().width;
 
   const [kits, setKits] = useState([] as Deck[]);
   const [selectedKit, setSelectedKit] = useState(null as Deck | null);
@@ -115,117 +117,128 @@ export default function AddKitModal({
   }
 
   return (
-    <Modal open={open} setOpen={setOpen}>
-      <View className="flex gap-4 max-w-2xl max-h-[80vh]">
-        <View className="flex flex-row gap-8 max-w-[416px]">
-          <View
-            className={`flex gap-4 ${
-              selectedKit ? "-ml-[450px]" : ""
-            } transition-all duration-300`}
-          >
-            <Text size="xl" weight="bold">
-              Add Kit
-            </Text>
-
-            <Text>Select a kit to add to your deck</Text>
-
-            <View className="flex flex-row gap-4 my-4">
-              <Input
-                label="Search"
-                placeholder="Search for a kit"
-                onChange={setSearch}
-              />
-
-              <View className="flex flex-row self-end">
-                <Button
-                  squareRight
-                  text="All Kits"
-                  type={!userKits ? "default" : "outlined"}
-                  onClick={() => setUserKits(false)}
-                />
-                <Button
-                  squareLeft
-                  text="Your Kits"
-                  type={userKits ? "default" : "outlined"}
-                  onClick={() => setUserKits(true)}
-                />
-              </View>
-            </View>
-
-            {kits?.length > 0 && (
-              <>
-                <DecksTable
-                  hideFormat
-                  hideModified
-                  hideFavorites
-                  hideViews
-                  decks={kits}
-                  rowClick={selectKit}
-                />
-
-                {meta && (
-                  <Pagination meta={meta} onChange={(page) => setPage(page)} />
-                )}
-              </>
-            )}
-          </View>
-
-          <View className="flex flex-col gap-4">
-            <View className="flex flex-row gap-2 items-center -ml-2">
-              <Button
-                rounded
-                type="clear"
-                action="default"
-                icon={faChevronLeft}
-                onClick={() => setSelectedKit(null)}
-              />
-
-              <Text size="xl" weight="bold">
-                {selectedKit?.name} Cards
-              </Text>
-            </View>
-
-            <Table
-              className="max-h-[250px]"
-              data={selectedKit?.main || []}
-              rowClick={(card) => setSelectedCard(card)}
-              columns={
-                [
-                  {
-                    fit: true,
-                    row: (card) => <Text>{card.count}</Text>,
-                  },
-                  {
-                    title: "Name",
-                    row: (card) => <Text>{card.name}</Text>,
-                  },
-                  {
-                    fit: true,
-                    title: "Type",
-                    row: (card) => <Text>{titleCase(getCardType(card))}</Text>,
-                  },
-                  {
-                    fit: true,
-                    title: "Mana Cost",
-                    row: (card) =>
-                      card.manaCost && (
-                        <View className="max-w-fit py-0.5 px-1 bg-background-100 rounded-full overflow-hidden">
-                          <CardText text={card.manaCost} />
-                        </View>
-                      ),
-                  },
-                ] as TableColumn<Card>[]
-              }
+    <Modal
+      open={open}
+      setOpen={setOpen}
+      title="Add Kit"
+      subtitle="Select a kit to add to your deck"
+    >
+      <View className="flex flex-row gap-8 max-w-full">
+        <View
+          className={`flex lg:gap-4 min-w-full max-w-full transition-all duration-300 ${
+            selectedKit ? "-ml-[calc(100%+36px)]" : ""
+          }`}
+        >
+          <View className="flex lg:flex-row flex-col-reverse flex-wrap gap-4 my-4">
+            <Input
+              label="Search"
+              placeholder="Search for a kit"
+              onChange={setSearch}
             />
 
-            <View className="flex flex-row justify-end">
+            <View className="flex flex-row lg:self-end">
               <Button
-                icon={faPlus}
-                disabled={!selectedKit || saving}
-                text={saving ? "Saving..." : "Add Kit"}
-                onClick={addKit}
+                size="sm"
+                squareRight
+                text="All Kits"
+                className="flex-1"
+                type={!userKits ? "default" : "outlined"}
+                onClick={() => setUserKits(false)}
+              />
+              <Button
+                size="sm"
+                squareLeft
+                text="Your Kits"
+                className="flex-1"
+                type={userKits ? "default" : "outlined"}
+                onClick={() => setUserKits(true)}
               />
             </View>
+          </View>
+
+          {kits?.length > 0 && (
+            <>
+              <DecksTable
+                hideViews
+                hideFormat
+                hideModified
+                hideFavorites
+                decks={kits}
+                rowClick={selectKit}
+                hideCreator={width <= 600}
+              />
+
+              {meta && (
+                <Pagination meta={meta} onChange={(page) => setPage(page)} />
+              )}
+            </>
+          )}
+        </View>
+
+        <View className="flex flex-col gap-4 min-w-full">
+          <Pressable
+            className="flex flex-row items-center mt-2"
+            onPress={() => setSelectedKit(null)}
+          >
+            <Button
+              type="clear"
+              action="default"
+              buttonClasses="gap-2"
+              icon={faChevronLeft}
+              onClick={() => setSelectedKit(null)}
+            />
+
+            <Text size="xl" weight="bold">
+              {selectedKit?.name} Cards
+            </Text>
+          </Pressable>
+
+          <Table
+            className="max-h-[250px] -mt-4"
+            data={selectedKit?.main || []}
+            rowClick={(card) => setSelectedCard(card)}
+            columns={
+              [
+                {
+                  fit: true,
+                  row: (card) => <Text>{card.count}</Text>,
+                },
+                {
+                  title: "Name",
+                  row: (card) => <Text>{card.name}</Text>,
+                },
+                ...(width > 600
+                  ? ([
+                      {
+                        fit: true,
+                        title: "Type",
+                        row: (card) => (
+                          <Text>{titleCase(getCardType(card))}</Text>
+                        ),
+                      },
+                      {
+                        fit: true,
+                        title: "Mana Cost",
+                        row: (card) =>
+                          card.manaCost && (
+                            <View className="max-w-fit py-0.5 px-1 bg-background-100 rounded-full overflow-hidden">
+                              <CardText text={card.manaCost} />
+                            </View>
+                          ),
+                      },
+                    ] as TableColumn<Card>[])
+                  : []),
+              ] as TableColumn<Card>[]
+            }
+          />
+
+          <View className="flex flex-row justify-end">
+            <Button
+              icon={faPlus}
+              disabled={!selectedKit || saving}
+              text={saving ? "Saving..." : "Add Kit"}
+              onClick={addKit}
+            />
           </View>
         </View>
       </View>

@@ -1,10 +1,10 @@
 import BoxHeader from "@/components/ui/box/box-header";
 import Button from "@/components/ui/button/button";
+import Footer from "@/components/ui/navigation/footer";
 import Pagination from "@/components/ui/pagination/pagination";
 import LoadingTable from "@/components/ui/table/loading-table";
 import Table, { TableColumn } from "@/components/ui/table/table";
 import Text from "@/components/ui/text/text";
-import BodyHeightContext from "@/contexts/ui/body-height.context";
 import UserPageContext from "@/contexts/user/user-page.context";
 import UserContext from "@/contexts/user/user.context";
 import { currency } from "@/functions/text-manipulation";
@@ -14,18 +14,14 @@ import { TradeSummary } from "@/models/trade/trade";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { router } from "expo-router";
 import moment from "moment";
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { SafeAreaView, useWindowDimensions, View } from "react-native";
 
-export default function UserFoldersPage() {
+export default function UserTradesPage() {
   const { user } = useContext(UserContext);
   const { userPageUser } = useContext(UserPageContext);
   if (!user || !userPageUser) return null;
   if (user?.id !== userPageUser?.id) return null;
-
-  const { setBodyHeight } = useContext(BodyHeightContext);
-
-  const containerRef = useRef<View>(null);
 
   const width = useWindowDimensions().width;
 
@@ -52,18 +48,11 @@ export default function UserFoldersPage() {
 
   return (
     <SafeAreaView className="flex-1 w-full h-full bg-background-100">
-      <View
-        ref={containerRef}
-        className="flex my-4"
-        onLayout={() =>
-          containerRef.current?.measureInWindow((_x, _y, _width, height) =>
-            setBodyHeight(height)
-          )
-        }
-      >
+      <View className="flex my-4 lg:px-16 px-4 min-h-[100dvh]">
         {user.id === userPageUser.id && (
           <BoxHeader
             title="Your Trades"
+            subtitle="View and manage your trades with other users"
             end={
               <Button
                 type="outlined"
@@ -143,6 +132,8 @@ export default function UserFoldersPage() {
 
         {meta && <Pagination meta={meta} onChange={setPage} />}
       </View>
+
+      <Footer />
     </SafeAreaView>
   );
 }

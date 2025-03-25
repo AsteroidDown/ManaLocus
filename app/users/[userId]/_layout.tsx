@@ -1,13 +1,13 @@
+import BoxHeader from "@/components/ui/box/box-header";
 import { TabProps } from "@/components/ui/tabs/tab";
 import TabBar from "@/components/ui/tabs/tab-bar";
-import Text from "@/components/ui/text/text";
 import UserPageContext from "@/contexts/user/user-page.context";
 import UserContext from "@/contexts/user/user.context";
 import "@/global.css";
 import UserService from "@/hooks/services/user.service";
 import { User } from "@/models/user/user";
 import { useLocalSearchParams } from "expo-router";
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { SafeAreaView, View } from "react-native";
 
 export default function UserLayout() {
@@ -15,7 +15,7 @@ export default function UserLayout() {
 
   const { user } = useContext(UserContext);
 
-  const [userPageUser, setPageUser] = React.useState(null as User | null);
+  const [userPageUser, setPageUser] = useState(null as User | null);
 
   useEffect(() => {
     if (typeof userId !== "string") return;
@@ -72,15 +72,11 @@ export default function UserLayout() {
   return (
     <UserPageContext.Provider value={{ userPageUser, setPageUser }}>
       <SafeAreaView className="flex w-full h-full bg-background-100">
-        <View className="flex-1 flex gap-4 w-full min-h-[100dvh] lg:px-16 px-4 py-8 bg-background-100">
-          <View className="flex flex-row justify-between">
-            <Text size="2xl" weight="medium">
-              {userPageUser?.name}
-            </Text>
-          </View>
-
-          <TabBar tabs={tabs} />
+        <View className="lg:px-16 px-4 mt-8">
+          <BoxHeader title={userPageUser?.name} />
         </View>
+
+        <TabBar tabs={tabs} containerClasses="lg:px-16 px-4" />
       </SafeAreaView>
     </UserPageContext.Provider>
   );

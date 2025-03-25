@@ -74,13 +74,11 @@ export default function Modal({
                       {!!title && (
                         <View className="flex flex-row justify-between items-center gap-2">
                           <View className="flex-1 flex">
-                            <Text size="lg" weight="semi">
+                            <Text size="lg" weight="medium">
                               {title}
                             </Text>
 
-                            <Text size="sm" weight="semi">
-                              {subtitle}
-                            </Text>
+                            <Text size="sm">{subtitle}</Text>
                           </View>
 
                           <Button

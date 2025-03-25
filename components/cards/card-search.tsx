@@ -154,7 +154,7 @@ export default function CardSearch({
         >
           <Box className="!bg-background-100 border-2 border-background-200">
             <CardDetailedPreview hidePrices card={card}>
-              <View className="flex flex-row justify-center items-end w-full gap-1">
+              <View className="flex flex-row justify-center items-end w-full gap-2">
                 <CardPrints card={card} setCard={setCard} />
 
                 <View className="flex flex-row gap-0.5">
@@ -162,6 +162,7 @@ export default function CardSearch({
                     squareRight
                     size="sm"
                     text="Add"
+                    type="outlined"
                     icon={faPlus}
                     disabled={
                       !card ||
@@ -173,6 +174,7 @@ export default function CardSearch({
                   <Button
                     squareLeft
                     size="sm"
+                    type="outlined"
                     icon={faEllipsisV}
                     disabled={
                       !card ||

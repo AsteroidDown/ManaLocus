@@ -60,7 +60,6 @@ export default function DecksTable({
       ),
     },
     {
-      fit: true,
       title: "Name",
       row: (deck) => <Text>{deck.name}</Text>,
     },

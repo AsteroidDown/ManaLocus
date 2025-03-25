@@ -1,7 +1,7 @@
 import { currency as currencyMask } from "@/functions/text-manipulation";
 import { faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-icons";
 import React, { useEffect, useState } from "react";
-import { TextInput, View } from "react-native";
+import { Platform, TextInput, View } from "react-native";
 import Button from "../button/button";
 import Text from "../text/text";
 
@@ -48,15 +48,11 @@ export default function NumberInput({
 
   return (
     <View
-      className="flex-1 flex gap-2 max-h-fit z-[-1] min-w-fit"
+      className="flex-1 flex gap-2 max-h-fit z-[-1] min-w-0"
       onPointerEnter={() => setHovered(true)}
       onPointerLeave={() => setHovered(false)}
     >
-      {label && (
-        <Text size="md" weight="bold">
-          {label}
-        </Text>
-      )}
+      {label && <Text weight="medium">{label}</Text>}
 
       <View
         className={`${
@@ -67,7 +63,7 @@ export default function NumberInput({
             : "border-background-200"
         } ${
           disabled ? "!border-background-100" : ""
-        } flex-1 flex flex-row justify-between items-center gap-2 min-h-fit min-w-fit border-2 rounded-lg border-background-200 overflow-hidden`}
+        } flex-1 flex flex-row justify-between items-center gap-2 max-h-8 min-w-0 border-2 rounded-lg border-background-200 overflow-hidden`}
       >
         <TextInput
           value={currency ? currencyMask(Number(text) / 100) : text}
@@ -75,14 +71,15 @@ export default function NumberInput({
           tabIndex={disabled ? -1 : 0}
           secureTextEntry={secured}
           placeholderTextColor="#8b8b8b"
-          className={`flex-1 px-3 py-2 -my-0.5 color-white text-base outline-none transition-all ${inputClasses}`}
+          keyboardType={Platform.OS === "android" ? "numeric" : "number-pad"}
+          className={`flex-1 px-3 py-2 -my-0.5 min-w-0 max-h-8 color-white text-sm outline-none transition-all ${inputClasses}`}
           onChangeText={(change) => setText(change.replace(/[^0-9]/g, ""))}
           onFocus={() => setFocused(true)}
           onBlur={() => setFocused(false)}
         />
 
-        <View className="flex justify-center max-h-9">
-          <View className="flex justify-center items-center max-h-5 overflow-hidden">
+        <View className="flex justify-center max-h-8">
+          <View className="flex justify-center items-center max-h-4 overflow-hidden">
             <Button
               square
               size="xs"
@@ -94,7 +91,7 @@ export default function NumberInput({
             />
           </View>
 
-          <View className="flex justify-center items-center max-h-5 overflow-hidden">
+          <View className="flex justify-center items-center max-h-4 overflow-hidden">
             <Button
               square
               size="xs"

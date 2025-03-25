@@ -4,9 +4,9 @@ import Button from "@/components/ui/button/button";
 import Divider from "@/components/ui/divider/divider";
 import Input from "@/components/ui/input/input";
 import NumberInput from "@/components/ui/input/number-input";
+import Footer from "@/components/ui/navigation/footer";
 import { MTGRarities } from "@/constants/mtg/mtg-rarity";
 import DeckContext from "@/contexts/deck/deck.context";
-import BodyHeightContext from "@/contexts/ui/body-height.context";
 import { groupCardsByRarity } from "@/functions/cards/card-grouping";
 import { Card } from "@/models/card/card";
 import { DeckCardGalleryViewTypes } from "@/models/deck/deck-gallery-filters";
@@ -20,7 +20,6 @@ export interface Pack {
 
 export default function PackBuilderPage() {
   const { deck } = useContext(DeckContext);
-  const { setBodyHeight } = useContext(BodyHeightContext);
 
   const containerRef = useRef<SafeAreaView>(null);
 
@@ -156,15 +155,7 @@ export default function PackBuilderPage() {
   if (!deck) return;
 
   return (
-    <SafeAreaView
-      ref={containerRef}
-      className="bg-background-100"
-      onLayout={() =>
-        containerRef.current?.measureInWindow((_x, _y, _width, height) =>
-          setBodyHeight(height)
-        )
-      }
-    >
+    <SafeAreaView className="bg-background-100">
       <View className="flex flex-1 gap-4 lg:px-16 px-4 py-8 min-h-[100dvh] bg-background-100 bg-opacity-60 rounded-xl overflow-hidden">
         <BoxHeader
           title="Pack Builder"
@@ -230,6 +221,8 @@ export default function PackBuilderPage() {
           ))}
         </View>
       </View>
+
+      <Footer />
     </SafeAreaView>
   );
 }

@@ -1,19 +1,16 @@
 import Button from "@/components/ui/button/button";
 import Input from "@/components/ui/input/input";
-import BodyHeightContext from "@/contexts/ui/body-height.context";
+import Footer from "@/components/ui/navigation/footer";
 import ToastContext from "@/contexts/ui/toast.context";
 import UserContext from "@/contexts/user/user.context";
 import UserService from "@/hooks/services/user.service";
 import { router } from "expo-router";
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { SafeAreaView, View } from "react-native";
 
 export default function Login() {
   const { setUser } = useContext(UserContext);
   const { addToast } = useContext(ToastContext);
-  const { setBodyHeight } = useContext(BodyHeightContext);
-
-  const containerRef = useRef<SafeAreaView>(null);
 
   const [login, setLogin] = useState(true);
 
@@ -181,15 +178,7 @@ export default function Login() {
   }
 
   return (
-    <SafeAreaView
-      className="flex-1 flex w-full h-full bg-dark-100"
-      ref={containerRef}
-      onLayout={() =>
-        containerRef.current?.measureInWindow((_x, _y, _width, height) =>
-          setBodyHeight(height)
-        )
-      }
-    >
+    <SafeAreaView className="flex-1 flex w-full h-full bg-dark-100">
       <View className="flex-1 flex items-center justify-center w-full min-h-[100dvh] -mt-[50px]">
         <View className="flex flex-row mb-4 w-96">
           <Button
@@ -317,6 +306,8 @@ export default function Login() {
           </View>
         </View>
       </View>
+
+      <Footer />
     </SafeAreaView>
   );
 }

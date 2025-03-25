@@ -89,33 +89,35 @@ export default function TradeCardDetails({
 
   return (
     <View
-      className="flex lg:flex-row gap-4 bg-dark-100 border-background-200 border-2 rounded-lg px-4 py-2"
+      className="flex lg:flex-row gap-4 bg-dark-100 bg-opacity-30 border-background-200 border-2 rounded-lg px-4 py-2"
       style={{ zIndex: zIndex ?? 0 }}
     >
       {!cardIsItem && width > 600 && (
         <View className="flex justify-center">
-          imageUri ? (
-          <Pressable onPress={() => setOpen(true)}>
-            <Image
-              className="min-w-28 max-w-32 aspect-[2.5/3.5]"
-              source={{
-                uri: imageUri,
-              }}
-            />
-          </Pressable>
+          {imageUri ? (
+            <Pressable onPress={() => setOpen(true)}>
+              <Image
+                className="min-w-28 max-w-32 aspect-[2.5/3.5]"
+                source={{
+                  uri: imageUri,
+                }}
+              />
+            </Pressable>
           ) : (
-          <Skeleton className="min-w-28 max-w-32 aspect-[2.5/3.5]" />)
+            <Skeleton className="min-w-28 max-w-32 aspect-[2.5/3.5]" />
+          )}
         </View>
       )}
 
       <View className="flex-1 flex flex-col gap-2">
         <View
-          className={`flex justify-between items-center gap-2 ${
+          className={`flex flex-row justify-between items-center gap-2 ${
             cardIsItem && !readonly ? "gap-2 -mx-2" : "max-h-8"
-          } ${readonly && width < 600 ? "flex-row-reverse" : "flex-row"}`}
+          }`}
         >
           {!cardIsItem && width < 600 && (
             <Button
+              size="sm"
               rounded
               type="clear"
               action="default"
@@ -127,19 +129,19 @@ export default function TradeCardDetails({
 
           {tradeCard.card ? (
             <Pressable className="flex-1" onPress={() => setOpen(true)}>
-              <Text truncate size="lg" weight="semi">
+              <Text truncate size="md" weight="medium">
                 {readonly && `${tradeCard.count}  `}
                 {tradeCard.card?.name}
               </Text>
             </Pressable>
           ) : cardIsItem ? (
             readonly ? (
-              <Text truncate size="lg" weight="semi">
+              <Text truncate size="md" weight="medium">
                 {tradeCard.name}
               </Text>
             ) : (
               <View className="flex-1 flex flex-row items-center gap-2 pl-2">
-                <Text weight="semi" className="min-w-fit">
+                <Text weight="medium" className="min-w-fit">
                   Name
                 </Text>
 
@@ -157,6 +159,7 @@ export default function TradeCardDetails({
           {!readonly && (
             <Button
               rounded
+              size="sm"
               icon={faX}
               type="clear"
               action="default"
@@ -166,117 +169,140 @@ export default function TradeCardDetails({
           )}
         </View>
 
-        {!cardIsItem && (
-          <View className="flex flex-row items-center gap-2 z-[12]">
-            {print !== undefined && (
-              <Text weight="semi" className="min-w-10">
-                Print
-              </Text>
-            )}
-
-            {print !== undefined ? (
-              readonly ? (
-                <Text size="md" weight="semi">
-                  {`${print.set.toUpperCase()} ${print.collectorNumber}`}
-                </Text>
-              ) : (
-                <Select
-                  value={print}
-                  onChange={setPrint}
-                  options={prints.map((print) => ({
-                    label: `${print.set.toUpperCase()} ${
-                      print.collectorNumber
-                    }`,
-                    value: print,
-                  }))}
-                />
-              )
-            ) : (
-              <Skeleton className="flex-1 h-10" />
-            )}
-          </View>
-        )}
-
-        {price !== undefined && (
-          <View className="flex flex-row items-center gap-2 z-[10]">
-            {price !== undefined && (
-              <Text weight="semi" className="min-w-10">
-                Price
-              </Text>
-            )}
-
-            {readonly ? (
-              <Text size="md" weight="semi">
-                {currency((price || 0) / 100)}
-              </Text>
-            ) : price !== undefined ? (
-              <NumberInput
-                currency
-                value={price}
-                inputClasses="max-w-[176px]"
-                onChange={(change) => setPrice(change ? Number(change) : 0)}
-              />
-            ) : (
-              <Skeleton className="flex-1 h-10" />
-            )}
-          </View>
-        )}
-
-        {!cardIsItem && (
-          <View className="flex flex-row justify-end items-center gap-4">
-            <>
-              {print !== undefined ? (
-                readonly ? (
-                  <Text weight="semi" className="mr-auto">
-                    {tradeCard.foil ? "Foil" : "Non-Foil"}
-                  </Text>
-                ) : (
-                  <Checkbox
-                    label="Foil"
-                    checked={foil}
-                    onChange={setFoil}
-                    disabled={readonly}
-                    className="!flex-row-reverse gap-[22px] !max-w-fit mr-auto"
+        <View className="flex flex-row gap-4">
+          {!cardIsItem && width <= 600 && (
+            <View className="flex justify-center">
+              {imageUri ? (
+                <Pressable onPress={() => setOpen(true)}>
+                  <Image
+                    className="min-w-20 max-w-20 aspect-[2.5/3.5]"
+                    source={{
+                      uri: imageUri,
+                    }}
                   />
-                )
+                </Pressable>
               ) : (
-                <Skeleton className="w-24 h-10 mr-auto" />
+                <Skeleton className="min-w-28 max-w-32 aspect-[2.5/3.5]" />
               )}
-            </>
+            </View>
+          )}
 
-            {tradeCard.card ? (
-              <>
-                {!readonly && (
-                  <View className="flex flex-row">
-                    <Button
-                      squareRight
-                      icon={faMinus}
-                      action="info"
-                      type="outlined"
-                      onClick={() =>
-                        setCount((count || 0) <= 1 ? 1 : (count || 0) - 1)
-                      }
-                    />
-
-                    <View className="flex justify-center items-center w-10 h-10 border-2 border-dark-300">
-                      <Text>{count}</Text>
-                    </View>
-
-                    <Button
-                      squareLeft
-                      icon={faPlus}
-                      action="danger"
-                      type="outlined"
-                      onClick={() => setCount((count || 0) + 1)}
-                    />
-                  </View>
+          <View className="flex-1 flex flex-col gap-2">
+            {!cardIsItem && (
+              <View className="flex flex-row items-center gap-2 z-[12]">
+                {print !== undefined && (
+                  <Text weight="medium" className="min-w-10">
+                    Print
+                  </Text>
                 )}
-              </>
-            ) : (
-              <Skeleton className="w-36 h-10" />
+
+                {print !== undefined ? (
+                  readonly ? (
+                    <Text size="md" weight="medium">
+                      {`${print.set.toUpperCase()} ${print.collectorNumber}`}
+                    </Text>
+                  ) : (
+                    <Select
+                      value={print}
+                      onChange={setPrint}
+                      options={prints.map((print) => ({
+                        label: `${print.set.toUpperCase()} ${
+                          print.collectorNumber
+                        }`,
+                        value: print,
+                      }))}
+                    />
+                  )
+                ) : (
+                  <Skeleton className="flex-1 h-10" />
+                )}
+              </View>
+            )}
+
+            {price !== undefined && (
+              <View className="flex flex-row items-center gap-2 z-[10]">
+                {price !== undefined && (
+                  <Text weight="medium" className="min-w-10">
+                    Price
+                  </Text>
+                )}
+
+                {readonly ? (
+                  <Text size="md" weight="medium">
+                    {currency((price || 0) / 100)}
+                  </Text>
+                ) : price !== undefined ? (
+                  <NumberInput
+                    currency
+                    value={price}
+                    inputClasses="max-w-[176px]"
+                    onChange={(change) => setPrice(change ? Number(change) : 0)}
+                  />
+                ) : (
+                  <Skeleton className="flex-1 h-10" />
+                )}
+              </View>
+            )}
+
+            {!cardIsItem && (
+              <View className="flex flex-row justify-end items-center gap-4">
+                <>
+                  {print !== undefined ? (
+                    readonly ? (
+                      <Text weight="semi" className="mr-auto">
+                        {tradeCard.foil ? "Foil" : "Non-Foil"}
+                      </Text>
+                    ) : (
+                      <Checkbox
+                        label="Foil"
+                        checked={foil}
+                        onChange={setFoil}
+                        disabled={readonly}
+                        className="!flex-row-reverse gap-[20px] !max-w-fit mr-auto"
+                      />
+                    )
+                  ) : (
+                    <Skeleton className="w-24 h-10 mr-auto" />
+                  )}
+                </>
+
+                {tradeCard.card ? (
+                  <>
+                    {!readonly && (
+                      <View className="flex flex-row">
+                        <Button
+                          size="sm"
+                          squareRight
+                          icon={faMinus}
+                          action="info"
+                          type="outlined"
+                          onClick={() =>
+                            setCount((count || 0) <= 1 ? 1 : (count || 0) - 1)
+                          }
+                        />
+
+                        <View className="flex justify-center items-center w-8 h-8 border-2 border-dark-300">
+                          <Text>{count}</Text>
+                        </View>
+
+                        <Button
+                          size="sm"
+                          squareLeft
+                          icon={faPlus}
+                          action="danger"
+                          type="outlined"
+                          onClick={() => setCount((count || 0) + 1)}
+                        />
+                      </View>
+                    )}
+                  </>
+                ) : (
+                  <Skeleton className="w-36 h-10" />
+                )}
+              </View>
             )}
           </View>
-        )}
+        </View>
       </View>
 
       <View className="-my-2 -mx-2">

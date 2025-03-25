@@ -1,31 +1,44 @@
 import { faBars } from "@fortawesome/free-solid-svg-icons";
 import { Link, router, Stack } from "expo-router";
-import React, { useEffect, useRef, useState } from "react";
+import React, {
+  Dispatch,
+  SetStateAction,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { Pressable, useWindowDimensions, View, ViewProps } from "react-native";
 import Box from "../box/box";
 import Button from "../button/button";
 import Dropdown from "../dropdown/dropdown";
 import Tab, { TabProps } from "./tab";
 
-const tabDetails: { [key: string]: { width: number; offset: number } } = {};
+export interface TabDetails {
+  [key: number]: {
+    width: number;
+    offset: number;
+  };
+}
 
 export type TabBarProps = ViewProps & {
   tabs: TabProps[];
+  containerClasses?: string;
 };
 
-export default function TabBar({ tabs, className, children }: TabBarProps) {
+export default function TabBar({
+  tabs,
+  className,
+  containerClasses,
+  children,
+}: TabBarProps) {
   const width = useWindowDimensions().width;
 
   const containerRef = useRef<View>(null);
 
   const [focusedIndex, setFocusedIndex] = useState(0);
 
-  const [details, setDetails] = useState(
-    null as { [key: string]: { width: number; offset: number } } | null
-  );
+  const [details, setDetails] = useState({} as any);
   const [XOffset, setXOffset] = useState(0);
-
-  const [expanded, setExpanded] = useState(false);
 
   useEffect(() => {
     if (!tabs?.[0]?.link) return;
@@ -43,36 +56,89 @@ export default function TabBar({ tabs, className, children }: TabBarProps) {
     if (tabIndex && tabIndex !== focusedIndex) setFocusedIndex(tabIndex);
   }, [window.location.href]);
 
-  useEffect(() => {
-    if (!XOffset || details) return;
-
-    tabs.forEach((tab, index) => {
-      const tabInfo = tabDetails[`${tab.title}_${index}`];
-      tabDetails[`${tab.title}_${index}`] = {
-        width: tabInfo?.width ?? 0,
-        offset: (tabInfo?.offset ?? 0) - XOffset,
-      };
-    });
-
-    setDetails(tabDetails);
-  }, [XOffset]);
-
   function setTabDetails(index: number, width: number, offset: number) {
-    tabDetails[`${tabs[index]?.title}_${index}`] = {
-      width,
-      offset: offset - XOffset,
-    };
+    if (index === tabs.length - 1) {
+      console.log(details);
+      setDetails({
+        ...details,
+        [`${index}`]: { width, offset },
+      });
+    } else {
+      details[`${index}`] = { width, offset };
+    }
   }
 
   return (
     <View
       key={tabs.length}
       ref={containerRef}
-      className={`${className} relative flex-1 flex`}
+      className={`${className} relative flex-1 flex min-h-fit`}
       onLayout={() =>
-        containerRef.current?.measureInWindow((x) => setXOffset(x))
+        containerRef.current?.measureInWindow((x) => {
+          console.log(x);
+          setXOffset(x);
+        })
       }
     >
+      <TabsLayout
+        tabs={tabs}
+        children={children}
+        focusedIndex={focusedIndex}
+        setTabDetails={setTabDetails}
+        setFocusedIndex={setFocusedIndex}
+        containerClasses={containerClasses}
+      />
+
+      {details && (
+        <View
+          className={`absolute bottom-0 border-b-2 border-primary-200 transition-all duration-500 ease-out`}
+          style={{
+            width: details[focusedIndex]?.width ?? 0,
+            left:
+              width > 600 ? (details[focusedIndex]?.offset ?? 0) - XOffset : 0,
+          }}
+        />
+      )}
+
+      {tabs?.[0]?.children ? (
+        tabs[focusedIndex].children
+      ) : (
+        <Stack screenOptions={{ headerShown: false }}>
+          {tabs.map((tab, index) => (
+            <Stack.Screen key={tab.title + index} name={tab.link?.toString()} />
+          ))}
+        </Stack>
+      )}
+    </View>
+  );
+}
+
+interface TabsLayoutProps {
+  tabs: TabProps[];
+  containerClasses?: string;
+
+  setTabDetails: (index: number, width: number, offset: number) => void;
+
+  focusedIndex: number;
+  setFocusedIndex: Dispatch<SetStateAction<number>>;
+
+  children: any;
+}
+
+function TabsLayout({
+  tabs,
+  containerClasses,
+  setTabDetails,
+  focusedIndex,
+  setFocusedIndex,
+  children,
+}: TabsLayoutProps) {
+  const width = useWindowDimensions().width;
+
+  const [expanded, setExpanded] = useState(false);
+
+  return (
+    <View className={`flex ${containerClasses}`}>
       <View
         className={`flex-1 flex flex-row w-full min-h-[36px] max-h-[36px] border-b-2 border-background-200 overflow-x-auto overflow-y-hidden`}
       >
@@ -107,7 +173,7 @@ export default function TabBar({ tabs, className, children }: TabBarProps) {
           ))}
 
         {width <= 600 && (
-          <View className="flex flex-row gap-1 items-center">
+          <View className="flex flex-row gap-1 justify-between items-center w-full">
             <Tab
               {...tabs[focusedIndex]}
               focused
@@ -115,77 +181,52 @@ export default function TabBar({ tabs, className, children }: TabBarProps) {
             />
 
             <Button
-              type="clear"
               size="lg"
+              type="clear"
               icon={faBars}
-              className={!children ? "ml-auto" : ""}
               onClick={() => setExpanded(!expanded)}
-            />
-
-            <Dropdown
-              xOffset={-64}
-              expanded={expanded}
-              setExpanded={setExpanded}
             >
-              <Box className="flex justify-start items-start !p-0 mt-6 border-2 border-primary-300 !bg-background-100 !bg-opacity-95 overflow-auto max-h-[250px]">
-                {tabs
-                  .filter((tab) => tab.title !== tabs[focusedIndex].title)
-                  .map((tab) => (
-                    <Button
-                      key={tab.title}
-                      start
-                      square
-                      size="lg"
-                      type="clear"
-                      text={tab.title}
-                      className="w-full"
-                      onClick={() => {
-                        if (tab.link) router.push(tab.link);
-                        else if (tab.onClick) tab.onClick?.();
+              <View className="-mx-1">
+                <Dropdown
+                  xOffset={-112}
+                  expanded={expanded}
+                  setExpanded={setExpanded}
+                >
+                  <Box className="flex justify-start items-start !p-0 mt-6 border-2 border-primary-300 !bg-background-100 !bg-opacity-95 overflow-auto max-h-[300px]">
+                    {tabs
+                      .filter((tab) => tab.title !== tabs[focusedIndex].title)
+                      .map((tab) => (
+                        <Button
+                          key={tab.title}
+                          start
+                          square
+                          size="lg"
+                          type="clear"
+                          text={tab.title}
+                          className="w-full"
+                          onClick={() => {
+                            if (tab.link) router.push(tab.link);
+                            else if (tab.onClick) tab.onClick?.();
 
-                        setFocusedIndex(
-                          tabs.findIndex(
-                            (swapTab) => tab.title === swapTab.title
-                          )
-                        );
+                            setFocusedIndex(
+                              tabs.findIndex(
+                                (swapTab) => tab.title === swapTab.title
+                              )
+                            );
 
-                        setExpanded(false);
-                      }}
-                    />
-                  ))}
-              </Box>
-            </Dropdown>
+                            setExpanded(false);
+                          }}
+                        />
+                      ))}
+                  </Box>
+                </Dropdown>
+              </View>
+            </Button>
           </View>
         )}
 
         <View className="ml-auto">{children}</View>
       </View>
-
-      {details && (
-        <View
-          className="absolute top-[34px] border-b-2 border-primary-200 w-10 transition-all duration-500 ease-out"
-          style={{
-            width:
-              details[`${tabs[focusedIndex].title}_${focusedIndex}`]?.width ??
-              0,
-            left:
-              width > 600
-                ? details[`${tabs[focusedIndex].title}_${focusedIndex}`]
-                    ?.offset ?? 0
-                : 0,
-          }}
-        />
-      )}
-
-      {tabs?.[0]?.children ? (
-        tabs[focusedIndex].children
-      ) : (
-        <Stack screenOptions={{ headerShown: false }}>
-          {tabs.map((tab, index) => (
-            <Stack.Screen key={tab.title + index} name={tab.link?.toString()} />
-          ))}
-        </Stack>
-      )}
     </View>
   );
 }

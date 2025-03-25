@@ -14,7 +14,7 @@ export type BoxHeaderProps = ViewProps & {
   titleEnd?: ReactNode;
   end?: ReactNode;
 
-  hideDivider?: boolean;
+  divider?: boolean;
 };
 
 export default function BoxHeader({
@@ -25,7 +25,7 @@ export default function BoxHeader({
   titleEnd,
   end,
   className,
-  hideDivider = false,
+  divider = false,
 }: BoxHeaderProps) {
   return (
     <View className="flex-1 -mx-6 max-h-fit">
@@ -50,7 +50,7 @@ export default function BoxHeader({
               </Text>
             )}
 
-            {subtitle && <Text className="text-dark-600">{subtitle}</Text>}
+            {subtitle && <Text className="!text-gray-200">{subtitle}</Text>}
           </View>
 
           {titleEnd}
@@ -61,7 +61,7 @@ export default function BoxHeader({
         )}
       </View>
 
-      {!hideDivider && <Divider thick />}
+      {divider && <Divider thick />}
     </View>
   );
 }

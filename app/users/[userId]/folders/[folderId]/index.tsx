@@ -3,9 +3,9 @@ import FolderDecksModal from "@/components/folders/folder-decks-modal";
 import FolderDetailsModal from "@/components/folders/folder-details-modal";
 import Button from "@/components/ui/button/button";
 import Modal from "@/components/ui/modal/modal";
+import Footer from "@/components/ui/navigation/footer";
 import Placeholder from "@/components/ui/placeholder/placeholder";
 import Text from "@/components/ui/text/text";
-import BodyHeightContext from "@/contexts/ui/body-height.context";
 import ToastContext from "@/contexts/ui/toast.context";
 import UserPageContext from "@/contexts/user/user-page.context";
 import UserContext from "@/contexts/user/user.context";
@@ -19,7 +19,13 @@ import {
   faTrash,
 } from "@fortawesome/free-solid-svg-icons";
 import { router, useLocalSearchParams } from "expo-router";
-import React, { useContext, useEffect, useRef } from "react";
+import React, {
+  Dispatch,
+  SetStateAction,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { SafeAreaView, View } from "react-native";
 
 export default function FolderPage() {
@@ -27,16 +33,12 @@ export default function FolderPage() {
 
   const { user } = useContext(UserContext);
   const { userPageUser } = useContext(UserPageContext);
-  const { setBodyHeight } = useContext(BodyHeightContext);
 
-  const containerRef = useRef<View>(null);
+  const [folder, setFolder] = useState(null as DeckFolder | null);
+  const [deckIds, setDeckIds] = useState([] as string[]);
 
-  const [folder, setFolder] = React.useState(null as DeckFolder | null);
-  const [deckIds, setDeckIds] = React.useState([] as string[]);
-
-  const [folderUpdateModalOpen, setFolderUpdateModalOpen] =
-    React.useState(false);
-  const [addDeckModalOpen, setAddDeckModalOpen] = React.useState(false);
+  const [folderUpdateModalOpen, setFolderUpdateModalOpen] = useState(false);
+  const [addDeckModalOpen, setAddDeckModalOpen] = useState(false);
 
   useEffect(() => {
     if (!userPageUser || typeof folderId !== "string") return;
@@ -50,86 +52,82 @@ export default function FolderPage() {
   if (!folder) return null;
 
   return (
-    <SafeAreaView className="flex w-full h-full py-4 bg-background-100">
-      <View
-        ref={containerRef}
-        className="flex flex-row gap-2 justify-between items-center mb-4"
-        onLayout={() =>
-          containerRef.current?.measureInWindow((_x, _y, _width, height) =>
-            setBodyHeight(height)
-          )
-        }
-      >
-        <View className="flex flex-row items-center gap-2">
-          <Button
-            rounded
-            type="clear"
-            action="default"
-            className="-ml-4"
-            icon={faChevronLeft}
-            onClick={() => router.push(`users/${userPageUser?.id}/folders`)}
-          />
+    <SafeAreaView>
+      <View className="flex w-full h-full lg:px-16 px-4 py-4 bg-background-100">
+        <View className="flex flex-row gap-2 justify-between items-center mb-4">
+          <View className="flex flex-row items-center gap-2">
+            <Button
+              rounded
+              type="clear"
+              action="default"
+              className="-ml-4"
+              icon={faChevronLeft}
+              onClick={() => router.push(`users/${userPageUser?.id}/folders`)}
+            />
 
-          <Text size="2xl" weight="bold">
-            {folder.name}
-          </Text>
+            <Text size="2xl" weight="bold">
+              {folder.name}
+            </Text>
+          </View>
+
+          {user?.id === userPageUser?.id && (
+            <View className="flex flex-row">
+              <Button
+                squareRight
+                type="outlined"
+                icon={faPen}
+                onClick={() => setFolderUpdateModalOpen(true)}
+              />
+              <Button
+                squareLeft
+                type="outlined"
+                icon={faPlus}
+                onClick={() => setAddDeckModalOpen(true)}
+              />
+            </View>
+          )}
         </View>
 
-        {user?.id === userPageUser?.id && (
-          <View className="flex flex-row">
-            <Button
-              squareRight
-              type="outlined"
-              icon={faPen}
-              onClick={() => setFolderUpdateModalOpen(true)}
-            />
-            <Button
-              squareLeft
-              type="outlined"
-              icon={faPlus}
-              onClick={() => setAddDeckModalOpen(true)}
-            />
-          </View>
+        {deckIds?.length > 0 ? (
+          <DeckGallery
+            noLoadScreen
+            includeIds={deckIds}
+            endColumns={[
+              {
+                fit: true,
+                row: (deck) => (
+                  <FolderRemoveDeckModal
+                    folder={folder}
+                    deck={deck}
+                    deckIds={deckIds}
+                    setDeckIds={setDeckIds}
+                  />
+                ),
+              },
+            ]}
+          />
+        ) : (
+          <Placeholder
+            title="No Decks Found!"
+            subtitle="Add a deck to this folder and it will be shown here!"
+            className="max-h-[300px]"
+          />
         )}
+
+        <FolderDetailsModal
+          folder={folder}
+          open={folderUpdateModalOpen}
+          setOpen={setFolderUpdateModalOpen}
+        />
+
+        <FolderDecksModal
+          folder={folder}
+          open={addDeckModalOpen}
+          setOpen={setAddDeckModalOpen}
+        />
       </View>
 
-      {deckIds?.length > 0 ? (
-        <DeckGallery
-          noLoadScreen
-          includeIds={deckIds}
-          endColumns={[
-            {
-              fit: true,
-              row: (deck) => (
-                <FolderRemoveDeckModal
-                  folder={folder}
-                  deck={deck}
-                  deckIds={deckIds}
-                  setDeckIds={setDeckIds}
-                />
-              ),
-            },
-          ]}
-        />
-      ) : (
-        <Placeholder
-          title="No Decks Found!"
-          subtitle="Add a deck to this folder and it will be shown here!"
-          className="max-h-[300px]"
-        />
-      )}
-
-      <FolderDetailsModal
-        folder={folder}
-        open={folderUpdateModalOpen}
-        setOpen={setFolderUpdateModalOpen}
-      />
-
-      <FolderDecksModal
-        folder={folder}
-        open={addDeckModalOpen}
-        setOpen={setAddDeckModalOpen}
-      />
+      <Footer />
     </SafeAreaView>
   );
 }
@@ -138,7 +136,7 @@ export interface FolderRemoveDeckModalProps {
   folder: DeckFolder;
   deck: Deck;
   deckIds: string[];
-  setDeckIds: React.Dispatch<React.SetStateAction<string[]>>;
+  setDeckIds: Dispatch<SetStateAction<string[]>>;
 }
 
 export function FolderRemoveDeckModal({
@@ -150,9 +148,9 @@ export function FolderRemoveDeckModal({
   const { user } = useContext(UserContext);
   const { addToast } = useContext(ToastContext);
 
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
 
-  const [saving, setSaving] = React.useState(false);
+  const [saving, setSaving] = useState(false);
 
   function removeDeck() {
     if (!user) return;

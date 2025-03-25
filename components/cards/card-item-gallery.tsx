@@ -149,8 +149,8 @@ export default function CardItemGallery({
   }, [cardsSortedCustom]);
 
   return (
-    <View className="bg-background-100 pb-4">
-      <Box className="!rounded-tl-none flex gap-2 px-0 overflow-hidden">
+    <View className="pb-4 min-h-full">
+      <Box className="!bg-background-100 !rounded-none flex gap-2 overflow-hidden">
         <BoxHeader
           title={
             "Cards Sorted by " +
@@ -165,7 +165,7 @@ export default function CardItemGallery({
             (partner ? partner.prices?.usd || 0 : 0)
           ).toFixed(2)}`}
           end={
-            <View className="flex flex-row gap-2">
+            <View className="flex flex-row gap-2 mr-2">
               <FilterBar type={type} setFilters={setFilters} />
 
               <View
@@ -445,29 +445,28 @@ export default function CardItemGallery({
                 />
               ))}
 
-              <View className="flex flex-row mt-2 max-h-[88px] bg-background-300 bg-opacity-30 rounded-xl">
-                <View className="flex flex-row px-4 py-2">
-                  <Input
-                    squareRight
-                    label="Create Group"
-                    placeholder="Group"
-                    value={group}
-                    onChange={setGroup}
-                  />
+              <View className="flex flex-row px-4 py-2 mt-2 max-h-fit border-2 border-background-200 bg-opacity-30 rounded-xl">
+                <Input
+                  squareRight
+                  label="Create Group"
+                  placeholder="Group Name"
+                  value={group}
+                  onChange={setGroup}
+                />
 
-                  <Button
-                    squareLeft
-                    icon={faPlus}
-                    type="outlined"
-                    className="self-end"
-                    disabled={!group || groupOptions.includes(group)}
-                    onClick={() => {
-                      if (!group || groupOptions.includes(group)) return;
+                <Button
+                  size="sm"
+                  squareLeft
+                  icon={faPlus}
+                  type="outlined"
+                  className="self-end"
+                  disabled={!group || groupOptions.includes(group)}
+                  onClick={() => {
+                    if (!group || groupOptions.includes(group)) return;
 
-                      setGroupOptions([...groupOptions, group]);
-                    }}
-                  />
-                </View>
+                    setGroupOptions([...groupOptions, group]);
+                  }}
+                />
               </View>
             </View>
           )}

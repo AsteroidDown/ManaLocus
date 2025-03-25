@@ -7,6 +7,7 @@ import { SideBoardLimit } from "@/constants/mtg/limits";
 import BoardContext from "@/contexts/cards/board.context";
 import StoredCardsContext from "@/contexts/cards/stored-cards.context";
 import DeckContext from "@/contexts/deck/deck.context";
+import ToastContext from "@/contexts/ui/toast.context";
 import { evaluateCardLegality } from "@/functions/decks/deck-legality";
 import {
   addToLocalStorageCardCount,
@@ -17,7 +18,7 @@ import {
   switchLocalStorageCardPrint,
   updateLocalStorageCardGroup,
 } from "@/functions/local-storage/card-local-storage";
-import { titleCase } from "@/functions/text-manipulation";
+import { currency, titleCase } from "@/functions/text-manipulation";
 import { Card } from "@/models/card/card";
 import {
   faCircleInfo,
@@ -31,7 +32,13 @@ import {
   faShop,
   faTrash,
 } from "@fortawesome/free-solid-svg-icons";
-import React, { useContext, useEffect } from "react";
+import React, {
+  Dispatch,
+  SetStateAction,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { Linking, Pressable, View } from "react-native";
 import Box from "../ui/box/box";
 import Dropdown from "../ui/dropdown/dropdown";
@@ -56,18 +63,20 @@ export default function CardItem({
   setItemsExpanded,
 }: CardItemProps & {
   itemsExpanded?: number;
-  setItemsExpanded: React.Dispatch<React.SetStateAction<number>>;
+  setItemsExpanded: Dispatch<SetStateAction<number>>;
 }) {
   const { deck, format, commander, partner } = useContext(DeckContext);
 
-  const [expanded, setExpanded] = React.useState(false);
-  const [modalOpen, setModalOpen] = React.useState(false);
-  const [focused, setFocused] = React.useState(false);
-  const [hovered, setHovered] = React.useState(false);
+  const [expanded, setExpanded] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [focused, setFocused] = useState(false);
+  const [hovered, setHovered] = useState(false);
 
-  const [legal, setLegal] = React.useState(true);
-  const [reasons, setReasons] = React.useState([] as string[]);
-  const [restricted, setRestricted] = React.useState(false);
+  const [previewOpen, setPreviewOpen] = useState(false);
+
+  const [legal, setLegal] = useState(true);
+  const [reasons, setReasons] = useState([] as string[]);
+  const [restricted, setRestricted] = useState(false);
 
   let leftHover = false;
 
@@ -114,9 +123,9 @@ export default function CardItem({
 
           setExpanded(!expanded);
         }}
-        className={`flex gap-2 rounded-2xl overflow-hidden transition-all duration-300 outline-none ${
+        className={`flex gap-2 overflow-hidden transition-all duration-300 outline-none ${
           expanded ? "max-h-[1000px] " : "max-h-[24px]"
-        } ${expanded ? "bg-background-300" : "bg-none"}`}
+        } ${expanded ? "bg-background-200 bg-opacity-1000" : "bg-none"}`}
       >
         <CardItemHeader
           card={card}
@@ -127,8 +136,6 @@ export default function CardItem({
 
         {expanded && (
           <>
-            <Divider thick className="-mt-2" />
-
             {!hideImage && (
               <>
                 <View className={"flex gap-2 px-2"}>
@@ -138,8 +145,6 @@ export default function CardItem({
                     onClick={() => setModalOpen(true)}
                   />
                 </View>
-
-                <Divider thick />
               </>
             )}
 
@@ -169,49 +174,35 @@ export default function CardItem({
         )}
       </Pressable>
 
-      {expanded && (
-        <Modal open={modalOpen} setOpen={setModalOpen}>
-          <CardDetailedPreview fullHeight card={card} />
-        </Modal>
-      )}
+      <Modal open={modalOpen} setOpen={setModalOpen}>
+        <CardDetailedPreview hidePrices fullHeight card={card}>
+          {reasons?.length > 0 && (
+            <>
+              <Divider thick />
 
-      <View className={`relative w-full h-0 z-10 max-w-full`}>
-        <View
-          className={`absolute top-0 left-0 flex gap-2 w-full !bg-background-100 rounded-xl overflow-hidden transition-all duration-300 z-10 ${
-            hovered && !expanded ? "max-h-[412px]" : "max-h-0"
-          }`}
-        >
-          <CardImage card={card} />
+              <View className="flex mx-4">
+                <Text size="sm" weight="semi">
+                  Legality Issues
+                </Text>
 
-          <View className="flex flex-row gap-2 px-2 pb-3">
-            <Button
-              size="xs"
-              action="info"
-              className="flex-1"
-              icon={faShop}
-              disabled={!card.priceUris?.tcgplayer}
-              text={`$${card.prices?.usd}`}
-              onClick={async () =>
-                card.priceUris?.tcgplayer &&
-                (await Linking.openURL(card.priceUris.tcgplayer))
-              }
-            />
+                <CardText text={reasons.join("\n")} />
+              </View>
 
-            <Button
-              size="xs"
-              action="info"
-              className="flex-1"
-              icon={faShop}
-              disabled={!card.priceUris?.cardmarket}
-              text={`€${card.prices?.eur}`}
-              onClick={async () =>
-                card.priceUris?.cardmarket &&
-                (await Linking.openURL(card.priceUris?.cardmarket))
-              }
-            />
-          </View>
-        </View>
-      </View>
+              <Divider thick />
+            </>
+          )}
+
+          <CardItemFooter
+            card={card}
+            groups={groups}
+            expanded={expanded}
+            modalOpen={modalOpen}
+            setModalOpen={setModalOpen}
+            itemsExpanded={itemsExpanded}
+            setItemsExpanded={setItemsExpanded}
+          />
+        </CardDetailedPreview>
+      </Modal>
     </>
   );
 }
@@ -222,20 +213,26 @@ export function CardItemHeader({
   legal,
   restricted,
 }: CardItemProps & { focused: boolean; legal: boolean; restricted: boolean }) {
-  const [hovered, setHovered] = React.useState(false);
+  const [hovered, setHovered] = useState(false);
 
   return (
     <View
       className={`flex flex-row justify-between gap-1 px-2 max-h-[24px] h-[24px] items-center transition-all ${
-        !legal ? "!bg-danger-100" : ""
-      } ${restricted ? "bg-warning-100" : ""} ${focused ? "bg-primary-300" : ""}
-        ${hovered ? "bg-primary-300" : "bg-none"}`}
+        hovered ? "bg-primary-300 bg-opacity-60" : "bg-none"
+      }`}
       onPointerEnter={() => setHovered(true)}
       onPointerLeave={() => setHovered(false)}
     >
       <View className="flex flex-row gap-2 flex-1">
-        <Text>{card.count}</Text>
-        <Text className="truncate">{card.name}</Text>
+        <Text action={!legal ? "danger" : restricted ? "warning" : "default"}>
+          {card.count}
+        </Text>
+        <Text
+          className="truncate"
+          action={!legal ? "danger" : restricted ? "warning" : "default"}
+        >
+          {card.name}
+        </Text>
       </View>
 
       {card.faces ? (
@@ -266,14 +263,15 @@ export function CardItemFooter({
   itemsExpanded,
   setItemsExpanded,
 }: any) {
+  const { addToast } = useContext(ToastContext);
   const { board } = useContext(BoardContext);
   const { setStoredCards } = useContext(StoredCardsContext);
 
-  const [print, setPrint] = React.useState(undefined as Card | undefined);
+  const [print, setPrint] = useState(undefined as Card | undefined);
 
-  const [groupOptions, setGroupOptions] = React.useState([] as SelectOption[]);
+  const [groupOptions, setGroupOptions] = useState([] as SelectOption[]);
 
-  const [moveOpen, setMoveOpen] = React.useState(false);
+  const [moveOpen, setMoveOpen] = useState(false);
 
   const sideboardCount = getLocalStorageStoredCards(BoardTypes.SIDE).reduce(
     (acc, storedCard) => acc + storedCard.count,
@@ -314,6 +312,12 @@ export function CardItemFooter({
 
     removeLocalStorageCard(card, board);
     setStoredCards(getLocalStorageStoredCards(board));
+
+    addToast({
+      action: "danger",
+      title: `Card Removed`,
+      subtitle: `${card.name} has been removed from the ${board} board`,
+    });
   }
 
   function switchPrint(print: Card) {
@@ -326,6 +330,12 @@ export function CardItemFooter({
     if (!add) removeLocalStorageCard(card, board);
     setStoredCards(getLocalStorageStoredCards(board));
     setMoveOpen(false);
+
+    addToast({
+      action: "info",
+      title: `Card Moved`,
+      subtitle: `${card.name} has been moved to the ${moveToBoard} board`,
+    });
   }
 
   return (
@@ -348,7 +358,9 @@ export function CardItemFooter({
       <View className="flex flex-row justify-center items-center gap-2 px-2">
         {setItemsExpanded && (
           <Button
+            size="sm"
             action="info"
+            type="outlined"
             className="flex-1"
             tabbable={expanded}
             icon={faCircleInfo}
@@ -365,6 +377,8 @@ export function CardItemFooter({
         />
 
         <Button
+          size="sm"
+          type="outlined"
           action="warning"
           className="flex-1"
           tabbable={expanded}
@@ -379,6 +393,7 @@ export function CardItemFooter({
                 <Button
                   start
                   square
+                  size="sm"
                   type="clear"
                   text="Main"
                   className="w-full"
@@ -391,6 +406,7 @@ export function CardItemFooter({
                 <Button
                   start
                   square
+                  size="sm"
                   type="clear"
                   text="Side"
                   className="w-full"
@@ -404,6 +420,7 @@ export function CardItemFooter({
                 <Button
                   start
                   square
+                  size="sm"
                   type="clear"
                   text="Maybe"
                   className="w-full"
@@ -417,6 +434,7 @@ export function CardItemFooter({
                   <Button
                     start
                     square
+                    size="sm"
                     type="clear"
                     text="Acquire"
                     className="w-full"
@@ -427,6 +445,7 @@ export function CardItemFooter({
                   <Button
                     start
                     square
+                    size="sm"
                     type="clear"
                     text="Acquire"
                     className="w-full"
@@ -440,11 +459,13 @@ export function CardItemFooter({
         </View>
 
         <Button
+          size="sm"
+          type="outlined"
           action="danger"
           className="flex-1"
           icon={faTrash}
           tabbable={expanded}
-          onClick={() => removeCard()}
+          onClick={removeCard}
         ></Button>
       </View>
 
@@ -483,20 +504,22 @@ export function CardItemFooter({
         <Button
           size="xs"
           action="info"
+          type="outlined"
           className="flex-1"
           icon={faShop}
           tabbable={expanded}
-          text={`$${card.prices?.usd}`}
+          text={currency(card.prices?.usd)}
           onClick={async () => await Linking.openURL(card.priceUris.tcgplayer)}
         />
 
         <Button
           size="xs"
           action="info"
+          type="outlined"
           className="flex-1"
           icon={faShop}
           tabbable={expanded}
-          text={`€${card.prices?.eur}`}
+          text={currency(card.prices?.eur)}
           onClick={async () => await Linking.openURL(card.priceUris.cardmarket)}
         />
       </View>

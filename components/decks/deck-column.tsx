@@ -8,7 +8,7 @@ import {
   DeckCardGalleryViewType,
   DeckCardGalleryViewTypes,
 } from "@/models/deck/deck-gallery-filters";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Pressable, View } from "react-native";
 import CardDetailedPreview from "../cards/card-detailed-preview";
 import CardImage from "../cards/card-image";
@@ -54,23 +54,23 @@ export default function DeckColumn({
   colorIdentity,
   shouldWrap,
 }: DeckColumnProps) {
-  const [count, setCount] = React.useState(0);
-  const [price, setPrice] = React.useState(0);
+  const [count, setCount] = useState(0);
+  const [price, setPrice] = useState(0);
 
-  const [cardPreviewModalOpen, setCardPreviewModalOpen] = React.useState(false);
+  const [cardPreviewModalOpen, setCardPreviewModalOpen] = useState(false);
 
-  const [cardGroupings, setCardGroupings] = React.useState(
+  const [cardGroupings, setCardGroupings] = useState(
     [] as DeckColumnCardGrouping[] | null
   );
 
-  React.useEffect(() => {
+  useEffect(() => {
     setCount(cards?.reduce((acc, card) => acc + card.count, 0) || 0);
     setPrice(
       cards?.reduce((acc, card) => acc + (card.prices?.usd || 0), 0) || 0
     );
   }, [cards]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!cards?.length || !groupMulticolored) return;
 
     const cardGroupings = [] as DeckColumnCardGrouping[];
@@ -103,7 +103,7 @@ export default function DeckColumn({
       } w-full break-inside-avoid mb-6`}
     >
       <Pressable
-        className="flex flex-row justify-between items-center px-2"
+        className="flex flex-row justify-between items-center px-2 border-b-2 border-background-200 pb-1 mb-1"
         onPress={() => setCardPreviewModalOpen(true)}
       >
         <Text size="lg" weight="bold">
@@ -118,8 +118,6 @@ export default function DeckColumn({
           )}
         </View>
       </Pressable>
-
-      <Divider thick className="!border-background-200 my-1" />
 
       {!groupMulticolored && (
         <View className="flex gap-0.5">
@@ -173,14 +171,14 @@ export default function DeckColumn({
                   <DeckCard
                     key={card.scryfallId + cardIndex}
                     card={card}
-                    last={index === cardGroupings.length - 1}
                     format={format}
                     viewType={viewType}
                     showPrice={showPrice}
-                    showManaValue={showManaValue}
                     hideCount={hideCount}
                     commander={commander}
+                    showManaValue={showManaValue}
                     colorIdentity={colorIdentity}
+                    last={index === cardGroupings.length - 1}
                   />
                 ))}
               </View>
@@ -223,12 +221,12 @@ function DeckCard({
   commander,
   colorIdentity,
 }: DeckCardProps) {
-  const [open, setOpen] = React.useState(false);
-  const [hoveredIndex, setHoveredIndex] = React.useState(-1);
+  const [open, setOpen] = useState(false);
+  const [hoveredIndex, setHoveredIndex] = useState(-1);
 
-  const [banned, setBanned] = React.useState(false);
-  const [restricted, setRestricted] = React.useState(false);
-  const [reasons, setReasons] = React.useState([] as string[]);
+  const [banned, setBanned] = useState(false);
+  const [restricted, setRestricted] = useState(false);
+  const [reasons, setReasons] = useState([] as string[]);
 
   const cardCount = Array(card.count).fill(undefined);
 

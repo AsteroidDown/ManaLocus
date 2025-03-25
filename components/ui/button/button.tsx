@@ -124,6 +124,7 @@ export default function Button({
 
         {text && (
           <Text
+            noWrap
             size={size}
             weight="bold"
             className={`select-none min-w-fit ${textColor} ${

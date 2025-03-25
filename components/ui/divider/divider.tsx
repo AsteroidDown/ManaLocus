@@ -13,7 +13,7 @@ export default function Divider({
   return (
     <View
       className={`
-        ${className} border-background-100 ${
+        ${className} border-background-200 ${
         vertical
           ? "  " + (thick ? "border-x" : "border-l")
           : " w-full " + (thick ? "border-y" : "border-b")

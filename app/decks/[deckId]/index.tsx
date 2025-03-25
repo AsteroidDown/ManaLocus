@@ -11,11 +11,11 @@ import Graph from "@/components/graph/graph";
 import Box from "@/components/ui/box/box";
 import Button from "@/components/ui/button/button";
 import Divider from "@/components/ui/divider/divider";
+import Footer from "@/components/ui/navigation/footer";
 import TabBar from "@/components/ui/tabs/tab-bar";
 import { BoardTypes } from "@/constants/boards";
 import { LegalityEvaluation } from "@/constants/mtg/mtg-legality";
 import DeckContext from "@/contexts/deck/deck.context";
-import BodyHeightContext from "@/contexts/ui/body-height.context";
 import { graphCardsByCost } from "@/functions/cards/card-graphing";
 import { evaluateDeckLegality } from "@/functions/decks/deck-legality";
 import { setLocalStorageCards } from "@/functions/local-storage/card-local-storage";
@@ -26,7 +26,6 @@ import { SafeAreaView, View } from "react-native";
 
 export default function DeckPage() {
   const { deck } = useContext(DeckContext);
-  const { setBodyHeight } = useContext(BodyHeightContext);
 
   const containerRef = useRef<SafeAreaView>(null);
 
@@ -51,14 +50,7 @@ export default function DeckPage() {
   if (!deck) return;
 
   return (
-    <SafeAreaView
-      ref={containerRef}
-      onLayout={() => {
-        containerRef.current?.measureInWindow((_x, _y, _width, height) =>
-          setBodyHeight(height)
-        );
-      }}
-    >
+    <SafeAreaView>
       <DeckHeader deck={deck} />
 
       <View className="flex flex-1 gap-8 lg:px-16 px-4 py-8 border-t-2 border-background-200 bg-background-100">
@@ -139,6 +131,8 @@ export default function DeckPage() {
       </View>
 
       <DeckFooter deck={deck} legalityEvaluation={legalityEvaluation} />
+
+      <Footer />
     </SafeAreaView>
   );
 }

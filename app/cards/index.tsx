@@ -3,41 +3,44 @@ import Box from "@/components/ui/box/box";
 import BoxHeader from "@/components/ui/box/box-header";
 import Button from "@/components/ui/button/button";
 import Dropdown from "@/components/ui/dropdown/dropdown";
+import Footer from "@/components/ui/navigation/footer";
 import Pagination from "@/components/ui/pagination/pagination";
 import Table, { TableColumn } from "@/components/ui/table/table";
 import Text from "@/components/ui/text/text";
 import { MTGSetType, MTGSetTypes } from "@/constants/mtg/mtg-set-types";
-import BodyHeightContext from "@/contexts/ui/body-height.context";
 import LoadingContext from "@/contexts/ui/loading.context";
 import { titleCase } from "@/functions/text-manipulation";
 import { PaginationMeta } from "@/hooks/pagination";
 import ScryfallService from "@/hooks/services/scryfall.service";
 import { faCheck, faFilter } from "@fortawesome/free-solid-svg-icons";
 import { router } from "expo-router";
-import React, { useContext, useEffect, useRef } from "react";
+import React, {
+  Dispatch,
+  SetStateAction,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { Image, SafeAreaView, View } from "react-native";
 import { Set } from "../../models/card/set";
 
 export default function CardsPage() {
   const { setLoading } = useContext(LoadingContext);
-  const { setBodyHeight } = useContext(BodyHeightContext);
 
-  const containerRef = useRef<SafeAreaView>(null);
+  const [allCardsLoading, setAllCardsLoading] = useState(false);
 
-  const [allCardsLoading, setAllCardsLoading] = React.useState(false);
-
-  const [page, setPage] = React.useState(1);
-  const [items, setItems] = React.useState(25);
-  const [meta, setMeta] = React.useState({
+  const [page, setPage] = useState(1);
+  const [items, setItems] = useState(25);
+  const [meta, setMeta] = useState({
     page,
     items,
     totalItems: 0,
     totalPages: 0,
   } as PaginationMeta);
 
-  const [sets, setSets] = React.useState([] as Set[]);
-  const [filteredSets, setFilteredSets] = React.useState([] as Set[]);
-  const [selectedSets, setSelectedSets] = React.useState([] as MTGSetType[]);
+  const [sets, setSets] = useState([] as Set[]);
+  const [filteredSets, setFilteredSets] = useState([] as Set[]);
+  const [selectedSets, setSelectedSets] = useState([] as MTGSetType[]);
 
   useEffect(() => {
     setLoading(true);
@@ -76,14 +79,7 @@ export default function CardsPage() {
   }
 
   return (
-    <SafeAreaView
-      ref={containerRef}
-      onLayout={() =>
-        containerRef.current?.measureInWindow((_x, _y, _width, height) =>
-          setBodyHeight(height)
-        )
-      }
-    >
+    <SafeAreaView>
       <View className="flex flex-1 gap-4 lg:px-16 px-4 py-8 min-h-[100dvh] bg-background-100">
         <BoxHeader
           title="Find Cards"
@@ -153,17 +149,19 @@ export default function CardsPage() {
           <Pagination meta={meta} onChange={(page) => setPage(page)} />
         </View>
       </View>
+
+      <Footer />
     </SafeAreaView>
   );
 }
 
 interface SetFilterProps {
   selectedSets: MTGSetType[];
-  setSelectedSets: React.Dispatch<React.SetStateAction<MTGSetType[]>>;
+  setSelectedSets: Dispatch<SetStateAction<MTGSetType[]>>;
 }
 
 function SetFilter({ selectedSets, setSelectedSets }: SetFilterProps) {
-  const [selectSetsOpen, setSelectSetsOpen] = React.useState(false);
+  const [selectSetsOpen, setSelectSetsOpen] = useState(false);
 
   const setTypes = Object.values(MTGSetTypes);
 

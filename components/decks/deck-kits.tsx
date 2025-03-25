@@ -6,7 +6,7 @@ import DeckService from "@/hooks/services/deck.service";
 import { Deck } from "@/models/deck/deck";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import React, { useEffect, useState } from "react";
-import { View } from "react-native";
+import { useWindowDimensions, View } from "react-native";
 import AddKitModal from "../kits/add-kit-modal";
 import KitModal from "../kits/kit-modal";
 import RemoveKitModal from "../kits/remove-kit-modal";
@@ -22,6 +22,8 @@ export interface DeckKitProps {
 }
 
 export default function DeckKits({ deck, readonly }: DeckKitProps) {
+  const width = useWindowDimensions().width;
+
   const [deckKits, setDeckKits] = useState([] as Deck[]);
 
   const [loading, setLoading] = useState(false);
@@ -78,9 +80,11 @@ export default function DeckKits({ deck, readonly }: DeckKitProps) {
       <View>
         {deckKits?.length > 0 && (
           <DecksTable
+            hideViews
+            hideFormat
             hideModified
             hideFavorites
-            hideViews
+            hideCreator={!readonly && width <= 600}
             decks={deckKits}
             loading={loading}
             hideHeader={!readonly}

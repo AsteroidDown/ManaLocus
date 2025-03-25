@@ -1,28 +1,24 @@
 import BoxHeader from "@/components/ui/box/box-header";
 import Button from "@/components/ui/button/button";
 import Input from "@/components/ui/input/input";
+import Footer from "@/components/ui/navigation/footer";
 import Pagination from "@/components/ui/pagination/pagination";
 import Table, { TableColumn } from "@/components/ui/table/table";
 import Text from "@/components/ui/text/text";
-import BodyHeightContext from "@/contexts/ui/body-height.context";
 import { PaginationMeta } from "@/hooks/pagination";
 import UserService from "@/hooks/services/user.service";
 import { User } from "@/models/user/user";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import { router } from "expo-router";
 import moment from "moment";
-import React, { useContext, useEffect, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import { SafeAreaView, View } from "react-native";
 
 export default function UsersPage() {
-  const { setBodyHeight } = useContext(BodyHeightContext);
-
-  const containerRef = useRef<SafeAreaView>(null);
-
-  const [page, setPage] = React.useState(1);
-  const [meta, setMeta] = React.useState(null as PaginationMeta | null);
-  const [search, setSearch] = React.useState("");
-  const [users, setUsers] = React.useState([] as User[]);
+  const [page, setPage] = useState(1);
+  const [meta, setMeta] = useState(null as PaginationMeta | null);
+  const [search, setSearch] = useState("");
+  const [users, setUsers] = useState([] as User[]);
 
   function searchUsers() {
     UserService.getMany({ search }, { items: meta?.items || 25, page }).then(
@@ -41,28 +37,23 @@ export default function UsersPage() {
   }, [page]);
 
   return (
-    <SafeAreaView
-      ref={containerRef}
-      onLayout={() =>
-        containerRef.current?.measureInWindow((_x, _y, _width, height) =>
-          setBodyHeight(height)
-        )
-      }
-    >
+    <SafeAreaView>
       <View className="flex flex-1 gap-4 lg:px-16 px-4 py-8 min-h-[100dvh] bg-background-100">
         <BoxHeader title="Find Users" className="!pb-0" />
 
-        <View className="flex flex-row gap-4 items-center">
+        <View className="flex flex-row items-center">
           <Input
+            squareRight
             label="Search"
             placeholder="Search for a user"
             onChange={setSearch}
           />
 
           <Button
-            text="Search"
-            className="self-end"
+            size="sm"
+            squareLeft
             icon={faSearch}
+            className="self-end"
             onClick={searchUsers}
           />
         </View>
@@ -92,6 +83,8 @@ export default function UsersPage() {
 
         {meta && <Pagination meta={meta} onChange={(page) => setPage(page)} />}
       </View>
+
+      <Footer />
     </SafeAreaView>
   );
 }

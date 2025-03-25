@@ -4,8 +4,8 @@ import Button from "@/components/ui/button/button";
 import Checkbox from "@/components/ui/checkbox/checkbox";
 import Divider from "@/components/ui/divider/divider";
 import Select from "@/components/ui/input/select";
+import Footer from "@/components/ui/navigation/footer";
 import Text from "@/components/ui/text/text";
-import BodyHeightContext from "@/contexts/ui/body-height.context";
 import ToastContext from "@/contexts/ui/toast.context";
 import UserContext from "@/contexts/user/user.context";
 import { currency } from "@/functions/text-manipulation";
@@ -18,21 +18,16 @@ import { TradeCardDTO, TradeDTO } from "@/models/trade/dtos/trade.dto";
 import { User } from "@/models/user/user";
 import { faArrowLeft, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { router, useLocalSearchParams } from "expo-router";
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { SafeAreaView, useWindowDimensions, View } from "react-native";
 
 export default function NewTradePage() {
+  const { tradedToUserId } = useLocalSearchParams();
+
   const { user } = useContext(UserContext);
-  const { setBodyHeight } = useContext(BodyHeightContext);
   const { addToast } = useContext(ToastContext);
 
-  const buffer = 164;
-
   const width = useWindowDimensions().width;
-
-  const containerRef = useRef<View>(null);
-
-  const { tradedToUserId } = useLocalSearchParams();
 
   const [tradedToUser, setTradedToUser] = useState(null as User | null);
   const [tradedToUserSearch, setTradedToUserSearch] = useState("");
@@ -353,15 +348,7 @@ export default function NewTradePage() {
 
   return (
     <SafeAreaView className="flex-1 w-full h-full bg-background-100">
-      <View
-        ref={containerRef}
-        className="flex gap-4 my-4"
-        onLayout={() =>
-          containerRef.current?.measureInWindow((_x, _y, _width, height) =>
-            setBodyHeight(height + buffer)
-          )
-        }
-      >
+      <View className="flex gap-4 my-4 lg:px-16 px-4 min-h-[100dvh]">
         <BoxHeader
           className="!pb-0"
           title={`${width > 600 ? "New " : !tradedToUser ? "New " : ""}Trade ${
@@ -689,6 +676,8 @@ export default function NewTradePage() {
           </View>
         </View>
       </View>
+
+      <Footer />
     </SafeAreaView>
   );
 }

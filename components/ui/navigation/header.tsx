@@ -1,5 +1,11 @@
 import UserContext from "@/contexts/user/user.context";
-import { faBars, faToolbox, faUsers } from "@fortawesome/free-solid-svg-icons";
+import {
+  faBars,
+  faChevronDown,
+  faToolbox,
+  faUsers,
+} from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link, router } from "expo-router";
 import { useContext, useState } from "react";
 import { Image, useWindowDimensions, View } from "react-native";
@@ -34,58 +40,81 @@ export default function Header() {
           <Logo />
 
           {width > 600 && (
-            <View className="flex flex-row items-center gap-2">
+            <View className="flex flex-row items-center">
               <Link href="/decks">
-                <Button square type="clear" text="Decks" size="lg" />
+                <Button
+                  square
+                  size="md"
+                  type="clear"
+                  text="Decks"
+                  buttonClasses="min-h-12"
+                />
               </Link>
 
               <Link href="/cards">
-                <Button square type="clear" text="Cards" size="lg" />
+                <Button
+                  square
+                  size="md"
+                  type="clear"
+                  text="Cards"
+                  buttonClasses="min-h-12"
+                />
               </Link>
 
               <Button
                 square
+                size="md"
                 type="clear"
                 text="Explore"
-                size="lg"
+                buttonClasses="min-h-12"
                 onClick={() => setExploreOpen(!exploreOpen)}
               >
-                <Dropdown
-                  xOffset={-76}
-                  expanded={exploreOpen}
-                  setExpanded={setExploreOpen}
-                >
-                  <View className="flex flex-col gap-2 mt-6 border-2 border-primary-300 !bg-background-100 rounded-xl !bg-opacity-95 overflow-auto max-h-[250px]">
-                    <Button
-                      start
-                      square
-                      size="lg"
-                      type="clear"
-                      text="Builders"
-                      icon={faUsers}
-                      className="w-full"
-                      onClick={() => {
-                        navigate("/users");
-                        setExploreOpen(false);
-                      }}
-                    />
+                <FontAwesomeIcon
+                  size="sm"
+                  icon={faChevronDown}
+                  className={`${
+                    exploreOpen ? "rotate-180" : ""
+                  } text-primary-200 transition-all duration-300`}
+                />
 
-                    <Button
-                      start
-                      square
-                      size="lg"
-                      type="clear"
-                      text="Kits"
-                      icon={faToolbox}
-                      className="w-full"
-                      buttonClasses="gap-1.5"
-                      onClick={() => {
-                        navigate("/kits");
-                        setExploreOpen(false);
-                      }}
-                    />
-                  </View>
-                </Dropdown>
+                <View className="-mx-1">
+                  <Dropdown
+                    xOffset={-76}
+                    expanded={exploreOpen}
+                    setExpanded={setExploreOpen}
+                  >
+                    <View className="flex flex-col gap-2 mt-6 border-2 border-primary-300 !bg-background-100 rounded-xl !bg-opacity-95 overflow-auto max-h-[250px]">
+                      <Button
+                        start
+                        square
+                        size="lg"
+                        type="clear"
+                        text="Builders"
+                        icon={faUsers}
+                        className="w-full"
+                        onClick={() => {
+                          navigate("/users");
+                          setExploreOpen(false);
+                        }}
+                      />
+
+                      <Button
+                        start
+                        square
+                        size="lg"
+                        type="clear"
+                        text="Kits"
+                        icon={faToolbox}
+                        className="w-full"
+                        buttonClasses="gap-1.5"
+                        onClick={() => {
+                          navigate("/kits");
+                          setExploreOpen(false);
+                        }}
+                      />
+                    </View>
+                  </Dropdown>
+                </View>
               </Button>
             </View>
           )}
@@ -95,11 +124,23 @@ export default function Header() {
           <View className="flex flex-row items-center gap-2">
             {user?.name ? (
               <Link href={`/users/${user.id}`}>
-                <Button square type="clear" size="lg" text={user.name} />
+                <Button
+                  square
+                  size="md"
+                  type="clear"
+                  text={user.name}
+                  buttonClasses="min-h-12"
+                />
               </Link>
             ) : (
               <Link href="/login">
-                <Button square type="clear" text="Login" size="lg" />
+                <Button
+                  square
+                  size="md"
+                  type="clear"
+                  text="Login"
+                  buttonClasses="min-h-12"
+                />
               </Link>
             )}
           </View>

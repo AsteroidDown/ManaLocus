@@ -155,12 +155,12 @@ export default function Select({
   return (
     <View
       style={{ elevation: 10, zIndex: 10 }}
-      className={`${className} flex-1 flex gap-2 max-h-fit min-w-fit z-[-1]`}
+      className={`${className} flex-1 flex gap-2 max-h-fit min-w-[144px] z-[-1]`}
       onPointerEnter={() => setHovered(true)}
       onPointerLeave={() => setHovered(false)}
     >
       {label && (
-        <Text size="md" weight="bold">
+        <Text noWrap weight="medium">
           {label}
         </Text>
       )}
@@ -168,8 +168,8 @@ export default function Select({
       <View
         style={multiple && { maxHeight: offsetHeight }}
         className={`${open ? "overflow-visible" : "overflow-hidden"} ${
-          !multiple && "max-h-[40px] min-h-[40px]"
-        } min-w-fit relative flex-1`}
+          !multiple && "max-h-8 min-h-8"
+        } min-w-0 relative flex-1`}
       >
         <View
           ref={inputRef}
@@ -188,9 +188,7 @@ export default function Select({
             open ? "!rounded-b-none" : ""
           } ${squareLeft ? "!rounded-l-none" : ""} ${
             squareRight ? "!rounded-r-none" : ""
-          } ${
-            multiple && "min-h-fit !py-[7px]"
-          } flex-1 flex flex-row flex-wrap items-center gap-2 min-w-fit min-h-10 px-3 py-2 rounded-lg border-2 overflow-hidden transition-all`}
+          } flex-1 flex flex-row flex-wrap items-center gap-2 min-w-0 min-h-8 max-h-8 px-3 py-2 rounded-lg border-2 overflow-hidden transition-all`}
         >
           {multiple && selectedOptions.length > 0 && (
             <View className="flex flex-row flex-wrap gap-2 items-center max-w-full">
@@ -223,7 +221,7 @@ export default function Select({
             placeholder={placeholder}
             tabIndex={disabled ? -1 : 0}
             placeholderTextColor="#8b8b8b"
-            className={`flex-1 color-white text-base outline-none -mt-0.5`}
+            className={`flex-1 color-white -mt-1 text-sm min-w-0 outline-none`}
             onFocus={() => (disabled ? null : onFocus())}
             onBlur={() => setTimeout(() => onBlur(), 200)}
             onChangeText={(change) => setSearch(change)}
@@ -231,6 +229,7 @@ export default function Select({
 
           <Pressable
             tabIndex={disabled ? -1 : 0}
+            className="-mt-1"
             onPress={() => (disabled ? null : setOpen(!open))}
             onBlur={() => setTimeout(() => onBlur(), 200)}
           >
@@ -263,7 +262,7 @@ export default function Select({
               : "border-background-200"
           } ${
             disabled ? "!border-background-100" : ""
-          } z-10 left-0 flex w-full h-fit px-2 py-1 border-2 bg-background-100 rounded-b-lg overflow-y-auto transition-all`}
+          } z-10 left-0 flex w-full h-fit border-2 bg-background-100 rounded-b-lg overflow-y-auto transition-all`}
         >
           {filteredOptions?.length ? (
             filteredOptions.map((option, index) => (
@@ -272,10 +271,7 @@ export default function Select({
                 tabIndex={disabled || !open ? -1 : 0}
                 onPress={() => selectOption(option)}
               >
-                <Text
-                  size="md"
-                  className="px-3 py-2 rounded-lg hover:bg-background-300 transition-all"
-                >
+                <Text className="px-3 py-1 hover:bg-background-300 transition-all">
                   {typeof option === "object" && option?.label
                     ? option.label
                     : typeof option === "string"

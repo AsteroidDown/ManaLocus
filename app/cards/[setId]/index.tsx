@@ -2,11 +2,11 @@ import CardList from "@/components/cards/card-list";
 import BoxHeader from "@/components/ui/box/box-header";
 import Button from "@/components/ui/button/button";
 import FilterBar from "@/components/ui/filters/filter-bar";
+import Footer from "@/components/ui/navigation/footer";
 import Placeholder from "@/components/ui/placeholder/placeholder";
 import SearchBar from "@/components/ui/search-bar/search-bar";
 import { TabProps } from "@/components/ui/tabs/tab";
 import TabBar from "@/components/ui/tabs/tab-bar";
-import BodyHeightContext from "@/contexts/ui/body-height.context";
 import LoadingContext from "@/contexts/ui/loading.context";
 import { filterCards } from "@/functions/cards/card-filtering";
 import {
@@ -20,26 +20,23 @@ import { DeckViewType } from "@/models/deck/dtos/deck-filters.dto";
 import { CardFilters } from "@/models/sorted-cards/sorted-cards";
 import { faBorderAll, faList } from "@fortawesome/free-solid-svg-icons";
 import { useLocalSearchParams } from "expo-router";
-import React, { useContext, useEffect, useRef } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Image, SafeAreaView, View } from "react-native";
 
 export default function SetPage() {
   const { setId } = useLocalSearchParams();
   const { setLoading } = useContext(LoadingContext);
-  const { setBodyHeight } = useContext(BodyHeightContext);
 
-  const containerRef = useRef<SafeAreaView>(null);
+  const [set, setSet] = useState(null as Set | null);
+  const [cards, setCards] = useState([] as Card[]);
+  const [filteredCards, setFilteredCards] = useState([] as Card[]);
 
-  const [set, setSet] = React.useState(null as Set | null);
-  const [cards, setCards] = React.useState([] as Card[]);
-  const [filteredCards, setFilteredCards] = React.useState([] as Card[]);
+  const [search, setSearch] = useState("");
 
-  const [search, setSearch] = React.useState("");
+  const [filters, setFilters] = useState({} as CardFilters);
+  const [viewType, setViewType] = useState(DeckViewType.CARD);
 
-  const [filters, setFilters] = React.useState({} as CardFilters);
-  const [viewType, setViewType] = React.useState(DeckViewType.CARD);
-
-  const [tabs, setTabs] = React.useState([] as TabProps[]);
+  const [tabs, setTabs] = useState([] as TabProps[]);
 
   const baseCards: Card[] = [];
   const showcaseCards: Card[] = [];
@@ -141,14 +138,7 @@ export default function SetPage() {
   if (!set) return;
 
   return (
-    <SafeAreaView
-      ref={containerRef}
-      onLayout={() =>
-        containerRef.current?.measureInWindow((_x, _y, _width, height) =>
-          setBodyHeight(height)
-        )
-      }
-    >
+    <SafeAreaView>
       <View className="flex-1 flex gap-6 lg:px-16 px-4 py-8 bg-background-100 min-h-[100dvh]">
         <BoxHeader
           className="!pb-0"
@@ -160,7 +150,7 @@ export default function SetPage() {
               className="h-10 w-10 fill-white invert-[1]"
             />
           }
-          end={<FilterBar clear setFilters={setFilters} />}
+          end={<FilterBar setFilters={setFilters} />}
         />
 
         <SearchBar
@@ -201,6 +191,8 @@ export default function SetPage() {
           </View>
         )}
       </View>
+
+      <Footer />
     </SafeAreaView>
   );
 }

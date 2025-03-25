@@ -1,12 +1,13 @@
 import FolderDetailsModal from "@/components/folders/folder-details-modal";
 import { FolderOptionsMenu } from "@/components/folders/folder-options-menu";
+import BoxHeader from "@/components/ui/box/box-header";
 import Button from "@/components/ui/button/button";
 import Input from "@/components/ui/input/input";
+import Footer from "@/components/ui/navigation/footer";
 import Pagination from "@/components/ui/pagination/pagination";
 import LoadingTable from "@/components/ui/table/loading-table";
 import Table, { TableColumn } from "@/components/ui/table/table";
 import Text from "@/components/ui/text/text";
-import BodyHeightContext from "@/contexts/ui/body-height.context";
 import UserPageContext from "@/contexts/user/user-page.context";
 import UserContext from "@/contexts/user/user.context";
 import { PaginationMeta } from "@/hooks/pagination";
@@ -19,29 +20,25 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { router } from "expo-router";
 import moment from "moment";
-import React, { useContext, useEffect, useRef } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { SafeAreaView, View } from "react-native";
 
 export default function UserFoldersPage() {
   const { user } = useContext(UserContext);
   const { userPageUser } = useContext(UserPageContext);
-  const { setBodyHeight } = useContext(BodyHeightContext);
-
-  const containerRef = useRef<View>(null);
 
   if (!user || !userPageUser) return null;
 
-  const [page, setPage] = React.useState(1);
-  const [meta, setMeta] = React.useState(null as PaginationMeta | null);
-  const [loading, setLoading] = React.useState(false);
+  const [page, setPage] = useState(1);
+  const [meta, setMeta] = useState(null as PaginationMeta | null);
+  const [loading, setLoading] = useState(false);
 
-  const [folders, setFolders] = React.useState([] as DeckFolder[]);
-  const [search, setSearch] = React.useState("");
+  const [folders, setFolders] = useState([] as DeckFolder[]);
+  const [search, setSearch] = useState("");
 
-  const [createFolderModalOpen, setCreateFolderModalOpen] =
-    React.useState(false);
+  const [createFolderModalOpen, setCreateFolderModalOpen] = useState(false);
 
-  const [selectedFolderId, setSelectedFolderId] = React.useState(
+  const [selectedFolderId, setSelectedFolderId] = useState(
     null as string | null
   );
 
@@ -58,29 +55,27 @@ export default function UserFoldersPage() {
 
   return (
     <SafeAreaView className="flex-1 w-full h-full bg-background-100">
-      <View
-        ref={containerRef}
-        className="flex my-4"
-        onLayout={() =>
-          containerRef.current?.measureInWindow((_x, _y, _width, height) =>
-            setBodyHeight(height)
-          )
-        }
-      >
+      <View className="lg:px-16 px-4 py-4 min-h-[100dvh] bg-background-100">
+        <BoxHeader
+          title="Folders"
+          subtitle="View and manage your deck folders"
+          end={
+            <Button
+              text="Create Folder"
+              type="outlined"
+              icon={faPlus}
+              className="self-end"
+              onClick={() => setCreateFolderModalOpen(true)}
+            />
+          }
+        />
+
         {user.id === userPageUser.id && (
           <View className="flex flex-row justify-between gap-4 mb-6">
             <Input
               label="Search"
               placeholder="Search for a folder"
               onChange={setSearch}
-            />
-
-            <Button
-              type="outlined"
-              text="Create Folder"
-              className="self-end"
-              icon={faPlus}
-              onClick={() => setCreateFolderModalOpen(true)}
             />
           </View>
         )}
@@ -151,13 +146,15 @@ export default function UserFoldersPage() {
         )}
 
         {meta && <Pagination meta={meta} onChange={setPage} />}
+
+        <FolderDetailsModal
+          setSelectedFolderId={setSelectedFolderId}
+          open={createFolderModalOpen}
+          setOpen={setCreateFolderModalOpen}
+        />
       </View>
 
-      <FolderDetailsModal
-        setSelectedFolderId={setSelectedFolderId}
-        open={createFolderModalOpen}
-        setOpen={setCreateFolderModalOpen}
-      />
+      <Footer />
     </SafeAreaView>
   );
 }

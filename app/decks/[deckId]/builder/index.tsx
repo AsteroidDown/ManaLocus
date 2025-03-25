@@ -1,10 +1,9 @@
 import DashboardSectionView from "@/components/dashboard/dashboard-section";
 import Button from "@/components/ui/button/button";
+import Footer from "@/components/ui/navigation/footer";
 import { MTGColor, MTGColors } from "@/constants/mtg/mtg-colors";
 import StoredCardsContext from "@/contexts/cards/stored-cards.context";
 import DashboardContext from "@/contexts/dashboard/dashboard.context";
-import BodyHeightContext from "@/contexts/ui/body-height.context";
-import BuilderHeightContext from "@/contexts/ui/builder-height.context";
 import { getLocalStorageStoredCards } from "@/functions/local-storage/card-local-storage";
 import {
   addLocalStorageDashboardItem,
@@ -14,17 +13,12 @@ import {
 } from "@/functions/local-storage/dashboard-local-storage";
 import { Card } from "@/models/card/card";
 import { faTableCellsLarge } from "@fortawesome/free-solid-svg-icons";
-import React, { useContext, useEffect, useRef } from "react";
+import React, { useContext, useEffect } from "react";
 import { View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function App() {
   const { storedCards } = useContext(StoredCardsContext);
   const { dashboard, setDashboard } = useContext(DashboardContext);
-  const { setBodyHeight } = useContext(BodyHeightContext);
-  const { setBuilderHeight } = useContext(BuilderHeightContext);
-
-  const containerRef = useRef<View>(null);
 
   const [cards, setCards] = React.useState([] as Card[]);
 
@@ -114,17 +108,8 @@ export default function App() {
   }
 
   return (
-    <SafeAreaView className="flex-1 bg-background-100">
-      <View
-        ref={containerRef}
-        className="flex-1 flex flex-row flex-wrap gap-6 px-6 min-h-fit max-h-fit justify-center items-center transition-all duration-0"
-        onLayout={() =>
-          containerRef.current?.measureInWindow((_x, _y, _width, height) => {
-            setBodyHeight(height);
-            setBuilderHeight(0);
-          })
-        }
-      >
+    <View className="flex-1 flex">
+      <View className="flex-1 flex flex-row flex-wrap gap-6 px-6 min-h-[100dvh] max-h-fit justify-center items-center transition-all duration-0">
         {dashboard?.sections.map((section, index) => (
           <DashboardSectionView
             cards={cards}
@@ -142,6 +127,8 @@ export default function App() {
           />
         </View>
       </View>
-    </SafeAreaView>
+
+      <Footer />
+    </View>
   );
 }

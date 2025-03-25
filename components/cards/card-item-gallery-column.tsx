@@ -61,16 +61,16 @@ export default function CardItemGalleryColumn({
   }, [cards, groupMulticolored]);
 
   const columnClasses =
-    "flex gap-2 py-2 my-2 w-[256px] max-w-[256px] rounded-xl bg-background-300 bg-opacity-30";
+    "flex gap-2 py-2 my-2 w-[256px] max-w-[256px] rounded-xl border-2 border-background-200";
 
   return (
     <View className={`${columnClasses}`}>
-      <View className="flex justify-center items-center mx-2">
-        <Text size="lg" weight="bold">
+      <View className="flex flex-row justify-between items-center mx-2">
+        <Text size="md" weight="medium">
           {title}
         </Text>
 
-        <Text weight="semi">
+        <Text>
           {cardCount} Card{cardCount !== 1 ? "s" : ""}
         </Text>
       </View>

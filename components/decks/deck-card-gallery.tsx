@@ -439,6 +439,7 @@ export default function DeckCardGallery({
           )}
 
           <Button
+            size="sm"
             icon={faFilter}
             className="self-end"
             type={filtersOpen ? "default" : "outlined"}
@@ -528,12 +529,12 @@ export default function DeckCardGallery({
             />
           </View>
 
-          <View className="flex-1 flex gap-2 max-h-fit min-w-fit">
-            <Text size="md" weight="bold">
+          <View className="flex-1 flex gap-3 max-h-fit min-w-fit">
+            <Text size="sm" weight="medium">
               Column Options
             </Text>
 
-            <View className="flex flex-row flex-wrap gap-4 my-2">
+            <View className="flex flex-row flex-wrap gap-4">
               <Checkbox
                 label="Price"
                 checked={showPrice}

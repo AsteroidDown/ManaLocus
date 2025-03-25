@@ -1,8 +1,8 @@
 import React, { useEffect } from "react";
-import { TextInput, View } from "react-native";
+import { TextInput, View, ViewProps } from "react-native";
 import Text from "../text/text";
 
-export interface InputProps {
+export interface InputProps extends ViewProps {
   label?: string;
   placeholder?: string;
 
@@ -38,6 +38,8 @@ export default function Input({
   value,
   onChange,
   enterAction,
+
+  className,
 }: InputProps) {
   const [text, setText] = React.useState(value ?? "");
 
@@ -55,15 +57,11 @@ export default function Input({
 
   return (
     <View
-      className="flex-1 flex gap-2 max-h-fit z-[-1] min-w-fit"
+      className={`flex-1 flex gap-2 max-h-fit z-[-1] min-w-fit ${className}`}
       onPointerEnter={() => setHovered(true)}
       onPointerLeave={() => setHovered(false)}
     >
-      {label && (
-        <Text size="md" weight="bold">
-          {label}
-        </Text>
-      )}
+      {label && <Text weight="medium">{label}</Text>}
 
       <TextInput
         value={text}
@@ -81,10 +79,10 @@ export default function Input({
             ? "border-primary-200"
             : "border-background-200"
         } ${disabled ? "!border-background-100" : ""} ${
-          multiline ? "min-h-24" : "h-10"
+          multiline ? "min-h-24 !max-h-[80px]" : "h-8"
         } ${squareLeft ? "rounded-l-none" : ""} ${
           squareRight ? "rounded-r-none" : ""
-        } flex-1 px-3 py-2 max-h-[40px] min-h-[40px] color-white rounded-lg text-base border-2  outline-none transition-all`}
+        } flex-1 px-3 py-2 max-h-8 min-h-8 color-white rounded-lg text-sm border-2  outline-none transition-all`}
         onChangeText={setText}
         onFocus={() => setFocused(true)}
         onBlur={() => setFocused(false)}

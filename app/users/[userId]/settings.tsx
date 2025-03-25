@@ -1,8 +1,10 @@
+import BoxHeader from "@/components/ui/box/box-header";
 import Button from "@/components/ui/button/button";
 import Checkbox from "@/components/ui/checkbox/checkbox";
 import CollapsableSection from "@/components/ui/collapsable-section/collapsable-section";
 import Divider from "@/components/ui/divider/divider";
 import Select from "@/components/ui/input/select";
+import Footer from "@/components/ui/navigation/footer";
 import Text from "@/components/ui/text/text";
 import { EmailMask } from "@/constants/masks/text-masks";
 import { SortType, SortTypes } from "@/constants/sorting";
@@ -11,7 +13,6 @@ import {
   PreferenceColorHues,
   PreferenceColorMap,
 } from "@/constants/ui/colors";
-import BodyHeightContext from "@/contexts/ui/body-height.context";
 import ToastContext from "@/contexts/ui/toast.context";
 import UserPageContext from "@/contexts/user/user-page.context";
 import UserPreferencesContext from "@/contexts/user/user-preferences.context";
@@ -35,7 +36,7 @@ import {
 } from "@/models/deck/dtos/deck-filters.dto";
 import { faBorderAll, faList } from "@fortawesome/free-solid-svg-icons";
 import { router } from "expo-router";
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Pressable, SafeAreaView, View } from "react-native";
 
 interface PasswordErrors {
@@ -50,11 +51,6 @@ export default function UserSettingsPage() {
   const { user, setUser } = useContext(UserContext);
   const { userPageUser } = useContext(UserPageContext);
   const { preferences, setPreferences } = useContext(UserPreferencesContext);
-  const { setBodyHeight } = useContext(BodyHeightContext);
-
-  const buffer = 164;
-
-  const containerRef = useRef<View>(null);
 
   if (user?.id !== userPageUser?.id) {
     router.push(`users/${userPageUser?.id}`);
@@ -243,16 +239,13 @@ export default function UserSettingsPage() {
   }
 
   return (
-    <SafeAreaView className="flex-1 flex gap-4 w-full h-full py-4 bg-background-100">
-      <View
-        ref={containerRef}
-        className="flex gap-4 z-10"
-        onLayout={() =>
-          containerRef.current?.measureInWindow((_x, _y, _width, height) => {
-            setBodyHeight(height + buffer);
-          })
-        }
-      >
+    <SafeAreaView>
+      <View className="flex-1 flex gap-4 lg:px-16 px-4 w-full h-full min-h-[100dvh] py-4 bg-background-100">
+        <BoxHeader
+          title="Settings"
+          subtitle="Manage your account preferences and settings"
+        />
+
         <CollapsableSection
           title="Preferences"
           expanded={preferencesOpen}
@@ -314,12 +307,11 @@ export default function UserSettingsPage() {
             />
 
             <View className={`flex gap-2 max-h-fit min-w-fit z-[-1]`}>
-              <Text size="md" weight="bold">
-                Default Decks View
-              </Text>
+              <Text weight="semi">Default Decks View</Text>
 
               <View className="flex flex-row">
                 <Button
+                  size="sm"
                   squareRight
                   icon={faBorderAll}
                   className="flex-1"
@@ -330,6 +322,7 @@ export default function UserSettingsPage() {
                 />
 
                 <Button
+                  size="sm"
                   squareLeft
                   icon={faList}
                   className="flex-1"
@@ -397,10 +390,8 @@ export default function UserSettingsPage() {
               ]}
             />
 
-            <View className="flex-1 flex gap-2 max-h-fit min-w-[200px] z-[-1]">
-              <Text size="md" weight="bold">
-                Default Column Options
-              </Text>
+            <View className="flex-1 flex gap-1 max-h-fit min-w-fit z-[-1]">
+              <Text weight="semi">Default Column Options</Text>
 
               <View className="flex flex-row flex-wrap gap-4 my-2 max-w-fit">
                 <Checkbox
@@ -520,6 +511,8 @@ export default function UserSettingsPage() {
           </View>
         )}
       </View>
+
+      <Footer />
     </SafeAreaView>
   );
 }

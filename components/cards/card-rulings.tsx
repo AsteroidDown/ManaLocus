@@ -4,7 +4,7 @@ import { Card } from "@/models/card/card";
 import { Ruling } from "@/models/card/ruling";
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import moment from "moment";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Pressable, View } from "react-native";
 import Button from "../ui/button/button";
 import Divider from "../ui/divider/divider";
@@ -16,11 +16,11 @@ export interface CardRulingsProps {
 }
 
 export default function CardRulings({ card }: CardRulingsProps) {
-  const [rulings, setRulings] = React.useState([] as Ruling[]);
+  const [rulings, setRulings] = useState([] as Ruling[]);
 
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!card) return;
 
     ScryfallService.getCardRulings(card.scryfallId).then((rulings) =>
@@ -57,28 +57,29 @@ export default function CardRulings({ card }: CardRulingsProps) {
       <View
         className={`${
           open ? "max-h-[500px]" : "max-h-0"
-        } flex gap-2 max-w-full rounded-lg overflow-y-scroll transition-all duration-300`}
+        } flex lg:flex-row lg:flex-wrap gap-2 max-w-full rounded-lg overflow-y-scroll transition-all duration-300`}
       >
         {rulings?.map((ruling, index) => (
-          <View key={index}>
-            <View className="flex gap-2 px-4 py-2">
+          <View
+            key={index}
+            className="flex-1 flex basis-1/3 lg:max-w-[50%] border-2 border-background-200 rounded-lg"
+          >
+            <View className="px-4 py-2">
               <CardText text={ruling.comment} />
-
-              <View className="flex flex-row justify-between items-center gap-2">
-                <Text size="sm" weight="semi">
-                  Source:{" "}
-                  {ruling.source === "wotc"
-                    ? "Wizards of the Coast"
-                    : titleCase(ruling.source)}
-                </Text>
-
-                <Text size="sm" weight="semi">
-                  {moment(ruling.publishedAt).format("MMM Do, YYYY")}
-                </Text>
-              </View>
             </View>
 
-            <Divider thick className="!border-background-200" />
+            <View className="flex flex-row justify-between items-center gap-2 mt-auto px-4 py-2 border-t-2 border-background-200">
+              <Text size="sm" weight="semi">
+                Source:{" "}
+                {ruling.source === "wotc"
+                  ? "Wizards of the Coast"
+                  : titleCase(ruling.source)}
+              </Text>
+
+              <Text size="sm" weight="semi">
+                {moment(ruling.publishedAt).format("MMM Do, YYYY")}
+              </Text>
+            </View>
           </View>
         ))}
       </View>

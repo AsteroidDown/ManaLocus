@@ -1,11 +1,11 @@
 import SettleUpModal from "@/components/trades/settle-up-modal";
 import BoxHeader from "@/components/ui/box/box-header";
 import Button from "@/components/ui/button/button";
+import Footer from "@/components/ui/navigation/footer";
 import Pagination from "@/components/ui/pagination/pagination";
 import LoadingTable from "@/components/ui/table/loading-table";
 import Table, { TableColumn } from "@/components/ui/table/table";
 import Text from "@/components/ui/text/text";
-import BodyHeightContext from "@/contexts/ui/body-height.context";
 import UserPageContext from "@/contexts/user/user-page.context";
 import UserContext from "@/contexts/user/user.context";
 import { currency } from "@/functions/text-manipulation";
@@ -21,7 +21,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { router, useLocalSearchParams } from "expo-router";
 import moment from "moment";
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { SafeAreaView, useWindowDimensions, View } from "react-native";
 
 export default function TradedToUserPage() {
@@ -33,10 +33,6 @@ export default function TradedToUserPage() {
   const { tradedToUserId } = useLocalSearchParams();
 
   const width = useWindowDimensions().width;
-
-  const { setBodyHeight } = useContext(BodyHeightContext);
-
-  const containerRef = useRef<View>(null);
 
   const [tradedToUser, setTradedToUser] = useState(null as User | null);
   const [tradesTotal, setTradesTotal] = useState(0);
@@ -101,15 +97,7 @@ export default function TradedToUserPage() {
 
   return (
     <SafeAreaView className="flex-1 w-full h-full bg-background-100">
-      <View
-        ref={containerRef}
-        className="flex my-4"
-        onLayout={() =>
-          containerRef.current?.measureInWindow((_x, _y, _width, height) =>
-            setBodyHeight(height)
-          )
-        }
-      >
+      <View className="flex my-4 lg:px-16 px-4 min-h-[100dvh]">
         {user.id === userPageUser.id && (
           <BoxHeader
             title={`Your Trades ${
@@ -251,6 +239,8 @@ export default function TradedToUserPage() {
           setPage={setPage}
         />
       )}
+
+      <Footer />
     </SafeAreaView>
   );
 }
