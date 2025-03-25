@@ -41,7 +41,7 @@ export default function Table({
         >
           {!hideHeader && (
             <View
-              className={`sticky top-0 flex flex-row items-center h-10 max-h-10 px-4 border-b border-background-300 overflow-hidden z-10 ${
+              className={`sticky top-0 flex flex-row items-center h-10 max-h-10 px-4 border-b border-background-200 overflow-hidden z-10 ${
                 column.center ? "justify-center" : "justify-start"
               } `}
             >
@@ -62,7 +62,7 @@ export default function Table({
                 onPress={() => rowClick?.(data[rowIndex])}
                 onHoverIn={() => setHoveredIndex(rowIndex)}
                 onHoverOut={() => setHoveredIndex(-1)}
-                className={`flex flex-row items-center h-10 max-h-10 px-4 border-b border-background-300 overflow-hidden transition-all duration-300 ${
+                className={`flex flex-row items-center h-10 max-h-10 px-4 border-b border-background-200 overflow-hidden transition-all duration-300 ${
                   column.center ? "justify-center" : "justify-start"
                 } ${
                   hoveredIndex === rowIndex
