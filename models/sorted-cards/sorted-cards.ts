@@ -4,7 +4,12 @@ import { MTGCardType } from "../../constants/mtg/mtg-types";
 import { SortType } from "../../constants/sorting";
 import { Card } from "../card/card";
 
-export type CardFilterSortType = "cost" | "color" | "type" | "custom";
+export type CardFilterSortType =
+  | "cost"
+  | "color"
+  | "type"
+  | "rarity"
+  | "custom";
 
 export interface CardsSortedByColor {
   white: Card[];

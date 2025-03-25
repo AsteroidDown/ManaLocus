@@ -24,7 +24,7 @@ import {
   faRotate,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useContext } from "react";
+import React, { Dispatch, SetStateAction, useContext, useState } from "react";
 import { View } from "react-native";
 
 export interface CardSaveAsGraphModalProps {
@@ -32,7 +32,7 @@ export interface CardSaveAsGraphModalProps {
   sectionId?: string;
   type?: CardFilterSortType;
   open: boolean;
-  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setOpen: Dispatch<SetStateAction<boolean>>;
 }
 
 export default function CardSaveAsGraphModal({
@@ -45,20 +45,20 @@ export default function CardSaveAsGraphModal({
   const { addToast } = useContext(ToastContext);
   const { setDashboard } = useContext(DashboardContext);
 
-  const [disabled, setDisabled] = React.useState(false);
-  const [error, setError] = React.useState(false);
+  const [disabled, setDisabled] = useState(false);
+  const [error, setError] = useState(false);
 
-  const [sortType, setSortType] = React.useState(
+  const [sortType, setSortType] = useState(
     (item ? item.sortType : type) as CardFilterSortType
   );
 
-  const [colorFilter, setColorFilter] = React.useState(
+  const [colorFilter, setColorFilter] = useState(
     item?.filters.colorFilter as MTGColor[] | undefined
   );
-  const [typeFilter, setTypeFilter] = React.useState(
+  const [typeFilter, setTypeFilter] = useState(
     item?.filters.typeFilter as MTGCardType[] | undefined
   );
-  const [rarityFilter, setRarityFilter] = React.useState(
+  const [rarityFilter, setRarityFilter] = useState(
     item?.filters.rarityFilter as MTGRarity[] | undefined
   );
 
@@ -140,27 +140,30 @@ export default function CardSaveAsGraphModal({
             <View className="flex flex-row gap-2 max-w-96">
               <Button
                 rounded
+                size="sm"
                 text="Cost"
                 className="flex-1"
                 type={sortType !== "cost" ? "outlined" : "default"}
                 onClick={() => setSortType("cost")}
-              ></Button>
+              />
 
               <Button
                 rounded
+                size="sm"
                 text="Color"
                 className="flex-1"
                 type={sortType !== "color" ? "outlined" : "default"}
                 onClick={() => setSortType("color")}
-              ></Button>
+              />
 
               <Button
                 rounded
+                size="sm"
                 text="Type"
                 className="flex-1"
                 type={sortType !== "type" ? "outlined" : "default"}
                 onClick={() => setSortType("type")}
-              ></Button>
+              />
             </View>
           </View>
 

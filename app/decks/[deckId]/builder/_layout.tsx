@@ -79,7 +79,7 @@ export default function TabLayout() {
         >
           <TabBar
             className="w-full min-h-fit bg-background-100"
-            containerClasses="px-6 pt-4"
+            containerClasses="lg:px-6 px-4 pt-4"
             tabs={[
               {
                 title: "Dashboard",

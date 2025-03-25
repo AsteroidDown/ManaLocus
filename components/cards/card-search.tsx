@@ -23,11 +23,13 @@ import CardPrints from "./card-prints";
 export interface CardSearchProps {
   hideCardPreview?: boolean;
   linkToCardPage?: boolean;
+  className?: string;
 }
 
 export default function CardSearch({
   hideCardPreview,
   linkToCardPage,
+  className,
 }: CardSearchProps) {
   const { addToast } = useContext(ToastContext);
   const { board } = useContext(BoardContext);
@@ -96,8 +98,16 @@ export default function CardSearch({
   }
 
   return (
-    <View className="flex flex-row flex-wrap gap-4 z-100">
-      <View className="flex flex-1 gap-4 min-w-[360px]">
+    <View
+      className={`flex lg:flex-row flex-wrap z-100 ${className} ${
+        searchedCards?.length ? "gap-4" : ""
+      }`}
+    >
+      <View
+        className={`flex-1 flex lg:min-w-[360px] max-w-full ${
+          searchedCards?.length ? "gap-4" : ""
+        }`}
+      >
         <SearchBar
           search={search}
           searchAction={findCards}
@@ -149,8 +159,8 @@ export default function CardSearch({
       {!hideCardPreview && (
         <View
           className={`${
-            card ? "max-w-[1000px]" : "max-w-0"
-          } max-h-[490px] transition-all duration-300 overflow-hidden`}
+            card ? "max-w-[1000px] max-h-[490px]" : "max-w-0 max-h-0"
+          } transition-all duration-300 overflow-hidden`}
         >
           <Box className="!bg-background-100 border-2 border-background-200">
             <CardDetailedPreview hidePrices card={card}>

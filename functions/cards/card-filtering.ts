@@ -10,9 +10,10 @@ import { CardFilters } from "../../models/sorted-cards/sorted-cards";
 
 const baseColors: MTGColorSymbol[] = ["W", "U", "B", "R", "G"];
 
-export function filterCards(cards: Card[], filters: CardFilters) {
+export function filterCards(cards: Card[], filters?: CardFilters) {
   return cards.reduce((acc, card) => {
-    if (filterCard(card, filters)) acc.push(card);
+    if (!filters) acc.push(card);
+    else if (filterCard(card, filters)) acc.push(card);
     return acc;
   }, [] as Card[]);
 }

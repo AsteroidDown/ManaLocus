@@ -136,6 +136,7 @@ export default function TypeFilter({
   const typeFiltersList = (
     <View className="flex flex-row flex-wrap gap-2">
       <Chip
+        size="sm"
         text="Creature"
         disabled={disabled}
         type={creatureApplied ? "default" : "outlined"}
@@ -143,6 +144,7 @@ export default function TypeFilter({
       />
 
       <Chip
+        size="sm"
         text="Instant"
         disabled={disabled}
         type={instantApplied ? "default" : "outlined"}
@@ -150,6 +152,7 @@ export default function TypeFilter({
       />
 
       <Chip
+        size="sm"
         text="Sorcery"
         disabled={disabled}
         type={sorceryApplied ? "default" : "outlined"}
@@ -157,6 +160,7 @@ export default function TypeFilter({
       />
 
       <Chip
+        size="sm"
         text="Artifact"
         disabled={disabled}
         type={artifactApplied ? "default" : "outlined"}
@@ -164,6 +168,7 @@ export default function TypeFilter({
       />
 
       <Chip
+        size="sm"
         text="Enchantment"
         disabled={disabled}
         type={enchantmentApplied ? "default" : "outlined"}
@@ -171,6 +176,7 @@ export default function TypeFilter({
       />
 
       <Chip
+        size="sm"
         text="Land"
         disabled={disabled}
         type={landApplied ? "default" : "outlined"}
@@ -178,6 +184,7 @@ export default function TypeFilter({
       />
 
       <Chip
+        size="sm"
         text="Planeswalker"
         disabled={disabled}
         type={planeswalkerApplied ? "default" : "outlined"}
@@ -185,6 +192,7 @@ export default function TypeFilter({
       />
 
       <Chip
+        size="sm"
         text="Battle"
         disabled={disabled}
         type={battleApplied ? "default" : "outlined"}
@@ -197,7 +205,12 @@ export default function TypeFilter({
 
   return (
     <View>
-      <Chip type="outlined" text="Type" onClick={() => setExpanded(!expanded)}>
+      <Chip
+        size="sm"
+        type="outlined"
+        text="Type"
+        onClick={() => setExpanded(!expanded)}
+      >
         <View
           className={`overflow-hidden transition-all duration-300 ${
             appliedFilters.length ? "ml-0 max-w-[100px]" : "-ml-2 max-w-[0px]"

@@ -47,6 +47,7 @@ export default function SortingFilter({
 
   return (
     <Chip
+      size="sm"
       type="outlined"
       text={title}
       startIcon={startIcon}

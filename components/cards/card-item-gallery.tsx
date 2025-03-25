@@ -1,11 +1,11 @@
 import Box from "@/components/ui/box/box";
 import BoxHeader from "@/components/ui/box/box-header";
-import FilterBar from "@/components/ui/filters/filter-bar";
 import { BoardTypes } from "@/constants/boards";
 import { MTGColors } from "@/constants/mtg/mtg-colors";
 import { MTGFormats } from "@/constants/mtg/mtg-format";
 import { MTGCardTypes } from "@/constants/mtg/mtg-types";
 import BoardContext from "@/contexts/cards/board.context";
+import BuilderPreferencesContext from "@/contexts/cards/builder-preferences.context";
 import StoredCardsContext from "@/contexts/cards/stored-cards.context";
 import DeckContext from "@/contexts/deck/deck.context";
 import { filterCards } from "@/functions/cards/card-filtering";
@@ -28,7 +28,6 @@ import { getLocalStorageStoredCards } from "@/functions/local-storage/card-local
 import { titleCase } from "@/functions/text-manipulation";
 import { Card } from "@/models/card/card";
 import {
-  CardFilters,
   CardFilterSortType,
   CardsSortedByColor,
   CardsSortedByCost,
@@ -38,16 +37,17 @@ import {
 import {
   faChartSimple,
   faDownLeftAndUpRightToCenter,
+  faFilter,
   faPlus,
   faTable,
 } from "@fortawesome/free-solid-svg-icons";
-import React, { useContext, useEffect } from "react";
-import { View } from "react-native";
+import React, { useContext, useEffect, useState } from "react";
+import { useWindowDimensions, View } from "react-native";
 import Button from "../ui/button/button";
 import Input from "../ui/input/input";
+import CardFiltersModal from "./card-filters-modal";
 import CardItemGalleryColumn from "./card-item-gallery-column";
 import CardSaveAsChartModal from "./card-save-as-chart-modal";
-import CardSaveAsGraphModal from "./card-save-as-graph-modal";
 
 export interface CardItemGalleryProps {
   type: CardFilterSortType;
@@ -61,35 +61,37 @@ export default function CardItemGallery({
   groupMulticolored,
   hideImages,
 }: CardItemGalleryProps) {
+  const width = useWindowDimensions().width;
+
   const { deck, format, commander, partner } = useContext(DeckContext);
   const { board } = useContext(BoardContext);
   const { storedCards } = useContext(StoredCardsContext);
+  const { preferences } = useContext(BuilderPreferencesContext);
 
-  const [itemsExpanded, setItemsExpanded] = React.useState(0);
+  const [itemsExpanded, setItemsExpanded] = useState(0);
 
-  const [saveAsGraphOpen, setSaveAsGraphOpen] = React.useState(false);
-  const [saveAsChartOpen, setSaveAsChartOpen] = React.useState(false);
+  const [cardFiltersOpen, setCardFiltersOpen] = useState(false);
+  const [saveAsGraphOpen, setSaveAsGraphOpen] = useState(false);
+  const [saveAsChartOpen, setSaveAsChartOpen] = useState(false);
 
-  const [cards, setCards] = React.useState([] as Card[]);
+  const [cards, setCards] = useState([] as Card[]);
 
-  const [group, setGroup] = React.useState("");
-  const [groupOptions, setGroupOptions] = React.useState([] as string[]);
+  const [group, setGroup] = useState("");
+  const [groupOptions, setGroupOptions] = useState([] as string[]);
 
-  const [cardCount, setCardCount] = React.useState(0);
-  const [cardsValue, setCardsValue] = React.useState(0);
+  const [cardCount, setCardCount] = useState(0);
+  const [cardsValue, setCardsValue] = useState(0);
 
-  const [filters, setFilters] = React.useState({} as CardFilters);
-
-  const [cardsSortedByCost, setCardsSortedByCost] = React.useState(
+  const [cardsSortedByCost, setCardsSortedByCost] = useState(
     {} as CardsSortedByCost
   );
-  const [cardsSortedByColor, setCardsSortedByColor] = React.useState(
+  const [cardsSortedByColor, setCardsSortedByColor] = useState(
     {} as CardsSortedByColor
   );
-  const [cardsSortedByType, setCardsSortedByType] = React.useState(
+  const [cardsSortedByType, setCardsSortedByType] = useState(
     {} as CardsSortedByType
   );
-  const [cardsSortedCustom, setCardsSortedCustom] = React.useState(
+  const [cardsSortedCustom, setCardsSortedCustom] = useState(
     {} as CardsSortedCustom
   );
 
@@ -106,16 +108,16 @@ export default function CardItemGallery({
     let sortedCards: Card[] = [];
 
     if (
-      filters.priceSort ||
-      filters.manaValueSort ||
-      filters.alphabeticalSort
+      preferences?.filters?.priceSort ||
+      preferences?.filters?.manaValueSort ||
+      preferences?.filters?.alphabeticalSort
     ) {
-      sortedCards = sortCards(cards, filters);
+      sortedCards = sortCards(cards, preferences.filters);
     } else {
       sortedCards = sortCardsByManaValue(sortCardsAlphabetically(cards));
     }
 
-    let filteredCards = filterCards(sortedCards, filters);
+    let filteredCards = filterCards(sortedCards, preferences?.filters);
 
     if (commander) {
       filteredCards = filteredCards.filter(
@@ -140,7 +142,7 @@ export default function CardItemGallery({
     if (type === "custom") {
       setCardsSortedCustom(groupCardsCustom(filteredCards));
     }
-  }, [deck, cards, filters, format, commander, partner]);
+  }, [deck, cards, preferences, format, commander, partner]);
 
   useEffect(() => {
     if (!cardsSortedCustom) return;
@@ -152,11 +154,12 @@ export default function CardItemGallery({
     <View className="pb-4 min-h-full">
       <Box className="!bg-background-100 !rounded-none flex gap-2 overflow-hidden">
         <BoxHeader
+          startIcon={faChartSimple}
           title={
             "Cards Sorted by " +
             (type === "cost" ? "Mana Value" : titleCase(type))
           }
-          startIcon={faChartSimple}
+          className={board !== BoardTypes.MAIN ? "!flex-nowrap" : ""}
           subtitle={`${
             cardCount + (commander ? 1 : 0) + (partner ? 1 : 0)
           } Card${cardCount !== 1 ? "s" : ""} | Total Value: $${(
@@ -165,57 +168,74 @@ export default function CardItemGallery({
             (partner ? partner.prices?.usd || 0 : 0)
           ).toFixed(2)}`}
           end={
-            <View className="flex flex-row gap-2 mr-2">
-              <FilterBar type={type} setFilters={setFilters} />
+            <>
+              <View className="flex flex-row lg:gap-1 lg:justify-end justify-around w-full">
+                {board === BoardTypes.MAIN && (
+                  <>
+                    <Button
+                      size="sm"
+                      type="clear"
+                      icon={faChartSimple}
+                      onClick={() => setSaveAsGraphOpen(true)}
+                    />
 
-              <View
-                className={`${
-                  itemsExpanded ? "max-w-10 mx-0" : "max-w-0 -ml-2"
-                } flex flex-row overflow-hidden transition-all duration-300`}
-              >
+                    <Button
+                      size="sm"
+                      icon={faTable}
+                      type="clear"
+                      onClick={() => setSaveAsChartOpen(true)}
+                    />
+                  </>
+                )}
+
+                {width > 600 && (
+                  <View
+                    className={`${width <= 600 ? "flex-1" : ""} ${
+                      itemsExpanded ? "lg:max-w-10 mx-0" : "max-w-0 lg:-ml-2"
+                    } overflow-hidden transition-all duration-300`}
+                  >
+                    <Button
+                      size="sm"
+                      square={width <= 600}
+                      iconClasses="-rotate-45"
+                      icon={faDownLeftAndUpRightToCenter}
+                      onClick={() => setItemsExpanded(0)}
+                    />
+                  </View>
+                )}
+
                 <Button
-                  rounded
+                  size="sm"
                   type="clear"
-                  className="-rotate-45"
-                  icon={faDownLeftAndUpRightToCenter}
-                  onClick={() => setItemsExpanded(0)}
+                  icon={faFilter}
+                  onClick={() => setCardFiltersOpen(true)}
                 />
               </View>
 
-              {board === BoardTypes.MAIN && (
-                <>
-                  <View className="-mx-1">
-                    <CardSaveAsGraphModal
-                      type={type}
-                      open={saveAsGraphOpen}
-                      setOpen={setSaveAsGraphOpen}
-                    />
-                  </View>
+              <View className="lg:-mx-1">
+                <CardFiltersModal
+                  type={type}
+                  open={saveAsGraphOpen}
+                  setOpen={setSaveAsGraphOpen}
+                />
+              </View>
 
-                  <Button
-                    rounded
-                    type="clear"
-                    icon={faChartSimple}
-                    onClick={() => setSaveAsGraphOpen(true)}
-                  />
+              <View className="lg:-mx-1">
+                <CardFiltersModal
+                  type={type}
+                  open={cardFiltersOpen}
+                  setOpen={setCardFiltersOpen}
+                />
+              </View>
 
-                  <View className="-mx-1">
-                    <CardSaveAsChartModal
-                      type={type === "type" ? "type" : "cost"}
-                      open={saveAsChartOpen}
-                      setOpen={setSaveAsChartOpen}
-                    />
-                  </View>
-
-                  <Button
-                    rounded
-                    type="clear"
-                    icon={faTable}
-                    onClick={() => setSaveAsChartOpen(true)}
-                  />
-                </>
-              )}
-            </View>
+              <View className="lg:-mx-1">
+                <CardSaveAsChartModal
+                  type={type === "type" ? "type" : "cost"}
+                  open={saveAsChartOpen}
+                  setOpen={setSaveAsChartOpen}
+                />
+              </View>
+            </>
           }
         />
 

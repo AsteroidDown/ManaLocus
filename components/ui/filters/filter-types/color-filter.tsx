@@ -119,6 +119,7 @@ export default function ColorFilter({
   const colorFiltersList = (
     <View className="flex flex-row flex-wrap gap-2">
       <Chip
+        size="sm"
         text="White"
         disabled={disabled}
         action={MTGColors.WHITE}
@@ -127,6 +128,7 @@ export default function ColorFilter({
       />
 
       <Chip
+        size="sm"
         text="Blue"
         disabled={disabled}
         action={MTGColors.BLUE}
@@ -135,6 +137,7 @@ export default function ColorFilter({
       />
 
       <Chip
+        size="sm"
         text="Black"
         disabled={disabled}
         action={MTGColors.BLACK}
@@ -143,6 +146,7 @@ export default function ColorFilter({
       />
 
       <Chip
+        size="sm"
         text="Red"
         disabled={disabled}
         action={MTGColors.RED}
@@ -151,6 +155,7 @@ export default function ColorFilter({
       />
 
       <Chip
+        size="sm"
         text="Green"
         disabled={disabled}
         action={MTGColors.GREEN}
@@ -159,6 +164,7 @@ export default function ColorFilter({
       />
 
       <Chip
+        size="sm"
         text="Gold"
         disabled={disabled}
         action={MTGColors.GOLD}
@@ -167,6 +173,7 @@ export default function ColorFilter({
       />
 
       <Chip
+        size="sm"
         text="Colorless"
         disabled={disabled}
         action={MTGColors.COLORLESS}
@@ -176,6 +183,7 @@ export default function ColorFilter({
 
       {!excludeMono && (
         <Chip
+          size="sm"
           text="Mono"
           disabled={disabled}
           type={monoColorApplied ? "default" : "outlined"}
@@ -189,7 +197,12 @@ export default function ColorFilter({
 
   return (
     <View>
-      <Chip type="outlined" text="Color" onClick={() => setExpanded(!expanded)}>
+      <Chip
+        size="sm"
+        type="outlined"
+        text="Color"
+        onClick={() => setExpanded(!expanded)}
+      >
         <View
           className={`overflow-hidden transition-all duration-300 ${
             appliedFilters.length ? "ml-0 max-w-[100px]" : "-ml-2 max-w-[0px]"

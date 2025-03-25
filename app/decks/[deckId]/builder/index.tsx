@@ -109,7 +109,7 @@ export default function App() {
 
   return (
     <View className="flex-1 flex">
-      <View className="flex-1 flex flex-row flex-wrap gap-6 px-6 min-h-[100dvh] max-h-fit justify-center items-center transition-all duration-0">
+      <View className="flex-1 flex flex-row flex-wrap gap-6 px-6 min-h-fit justify-center items-center transition-all duration-0">
         {dashboard?.sections.map((section, index) => (
           <DashboardSectionView
             cards={cards}
@@ -118,7 +118,11 @@ export default function App() {
           />
         ))}
 
-        <View className="flex justify-center items-center my-24">
+        <View
+          className={`${
+            !dashboard?.sections?.length ? "min-h-[100dvh] -mt-12" : "my-24"
+          } flex justify-center items-center`}
+        >
           <Button
             text="Add Section"
             type="outlined"

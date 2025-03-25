@@ -121,15 +121,16 @@ export default function DeckHeader({ deck }: { deck: Deck }) {
       </View>
 
       {user?.id === deck.userId && (
-        <View className="lg:flex hidden absolute top-4 right-6 flex-row gap-2">
+        <View className="absolute top-4 right-6 flex-row gap-2">
           <Link
             href={`${deck.id}/builder/main-board`}
             className="shadow-lg rounded-lg"
           >
-            <Button text="Edit" icon={faPen} className="w-full" />
+            <Button size="sm" text="Edit" icon={faPen} className="w-full" />
           </Link>
 
           <Button
+            size="sm"
             icon={faEllipsisV}
             onClick={() => setOptionsExpanded(true)}
             className="shadow-lg rounded-lg"

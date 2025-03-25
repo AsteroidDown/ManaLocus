@@ -38,7 +38,6 @@ export default function TabBar({
   const [focusedIndex, setFocusedIndex] = useState(0);
 
   const [details, setDetails] = useState({} as any);
-  const [XOffset, setXOffset] = useState(0);
 
   useEffect(() => {
     if (!tabs?.[0]?.link) return;
@@ -71,14 +70,7 @@ export default function TabBar({
   return (
     <View
       key={tabs.length}
-      ref={containerRef}
       className={`${className} relative flex-1 flex min-h-fit`}
-      onLayout={() =>
-        containerRef.current?.measureInWindow((x) => {
-          console.log(x);
-          setXOffset(x);
-        })
-      }
     >
       <TabsLayout
         tabs={tabs}
@@ -94,8 +86,7 @@ export default function TabBar({
           className={`absolute bottom-0 border-b-2 border-primary-200 transition-all duration-500 ease-out`}
           style={{
             width: details[focusedIndex]?.width ?? 0,
-            left:
-              width > 600 ? (details[focusedIndex]?.offset ?? 0) - XOffset : 0,
+            left: width > 600 ? details[focusedIndex]?.offset ?? 0 : 0,
           }}
         />
       )}
@@ -180,52 +171,55 @@ function TabsLayout({
               setTabDetails={setTabDetails}
             />
 
-            <Button
-              size="lg"
-              type="clear"
-              icon={faBars}
-              onClick={() => setExpanded(!expanded)}
-            >
-              <View className="-mx-1">
-                <Dropdown
-                  xOffset={-112}
-                  expanded={expanded}
-                  setExpanded={setExpanded}
-                >
-                  <Box className="flex justify-start items-start !p-0 mt-6 border-2 border-primary-300 !bg-background-100 !bg-opacity-95 overflow-auto max-h-[300px]">
-                    {tabs
-                      .filter((tab) => tab.title !== tabs[focusedIndex].title)
-                      .map((tab) => (
-                        <Button
-                          key={tab.title}
-                          start
-                          square
-                          size="lg"
-                          type="clear"
-                          text={tab.title}
-                          className="w-full"
-                          onClick={() => {
-                            if (tab.link) router.push(tab.link);
-                            else if (tab.onClick) tab.onClick?.();
+            <View className="flex flex-row items-center">
+              {width <= 600 && <View className="ml-auto">{children}</View>}
 
-                            setFocusedIndex(
-                              tabs.findIndex(
-                                (swapTab) => tab.title === swapTab.title
-                              )
-                            );
+              <Button
+                type="clear"
+                icon={faBars}
+                onClick={() => setExpanded(!expanded)}
+              >
+                <View className="-mx-1">
+                  <Dropdown
+                    xOffset={-112}
+                    expanded={expanded}
+                    setExpanded={setExpanded}
+                  >
+                    <Box className="flex justify-start items-start !p-0 mt-6 border-2 border-primary-300 !bg-background-100 !bg-opacity-95 overflow-auto max-h-[300px]">
+                      {tabs
+                        .filter((tab) => tab.title !== tabs[focusedIndex].title)
+                        .map((tab) => (
+                          <Button
+                            key={tab.title}
+                            start
+                            square
+                            size="sm"
+                            type="clear"
+                            text={tab.title}
+                            className="w-full"
+                            onClick={() => {
+                              if (tab.link) router.push(tab.link);
+                              else if (tab.onClick) tab.onClick?.();
 
-                            setExpanded(false);
-                          }}
-                        />
-                      ))}
-                  </Box>
-                </Dropdown>
-              </View>
-            </Button>
+                              setFocusedIndex(
+                                tabs.findIndex(
+                                  (swapTab) => tab.title === swapTab.title
+                                )
+                              );
+
+                              setExpanded(false);
+                            }}
+                          />
+                        ))}
+                    </Box>
+                  </Dropdown>
+                </View>
+              </Button>
+            </View>
           </View>
         )}
 
-        <View className="ml-auto">{children}</View>
+        {width > 600 && <View className="ml-auto">{children}</View>}
       </View>
     </View>
   );

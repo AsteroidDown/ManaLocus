@@ -82,6 +82,7 @@ export default function RarityFilter({
   const rarityFiltersList = (
     <View className="flex flex-row flex-wrap gap-2">
       <Chip
+        size="sm"
         text="Common"
         disabled={disabled}
         type={commonApplied ? "default" : "outlined"}
@@ -89,6 +90,7 @@ export default function RarityFilter({
       />
 
       <Chip
+        size="sm"
         text="Uncommon"
         disabled={disabled}
         type={uncommonApplied ? "default" : "outlined"}
@@ -96,6 +98,7 @@ export default function RarityFilter({
       />
 
       <Chip
+        size="sm"
         text="Rare"
         disabled={disabled}
         type={rareApplied ? "default" : "outlined"}
@@ -103,6 +106,7 @@ export default function RarityFilter({
       />
 
       <Chip
+        size="sm"
         text="Mythic"
         disabled={disabled}
         type={mythicApplied ? "default" : "outlined"}
@@ -116,6 +120,7 @@ export default function RarityFilter({
   return (
     <View>
       <Chip
+        size="sm"
         type="outlined"
         text="Rarity"
         onClick={() => setExpanded(!expanded)}

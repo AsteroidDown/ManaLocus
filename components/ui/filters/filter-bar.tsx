@@ -14,8 +14,14 @@ import {
   CardFilterSortType,
 } from "@/models/sorted-cards/sorted-cards";
 import { faFilter, faRotateRight } from "@fortawesome/free-solid-svg-icons";
-import React, { useContext, useEffect } from "react";
-import { View } from "react-native";
+import React, {
+  Dispatch,
+  SetStateAction,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
+import { useWindowDimensions, View } from "react-native";
 import Chip from "../chip/chip";
 import ColorFilter from "./filter-types/color-filter";
 import RarityFilter from "./filter-types/rarity-filter";
@@ -24,31 +30,31 @@ import SortingFilter from "./sorting-filter";
 
 export interface FilterBarProps {
   type?: CardFilterSortType;
-  setFilters: React.Dispatch<React.SetStateAction<CardFilters>>;
+  setFilters: Dispatch<SetStateAction<CardFilters>>;
 }
 
 export default function FilterBar({ type, setFilters }: FilterBarProps) {
+  const width = useWindowDimensions().width;
+
   const { setPreferences } = useContext(BuilderPreferencesContext);
 
-  const [showFilters, setShowFilters] = React.useState(false);
-  const [filterLength, setFilterLength] = React.useState(0);
-  const [resetFilters, setResetFilters] = React.useState(false);
+  const [showFilters, setShowFilters] = useState(false);
+  const [filterLength, setFilterLength] = useState(0);
+  const [resetFilters, setResetFilters] = useState(false);
 
-  const [colorFilter, setColorFilter] = React.useState(
+  const [colorFilter, setColorFilter] = useState(
     undefined as MTGColor[] | undefined
   );
-  const [typeFilter, setTypeFilter] = React.useState(
+  const [typeFilter, setTypeFilter] = useState(
     undefined as MTGCardType[] | undefined
   );
-  const [rarityFilter, setRarityFilter] = React.useState(
+  const [rarityFilter, setRarityFilter] = useState(
     undefined as MTGRarity[] | undefined
   );
 
-  const [priceSort, setPriceSort] = React.useState(null as SortType);
-  const [manaValueSort, setManaValueSort] = React.useState(null as SortType);
-  const [alphabeticalSort, setAlphabeticalSort] = React.useState(
-    null as SortType
-  );
+  const [priceSort, setPriceSort] = useState(null as SortType);
+  const [manaValueSort, setManaValueSort] = useState(null as SortType);
+  const [alphabeticalSort, setAlphabeticalSort] = useState(null as SortType);
 
   useEffect(() => {
     const filters: CardFilters = {
@@ -95,17 +101,20 @@ export default function FilterBar({ type, setFilters }: FilterBarProps) {
 
   return (
     <View
-      className={`flex flex-row-reverse transition-all duration-300 ${
-        showFilters ? "max-w-[1000px]" : "max-w-[8px]"
+      className={`flex-1 flex flex-row-reverse transition-all duration-300 ${
+        width > 600 ? (showFilters ? "max-w-[1000px]" : "max-w-[8px]") : ""
       }`}
     >
-      <View className={`rounded-l-full z-10 bg-background-100`}>
+      <View
+        className={`flex-1 flex flex-row items-center rounded-l-full z-10 bg-background-100 max-h-8`}
+      >
         <Button
           rounded
+          size="sm"
           icon={faFilter}
           type={showFilters ? "default" : "clear"}
           onClick={() => setShowFilters(!showFilters)}
-        ></Button>
+        />
 
         <View
           className={`${
@@ -121,52 +130,63 @@ export default function FilterBar({ type, setFilters }: FilterBarProps) {
         </View>
       </View>
 
-      <View
-        className={`flex flex-row gap-2 w-fit rounded-full overflow-hidden transition-all duration-300 ${
-          showFilters ? "mr-4 max-w-[100%] overflow-x-auto" : "-mr-8 max-w-[0%]"
-        }`}
-      >
-        {filterLength > 0 && (
-          <Chip
-            type="outlined"
-            startIcon={faRotateRight}
-            onClick={() => clearFilters()}
-          />
-        )}
+      {width > 600 && (
+        <View
+          className={`flex flex-row gap-2 w-fit rounded-full overflow-hidden transition-all duration-300 ${
+            showFilters
+              ? "mr-4 max-w-[100%] overflow-x-auto"
+              : "-mr-8 max-w-[0%]"
+          }`}
+        >
+          {filterLength > 0 && (
+            <Chip
+              size="sm"
+              type="outlined"
+              startIcon={faRotateRight}
+              onClick={() => clearFilters()}
+            />
+          )}
 
-        {type !== "color" && (
-          <ColorFilter setColorFilters={setColorFilter} reset={resetFilters} />
-        )}
+          {type !== "color" && (
+            <ColorFilter
+              setColorFilters={setColorFilter}
+              reset={resetFilters}
+            />
+          )}
 
-        {type !== "type" && (
-          <TypeFilter setTypeFilters={setTypeFilter} reset={resetFilters} />
-        )}
+          {type !== "type" && (
+            <TypeFilter setTypeFilters={setTypeFilter} reset={resetFilters} />
+          )}
 
-        <RarityFilter setRarityFilters={setRarityFilter} reset={resetFilters} />
-
-        {type !== "cost" && (
-          <SortingFilter
-            title="Mana Value"
+          <RarityFilter
+            setRarityFilters={setRarityFilter}
             reset={resetFilters}
-            sortDirection={manaValueSort}
-            setSortDirection={setManaValueSort}
           />
-        )}
 
-        <SortingFilter
-          title="Price"
-          reset={resetFilters}
-          sortDirection={priceSort}
-          setSortDirection={setPriceSort}
-        />
+          {type !== "cost" && (
+            <SortingFilter
+              title="Mana Value"
+              reset={resetFilters}
+              sortDirection={manaValueSort}
+              setSortDirection={setManaValueSort}
+            />
+          )}
 
-        <SortingFilter
-          title="Name"
-          reset={resetFilters}
-          sortDirection={alphabeticalSort}
-          setSortDirection={setAlphabeticalSort}
-        />
-      </View>
+          <SortingFilter
+            title="Price"
+            reset={resetFilters}
+            sortDirection={priceSort}
+            setSortDirection={setPriceSort}
+          />
+
+          <SortingFilter
+            title="Name"
+            reset={resetFilters}
+            sortDirection={alphabeticalSort}
+            setSortDirection={setAlphabeticalSort}
+          />
+        </View>
+      )}
     </View>
   );
 }

@@ -1,5 +1,11 @@
-import { faX } from "@fortawesome/free-solid-svg-icons";
-import React, { useEffect } from "react";
+import { faX, IconDefinition } from "@fortawesome/free-solid-svg-icons";
+import React, {
+  Dispatch,
+  ReactNode,
+  SetStateAction,
+  useEffect,
+  useState,
+} from "react";
 import {
   Pressable,
   Modal as ReactModal,
@@ -8,29 +14,34 @@ import {
   ViewProps,
 } from "react-native";
 import Box from "../box/box";
+import BoxHeader from "../box/box-header";
 import Button from "../button/button";
-import Text from "../text/text";
 
 export type ModalProps = ViewProps & {
   title?: string;
   subtitle?: string;
+  icon?: IconDefinition;
+
+  end?: ReactNode;
 
   transparent?: boolean;
 
   open: boolean;
-  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setOpen: Dispatch<SetStateAction<boolean>>;
 };
 
 export default function Modal({
   title,
   subtitle,
+  icon,
+  end,
   transparent = false,
   open,
   setOpen,
   className,
   children,
 }: ModalProps) {
-  const [animate, setAnimate] = React.useState(true);
+  const [animate, setAnimate] = useState(true);
 
   const transParentClasses = transparent
     ? "!bg-opacity-0 !border-none shadow-none"
@@ -71,40 +82,31 @@ export default function Modal({
                         !bg-background-100 !border-background-200 max-h-[95dvh] max-w-[95dvw] lg:mx-0 mx-2 border-2 transition-all duration-500
                         ${animate ? "opacity-0" : "opacity-100"}`}
                     >
-                      {!!title && (
-                        <View className="flex flex-row justify-between items-center gap-2">
-                          <View className="flex-1 flex">
-                            <Text size="lg" weight="medium">
-                              {title}
-                            </Text>
+                      <View className="flex">
+                        <BoxHeader
+                          className="!pb-0"
+                          title={title}
+                          subtitle={subtitle}
+                          startIcon={icon}
+                          end={
+                            <View className="flex flex-row gap-2 justify-end items-center">
+                              {end}
 
-                            <Text size="sm">{subtitle}</Text>
-                          </View>
-
-                          <Button
-                            rounded
-                            type="clear"
-                            icon={faX}
-                            action="default"
-                            className="lg:hidden -mr-2 ml-auto self-start"
-                            onClick={fadeOut}
-                          />
-                        </View>
-                      )}
+                              <Button
+                                rounded
+                                size="sm"
+                                type="clear"
+                                icon={faX}
+                                action="default"
+                                className="lg:hidden -mr-2 self-start"
+                                onClick={fadeOut}
+                              />
+                            </View>
+                          }
+                        />
+                      </View>
 
                       <ScrollView>{children}</ScrollView>
-
-                      {!title && (
-                        <View className="absolute top-4 right-4 lg:hidden">
-                          <Button
-                            rounded
-                            type="clear"
-                            icon={faX}
-                            action="default"
-                            onClick={fadeOut}
-                          />
-                        </View>
-                      )}
                     </Box>
                   </Pressable>
                 </View>

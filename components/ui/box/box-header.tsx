@@ -2,7 +2,7 @@ import Text from "@/components/ui/text/text";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ReactNode } from "react";
-import { View, ViewProps } from "react-native";
+import { useWindowDimensions, View, ViewProps } from "react-native";
 import Divider from "../divider/divider";
 
 export type BoxHeaderProps = ViewProps & {
@@ -27,6 +27,8 @@ export default function BoxHeader({
   className,
   divider = false,
 }: BoxHeaderProps) {
+  const width = useWindowDimensions().width;
+
   return (
     <View className="flex-1 -mx-6 max-h-fit">
       <View
@@ -37,15 +39,15 @@ export default function BoxHeader({
 
           {startIcon && (
             <FontAwesomeIcon
-              size="2xl"
               icon={startIcon}
               className="text-white"
+              size={width > 600 ? "lg" : undefined}
             />
           )}
 
           <View className="flex-1 flex">
             {title && (
-              <Text size="2xl" weight="bold">
+              <Text size={width > 600 ? "xl" : "lg"} weight="bold">
                 {title}
               </Text>
             )}
@@ -57,7 +59,9 @@ export default function BoxHeader({
         </View>
 
         {end && (
-          <View className="flex-1 flex lg:max-w-fit min-w-fit">{end}</View>
+          <View className="flex-1 flex flex-row justify-end items-center lg:max-w-fit min-w-fit ml-auto">
+            {end}
+          </View>
         )}
       </View>
 

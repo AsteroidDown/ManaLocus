@@ -14,6 +14,7 @@ export type ButtonProps = ViewProps & {
   text?: string;
   icon?: IconProp | IconDefinition | BrandIconDefinition;
   buttonClasses?: string;
+  iconClasses?: string;
   iconRight?: boolean;
   action?: ActionColor;
   size?: Size;
@@ -39,6 +40,7 @@ export default function Button({
   icon,
   buttonClasses,
   className,
+  iconClasses,
   iconRight = false,
   action = "primary",
   size = "md",
@@ -115,10 +117,10 @@ export default function Button({
         {icon && !iconRight && (
           <FontAwesomeIcon
             icon={icon as any}
-            className={`${textColor} ${text || children ? "mr-2" : ""} ${
-              icon === faRotate ? "animate-spin" : ""
-            }`}
             size={size !== "md" ? size : undefined}
+            className={`${iconClasses} ${textColor} ${
+              text || children ? "mr-2" : ""
+            } ${icon === faRotate ? "animate-spin" : ""}`}
           />
         )}
 
@@ -250,7 +252,7 @@ function getButtonTextColor(
   type: ButtonType,
   disabled: boolean
 ) {
-  if (disabled) return "text-dark-600";
+  if (disabled) return "text-gray-600";
 
   return `${
     type === "default"

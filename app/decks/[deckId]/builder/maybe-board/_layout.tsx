@@ -95,11 +95,9 @@ export default function CardsLayout() {
   return (
     <BoardContext.Provider value={{ board, setBoard }}>
       <View className="flex gap-4 py-4 w-full min-h-fit pb-4 bg-background-100">
-        <View className="px-4">
-          <CardSearch />
-        </View>
+        <CardSearch className="lg:px-6 px-4" />
 
-        <TabBar tabs={tabs} className="z-[-1]" containerClasses="px-6">
+        <TabBar tabs={tabs} className="z-[-1]" containerClasses="lg:px-6 px-4">
           <View className="flex flex-row">
             <Button
               size="sm"

@@ -352,25 +352,24 @@ export default function CardImportExportModal({
   }
 
   return (
-    <Modal open={open} setOpen={setOpen}>
+    <Modal
+      title={`${!exportOnly && "Import/"}Export Cards`}
+      open={open}
+      setOpen={setOpen}
+      end={
+        <Button
+          rounded
+          icon={faFilter}
+          type={filtersOpen ? "outlined" : "clear"}
+          onClick={() => setFiltersOpen(!filtersOpen)}
+        />
+      }
+    >
       <View className="flex gap-4 max-w-2xl max-h-[80vh]">
-        <View className="flex flex-row justify-between gap-2">
-          <Text size="xl" weight="bold">
-            {!exportOnly && "Import/"}Export Cards
-          </Text>
-
-          <Button
-            rounded
-            icon={faFilter}
-            type={filtersOpen ? "outlined" : "clear"}
-            onClick={() => setFiltersOpen(!filtersOpen)}
-          />
-        </View>
-
-        <View className="flex-1 flex gap-3 -mt-2 overflow-y-auto">
+        <View className="flex-1 flex gap-3 overflow-y-auto">
           <View
             className={`${
-              filtersOpen ? "max-h-[1000px]" : "max-h-0 -mt-3"
+              filtersOpen ? "max-h-[1000px]" : "max-h-0"
             } flex gap-3 overflow-hidden transition-all duration-300`}
           >
             <View className="flex gap-2 ">
