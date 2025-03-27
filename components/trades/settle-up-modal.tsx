@@ -2,6 +2,7 @@ import ToastContext from "@/contexts/ui/toast.context";
 import { currency } from "@/functions/text-manipulation";
 import TradeService from "@/hooks/services/trade.service";
 import { User } from "@/models/user/user";
+import { faReceipt } from "@fortawesome/free-solid-svg-icons";
 import React, { useContext } from "react";
 import { View } from "react-native";
 import Button from "../ui/button/button";
@@ -95,9 +96,28 @@ export default function SettleUpModal({
 
   return (
     <Modal
-      title={`Settle Up with ${tradedToUser?.name}`}
       open={open}
       setOpen={setOpen}
+      title={`Settle Up with ${tradedToUser?.name}?`}
+      footer={
+        <View className="flex flex-row gap-2 justify-end">
+          <Button
+            size="sm"
+            type="outlined"
+            text="Cancel"
+            onClick={() => setOpen(false)}
+          />
+
+          <Button
+            size="sm"
+            type="outlined"
+            text="Settle Up"
+            icon={faReceipt}
+            disabled={loading}
+            onClick={settleUp}
+          />
+        </View>
+      }
     >
       <Text className="max-w-[500px] mt-2">
         {owing ? "You owe" : `${tradedToUser.name} owes`}{" "}
@@ -105,13 +125,10 @@ export default function SettleUpModal({
         <Text action={owing ? "danger" : "success"}>
           {currency(Math.abs(total) / 100)}
         </Text>
-        , would you like to settle up this difference? A trade will be created
-        with the amount {owing ? "you owe" : `${tradedToUser.name} owes you`}.
+        , would you like to settle up this difference? This action will create a
+        trade with the amount{" "}
+        {owing ? "you owe" : `${tradedToUser.name} owes you`}.
       </Text>
-
-      <View className="flex flex-row justify-end mt-4">
-        <Button text="Settle Up" disabled={loading} onClick={settleUp} />
-      </View>
     </Modal>
   );
 }

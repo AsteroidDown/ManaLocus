@@ -52,12 +52,12 @@ export default function UserTradesPage() {
         {user.id === userPageUser.id && (
           <BoxHeader
             title="Your Trades"
-            subtitle="View and manage your trades with other users"
+            subtitle="View and manage your trades"
             end={
               <Button
+                size="sm"
                 type="outlined"
                 text="New Trade"
-                className="self-end"
                 icon={faPlus}
                 onClick={() =>
                   router.push(`users/${userPageUser.id}/trades/new-trade`)

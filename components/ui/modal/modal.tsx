@@ -24,6 +24,8 @@ export type ModalProps = ViewProps & {
 
   end?: ReactNode;
 
+  footer?: ReactNode;
+
   transparent?: boolean;
 
   open: boolean;
@@ -35,6 +37,7 @@ export default function Modal({
   subtitle,
   icon,
   end,
+  footer,
   transparent = false,
   open,
   setOpen,
@@ -84,10 +87,10 @@ export default function Modal({
                     >
                       <View className="flex">
                         <BoxHeader
-                          className="!pb-0"
                           title={title}
-                          subtitle={subtitle}
                           startIcon={icon}
+                          subtitle={subtitle}
+                          className="!flex-nowrap !pb-2"
                           end={
                             <View className="flex flex-row gap-2 justify-end items-center">
                               {end}
@@ -107,6 +110,8 @@ export default function Modal({
                       </View>
 
                       <ScrollView>{children}</ScrollView>
+
+                      {footer && <View className="mt-4">{footer}</View>}
                     </Box>
                   </Pressable>
                 </View>

@@ -41,12 +41,8 @@ export default function KitModal({ kit, open, setOpen }: KitModalProps) {
   }, [selectedCard]);
 
   return (
-    <Modal open={open} setOpen={setOpen}>
+    <Modal open={open} setOpen={setOpen} title={kit.name}>
       <View className="flex gap-4 min-w-[400px] max-w-2xl max-h-[80vh]">
-        <Text size="xl" weight="bold">
-          {kit.name}
-        </Text>
-
         {loading ? (
           <LoadingTable />
         ) : (

@@ -61,9 +61,10 @@ export default function UserFoldersPage() {
           subtitle="View and manage your deck folders"
           end={
             <Button
-              text="Create Folder"
-              type="outlined"
+              size="sm"
+              text="Folder"
               icon={faPlus}
+              type="outlined"
               className="self-end"
               onClick={() => setCreateFolderModalOpen(true)}
             />

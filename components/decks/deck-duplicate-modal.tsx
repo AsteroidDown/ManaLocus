@@ -3,6 +3,7 @@ import { BoardTypes } from "@/constants/boards";
 import ToastContext from "@/contexts/ui/toast.context";
 import DeckService from "@/hooks/services/deck.service";
 import { Deck } from "@/models/deck/deck";
+import { faCopy, faRotate } from "@fortawesome/free-solid-svg-icons";
 import { router } from "expo-router";
 import React, { useContext } from "react";
 import { View } from "react-native";
@@ -98,12 +99,25 @@ export default function DeckDuplicateModal({
   }
 
   return (
-    <Modal open={open} setOpen={setOpen}>
-      <View className="flex gap-4 max-w-2xl min-w-96 max-h-[80vh]">
-        <Text size="xl" weight="bold">
-          Copy Deck
-        </Text>
-
+    <Modal
+      open={open}
+      icon={faCopy}
+      setOpen={setOpen}
+      title="Copy Deck"
+      footer={
+        <View className="flex flex-row gap-2 justify-end">
+          <Button
+            size="sm"
+            type="outlined"
+            icon={saving ? faRotate : faCopy}
+            disabled={!deck.name || saving}
+            text={saving ? "Creating..." : "Create"}
+            onClick={copyDeck}
+          />
+        </View>
+      }
+    >
+      <View className="flex gap-4 max-w-xl min-w-96 max-h-[80vh]">
         <Input
           label="New Deck Name"
           placeholder="Name your copy of the deck"
@@ -115,14 +129,6 @@ export default function DeckDuplicateModal({
           This will create a new deck with the same cards and settings as the
           original and the copy will be marked as private
         </Text>
-
-        <View className="flex flex-row justify-end">
-          <Button
-            disabled={!deck.name || saving}
-            text={saving ? "Saving..." : "Save"}
-            onClick={() => copyDeck()}
-          />
-        </View>
       </View>
     </Modal>
   );

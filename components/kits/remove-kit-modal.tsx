@@ -80,17 +80,11 @@ export default function RemoveKitModal({
         onClick={() => setOpen(true)}
       />
 
-      <Modal open={open} setOpen={setOpen}>
-        <View className="flex gap-4 max-w-2xl max-h-[80vh]">
-          <Text size="xl" weight="bold">
-            Remove {kit.name}
-          </Text>
-
-          <Text>
-            Are you sure you want to remove this kit from your deck? This action
-            cannot be undone.
-          </Text>
-
+      <Modal
+        open={open}
+        setOpen={setOpen}
+        title={`Remove ${kit.name}?`}
+        footer={
           <View className="flex flex-row justify-between items-center gap-4">
             <Checkbox
               size="sm"
@@ -101,18 +95,27 @@ export default function RemoveKitModal({
 
             <View className="flex flex-row gap-2 items-center">
               <Button
-                type="outlined"
+                size="sm"
                 text="Cancel"
+                type="outlined"
                 onClick={() => setOpen(false)}
               />
 
               <Button
+                size="sm"
                 disabled={saving}
                 text={saving ? "Removing..." : "Remove"}
                 onClick={removeKit}
               />
             </View>
           </View>
+        }
+      >
+        <View className="flex gap-4 max-w-2xl max-h-[80vh]">
+          <Text>
+            Are you sure you want to remove this kit from your deck? This action
+            cannot be undone.
+          </Text>
         </View>
       </Modal>
     </View>

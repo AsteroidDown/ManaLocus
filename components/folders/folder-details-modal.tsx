@@ -1,10 +1,10 @@
 import Input from "@/components/ui/input/input";
 import Modal from "@/components/ui/modal/modal";
-import Text from "@/components/ui/text/text";
 import ToastContext from "@/contexts/ui/toast.context";
 import UserContext from "@/contexts/user/user.context";
 import FolderService from "@/hooks/services/folder.service";
 import { DeckFolder } from "@/models/folder/folder";
+import { faSave } from "@fortawesome/free-solid-svg-icons";
 import { router } from "expo-router";
 import React, { useContext, useEffect } from "react";
 import { View } from "react-native";
@@ -89,26 +89,30 @@ export default function FolderDetailsModal({
   }
 
   return (
-    <Modal open={open} setOpen={setOpen}>
+    <Modal
+      open={open}
+      setOpen={setOpen}
+      title={folder ? `Update ${folder.name}` : "Create Folder"}
+      footer={
+        <View className="flex flex-row justify-end">
+          <Button
+            size="sm"
+            type="outlined"
+            icon={faSave}
+            disabled={!name || saving}
+            text={saving ? "Saving..." : folder ? "Update" : "Create"}
+            onClick={() => (!folder ? createFolder() : updateFolder())}
+          />
+        </View>
+      }
+    >
       <View className="flex gap-4 min-w-96 max-w-2xl max-h-[80vh]">
-        <Text size="xl" weight="bold">
-          {folder ? `Update ${folder.name}` : "Create Folder"}
-        </Text>
-
         <Input
           label="Name"
           placeholder="Name your folder"
           value={name}
           onChange={setName}
         />
-
-        <View className="flex flex-row justify-end">
-          <Button
-            disabled={!name || saving}
-            text={saving ? "Saving..." : folder ? "Update" : "Create"}
-            onClick={() => (!folder ? createFolder() : updateFolder())}
-          />
-        </View>
       </View>
     </Modal>
   );

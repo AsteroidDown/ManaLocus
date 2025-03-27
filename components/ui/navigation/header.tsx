@@ -83,11 +83,10 @@ export default function Header() {
                     expanded={exploreOpen}
                     setExpanded={setExploreOpen}
                   >
-                    <View className="flex flex-col gap-2 mt-6 border-2 border-primary-300 !bg-background-100 rounded-xl !bg-opacity-95 overflow-auto max-h-[250px]">
+                    <View className="flex flex-col mt-6 border-2 border-primary-300 !bg-background-100 rounded-xl !bg-opacity-95 overflow-auto max-h-[250px]">
                       <Button
                         start
                         square
-                        size="lg"
                         type="clear"
                         text="Builders"
                         icon={faUsers}
@@ -101,7 +100,6 @@ export default function Header() {
                       <Button
                         start
                         square
-                        size="lg"
                         type="clear"
                         text="Kits"
                         icon={faToolbox}

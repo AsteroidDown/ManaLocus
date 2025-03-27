@@ -582,7 +582,13 @@ export default function DeckGallery({
             <Link
               key={deck.id + deck.name + index}
               href={`${
-                collections || kits ? "../../" : userId ? "../" : ""
+                includeIds?.length
+                  ? "../../../"
+                  : collections || kits
+                  ? "../../"
+                  : userId
+                  ? "../"
+                  : ""
               }decks/${deck.id}`}
             >
               <DeckCard deck={deck} />

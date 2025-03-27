@@ -58,7 +58,7 @@ export function FolderOptionsMenu({
 
   return (
     <View className="flex flex-row gap-2 items-center">
-      <View className="flex border-l border-background-300 -mr-4">
+      <View className="flex border-l border-background-200 -mr-4">
         <Button
           square
           type="clear"
@@ -130,18 +130,21 @@ export function FolderOptionsMenu({
           setSelectedFolderId={setSelectedFolderId}
         />
 
-        <Modal open={removeFolderOpen} setOpen={setRemoveFolderOpen}>
-          <View className="flex gap-4 max-w-2xl max-h-[80vh]">
-            <Text size="xl" weight="bold">
-              Remove {folder.name}?
-            </Text>
-
-            <Text>
-              This action can't be undone. Are you sure you want to continue?
-            </Text>
-
-            <View className="flex flex-row justify-end">
+        <Modal
+          open={removeFolderOpen}
+          setOpen={setRemoveFolderOpen}
+          title={`Remove ${folder.name}?`}
+          footer={
+            <View className="flex flex-row gap-2 justify-end">
               <Button
+                size="sm"
+                text="Cancel"
+                type="outlined"
+                onClick={() => setRemoveFolderOpen(false)}
+              />
+
+              <Button
+                size="sm"
                 action="danger"
                 icon={faTrash}
                 disabled={saving}
@@ -149,6 +152,12 @@ export function FolderOptionsMenu({
                 onClick={removeFolder}
               />
             </View>
+          }
+        >
+          <View className="flex gap-4 max-w-2xl max-h-[80vh]">
+            <Text>
+              This action can't be undone. Are you sure you want to continue?
+            </Text>
           </View>
         </Modal>
       </View>

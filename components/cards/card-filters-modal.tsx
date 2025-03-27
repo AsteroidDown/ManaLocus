@@ -18,7 +18,7 @@ import {
   CardFilters,
   CardFilterSortType,
 } from "@/models/sorted-cards/sorted-cards";
-import { faFilter } from "@fortawesome/free-solid-svg-icons";
+import { faFilter, faTimes } from "@fortawesome/free-solid-svg-icons";
 import React, {
   Dispatch,
   SetStateAction,
@@ -112,7 +112,38 @@ export default function CardFiltersModal({
   }
 
   return (
-    <Modal icon={faFilter} title="Set Filters" open={open} setOpen={setOpen}>
+    <Modal
+      icon={faFilter}
+      title="Set Filters"
+      open={open}
+      setOpen={setOpen}
+      footer={
+        <View className="flex-1 flex flex-row justify-end gap-2">
+          <Button
+            rounded
+            size="sm"
+            text="Clear"
+            type="outlined"
+            action="danger"
+            className="flex-1"
+            icon={faTimes}
+            disabled={!filterLength}
+            onClick={clearFilters}
+          />
+
+          <Button
+            rounded
+            size="sm"
+            text="Filter"
+            type="outlined"
+            className="flex-1"
+            icon={faFilter}
+            disabled={!filterLength}
+            onClick={applyFilters}
+          />
+        </View>
+      }
+    >
       <View className="flex gap-2">
         <View className="flex gap-4">
           {type !== "color" && (
@@ -195,22 +226,6 @@ export default function CardFiltersModal({
               />
             </View>
           </View>
-        </View>
-
-        <View className="flex-1 flex flex-row justify-end gap-2">
-          <Button
-            text="Clear"
-            type="outlined"
-            action="danger"
-            disabled={!filterLength}
-            onClick={clearFilters}
-          />
-          <Button
-            text="Filter"
-            type="outlined"
-            disabled={!filterLength}
-            onClick={applyFilters}
-          />
         </View>
       </View>
     </Modal>

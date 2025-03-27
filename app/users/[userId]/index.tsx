@@ -36,10 +36,11 @@ export default function Login() {
       <View className="lg:px-16 px-4 py-4 min-h-[100dvh] bg-background-100">
         <BoxHeader
           title="Your Decks"
-          subtitle="View and manage your deck collection"
+          subtitle="View and manage your decks"
           end={
             <Button
-              text="Create Deck"
+              size="sm"
+              text="Deck"
               type="outlined"
               icon={faPlus}
               className="self-end"

@@ -179,12 +179,12 @@ export function FolderRemoveDeckModal({
         onClick={() => setOpen(true)}
       />
 
-      <Modal open={open} setOpen={setOpen}>
+      <Modal
+        open={open}
+        setOpen={setOpen}
+        title={`Remove ${deck.name} from ${folder.name}?`}
+      >
         <View className="flex gap-4 max-w-2xl max-h-[80vh]">
-          <Text size="xl" weight="bold">
-            Remove {deck.name} from {folder.name}?
-          </Text>
-
           <Text>
             This action can't be undone. Are you sure you want to continue?
           </Text>

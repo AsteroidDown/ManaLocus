@@ -82,7 +82,7 @@ function getChipBaseColor(
   disabled: boolean
 ) {
   if (type === "outlined") {
-    if (disabled) return "border-2 bg-dark-300 bg-opacity-30";
+    if (disabled) return "border-2 border-dark-200";
 
     return (
       "border-2 " +
@@ -115,35 +115,38 @@ function getChipBaseColor(
         : "border-mtg-blue-secondary")
     );
   } else {
-    if (disabled) return "bg-dark-300";
+    if (disabled) return "border-2 bg-dark-300";
 
-    return action === "primary"
-      ? "bg-primary-300"
-      : action === "secondary"
-      ? "bg-secondary-200"
-      : action === "success"
-      ? "bg-success-200"
-      : action === "danger"
-      ? "bg-danger-200"
-      : action === "info"
-      ? "bg-info-200"
-      : action === "warning"
-      ? "bg-warning-200"
-      : action === "white"
-      ? "bg-mtg-white-secondary"
-      : action === "blue"
-      ? "bg-mtg-blue-secondary"
-      : action === "black"
-      ? "bg-mtg-black-secondary"
-      : action === "red"
-      ? "bg-mtg-red-secondary"
-      : action === "green"
-      ? "bg-mtg-green-secondary"
-      : action === "gold"
-      ? "bg-mtg-gold-secondary"
-      : action === "colorless"
-      ? "bg-mtg-colorless-secondary"
-      : "bg-mtg-blue-secondary";
+    return (
+      "border-2 border-transparent " +
+      (action === "primary"
+        ? "bg-primary-300"
+        : action === "secondary"
+        ? "bg-secondary-200"
+        : action === "success"
+        ? "bg-success-200"
+        : action === "danger"
+        ? "bg-danger-200"
+        : action === "info"
+        ? "bg-info-200"
+        : action === "warning"
+        ? "bg-warning-200"
+        : action === "white"
+        ? "bg-mtg-white-secondary"
+        : action === "blue"
+        ? "bg-mtg-blue-secondary"
+        : action === "black"
+        ? "bg-mtg-black-secondary"
+        : action === "red"
+        ? "bg-mtg-red-secondary"
+        : action === "green"
+        ? "bg-mtg-green-secondary"
+        : action === "gold"
+        ? "bg-mtg-gold-secondary"
+        : action === "colorless"
+        ? "bg-mtg-colorless-secondary"
+        : "bg-mtg-blue-secondary")
+    );
   }
 }
 

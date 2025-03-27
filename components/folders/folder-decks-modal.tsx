@@ -2,7 +2,6 @@ import DecksTable from "@/components/decks/decks-table";
 import Input from "@/components/ui/input/input";
 import Modal from "@/components/ui/modal/modal";
 import Pagination from "@/components/ui/pagination/pagination";
-import Text from "@/components/ui/text/text";
 import ToastContext from "@/contexts/ui/toast.context";
 import UserContext from "@/contexts/user/user.context";
 import { PaginationMeta } from "@/hooks/pagination";
@@ -82,12 +81,8 @@ export default function FolderDecksModal({
   }
 
   return (
-    <Modal open={open} setOpen={setOpen}>
+    <Modal open={open} setOpen={setOpen} title={`Add Deck to ${folder.name}`}>
       <View className="flex gap-4 max-w-2xl max-h-[80vh]">
-        <Text size="xl" weight="bold">
-          Add Deck to {folder.name}
-        </Text>
-
         <Input
           label="Search"
           placeholder="Search for a deck"

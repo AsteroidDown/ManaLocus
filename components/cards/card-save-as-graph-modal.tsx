@@ -23,7 +23,6 @@ import {
   faInfoCircle,
   faRotate,
 } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { Dispatch, SetStateAction, useContext, useState } from "react";
 import { View } from "react-native";
 
@@ -97,8 +96,7 @@ export default function CardSaveAsGraphModal({
     setDashboard(getLocalStorageDashboard());
 
     setDisabled(false);
-
-    if (item) setOpen(false);
+    setOpen(false);
 
     addToast({
       action: "success",
@@ -110,110 +108,20 @@ export default function CardSaveAsGraphModal({
   }
 
   return (
-    <Modal open={open} setOpen={setOpen}>
-      <View className="flex gap-2 max-w-[400px]">
-        <View className="flex flex-row gap-4">
-          <FontAwesomeIcon
-            icon={faChartSimple}
-            size="2xl"
-            className="color-white"
-          />
-          <Text size="2xl" weight="bold">
-            {item ? "Update Graph" : "Save As Graph"}
-          </Text>
-        </View>
-
-        <View className="flex gap-4">
-          <Text>
-            {item
-              ? "Update the filters for " + item.title
-              : "Add a graph to the dashboard with the following filters:"}
-          </Text>
-
-          <View className="flex gap-2 max-w-96">
-            <Text size="md" weight="bold">
-              Sort Type
-            </Text>
-
-            <Divider thick />
-
-            <View className="flex flex-row gap-2 max-w-96">
-              <Button
-                rounded
-                size="sm"
-                text="Cost"
-                className="flex-1"
-                type={sortType !== "cost" ? "outlined" : "default"}
-                onClick={() => setSortType("cost")}
-              />
-
-              <Button
-                rounded
-                size="sm"
-                text="Color"
-                className="flex-1"
-                type={sortType !== "color" ? "outlined" : "default"}
-                onClick={() => setSortType("color")}
-              />
-
-              <Button
-                rounded
-                size="sm"
-                text="Type"
-                className="flex-1"
-                type={sortType !== "type" ? "outlined" : "default"}
-                onClick={() => setSortType("type")}
-              />
-            </View>
-          </View>
-
-          <View className="flex gap-2 max-w-96">
-            <Text size="md" weight="bold">
-              Color
-            </Text>
-
-            <Divider thick />
-
-            <ColorFilter
-              flat
-              colorFilters={colorFilter}
-              setColorFilters={setColorFilter}
-            />
-          </View>
-
-          <View className="flex gap-2 max-w-96">
-            <Text size="md" weight="bold">
-              Type
-            </Text>
-
-            <Divider thick />
-
-            <TypeFilter
-              flat
-              typeFilters={typeFilter}
-              setTypeFilters={setTypeFilter}
-            />
-          </View>
-
-          <View className="flex gap-2 max-w-96">
-            <Text size="md" weight="bold">
-              Rarity
-            </Text>
-
-            <Divider thick />
-
-            <RarityFilter
-              flat
-              rarityFilters={rarityFilter}
-              setRarityFilters={setRarityFilter}
-            />
-          </View>
-        </View>
-
+    <Modal
+      open={open}
+      setOpen={setOpen}
+      icon={faChartSimple}
+      title={item ? "Update Graph" : "Save As Graph"}
+      subtitle={
+        item
+          ? "Update the filters for " + item.title
+          : "Add a graph to your dashboard"
+      }
+      footer={
         <Button
           rounded
           type="outlined"
-          className="mt-4"
           disabled={disabled}
           action={error ? "danger" : "primary"}
           icon={disabled ? faRotate : error ? faInfoCircle : faChartSimple}
@@ -230,6 +138,87 @@ export default function CardSaveAsGraphModal({
           }
           onClick={async () => createGraph()}
         />
+      }
+    >
+      <View className="flex gap-4 max-w-[400px]">
+        <View className="flex gap-2 max-w-96">
+          <Text size="md" weight="bold">
+            Sort Type
+          </Text>
+
+          <Divider thick />
+
+          <View className="flex flex-row gap-2 max-w-96">
+            <Button
+              rounded
+              size="sm"
+              text="Cost"
+              className="flex-1"
+              type={sortType !== "cost" ? "outlined" : "default"}
+              onClick={() => setSortType("cost")}
+            />
+
+            <Button
+              rounded
+              size="sm"
+              text="Color"
+              className="flex-1"
+              type={sortType !== "color" ? "outlined" : "default"}
+              onClick={() => setSortType("color")}
+            />
+
+            <Button
+              rounded
+              size="sm"
+              text="Type"
+              className="flex-1"
+              type={sortType !== "type" ? "outlined" : "default"}
+              onClick={() => setSortType("type")}
+            />
+          </View>
+        </View>
+
+        <View className="flex gap-2 max-w-96">
+          <Text size="md" weight="bold">
+            Color
+          </Text>
+
+          <Divider thick />
+
+          <ColorFilter
+            flat
+            colorFilters={colorFilter}
+            setColorFilters={setColorFilter}
+          />
+        </View>
+
+        <View className="flex gap-2 max-w-96">
+          <Text size="md" weight="bold">
+            Type
+          </Text>
+
+          <Divider thick />
+
+          <TypeFilter
+            flat
+            typeFilters={typeFilter}
+            setTypeFilters={setTypeFilter}
+          />
+        </View>
+
+        <View className="flex gap-2 max-w-96">
+          <Text size="md" weight="bold">
+            Rarity
+          </Text>
+
+          <Divider thick />
+
+          <RarityFilter
+            flat
+            rarityFilters={rarityFilter}
+            setRarityFilters={setRarityFilter}
+          />
+        </View>
       </View>
     </Modal>
   );

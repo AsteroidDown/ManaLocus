@@ -22,7 +22,6 @@ import {
   faRotate,
   faTable,
 } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { Dispatch, SetStateAction, useContext, useState } from "react";
 import { View } from "react-native";
 import { ChartType } from "../chart/chart";
@@ -93,8 +92,8 @@ export default function CardSaveAsChartModal({
     setDashboard(getLocalStorageDashboard());
 
     setDisabled(false);
+    setOpen(false);
 
-    if (item) setOpen(false);
     addToast({
       action: "success",
       title: `${item ? "Chart Updated" : "Chart Created"}!`,
@@ -105,23 +104,43 @@ export default function CardSaveAsChartModal({
   }
 
   return (
-    <Modal open={open} setOpen={setOpen}>
+    <Modal
+      open={open}
+      setOpen={setOpen}
+      icon={faTable}
+      title={item ? "Update Chart" : "Save As Chart"}
+      subtitle={
+        item
+          ? "Update the filters for " + item.title
+          : "Add a Chart to your dashboard"
+      }
+      footer={
+        <Button
+          rounded
+          size="sm"
+          type="outlined"
+          disabled={disabled || colorFilter?.length === 0}
+          action={error ? "danger" : "primary"}
+          icon={disabled ? faRotate : error ? faInfoCircle : faTable}
+          text={
+            disabled
+              ? item
+                ? "Updating Chart..."
+                : "Creating Chart..."
+              : error
+              ? "Error Creating Chart!"
+              : item
+              ? "Update Chart"
+              : "Create Chart"
+          }
+          onClick={createChart}
+        />
+      }
+    >
       <View className="flex gap-2 max-w-[400px]">
-        <View className="flex flex-row gap-4">
-          <FontAwesomeIcon icon={faTable} size="2xl" className="color-white" />
-
-          <Text size="2xl" weight="bold">
-            {item ? "Update Chart" : "Save As Chart"}
-          </Text>
-        </View>
+        <View className="flex flex-row gap-4"></View>
 
         <View className="flex gap-4">
-          <Text>
-            {item
-              ? "Update the filters for " + item.title
-              : "Add a Chart to the dashboard with the following filters:"}
-          </Text>
-
           <View className="flex gap-2 max-w-96">
             <Text size="md" weight="bold">
               Sort Type
@@ -204,27 +223,6 @@ export default function CardSaveAsChartModal({
             />
           </View>
         </View>
-
-        <Button
-          rounded
-          type="outlined"
-          className="mt-4"
-          disabled={disabled || colorFilter?.length === 0}
-          action={error ? "danger" : "primary"}
-          icon={disabled ? faRotate : error ? faInfoCircle : faTable}
-          text={
-            disabled
-              ? item
-                ? "Updating Chart..."
-                : "Creating Chart..."
-              : error
-              ? "Error Creating Chart!"
-              : item
-              ? "Update Chart"
-              : "Create Chart"
-          }
-          onClick={async () => createChart()}
-        />
       </View>
     </Modal>
   );

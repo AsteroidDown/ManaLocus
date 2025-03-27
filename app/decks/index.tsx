@@ -4,7 +4,7 @@ import Button from "@/components/ui/button/button";
 import Footer from "@/components/ui/navigation/footer";
 import UserContext from "@/contexts/user/user.context";
 import DeckService from "@/hooks/services/deck.service";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faPlus, faSearch } from "@fortawesome/free-solid-svg-icons";
 import { router } from "expo-router";
 import React, { useContext } from "react";
 import { SafeAreaView, View } from "react-native";
@@ -31,14 +31,16 @@ export default function DecksPage() {
     <SafeAreaView>
       <View className="flex flex-1 gap-4 lg:px-16 px-4 py-8 min-h-[100dvh] bg-background-100">
         <BoxHeader
-          title="Find Decks"
           className="!pb-0"
+          title="Discover Decks"
+          startIcon={faSearch}
           end={
             user && (
               <Button
+                size="sm"
+                text="Deck"
                 icon={faPlus}
                 type="outlined"
-                text="Create Deck"
                 onClick={createDeck}
               />
             )

@@ -100,7 +100,7 @@ export default function TradedToUserPage() {
       <View className="flex my-4 lg:px-16 px-4 min-h-[100dvh]">
         {user.id === userPageUser.id && (
           <BoxHeader
-            title={`Your Trades ${
+            title={`Trades ${
               tradedToUser?.name ? `with ${tradedToUser.name}` : ""
             }`}
             subtitle={
@@ -120,7 +120,7 @@ export default function TradedToUserPage() {
                   )}
                 </>
               ) : (
-                ""
+                "Your trades made without another user"
               )
             }
             start={
@@ -135,18 +135,19 @@ export default function TradedToUserPage() {
               />
             }
             end={
-              <View className="flex flex-row gap-2 lg:ml-auto lg:mt-0 mt-2 min-w-fit">
-                {tradedToUser && tradesTotal !== 0 && (
-                  <Button
-                    type="outlined"
-                    text="Settle Up"
-                    icon={faReceipt}
-                    className="flex-1 lg:max-w-fit"
-                    onClick={() => setSettleUpOpen(true)}
-                  />
-                )}
+              <View className="flex flex-row gap-2 lg:mt-0 mt-4 lg:w-fit w-full">
+                <Button
+                  size="sm"
+                  type="outlined"
+                  text="Settle Up"
+                  icon={faReceipt}
+                  className="flex-1 lg:max-w-fit"
+                  disabled={!tradedToUser || tradesTotal === 0}
+                  onClick={() => setSettleUpOpen(true)}
+                />
 
                 <Button
+                  size="sm"
                   type="outlined"
                   text="New Trade"
                   className="flex-1 lg:max-w-fit"

@@ -234,9 +234,11 @@ export default function AddKitModal({
 
           <View className="flex flex-row justify-end">
             <Button
+              size="sm"
+              type="outlined"
               icon={faPlus}
               disabled={!selectedKit || saving}
-              text={saving ? "Saving..." : "Add Kit"}
+              text={saving ? "Adding..." : "Add Kit"}
               onClick={addKit}
             />
           </View>

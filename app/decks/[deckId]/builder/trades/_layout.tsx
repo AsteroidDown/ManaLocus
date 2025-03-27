@@ -15,10 +15,10 @@ import {
 } from "@/functions/local-storage/builder-preferences-local-storage";
 import { getLocalStorageStoredCards } from "@/functions/local-storage/card-local-storage";
 import {
-  faBars,
   faEye,
   faEyeSlash,
   faFileArrowDown,
+  faPalette,
 } from "@fortawesome/free-solid-svg-icons";
 import React, { useContext, useEffect, useState } from "react";
 import { View } from "react-native";
@@ -110,7 +110,7 @@ export default function AcquireBoardLayout() {
             <Tooltip title="Group Multicolored Cards">
               <Button
                 size="sm"
-                icon={faBars}
+                icon={faPalette}
                 type={`${groupMulticolored ? "outlined" : "clear"}`}
                 onClick={() =>
                   groupMulticolored

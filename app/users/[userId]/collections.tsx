@@ -43,9 +43,10 @@ export default function UserCollectionsPage() {
           subtitle="View and manage your collections"
           end={
             <Button
-              text="Create Collection"
-              type="outlined"
+              size="sm"
               icon={faPlus}
+              type="outlined"
+              text="Collection"
               className="self-end"
               onClick={createCollection}
             />

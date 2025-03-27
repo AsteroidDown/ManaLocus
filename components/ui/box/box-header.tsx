@@ -32,9 +32,11 @@ export default function BoxHeader({
   return (
     <View className="flex-1 -mx-6 max-h-fit">
       <View
-        className={`flex flex-row flex-wrap gap-2 justify-between items-center px-6 pb-4 ${className}`}
+        className={`flex flex-row flex-wrap justify-between items-center px-6 pb-4 ${className}`}
       >
-        <View className="flex-1 flex flex-row items-center gap-4 min-w-fit">
+        <View
+          className={`flex-1 flex flex-row items-center gap-4 min-w-[100px]`}
+        >
           {start}
 
           {startIcon && (
@@ -46,23 +48,19 @@ export default function BoxHeader({
           )}
 
           <View className="flex-1 flex">
-            {title && (
+            {!!title && (
               <Text size={width > 600 ? "xl" : "lg"} weight="bold">
                 {title}
               </Text>
             )}
 
-            {subtitle && <Text className="!text-gray-200">{subtitle}</Text>}
+            {!!subtitle && <Text className="!text-gray-200">{subtitle}</Text>}
           </View>
 
           {titleEnd}
         </View>
 
-        {end && (
-          <View className="flex-1 flex flex-row justify-end items-center lg:max-w-fit min-w-fit ml-auto">
-            {end}
-          </View>
-        )}
+        {end}
       </View>
 
       {divider && <Divider thick />}

@@ -160,7 +160,7 @@ function getButtonBaseColor(
 ) {
   if (type === "clear") return "border-2 border-transparent";
   else if (type === "outlined") {
-    if (disabled) return "border-2 bg-dark-300 bg-opacity-30";
+    if (disabled) return "border-2 border-dark-200";
 
     return (
       "border-2 " +
@@ -179,7 +179,7 @@ function getButtonBaseColor(
         : "border-white")
     );
   } else {
-    if (disabled) return "bg-dark-300";
+    if (disabled) return "bg-dark-200";
 
     return (
       (action === "primary"
@@ -194,7 +194,7 @@ function getButtonBaseColor(
         ? "bg-info-200 border-info-200"
         : action === "warning"
         ? "bg-warning-200 border-warning-200"
-        : "bg-white bg-opacity-30") + " border-2"
+        : "bg-white bg-opacity-30") + " border-2 border-transparent"
     );
   }
 }

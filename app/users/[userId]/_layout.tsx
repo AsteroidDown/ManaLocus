@@ -72,7 +72,7 @@ export default function UserLayout() {
   return (
     <UserPageContext.Provider value={{ userPageUser, setPageUser }}>
       <SafeAreaView className="flex w-full h-full bg-background-100">
-        <View className="lg:px-16 px-4 mt-8">
+        <View className="lg:px-16 px-4 mt-4">
           <BoxHeader title={userPageUser?.name} />
         </View>
 

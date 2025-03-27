@@ -353,7 +353,7 @@ export default function CardImportExportModal({
 
   return (
     <Modal
-      title={`${!exportOnly && "Import/"}Export Cards`}
+      title={`${!exportOnly ? "Import/" : ""}Export Cards`}
       open={open}
       setOpen={setOpen}
       end={
@@ -364,111 +364,12 @@ export default function CardImportExportModal({
           onClick={() => setFiltersOpen(!filtersOpen)}
         />
       }
-    >
-      <View className="flex gap-4 max-w-2xl max-h-[80vh]">
-        <View className="flex-1 flex gap-3 overflow-y-auto">
-          <View
-            className={`${
-              filtersOpen ? "max-h-[1000px]" : "max-h-0"
-            } flex gap-3 overflow-hidden transition-all duration-300`}
-          >
-            <View className="flex gap-2 ">
-              <Text size="md" weight="bold">
-                Colors to Include
-              </Text>
-
-              <Divider thick />
-
-              <ColorFilter
-                flat
-                excludeMono
-                colorFilters={colorFilter}
-                setColorFilters={setColorFilter}
-              />
-            </View>
-
-            <View className="flex gap-2 ">
-              <Text size="md" weight="bold">
-                Types to Filter By
-              </Text>
-
-              <Divider thick />
-
-              <TypeFilter
-                flat
-                typeFilters={typeFilter}
-                setTypeFilters={setTypeFilter}
-              />
-            </View>
-
-            <View className="flex gap-2 ">
-              <Text size="md" weight="bold">
-                Rarities to Filter By
-              </Text>
-
-              <Divider thick />
-
-              <RarityFilter
-                flat
-                rarityFilters={rarityFilter}
-                setRarityFilters={setRarityFilter}
-              />
-            </View>
-
-            <View className="flex gap-2 ">
-              <Text size="md" weight="bold">
-                Sort By
-              </Text>
-
-              <Divider thick />
-
-              <View className="flex flex-row gap-2 items-center">
-                <SortingFilter
-                  className="flex-1"
-                  title="Mana Value"
-                  sortDirection={manaValueSort}
-                  setSortDirection={setManaValueSort}
-                />
-
-                <SortingFilter
-                  className="flex-1"
-                  title="Name"
-                  sortDirection={alphabeticalSort}
-                  setSortDirection={setAlphabeticalSort}
-                />
-
-                <Chip
-                  className="flex-1"
-                  text="Color"
-                  type={colorSort ? "default" : "outlined"}
-                  onClick={() => setColorSort(!colorSort)}
-                />
-              </View>
-            </View>
-          </View>
-
-          <View className="bg-dark-100 p-4 rounded-xl overflow-hidden">
-            <View className="max-h-40 overflow-y-auto">
-              <Text mono>{cards}</Text>
-            </View>
-          </View>
-
-          {!exportOnly && (
-            <>
-              <Text className="pl-3">
-                For importing use one of the standards:
-              </Text>
-              <Text mono className="-mt-2 px-2.5 py-1.5 bg-dark-100 rounded-lg">
-                1 id {"\n"}1 name {"\n"}1 name (set) collection_number
-              </Text>
-            </>
-          )}
-        </View>
-
-        <View className="flex flex-row flex-wrap justify-center gap-3">
+      footer={
+        <View className="flex flex-row flex-wrap justify-center lg:gap-3 gap-1">
           {!exportOnly && (
             <Button
               rounded
+              size="sm"
               type="outlined"
               className="flex-1 min-w-[250px]"
               disabled={disabled}
@@ -491,6 +392,7 @@ export default function CardImportExportModal({
 
           <Button
             rounded
+            size="sm"
             type="outlined"
             className="flex-1 min-w-[250px]"
             disabled={copyDisabled}
@@ -512,6 +414,106 @@ export default function CardImportExportModal({
             }}
           />
         </View>
+      }
+    >
+      <View className="flex-1 flex gap-3 lg:max-w-[450px]">
+        <View
+          className={`${
+            filtersOpen ? "max-h-[1000px]" : "max-h-0"
+          } flex gap-3 overflow-hidden transition-all duration-300`}
+        >
+          <View className="flex gap-2 ">
+            <Text size="md" weight="bold">
+              Colors to Include
+            </Text>
+
+            <Divider thick />
+
+            <ColorFilter
+              flat
+              excludeMono
+              colorFilters={colorFilter}
+              setColorFilters={setColorFilter}
+            />
+          </View>
+
+          <View className="flex gap-2 ">
+            <Text size="md" weight="bold">
+              Types to Filter By
+            </Text>
+
+            <Divider thick />
+
+            <TypeFilter
+              flat
+              typeFilters={typeFilter}
+              setTypeFilters={setTypeFilter}
+            />
+          </View>
+
+          <View className="flex gap-2 ">
+            <Text size="md" weight="bold">
+              Rarities to Filter By
+            </Text>
+
+            <Divider thick />
+
+            <RarityFilter
+              flat
+              rarityFilters={rarityFilter}
+              setRarityFilters={setRarityFilter}
+            />
+          </View>
+
+          <View className="flex gap-2 ">
+            <Text size="md" weight="bold">
+              Sort By
+            </Text>
+
+            <Divider thick />
+
+            <View className="flex flex-row gap-2 items-center">
+              <SortingFilter
+                className="flex-1"
+                title="Mana Value"
+                sortDirection={manaValueSort}
+                setSortDirection={setManaValueSort}
+              />
+
+              <SortingFilter
+                className="flex-1"
+                title="Name"
+                sortDirection={alphabeticalSort}
+                setSortDirection={setAlphabeticalSort}
+              />
+
+              <Chip
+                size="sm"
+                text="Color"
+                className="flex-1"
+                type={colorSort ? "default" : "outlined"}
+                onClick={() => setColorSort(!colorSort)}
+              />
+            </View>
+          </View>
+        </View>
+
+        <View className="bg-dark-100 p-4 rounded-xl overflow-hidden">
+          <View className="max-h-40 overflow-y-auto">
+            <Text mono>{cards}</Text>
+          </View>
+        </View>
+
+        {!exportOnly && (
+          <>
+            <Text className="pl-3">
+              For importing use one of the standards:
+            </Text>
+            <Text mono className="-mt-2 px-2.5 py-1.5 bg-dark-100 rounded-lg">
+              1 id {"\n"}1 name {"\n"}1 name (set) collection_number
+            </Text>
+          </>
+        )}
       </View>
     </Modal>
   );

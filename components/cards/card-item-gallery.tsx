@@ -48,6 +48,7 @@ import Input from "../ui/input/input";
 import CardFiltersModal from "./card-filters-modal";
 import CardItemGalleryColumn from "./card-item-gallery-column";
 import CardSaveAsChartModal from "./card-save-as-chart-modal";
+import CardSaveAsGraphModal from "./card-save-as-graph-modal";
 
 export interface CardItemGalleryProps {
   type: CardFilterSortType;
@@ -169,8 +170,8 @@ export default function CardItemGallery({
           ).toFixed(2)}`}
           end={
             <>
-              <View className="flex flex-row lg:gap-1 lg:justify-end justify-around w-full">
-                {board === BoardTypes.MAIN && (
+              <View className="flex flex-row">
+                {board === BoardTypes.MAIN && width > 600 && (
                   <>
                     <Button
                       size="sm"
@@ -191,7 +192,7 @@ export default function CardItemGallery({
                 {width > 600 && (
                   <View
                     className={`${width <= 600 ? "flex-1" : ""} ${
-                      itemsExpanded ? "lg:max-w-10 mx-0" : "max-w-0 lg:-ml-2"
+                      itemsExpanded ? "lg:max-w-10 mx-0" : "max-w-0"
                     } overflow-hidden transition-all duration-300`}
                   >
                     <Button
@@ -209,30 +210,6 @@ export default function CardItemGallery({
                   type="clear"
                   icon={faFilter}
                   onClick={() => setCardFiltersOpen(true)}
-                />
-              </View>
-
-              <View className="lg:-mx-1">
-                <CardFiltersModal
-                  type={type}
-                  open={saveAsGraphOpen}
-                  setOpen={setSaveAsGraphOpen}
-                />
-              </View>
-
-              <View className="lg:-mx-1">
-                <CardFiltersModal
-                  type={type}
-                  open={cardFiltersOpen}
-                  setOpen={setCardFiltersOpen}
-                />
-              </View>
-
-              <View className="lg:-mx-1">
-                <CardSaveAsChartModal
-                  type={type === "type" ? "type" : "cost"}
-                  open={saveAsChartOpen}
-                  setOpen={setSaveAsChartOpen}
                 />
               </View>
             </>
@@ -492,6 +469,29 @@ export default function CardItemGallery({
           )}
         </View>
       </Box>
+
+      <View className="lg:-mx-1">
+        <CardFiltersModal
+          type={type}
+          open={cardFiltersOpen}
+          setOpen={setCardFiltersOpen}
+        />
+      </View>
+
+      <View className="lg:-mx-1">
+        <CardSaveAsChartModal
+          type={type === "type" ? "type" : "cost"}
+          open={saveAsChartOpen}
+          setOpen={setSaveAsChartOpen}
+        />
+      </View>
+
+      <View className="lg:-mx-1">
+        <CardSaveAsGraphModal
+          open={saveAsGraphOpen}
+          setOpen={setSaveAsGraphOpen}
+        />
+      </View>
     </View>
   );
 }
