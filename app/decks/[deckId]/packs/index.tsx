@@ -156,7 +156,7 @@ export default function PackBuilderPage() {
 
   return (
     <SafeAreaView className="bg-background-100">
-      <View className="flex flex-1 gap-4 lg:px-16 px-4 py-8 min-h-[100dvh] bg-background-100 bg-opacity-60 rounded-xl overflow-hidden">
+      <View className="flex flex-1 gap-4 lg:px-16 px-4 py-4 min-h-[100dvh] bg-background-100 bg-opacity-60 rounded-xl overflow-hidden">
         <BoxHeader
           title="Pack Builder"
           className="!pb-0"

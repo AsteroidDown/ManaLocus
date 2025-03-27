@@ -7,7 +7,7 @@ import { SafeAreaView, View } from "react-native";
 export default function TermsOfService() {
   return (
     <SafeAreaView>
-      <View className="flex flex-1 gap-4 lg:px-48 px-4 py-8 min-h-fit bg-dark-100">
+      <View className="flex flex-1 gap-4 lg:px-48 px-4 py-4 min-h-fit bg-dark-100">
         <View className="flex gap-4 min-h-fit">
           <Text size="2xl" weight="bold">
             Terms of Service for ManaLocus

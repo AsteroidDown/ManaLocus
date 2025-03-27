@@ -38,7 +38,7 @@ export default function UsersPage() {
 
   return (
     <SafeAreaView>
-      <View className="flex flex-1 gap-4 lg:px-16 px-4 py-8 min-h-[100dvh] bg-background-100">
+      <View className="flex flex-1 gap-4 lg:px-16 px-4 py-4 min-h-[100dvh] bg-background-100">
         <BoxHeader title="Find Users" className="!pb-0" />
 
         <View className="flex flex-row items-center">

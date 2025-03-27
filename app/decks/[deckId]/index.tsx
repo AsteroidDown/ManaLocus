@@ -53,7 +53,7 @@ export default function DeckPage() {
     <SafeAreaView>
       <DeckHeader deck={deck} />
 
-      <View className="flex flex-1 gap-8 lg:px-16 px-4 py-8 border-t-2 border-background-200 bg-background-100">
+      <View className="flex flex-1 gap-8 lg:px-16 px-4 py-4 border-t-2 border-background-200 bg-background-100">
         {(deck.dashboard?.sections?.length || 0) > 0 ? (
           <TabBar
             tabs={[

@@ -139,7 +139,7 @@ export default function SetPage() {
 
   return (
     <SafeAreaView>
-      <View className="flex-1 flex gap-6 lg:px-16 px-4 py-8 bg-background-100 min-h-[100dvh]">
+      <View className="flex-1 flex gap-6 lg:px-16 px-4 py-4 bg-background-100 min-h-[100dvh]">
         <BoxHeader
           className="!pb-0"
           title={set.name}

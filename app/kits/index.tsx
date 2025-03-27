@@ -4,6 +4,7 @@ import Button from "@/components/ui/button/button";
 import Footer from "@/components/ui/navigation/footer";
 import UserContext from "@/contexts/user/user.context";
 import DeckService from "@/hooks/services/deck.service";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { router } from "expo-router";
 import React, { useContext } from "react";
 import { SafeAreaView, View } from "react-native";
@@ -28,11 +29,11 @@ export default function DecksPage() {
 
   return (
     <SafeAreaView>
-      <View className="flex flex-1 gap-4 lg:px-16 px-4 py-8 min-h-[100dvh] bg-background-100">
+      <View className="flex flex-1 gap-4 lg:px-16 px-4 py-4 min-h-[100dvh] bg-background-100">
         <BoxHeader
           title="Find Kits"
           className="!pb-0"
-          end={user && <Button text="Create Kit" onClick={createDeck} />}
+          end={user && <Button icon={faPlus} text="Kit" onClick={createDeck} />}
         />
 
         <DeckGallery kits />
