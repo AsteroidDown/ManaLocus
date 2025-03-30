@@ -251,11 +251,11 @@ export default function UserSettingsPage() {
           expanded={preferencesOpen}
           setExpanded={setPreferencesOpen}
         >
-          <Text size="lg" weight="bold">
+          <Text size="md" weight="bold">
             Color
           </Text>
 
-          <Divider thick className="!border-background-200" />
+          <Divider thick />
 
           <View className="flex flex-row flex-wrap gap-4 mt-2">
             {Object.values(PreferenceColor).map((key) => (
@@ -270,11 +270,11 @@ export default function UserSettingsPage() {
             ))}
           </View>
 
-          <Text size="lg" weight="bold" className="mt-4">
+          <Text size="md" weight="bold" className="mt-4">
             Decks Page
           </Text>
 
-          <Divider thick className="!border-background-200" />
+          <Divider thick />
 
           <View className="flex flex-row flex-wrap gap-4 z-10">
             <Select
@@ -335,11 +335,11 @@ export default function UserSettingsPage() {
             </View>
           </View>
 
-          <Text size="lg" weight="bold" className="mt-4">
+          <Text size="md" weight="bold" className="mt-4">
             Deck Page
           </Text>
 
-          <Divider thick className="!border-background-200" />
+          <Divider thick />
 
           <View className="flex flex-row flex-wrap gap-4 max-w-full">
             <Select

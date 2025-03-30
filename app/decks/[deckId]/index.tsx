@@ -85,13 +85,13 @@ export default function DeckPage() {
 
         {!!deck.description && (
           <>
-            <Divider thick className="!border-background-200" />
+            <Divider thick />
 
             <DeckDescription deck={deck} />
           </>
         )}
 
-        <Divider thick className="!border-background-200" />
+        <Divider thick />
 
         <View className="flex flex-row flex-wrap gap-12">
           <Box
@@ -119,9 +119,7 @@ export default function DeckPage() {
           <DeckChangeLog className="flex-1 min-w-[250px]" deck={deck} />
         </View>
 
-        {!deck.isCollection && (
-          <Divider thick className="!border-background-200" />
-        )}
+        {!deck.isCollection && <Divider thick />}
 
         {!deck.isKit && !deck.isCollection && <DeckExampleHand deck={deck} />}
 

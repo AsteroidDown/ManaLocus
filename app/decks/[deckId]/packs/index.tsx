@@ -206,7 +206,7 @@ export default function PackBuilderPage() {
           />
         </View>
 
-        <Divider thick className="!border-background-200" />
+        <Divider thick />
 
         <View className="block w-full mt-2 lg:columns-3 md:columns-2 columns-1 gap-8">
           {packs?.map((pack, index) => (

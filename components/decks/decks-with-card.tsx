@@ -31,7 +31,7 @@ export default function DecksWithCard({ card }: DecksWithCardProps) {
         Decks Featuring {card.name}
       </Text>
 
-      <Divider thick className="!border-background-200" />
+      <Divider thick />
 
       <View className="flex flex-row flex-wrap gap-4">
         {decks?.map((deck, index) => (

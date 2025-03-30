@@ -141,7 +141,7 @@ export default function DeckChangeLog({ deck, className }: DeckChangeLogProps) {
                       </View>
                     </Pressable>
 
-                    <Divider thick className="!border-background-200" />
+                    <Divider thick />
 
                     <View
                       className={`${
@@ -167,7 +167,7 @@ export default function DeckChangeLog({ deck, className }: DeckChangeLogProps) {
                             </Text>
                           </View>
 
-                          <Divider thick className="!border-background-200" />
+                          <Divider thick />
                         </View>
                       ))}
                     </View>
@@ -182,7 +182,7 @@ export default function DeckChangeLog({ deck, className }: DeckChangeLogProps) {
           ),
         }))}
       />
-      <Divider thick className="!border-background-200" />
+      <Divider thick />
     </View>
   );
 }

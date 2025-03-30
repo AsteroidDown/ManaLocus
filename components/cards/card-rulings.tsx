@@ -52,7 +52,7 @@ export default function CardRulings({ card }: CardRulingsProps) {
         />
       </Pressable>
 
-      <Divider thick className="!border-background-200" />
+      <Divider thick />
 
       <View
         className={`${

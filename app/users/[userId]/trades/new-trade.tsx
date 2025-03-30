@@ -442,7 +442,7 @@ export default function NewTradePage() {
             </View>
 
             <View className="flex gap-2">
-              <Divider thick className="!border-background-200" />
+              <Divider thick />
 
               <View className="flex flex-row flex-wrap gap-2 justify-between items-center">
                 <Text size="lg" weight="semi">
@@ -538,7 +538,7 @@ export default function NewTradePage() {
             </View>
 
             <View className="flex gap-2">
-              <Divider thick className="!border-background-200" />
+              <Divider thick />
 
               <View className="flex flex-row flex-wrap gap-2 justify-between items-center">
                 <Text size="lg" weight="semi">
@@ -612,9 +612,7 @@ export default function NewTradePage() {
             </Text>
 
             {(tradingUserCards?.length > 0 ||
-              tradedToUserCards?.length > 0) && (
-              <Divider thick className="!border-background-200" />
-            )}
+              tradedToUserCards?.length > 0) && <Divider thick />}
 
             <View className="flex flex-row justify-end items-center gap-4">
               {total !== 0 && (

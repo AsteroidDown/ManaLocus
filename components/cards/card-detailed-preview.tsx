@@ -92,7 +92,7 @@ export default function CardDetailedPreview({
           </View>
         )}
 
-        <Divider thick className="!border-background-200" />
+        <Divider thick />
 
         <View className="px-1 mb-0">
           <CardLegalities card={card} />

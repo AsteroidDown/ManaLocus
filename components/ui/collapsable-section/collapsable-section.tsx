@@ -66,7 +66,7 @@ export default function CollapsableSection({
           collapsed ? "overflow-hidden" : ""
         } transition-all duration-300`}
       >
-        <Divider thick className="!border-background-200" />
+        <Divider thick />
 
         <View className={`${className} flex gap-2 px-4 py-6`}>{children}</View>
       </View>
