@@ -7,6 +7,7 @@ import Input from "@/components/ui/input/input";
 import Select from "@/components/ui/input/select";
 import Footer from "@/components/ui/navigation/footer";
 import Text from "@/components/ui/text/text";
+import { EmailType } from "@/constants/emails";
 import { EmailMask } from "@/constants/masks/text-masks";
 import { SortType, SortTypes } from "@/constants/sorting";
 import {
@@ -18,6 +19,7 @@ import ToastContext from "@/contexts/ui/toast.context";
 import UserPageContext from "@/contexts/user/user-page.context";
 import UserPreferencesContext from "@/contexts/user/user-preferences.context";
 import UserContext from "@/contexts/user/user.context";
+import { encode } from "@/functions/encoding";
 import { updateLocalStorageUser } from "@/functions/local-storage/user-local-storage";
 import {
   getLocalStorageUserPreferences,
@@ -25,6 +27,7 @@ import {
   setLocalStorageUserPreferences,
 } from "@/functions/local-storage/user-preferences-local-storage";
 import { titleCase } from "@/functions/text-manipulation";
+import EmailService from "@/hooks/services/email.service";
 import UserService from "@/hooks/services/user.service";
 import {
   DeckCardGalleryGroupTypes,
@@ -36,7 +39,7 @@ import {
   DeckSortTypes,
   DeckViewType,
 } from "@/models/deck/dtos/deck-filters.dto";
-import { faBorderAll, faList } from "@fortawesome/free-solid-svg-icons";
+import { faBorderAll, faEnvelope, faList, faRotate } from "@fortawesome/free-solid-svg-icons";
 import { router } from "expo-router";
 import React, { useContext, useEffect, useState } from "react";
 import { Pressable, SafeAreaView, View } from "react-native";
@@ -104,6 +107,7 @@ export default function UserSettingsPage() {
   const [passwordErrors, setPasswordErrors] = useState({} as PasswordErrors);
 
   const [loading, setLoading] = useState(false);
+  const [verifying, setVerifying] = useState(false);
 
   if (!user) return null;
 
@@ -236,6 +240,23 @@ export default function UserSettingsPage() {
     setDeckCardColumnGroupMulticolored(group);
   }
 
+  function verify() {
+    if (!user) return;
+    setVerifying(true);
+
+    EmailService.send<EmailType.VERIFY>(EmailType.VERIFY, user.email, "Verify Your Account", {
+      username: user.name,
+      verifyUrl: `${process.env.BASE_URL}/${encode(user.name, process.env.VERIFICATION_SECRET)}`,
+    }).then(() => {
+      setVerifying(false);
+      addToast({
+        action: "success",
+        title: "Verification Email Sent!",
+        subtitle: "Check your email for a verification link",
+      })
+    });
+  }
+
   function updateUsername() {
     if (!user || !username) return;
 
@@ -260,7 +281,7 @@ export default function UserSettingsPage() {
       addToast({
         action: "success",
         title: "Username Updated!",
-        subtitle: `Hello ${username}!`,
+        subtitle: `Hello, ${username}!`,
       });
     });
   }
@@ -522,6 +543,22 @@ export default function UserSettingsPage() {
           expanded={detailsOpen}
           setExpanded={setDetailsOpen}
         >
+          <Text size="md" weight="bold">
+            Verification
+          </Text>
+
+          <Divider thick />
+
+          <Button
+            size="sm"
+            type="outlined"
+            disabled={verifying}
+            text="Resend Verification Email"
+            className="mb-4 max-w-fit"
+            icon={verifying ? faRotate : faEnvelope}
+            onClick={verify}
+          />
+
           <View className="flex flex-row justify-between">
             <Text size="md" weight="bold" className="self-end">
               Username
@@ -574,8 +611,8 @@ export default function UserSettingsPage() {
               email === user.email
                 ? "Email can't be updated to your current email!"
                 : emailError
-                ? "Email must be valid"
-                : ""
+                  ? "Email must be valid"
+                  : ""
             }
           />
 
