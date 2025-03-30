@@ -1,6 +1,5 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  // NOTE: Update this to include the paths to all of your component files.
   content: ["./app/**/*.{js,jsx,ts,tsx}", "./components/**/*.{js,jsx,ts,tsx}"],
   presets: [require("nativewind/preset")],
   theme: {
@@ -42,13 +41,6 @@ module.exports = {
         "primary-400": "rgba(var(--primary-400) / <alpha-value>)",
         "primary-500": "rgba(var(--primary-500) / <alpha-value>)",
         "primary-600": "rgba(var(--primary-600) / <alpha-value>)",
-
-        "secondary-100": "#9c27b0",
-        "secondary-200": "#a945b9",
-        "secondary-300": "#b55ec2",
-        "secondary-400": "#c176cb",
-        "secondary-500": "#cc8dd4",
-        "secondary-600": "#d7a4dd",
 
         "dark-100": "#121212",
         "dark-200": "#282828",
@@ -94,5 +86,4 @@ module.exports = {
       },
     },
   },
-  plugins: [require("@savvywombat/tailwindcss-grid-areas")],
 };
