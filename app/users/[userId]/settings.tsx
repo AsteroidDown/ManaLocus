@@ -3,6 +3,7 @@ import Button from "@/components/ui/button/button";
 import Checkbox from "@/components/ui/checkbox/checkbox";
 import CollapsableSection from "@/components/ui/collapsable-section/collapsable-section";
 import Divider from "@/components/ui/divider/divider";
+import Input from "@/components/ui/input/input";
 import Select from "@/components/ui/input/select";
 import Footer from "@/components/ui/navigation/footer";
 import Text from "@/components/ui/text/text";
@@ -17,6 +18,7 @@ import ToastContext from "@/contexts/ui/toast.context";
 import UserPageContext from "@/contexts/user/user-page.context";
 import UserPreferencesContext from "@/contexts/user/user-preferences.context";
 import UserContext from "@/contexts/user/user.context";
+import { updateLocalStorageUser } from "@/functions/local-storage/user-local-storage";
 import {
   getLocalStorageUserPreferences,
   removeLocalStorageUserPreferences,
@@ -62,8 +64,7 @@ export default function UserSettingsPage() {
   );
 
   const [preferencesOpen, setPreferencesOpen] = useState(false);
-  const [emailOpen, setEmailOpen] = useState(false);
-  const [passwordOpen, setPasswordOpen] = useState(false);
+  const [detailsOpen, setDetailsOpen] = useState(false);
 
   const [decksSort, setDecksSort] = useState(
     preferences?.decksSortType ?? (DeckSortTypes.CREATED as DeckSortType)
@@ -92,6 +93,8 @@ export default function UserSettingsPage() {
   const [deckCardColumnGroupMulticolored, setDeckCardColumnGroupMulticolored] =
     useState(preferences?.deckCardColumnGroupMulticolored ?? false);
 
+  const [username, setUsername] = useState(user?.name ?? "");
+
   const [email, setEmail] = useState("");
   const [emailError, setEmailError] = useState(false);
 
@@ -100,9 +103,16 @@ export default function UserSettingsPage() {
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
   const [passwordErrors, setPasswordErrors] = useState({} as PasswordErrors);
 
+  const [loading, setLoading] = useState(false);
+
   if (!user) return null;
 
   useEffect(() => {
+    if (!preferences) {
+      setPreferences(getLocalStorageUserPreferences() || {});
+      return;
+    }
+
     if (!colorKey || colorKey === preferences?.color) return;
 
     Object.values(PreferenceColorHues).forEach((hue) => {
@@ -113,11 +123,12 @@ export default function UserSettingsPage() {
     });
 
     setLocalStorageUserPreferences({ color: colorKey });
+    setPreferences(getLocalStorageUserPreferences() || {});
 
     addToast({
       title: `Color set to ${titleCase(colorKey)}!`,
     });
-  }, [colorKey]);
+  }, [colorKey, preferences]);
 
   useEffect(() => {
     setEmail(user.email);
@@ -221,6 +232,94 @@ export default function UserSettingsPage() {
     setLocalStorageUserPreferences({ deckCardColumnGroupMulticolored: group });
     setPreferences(getLocalStorageUserPreferences() || {});
     setDeckCardColumnGroupMulticolored(group);
+  }
+
+  function updateUsername() {
+    if (!user || !username) return;
+
+    setLoading(true);
+
+    UserService.update(user.id, { name: username }).then((response) => {
+      setLoading(false);
+
+      if (!response) {
+        addToast({
+          duration: 5000,
+          action: "danger",
+          title: "Error Updating Username!",
+          subtitle: "Name already in use",
+        });
+        return;
+      }
+
+      setEmailError(false);
+      setUser({ ...user, name: username });
+      updateLocalStorageUser({ ...user, name: username });
+      addToast({
+        action: "success",
+        title: "Username Updated!",
+        subtitle: `Hello ${username}!`,
+      });
+    });
+  }
+
+  function updateEmail() {
+    if (!user || !email || emailError) return;
+
+    setLoading(true);
+
+    UserService.update(user.id, { email }).then((response) => {
+      setLoading(false);
+
+      if (!response) {
+        addToast({
+          duration: 5000,
+          action: "danger",
+          title: "Error Updating Email!",
+          subtitle: "Email already in use",
+        });
+        return;
+      }
+
+      setEmailError(false);
+      setUser({ ...user, email });
+      updateLocalStorageUser({ ...user, email });
+      addToast({
+        action: "success",
+        title: "Email Updated!",
+        subtitle: "Your email has been updated",
+      });
+    });
+  }
+
+  function updatePassword() {
+    if (!user || !newPassword || Object.values(passwordErrors)?.length) return;
+
+    setLoading(true);
+
+    UserService.update(user.id, { password: newPassword }).then((response) => {
+      setLoading(false);
+
+      if (!response) {
+        addToast({
+          duration: 5000,
+          action: "danger",
+          title: "Error Updating Password!",
+        });
+        return;
+      }
+
+      setPasswordErrors({});
+      setCurrentPassword("");
+      setNewPassword("");
+      setConfirmNewPassword("");
+      updateLocalStorageUser(user, newPassword);
+      addToast({
+        action: "success",
+        title: "Password Updated!",
+        subtitle: "Your password has been updated",
+      });
+    });
   }
 
   function logout() {
@@ -416,27 +515,55 @@ export default function UserSettingsPage() {
           </View>
         </CollapsableSection>
 
-        {/* <CollapsableSection
-          title="Email"
-          expanded={emailOpen}
-          setExpanded={setEmailOpen}
+        <CollapsableSection
+          title="Account Details"
+          expanded={detailsOpen}
+          setExpanded={setDetailsOpen}
         >
-          <View className="flex flex-row -mb-9 justify-end">
+          <View className="flex flex-row justify-between">
+            <Text size="md" weight="bold" className="self-end">
+              Username
+            </Text>
+
             <Button
+              size="sm"
+              type="clear"
               text="Update"
+              className="-mb-1"
+              disabled={loading || user.name === username}
+              onClick={updateUsername}
+            />
+          </View>
+
+          <Divider thick />
+
+          <Input value={username} onChange={setUsername} />
+
+          <View className="flex flex-row justify-between mt-4">
+            <Text size="md" weight="bold" className="self-end">
+              Email
+            </Text>
+
+            <Button
+              size="sm"
+              type="clear"
+              text="Update"
+              className="-mb-1"
               disabled={
+                loading ||
                 user.email === email ||
                 !email.match(EmailMask) ||
                 !email.includes("@") ||
                 !email.includes(".") ||
                 emailError
               }
-              onClick={() => {}}
+              onClick={updateEmail}
             />
           </View>
 
+          <Divider thick />
+
           <Input
-            label="Update Your Email"
             placeholder="you@example.com"
             value={email}
             error={emailError}
@@ -449,24 +576,28 @@ export default function UserSettingsPage() {
                 : ""
             }
           />
-        </CollapsableSection>
 
-        <CollapsableSection
-          title="Password"
-          expanded={passwordOpen}
-          setExpanded={setPasswordOpen}
-        >
-          <View className="flex flex-row -mb-9 justify-end">
+          <View className="flex flex-row justify-between mt-4">
+            <Text size="md" weight="bold" className="self-end">
+              Password
+            </Text>
+
             <Button
+              size="sm"
+              type="clear"
               text="Update"
+              className="-mb-1"
               disabled={
+                loading ||
                 Object.keys(passwordErrors).length > 0 ||
                 newPassword.length < 8 ||
                 newPassword !== confirmNewPassword
               }
-              onClick={() => {}}
+              onClick={updatePassword}
             />
           </View>
+
+          <Divider thick />
 
           <Input
             secured
@@ -498,7 +629,7 @@ export default function UserSettingsPage() {
             }
             errorMessage="Passwords must match!"
           />
-        </CollapsableSection> */}
+        </CollapsableSection>
 
         {user.id === userPageUser?.id && (
           <View className="flex flex-row justify-end">

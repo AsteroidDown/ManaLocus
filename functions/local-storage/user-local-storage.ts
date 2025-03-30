@@ -30,6 +30,19 @@ export function setLocalStorageUser(user: User, password: string) {
   );
 }
 
+export function updateLocalStorageUser(user: User, password?: string) {
+  const savedUser = getLocalStorageUser();
+  if (!savedUser) return;
+
+  localStorage.setItem(
+    "user-details",
+    JSON.stringify({
+      ...user,
+      password: password ? encode(password, user.name) : savedUser.password,
+    })
+  );
+}
+
 export function removeLocalStorageUser(): void {
   localStorage.removeItem("user-details");
 }

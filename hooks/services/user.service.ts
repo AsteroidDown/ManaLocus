@@ -2,6 +2,7 @@ import { setLocalStorageJwt } from "@/functions/local-storage/auth-token-local-s
 import { setLocalStorageUser } from "@/functions/local-storage/user-local-storage";
 import { mapDatabaseUser } from "@/functions/mapping/user-mapping";
 import { UserFiltersDTO } from "@/models/user/dtos/user-filters.dto";
+import { UpdateUserDTO } from "@/models/user/dtos/user-update.dto";
 import { User } from "@/models/user/user";
 import API from "../api-methods/api-methods";
 import {
@@ -42,6 +43,16 @@ async function getCurrentUser(): Promise<User | null> {
       console.error(`Error retrieving current user: ${error}`);
       return null;
     });
+}
+
+async function update(userId: string, data: UpdateUserDTO) {
+  return await API.patch(`users/${userId}/`, { ...data }, true).catch(
+    (error) => {
+      console.error(
+        `Error updating user with id: (${userId}).\nError: ${error}`
+      );
+    }
+  );
 }
 
 async function register(
@@ -107,6 +118,7 @@ const UserService = {
   getMany,
   get,
   getCurrentUser,
+  update,
   register,
   login,
   refresh,
