@@ -182,6 +182,7 @@ export default function Login() {
       <View className="flex-1 flex items-center justify-center w-full min-h-[100dvh] -mt-[50px]">
         <View className="flex flex-row mb-4 w-96">
           <Button
+            size="sm"
             squareRight
             text="Login"
             action="primary"
@@ -191,6 +192,7 @@ export default function Login() {
           />
 
           <Button
+            size="sm"
             squareLeft
             text="Register"
             action="primary"
@@ -229,6 +231,7 @@ export default function Login() {
             />
 
             <Button
+              size="sm"
               text="Login"
               action="primary"
               className="flex-1 mt-2"
@@ -297,6 +300,7 @@ export default function Login() {
             />
 
             <Button
+              size="sm"
               text="Register"
               action="primary"
               className="flex-1 mt-2"
