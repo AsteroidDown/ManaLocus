@@ -12,7 +12,7 @@ import {
   faList,
   faSearch,
 } from "@fortawesome/free-solid-svg-icons";
-import { useLocalSearchParams } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
 import { SafeAreaView, View } from "react-native";
 
@@ -29,11 +29,14 @@ export default function CardSearchPage() {
   useEffect(() => findCards(), [query]);
 
   function findCards() {
-    ScryfallService.findCards(search).then((response) => {
-      setTotal(response.total);
-      setCards(response.cards);
-      setNextPage(response.nextPage);
-    });
+    if (query !== search) router.push(`cards/search?query=${search}`);
+    else {
+      ScryfallService.findCards(search).then((response) => {
+        setTotal(response.total);
+        setCards(response.cards);
+        setNextPage(response.nextPage);
+      });
+    }
   }
 
   function loadMore() {
