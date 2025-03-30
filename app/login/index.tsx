@@ -77,7 +77,7 @@ export default function Login() {
         addToast({
           action: "success",
           title: "Logged In!",
-          subtitle: `Welcome back, ${username}!`,
+          subtitle: `Welcome back, ${user.name}!`,
         });
       } else setUserError(true);
     });
