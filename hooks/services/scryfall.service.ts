@@ -30,12 +30,32 @@ async function autocomplete(query: string): Promise<string[]> {
     : [];
 }
 
-async function findCards(query: string): Promise<Card[]> {
+async function findCards(
+  query: string
+): Promise<{ total: number; cards: Card[]; nextPage?: string }> {
   const response: ScryfallCardList = await ScryfallAPI.get(`cards/search`, {
     q: query + " game:paper",
   }).catch((error) => console.error(error));
 
-  return response ? response.data.map((card) => ScryfallToCard(card)) : [];
+  return {
+    total: response?.total_cards ?? 0,
+    nextPage: response?.next_page?.split("search?")[1],
+    cards: response?.data?.map((card) => ScryfallToCard(card)) ?? [],
+  };
+}
+
+async function findCardsByPage(
+  href: string
+): Promise<{ total: number; cards: Card[]; nextPage?: string }> {
+  const response: ScryfallCardList = await ScryfallAPI.get(
+    `cards/search?${href}`
+  ).catch((error) => console.error(error));
+
+  return {
+    total: response.total_cards,
+    nextPage: response.next_page?.split("search?")[1],
+    cards: response.data?.map((card) => ScryfallToCard(card)) ?? [],
+  };
 }
 
 async function getCard(name: string, exact = false): Promise<Card> {
@@ -66,9 +86,11 @@ async function getCardById(cardId: string): Promise<Card> {
 }
 
 async function getCardPrints(name: string): Promise<Card[]> {
-  return (await findCards(`name:/^${name}$/ unique:prints game:paper`)).sort(
-    (a, b) =>
-      new Date(b.releasedAt).getTime() - new Date(a.releasedAt).getTime()
+  return (
+    (await findCards(`name:/^${name}$/ unique:prints game:paper`)).cards?.sort(
+      (a, b) =>
+        new Date(b.releasedAt).getTime() - new Date(a.releasedAt).getTime()
+    ) ?? []
   );
 }
 
@@ -173,6 +195,7 @@ async function getAllCards() {
 const ScryfallService = {
   autocomplete,
   findCards,
+  findCardsByPage,
   getCard,
   getCardById,
   getCardByNumber,

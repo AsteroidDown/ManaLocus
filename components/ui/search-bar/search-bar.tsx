@@ -2,13 +2,13 @@ import Text from "@/components/ui/text/text";
 import ScryfallService from "@/hooks/services/scryfall.service";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useEffect } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { Pressable, TextInput, View } from "react-native";
 import Box from "../box/box";
 
 export interface SearchBarProps {
   search: string;
-  searchChange: React.Dispatch<React.SetStateAction<string>>;
+  searchChange: Dispatch<SetStateAction<string>>;
   searchAction?: (search?: string) => void;
   placeholder?: string;
   hideAutocomplete?: boolean;
@@ -23,11 +23,11 @@ export default function SearchBar({
   hideAutocomplete,
   noSearchResults,
 }: SearchBarProps) {
-  const [focused, setFocused] = React.useState(false);
-  const [hovered, setHovered] = React.useState(false);
-  const [searchHovered, setSearchHovered] = React.useState(false);
+  const [focused, setFocused] = useState(false);
+  const [hovered, setHovered] = useState(false);
+  const [searchHovered, setSearchHovered] = useState(false);
 
-  const [autoComplete, setAutoComplete] = React.useState([] as string[]);
+  const [autoComplete, setAutoComplete] = useState([] as string[]);
 
   const onFocus = () => setFocused(true);
   const onBlur = () => setFocused(false);

@@ -1,10 +1,10 @@
-import CardSearch from "@/components/cards/card-search";
 import Box from "@/components/ui/box/box";
 import BoxHeader from "@/components/ui/box/box-header";
 import Button from "@/components/ui/button/button";
 import Dropdown from "@/components/ui/dropdown/dropdown";
 import Footer from "@/components/ui/navigation/footer";
 import Pagination from "@/components/ui/pagination/pagination";
+import SearchBar from "@/components/ui/search-bar/search-bar";
 import Table, { TableColumn } from "@/components/ui/table/table";
 import Text from "@/components/ui/text/text";
 import { MTGSetType, MTGSetTypes } from "@/constants/mtg/mtg-set-types";
@@ -12,7 +12,7 @@ import LoadingContext from "@/contexts/ui/loading.context";
 import { titleCase } from "@/functions/text-manipulation";
 import { PaginationMeta } from "@/hooks/pagination";
 import ScryfallService from "@/hooks/services/scryfall.service";
-import { faCheck, faFilter } from "@fortawesome/free-solid-svg-icons";
+import { faCheck, faFilter, faSearch } from "@fortawesome/free-solid-svg-icons";
 import { router } from "expo-router";
 import React, {
   Dispatch,
@@ -26,6 +26,8 @@ import { Set } from "../../models/card/set";
 
 export default function CardsPage() {
   const { setLoading } = useContext(LoadingContext);
+
+  const [search, setSearch] = useState("");
 
   const [allCardsLoading, setAllCardsLoading] = useState(false);
 
@@ -82,6 +84,7 @@ export default function CardsPage() {
     <SafeAreaView>
       <View className="flex flex-1 gap-4 lg:px-16 px-4 py-4 min-h-[100dvh] bg-background-100">
         <BoxHeader
+          startIcon={faSearch}
           title="Find Cards"
           subtitle="Search for cards or view full sets"
           className="!pb-0"
@@ -94,7 +97,11 @@ export default function CardsPage() {
           // }
         />
 
-        <CardSearch hideCardPreview linkToCardPage />
+        <SearchBar
+          search={search}
+          searchChange={setSearch}
+          searchAction={() => router.push(`cards/search?query=${search}`)}
+        />
 
         <View className="flex z-[-1]">
           <Table

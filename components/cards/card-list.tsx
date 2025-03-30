@@ -4,7 +4,7 @@ import { PaginationMeta } from "@/hooks/pagination";
 import { Card } from "@/models/card/card";
 import { DeckViewType } from "@/models/deck/dtos/deck-filters.dto";
 import { router, useLocalSearchParams } from "expo-router";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { View } from "react-native";
 import Pagination from "../ui/pagination/pagination";
 import Table from "../ui/table/table";
@@ -20,18 +20,18 @@ export interface CardListProps {
 export default function CardList({ cards, viewType }: CardListProps) {
   const { setId } = useLocalSearchParams();
 
-  const [page, setPage] = React.useState(1);
-  const [items, setItems] = React.useState(50);
-  const [meta, setMeta] = React.useState({
+  const [page, setPage] = useState(1);
+  const [items, setItems] = useState(50);
+  const [meta, setMeta] = useState({
     page,
     items,
     totalItems: cards.length,
     totalPages: Math.ceil(cards.length / items),
   } as PaginationMeta | null);
 
-  const [loadIndex, setLoadIndex] = React.useState(0);
+  const [loadIndex, setLoadIndex] = useState(0);
 
-  const [viewedCards, setViewedCards] = React.useState([] as Card[]);
+  const [viewedCards, setViewedCards] = useState([] as Card[]);
 
   useEffect(() => {
     if (!cards?.length) return;
@@ -55,7 +55,9 @@ export default function CardList({ cards, viewType }: CardListProps) {
               key={card.scryfallId + index}
               shouldLoad={loadIndex >= index}
               onClick={() =>
-                router.push(`cards/${setId}/${card.collectorNumber}`)
+                router.push(
+                  `cards/${setId ?? card.set}/${card.collectorNumber}`
+                )
               }
               onLoad={() => {
                 if (index < loadIndex) return;
@@ -69,7 +71,7 @@ export default function CardList({ cards, viewType }: CardListProps) {
           <Table
             data={viewedCards}
             rowClick={(card) =>
-              router.push(`cards/${setId}/${card.collectorNumber}`)
+              router.push(`cards/${setId ?? card.set}/${card.collectorNumber}`)
             }
             columns={[
               {

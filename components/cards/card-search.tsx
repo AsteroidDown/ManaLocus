@@ -24,12 +24,15 @@ export interface CardSearchProps {
   hideCardPreview?: boolean;
   linkToCardPage?: boolean;
   className?: string;
+
+  searchAction?: (search?: string) => void;
 }
 
 export default function CardSearch({
   hideCardPreview,
   linkToCardPage,
   className,
+  searchAction,
 }: CardSearchProps) {
   const { addToast } = useContext(ToastContext);
   const { board } = useContext(BoardContext);
@@ -55,7 +58,9 @@ export default function CardSearch({
   );
 
   function findCards(query?: string) {
-    ScryfallService.findCards(query ?? search).then((cards) => {
+    ScryfallService.findCards(query ?? search).then((response) => {
+      const cards = response.cards;
+
       // If a no search results message is currently rendered, clear the disappear message timeout
       if (noSearchResultsTimer) {
         clearTimeout(noSearchResultsTimer);
@@ -110,9 +115,11 @@ export default function CardSearch({
       >
         <SearchBar
           search={search}
-          searchAction={findCards}
           searchChange={onSearchChange}
           noSearchResults={noSearchResults}
+          searchAction={(query) =>
+            searchAction ? searchAction(query) : findCards(query)
+          }
         />
 
         <Box

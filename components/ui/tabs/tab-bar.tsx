@@ -57,7 +57,6 @@ export default function TabBar({
 
   function setTabDetails(index: number, width: number, offset: number) {
     if (index === tabs.length - 1) {
-      console.log(details);
       setDetails({
         ...details,
         [`${index}`]: { width, offset },
