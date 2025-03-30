@@ -122,12 +122,14 @@ export default function UserSettingsPage() {
       );
     });
 
+    if (preferences.color) {
+      addToast({
+        title: `Color set to ${titleCase(colorKey)}!`,
+      });
+    }
+
     setLocalStorageUserPreferences({ color: colorKey });
     setPreferences(getLocalStorageUserPreferences() || {});
-
-    addToast({
-      title: `Color set to ${titleCase(colorKey)}!`,
-    });
   }, [colorKey, preferences]);
 
   useEffect(() => {
