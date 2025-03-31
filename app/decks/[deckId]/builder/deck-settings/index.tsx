@@ -24,7 +24,7 @@ import { Card } from "@/models/card/card";
 import { DeckDTO } from "@/models/deck/dtos/deck.dto";
 import { faSave } from "@fortawesome/free-solid-svg-icons";
 import { router } from "expo-router";
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Image, SafeAreaView, useWindowDimensions, View } from "react-native";
 
 export default function DeckSettingsPage() {
@@ -41,8 +41,6 @@ export default function DeckSettingsPage() {
   } = useContext(DeckContext);
 
   const width = useWindowDimensions().width;
-
-  const kitContainerRef = useRef<View>(null);
 
   const [saving, setSaving] = useState(false);
 
