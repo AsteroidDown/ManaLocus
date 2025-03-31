@@ -28,20 +28,16 @@ export default function VerifyPage() {
     const decoded = decode(token, process.env.VERIFICATION_SECRET);
     if (!decoded || decoded !== user.name) return;
 
-    setTimeout(
-      () =>
-        UserService.verify().then(() => {
-          setVerifying(false);
+    UserService.verify().then(() => {
+      setVerifying(false);
 
-          UserService.getCurrentUser().then((user) => {
-            if (!user) return;
+      UserService.getCurrentUser().then((user) => {
+        if (!user) return;
 
-            setUser(user);
-            updateLocalStorageUser(user);
-          });
-        }),
-      3000
-    );
+        setUser(user);
+        updateLocalStorageUser(user);
+      });
+    });
   }, [user, token]);
 
   return (

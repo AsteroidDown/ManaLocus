@@ -34,6 +34,13 @@ async function get(userId: string): Promise<User> {
   );
 }
 
+async function getByEmail(email: string): Promise<User | null> {
+  return await API.get(`users/email/`, { email }).then((response) => {
+    if (!response?.data) return null;
+    else return mapDatabaseUser(response.data);
+  });
+}
+
 async function getCurrentUser(): Promise<User | null> {
   if (!localStorage.getItem("user-access")) return null;
 
@@ -123,6 +130,7 @@ async function logout() {
 const UserService = {
   getMany,
   get,
+  getByEmail,
   getCurrentUser,
   update,
   login,

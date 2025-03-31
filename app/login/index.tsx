@@ -1,18 +1,25 @@
 import Button from "@/components/ui/button/button";
+import Divider from "@/components/ui/divider/divider";
 import Input from "@/components/ui/input/input";
 import Footer from "@/components/ui/navigation/footer";
+import Text from "@/components/ui/text/text";
+import { EmailType } from "@/constants/emails";
 import ToastContext from "@/contexts/ui/toast.context";
 import UserContext from "@/contexts/user/user.context";
+import { encode } from "@/functions/encoding";
+import EmailService from "@/hooks/services/email.service";
 import UserService from "@/hooks/services/user.service";
+import { faArrowRight, faEnvelope } from "@fortawesome/free-solid-svg-icons";
 import { router } from "expo-router";
 import React, { useContext, useEffect, useState } from "react";
-import { SafeAreaView, View } from "react-native";
+import { Pressable, SafeAreaView, View } from "react-native";
 
 export default function Login() {
   const { setUser } = useContext(UserContext);
   const { addToast } = useContext(ToastContext);
 
   const [login, setLogin] = useState(true);
+  const [forgotPassword, setForgotPassword] = useState(false);
 
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
@@ -115,6 +122,43 @@ export default function Login() {
     });
   }
 
+  async function sendResetEmail() {
+    if (!email) return;
+    setLoading(true);
+
+    const foundUser = await UserService.getByEmail(email);
+
+    if (!foundUser) {
+      setLoading(false);
+      addToast({
+        action: "danger",
+        title: "No User Found",
+        subtitle: "No user found with that email",
+      });
+      return;
+    }
+
+    EmailService.send<EmailType.FORGOT_PASSWORD>(
+      EmailType.FORGOT_PASSWORD,
+      foundUser.email,
+      "Reset Password",
+      {
+        username: foundUser.name,
+        resetUrl: `${process.env.BASE_URL}/reset?token=${encode(
+          foundUser.email,
+          process.env.RESET_SECRET
+        )}`,
+      }
+    ).then(() => {
+      setLoading(false);
+      addToast({
+        action: "success",
+        title: "Reset Email Sent!",
+        subtitle: "Check your email for a password reset link",
+      });
+    });
+  }
+
   function validatePassword(password: string) {
     let passwordLengthCheck = false;
     let passwordUpperCheck = false;
@@ -180,34 +224,81 @@ export default function Login() {
   return (
     <SafeAreaView className="flex-1 flex w-full h-full bg-dark-100">
       <View className="flex-1 flex items-center justify-center w-full min-h-[100dvh] -mt-[50px]">
-        <View className="flex flex-row mb-4 w-96">
-          <Button
-            size="sm"
-            squareRight
-            text="Login"
-            action="primary"
-            className="flex-1"
-            type={login ? "default" : "outlined"}
-            onClick={() => setLogin(true)}
-          />
+        <View className="flex flex-row gap-4 items-start w-96 overflow-hidden">
+          <View
+            className={`flex gap-2 w-96 transition-all duration-300 ${
+              forgotPassword ? "" : "-ml-[400px]"
+            }`}
+          >
+            <Pressable
+              className="flex flex-row justify-between items-center"
+              onPress={() => setForgotPassword(false)}
+            >
+              <Text size="md" weight="semi">
+                Forgot Password
+              </Text>
 
-          <Button
-            size="sm"
-            squareLeft
-            text="Register"
-            action="primary"
-            className="flex-1"
-            type={login ? "outlined" : "default"}
-            onClick={() => setLogin(false)}
-          />
+              <Button
+                rounded
+                type="clear"
+                action="default"
+                icon={faArrowRight}
+                onClick={() => setForgotPassword(false)}
+              />
+            </Pressable>
+
+            <Divider thick />
+          </View>
+
+          <View className="flex flex-row mb-4 w-96">
+            <Button
+              size="sm"
+              squareRight
+              text="Login"
+              action="primary"
+              className="flex-1"
+              type={login ? "default" : "outlined"}
+              onClick={() => setLogin(false)}
+            />
+
+            <Button
+              size="sm"
+              squareLeft
+              text="Register"
+              action="primary"
+              className="flex-1"
+              type={login ? "outlined" : "default"}
+              onClick={() => setLogin(false)}
+            />
+          </View>
         </View>
 
         <View className="flex flex-row gap-4 items-start w-96 overflow-hidden">
           <View
-            className={`flex gap-2 w-96 transition-all duration-300 ${
-              !login ? "-ml-[400px]" : ""
+            className={`flex gap-2 w-96 mt-4 transition-all duration-300 ${
+              forgotPassword ? "" : login ? "-ml-[400px]" : "-ml-[800px]"
             }`}
           >
+            <Input
+              label="Email to send reset link"
+              placeholder="Enter your email"
+              value={email}
+              onChange={setEmail}
+              enterAction={sendResetEmail}
+            />
+
+            <Button
+              size="sm"
+              action="primary"
+              icon={faEnvelope}
+              className="flex-1 mt-2"
+              text="Send Reset Email"
+              disabled={loading}
+              onClick={sendResetEmail}
+            />
+          </View>
+
+          <View className="flex gap-2 w-96">
             <Input
               label="Username"
               placeholder="Username or Email"
@@ -215,7 +306,7 @@ export default function Login() {
               error={userError}
               disabled={!login}
               onChange={setUsername}
-              enterAction={() => loginUser()}
+              enterAction={loginUser}
             />
 
             <Input
@@ -226,8 +317,8 @@ export default function Login() {
               error={userError}
               disabled={!login}
               onChange={setPassword}
+              enterAction={loginUser}
               errorMessage="This username and password combination does not exist"
-              enterAction={() => loginUser()}
             />
 
             <Button
@@ -236,7 +327,17 @@ export default function Login() {
               action="primary"
               className="flex-1 mt-2"
               disabled={loading}
-              onClick={() => loginUser()}
+              onClick={loginUser}
+            />
+
+            <Button
+              size="xs"
+              type="clear"
+              action="primary"
+              text="Forgot Password?"
+              className="mt-2 max-w-fit ml-auto"
+              disabled={loading}
+              onClick={() => setForgotPassword(true)}
             />
           </View>
 
@@ -292,10 +393,10 @@ export default function Login() {
               secured
               label="Confirm Password"
               placeholder="D0 1t Ag4in"
-              value={confirmPassword}
               disabled={login}
-              onChange={setConfirmPassword}
               error={passwordsMatch}
+              value={confirmPassword}
+              onChange={setConfirmPassword}
               errorMessage="Passwords do not match"
             />
 
@@ -304,8 +405,8 @@ export default function Login() {
               text="Register"
               action="primary"
               className="flex-1 mt-2"
-              disabled={loading}
-              onClick={() => registerUser()}
+              disabled={loading || passwordError || passwordsMatch}
+              onClick={registerUser}
             />
           </View>
         </View>
