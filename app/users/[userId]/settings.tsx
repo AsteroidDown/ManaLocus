@@ -39,7 +39,12 @@ import {
   DeckSortTypes,
   DeckViewType,
 } from "@/models/deck/dtos/deck-filters.dto";
-import { faBorderAll, faEnvelope, faList, faRotate } from "@fortawesome/free-solid-svg-icons";
+import {
+  faBorderAll,
+  faEnvelope,
+  faList,
+  faRotate,
+} from "@fortawesome/free-solid-svg-icons";
 import { router } from "expo-router";
 import React, { useContext, useEffect, useState } from "react";
 import { Pressable, SafeAreaView, View } from "react-native";
@@ -244,16 +249,24 @@ export default function UserSettingsPage() {
     if (!user) return;
     setVerifying(true);
 
-    EmailService.send<EmailType.VERIFY>(EmailType.VERIFY, user.email, "Verify Your Account", {
-      username: user.name,
-      verifyUrl: `${process.env.BASE_URL}/${encode(user.name, process.env.VERIFICATION_SECRET)}`,
-    }).then(() => {
+    EmailService.send<EmailType.VERIFY>(
+      EmailType.VERIFY,
+      user.email,
+      "Verify Your Account",
+      {
+        username: user.name,
+        verifyUrl: `${process.env.BASE_URL}/verify?token=${encode(
+          user.name,
+          process.env.VERIFICATION_SECRET
+        )}`,
+      }
+    ).then(() => {
       setVerifying(false);
       addToast({
         action: "success",
         title: "Verification Email Sent!",
         subtitle: "Check your email for a verification link",
-      })
+      });
     });
   }
 
@@ -543,21 +556,25 @@ export default function UserSettingsPage() {
           expanded={detailsOpen}
           setExpanded={setDetailsOpen}
         >
-          <Text size="md" weight="bold">
-            Verification
-          </Text>
+          {!user.verified && (
+            <>
+              <Text size="md" weight="bold">
+                Verification
+              </Text>
 
-          <Divider thick />
+              <Divider thick />
 
-          <Button
-            size="sm"
-            type="outlined"
-            disabled={verifying}
-            text="Resend Verification Email"
-            className="mb-4 max-w-fit"
-            icon={verifying ? faRotate : faEnvelope}
-            onClick={verify}
-          />
+              <Button
+                size="sm"
+                type="outlined"
+                disabled={verifying}
+                text="Resend Verification Email"
+                className="mb-4 max-w-fit"
+                icon={verifying ? faRotate : faEnvelope}
+                onClick={verify}
+              />
+            </>
+          )}
 
           <View className="flex flex-row justify-between">
             <Text size="md" weight="bold" className="self-end">
@@ -611,8 +628,8 @@ export default function UserSettingsPage() {
               email === user.email
                 ? "Email can't be updated to your current email!"
                 : emailError
-                  ? "Email must be valid"
-                  : ""
+                ? "Email must be valid"
+                : ""
             }
           />
 

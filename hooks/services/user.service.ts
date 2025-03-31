@@ -67,6 +67,12 @@ async function register(
   }).catch((error) => console.error(`Error registering user: ${error}`));
 }
 
+async function verify() {
+  return await API.post(`users/verify/`).catch((error) =>
+    console.error(`Error verifying user: ${error}`)
+  );
+}
+
 async function login(username: string, password: string) {
   return await API.post(`users/login/`, {
     username: username,
@@ -119,8 +125,9 @@ const UserService = {
   get,
   getCurrentUser,
   update,
-  register,
   login,
+  register,
+  verify,
   refresh,
   logout,
 };
