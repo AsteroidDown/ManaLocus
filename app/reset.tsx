@@ -4,6 +4,7 @@ import Input from "@/components/ui/input/input";
 import Footer from "@/components/ui/navigation/footer";
 import Text from "@/components/ui/text/text";
 import ToastContext from "@/contexts/ui/toast.context";
+import UserContext from "@/contexts/user/user.context";
 import { decode } from "@/functions/encoding";
 import UserService from "@/hooks/services/user.service";
 import { User } from "@/models/user/user";
@@ -14,6 +15,8 @@ import { SafeAreaView, View } from "react-native";
 
 export default function ResetPage() {
   const { token } = useLocalSearchParams();
+
+  const { user: loggedInUser } = useContext(UserContext);
   const { addToast } = useContext(ToastContext);
 
   const [user, setUser] = useState(null as User | null);
@@ -30,6 +33,10 @@ export default function ResetPage() {
   const [passwordSpecial, setPasswordSpecial] = useState(false);
 
   const [passwordsMatch, setPasswordsMatch] = useState(false);
+
+  useEffect(() => {
+    if (loggedInUser) router.push(`users/${loggedInUser.id}`);
+  }, [loggedInUser]);
 
   useEffect(() => {
     if (!token || typeof token !== "string") return;

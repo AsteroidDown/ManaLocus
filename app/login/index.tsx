@@ -15,8 +15,8 @@ import React, { useContext, useEffect, useState } from "react";
 import { Pressable, SafeAreaView, View } from "react-native";
 
 export default function Login() {
-  const { setUser } = useContext(UserContext);
   const { addToast } = useContext(ToastContext);
+  const { user, setUser } = useContext(UserContext);
 
   const [login, setLogin] = useState(true);
   const [forgotPassword, setForgotPassword] = useState(false);
@@ -38,6 +38,10 @@ export default function Login() {
   const [passwordsMatch, setPasswordsMatch] = useState(false);
 
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (user) router.push(`users/${user.id}`);
+  }, [user]);
 
   useEffect(() => {
     if (userError) setUserError(false);
