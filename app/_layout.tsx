@@ -77,7 +77,9 @@ export default function RootLayout() {
               <Stack screenOptions={{ headerShown: false }}>
                 <Stack.Screen name="index" />
                 <Stack.Screen name="users" />
-                <Stack.Screen name="login/index" />
+                <Stack.Screen name="login" />
+                <Stack.Screen name="reset" />
+                <Stack.Screen name="verify" />
                 <Stack.Screen name="+not-found" />
               </Stack>
 

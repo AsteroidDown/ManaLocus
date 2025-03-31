@@ -252,7 +252,7 @@ function getButtonTextColor(
   type: ButtonType,
   disabled: boolean
 ) {
-  if (disabled) return "text-gray-600";
+  if (disabled) return "text-gray-300";
 
   return `${
     type === "default"
