@@ -154,7 +154,7 @@ export default function Login() {
       "Reset Password",
       {
         username: foundUser.name,
-        resetUrl: `${process.env.BASE_URL}/reset?token=${encode(
+        link: `${process.env.BASE_URL}/reset?token=${encode(
           foundUser.email,
           process.env.RESET_SECRET
         )}`,

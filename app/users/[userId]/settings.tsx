@@ -255,7 +255,7 @@ export default function UserSettingsPage() {
       "Verify Your Account",
       {
         username: user.name,
-        verifyUrl: `${process.env.BASE_URL}/verify?token=${encode(
+        link: `${process.env.BASE_URL}/verify?token=${encode(
           user.name,
           process.env.VERIFICATION_SECRET
         )}`,

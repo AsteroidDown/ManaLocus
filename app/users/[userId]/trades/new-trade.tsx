@@ -6,10 +6,12 @@ import Divider from "@/components/ui/divider/divider";
 import Select from "@/components/ui/input/select";
 import Footer from "@/components/ui/navigation/footer";
 import Text from "@/components/ui/text/text";
+import { EmailType } from "@/constants/emails";
 import ToastContext from "@/contexts/ui/toast.context";
 import UserContext from "@/contexts/user/user.context";
 import { currency } from "@/functions/text-manipulation";
 import DeckService from "@/hooks/services/deck.service";
+import EmailService from "@/hooks/services/email.service";
 import ScryfallService from "@/hooks/services/scryfall.service";
 import TradeService from "@/hooks/services/trade.service";
 import UserService from "@/hooks/services/user.service";
@@ -328,6 +330,27 @@ export default function NewTradePage() {
       setLoading(false);
 
       if ((response as any).message === "Trade created!") {
+        if (tradedToUser) {
+          EmailService.send<EmailType.TRADE_CREATED>(
+            EmailType.TRADE_CREATED,
+            tradedToUser.email,
+            "Trade Created",
+            {
+              username: tradedToUser.name,
+              tradedWithUsername: user.name,
+              link: `${process.env.BASE_URL}/users/${tradedToUser.id}/trades/${
+                user.id
+              }/${(response as any).tradeId}`,
+              tradeResult:
+                total > 0
+                  ? ` where they owe you ${currency(total / 100)}`
+                  : total < 0
+                  ? ` where you owe them ${currency(Math.abs(total) / 100)}`
+                  : "",
+            }
+          );
+        }
+
         addToast({
           action: "success",
           title: "Trade Created!",
