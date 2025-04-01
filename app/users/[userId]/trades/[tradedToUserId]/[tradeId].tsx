@@ -18,19 +18,24 @@ import { useContext, useEffect, useState } from "react";
 import { SafeAreaView, View } from "react-native";
 
 export default function TradePage() {
-  const { tradeId } = useLocalSearchParams();
-  const { tradedToUserId } = useLocalSearchParams();
+  const { userId, tradeId, tradedToUserId } = useLocalSearchParams();
 
   const { user } = useContext(UserContext);
   const { userPageUser } = useContext(UserPageContext);
-  if (!user || !userPageUser) return null;
-  if (user?.id !== userPageUser?.id) return null;
 
   const [tradedToUser, setTradedToUser] = useState(null as User | null);
 
   const [loading, setLoading] = useState(false);
 
   const [trade, setTrade] = useState(null as Trade | null);
+
+  useEffect(() => {
+    if (!user || !userPageUser || user?.id !== userPageUser?.id) {
+      router.push(
+        `login?redirect=${process.env.BASE_URL}/users/${userId}/trades/${tradedToUserId}/${tradeId}`
+      );
+    }
+  }, [user, userPageUser]);
 
   useEffect(() => {
     if (
