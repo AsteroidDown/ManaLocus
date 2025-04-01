@@ -1,3 +1,4 @@
+import { WelcomeEmail } from "@/constants/emails";
 import { setLocalStorageJwt } from "@/functions/local-storage/auth-token-local-storage";
 import { setLocalStorageUser } from "@/functions/local-storage/user-local-storage";
 import { mapDatabaseUser } from "@/functions/mapping/user-mapping";
@@ -65,12 +66,14 @@ async function update(userId: string, data: UpdateUserDTO) {
 async function register(
   username: string,
   password: string,
-  email: string
+  email: string,
+  props: WelcomeEmail
 ): Promise<User> {
   return await API.post(`users/register/`, {
     username: username,
     password: password,
     email: email,
+    props,
   }).catch((error) => console.error(`Error registering user: ${error}`));
 }
 

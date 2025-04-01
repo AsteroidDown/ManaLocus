@@ -108,7 +108,13 @@ export default function Login() {
     setLoading(true);
     localStorage.clear();
 
-    UserService.register(username, password, email).then(() => {
+    UserService.register(username, password, email, {
+      username,
+      verifyUrl: `${process.env.BASE_URL}/verify?token=${encode(
+        username,
+        process.env.VERIFICATION_SECRET
+      )}`,
+    }).then(() => {
       UserService.login(username, password).then((user) => {
         setLoading(false);
 
