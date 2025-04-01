@@ -10,11 +10,12 @@ import { encode } from "@/functions/encoding";
 import EmailService from "@/hooks/services/email.service";
 import UserService from "@/hooks/services/user.service";
 import { faArrowRight, faEnvelope } from "@fortawesome/free-solid-svg-icons";
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import React, { useContext, useEffect, useState } from "react";
 import { Pressable, SafeAreaView, View } from "react-native";
 
 export default function Login() {
+  const { redirect } = useLocalSearchParams();
   const { addToast } = useContext(ToastContext);
   const { user, setUser } = useContext(UserContext);
 
@@ -40,7 +41,11 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (user) router.push(`users/${user.id}`);
+    if (user) {
+      router.push(
+        redirect && typeof redirect === "string" ? redirect : `users/${user.id}`
+      );
+    }
   }, [user]);
 
   useEffect(() => {
@@ -83,7 +88,6 @@ export default function Login() {
 
       if (user) {
         setUser(user);
-        router.push("../decks");
 
         addToast({
           action: "success",
