@@ -343,9 +343,9 @@ export default function NewTradePage() {
               }/${(response as any).tradeId}`,
               tradeResult:
                 total < 0
-                  ? ` where they owe you ${currency(total / 100)}`
+                  ? ` where they owe you ${currency(Math.abs(total / 100))}`
                   : total > 0
-                  ? ` where you owe them ${currency(Math.abs(total) / 100)}`
+                  ? ` where you owe them ${currency(Math.abs(total / 100))}`
                   : "",
             }
           );
