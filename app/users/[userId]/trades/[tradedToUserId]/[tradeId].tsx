@@ -118,7 +118,7 @@ export default function TradePage() {
                 icon={faArrowLeft}
                 onClick={() =>
                   router.push(
-                    `users/${userPageUser.id}/trades${
+                    `users/${userPageUser?.id}/trades${
                       tradedToUserId ? `/${tradedToUserId}` : "anonymous"
                     }`
                   )
@@ -144,11 +144,15 @@ export default function TradePage() {
               ))}
             </View>
 
-            <Divider thick className="!border-background-200 mt-auto" />
+            {trade.tradingUserTotal > 0 && trade.tradedToUserTotal > 0 && (
+              <>
+                <Divider thick className="!border-background-200 mt-auto" />
 
-            <Text size="lg" weight="semi">
-              Your Total: {currency(trade.tradingUserTotal / 100)}
-            </Text>
+                <Text size="lg" weight="semi">
+                  Your Total: {currency(trade.tradingUserTotal / 100)}
+                </Text>
+              </>
+            )}
           </View>
 
           <View className="flex-1 flex gap-2 min-h-fit">
@@ -169,14 +173,18 @@ export default function TradePage() {
               ))}
             </View>
 
-            <Divider thick className="!border-background-200 mt-auto" />
+            {trade.tradingUserTotal > 0 && trade.tradedToUserTotal > 0 && (
+              <>
+                <Divider thick className="!border-background-200 mt-auto" />
 
-            <Text size="lg" weight="semi">
-              {trade.tradedToUser
-                ? (trade.tradedToUser as any)?.username + "'s"
-                : "Their"}{" "}
-              Total: {currency(trade.tradedToUserTotal / 100)}
-            </Text>
+                <Text size="lg" weight="semi">
+                  {trade.tradedToUser
+                    ? (trade.tradedToUser as any)?.username + "'s"
+                    : "Their"}{" "}
+                  Total: {currency(trade.tradedToUserTotal / 100)}
+                </Text>
+              </>
+            )}
           </View>
         </View>
 

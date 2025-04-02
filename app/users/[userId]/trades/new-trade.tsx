@@ -308,8 +308,8 @@ export default function NewTradePage() {
       tradingUserId: user.id,
       tradedToUserId: tradedToUser?.id,
       total: evenTrade ? 0 : total,
-      tradingUserTotal: evenTrade ? tradeUserTotal : tradingUserTotal,
-      tradedToUserTotal: evenTrade ? tradeUserTotal : tradedToUserTotal,
+      tradingUserTotal: evenTrade ? 0 : tradingUserTotal,
+      tradedToUserTotal: evenTrade ? 0 : tradedToUserTotal,
       tradingUserCollectionId: useTradingUserCollection
         ? tradingUserCollection?.id
         : "",
@@ -341,12 +341,11 @@ export default function NewTradePage() {
               link: `${process.env.BASE_URL}/users/${tradedToUser.id}/trades/${
                 user.id
               }/${(response as any).tradeId}`,
-              tradeResult:
-                total < 0
+              tradeResult: !evenTrade
+                ? total < 0
                   ? ` where they owe you ${currency(Math.abs(total / 100))}`
-                  : total > 0
-                  ? ` where you owe them ${currency(Math.abs(total / 100))}`
-                  : "",
+                  : ` where you owe them ${currency(Math.abs(total / 100))}`
+                : "",
             }
           );
         }
