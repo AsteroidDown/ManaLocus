@@ -1,5 +1,7 @@
+import { EmailType } from "@/constants/emails";
 import ToastContext from "@/contexts/ui/toast.context";
 import { currency } from "@/functions/text-manipulation";
+import EmailService from "@/hooks/services/email.service";
 import TradeService from "@/hooks/services/trade.service";
 import { User } from "@/models/user/user";
 import { faReceipt } from "@fortawesome/free-solid-svg-icons";
@@ -58,6 +60,17 @@ export default function SettleUpModal({
         setLoading(false);
         setPage(1);
 
+        EmailService.send<EmailType.SETTLED_UP>(
+          EmailType.SETTLED_UP,
+          tradedToUser.email,
+          `Settled Up with ${user.name}`,
+          {
+            username: tradedToUser.name,
+            tradedWithUsername: user.name,
+            link: `${process.env.BASE_URL}/users/${tradedToUser.id}/trades/${user.id}`,
+          }
+        );
+
         addToast({
           action: "success",
           title: "Settled Up!",
@@ -84,6 +97,17 @@ export default function SettleUpModal({
         setOpen(false);
         setLoading(false);
         setPage(1);
+
+        EmailService.send<EmailType.SETTLED_UP>(
+          EmailType.SETTLED_UP,
+          tradedToUser.email,
+          `Settled Up with ${user.name}`,
+          {
+            username: tradedToUser.name,
+            tradedWithUsername: user.name,
+            link: `${process.env.BASE_URL}/users/${tradedToUser.id}/trades/${user.id}`,
+          }
+        );
 
         addToast({
           action: "success",

@@ -342,9 +342,9 @@ export default function NewTradePage() {
                 user.id
               }/${(response as any).tradeId}`,
               tradeResult:
-                total > 0
+                total < 0
                   ? ` where they owe you ${currency(total / 100)}`
-                  : total < 0
+                  : total > 0
                   ? ` where you owe them ${currency(Math.abs(total) / 100)}`
                   : "",
             }
