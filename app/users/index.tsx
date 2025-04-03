@@ -30,7 +30,7 @@ export default function UsersPage() {
   }
 
   useEffect(() => {
-    UserService.getMany({ search }).then((response) => {
+    UserService.getMany({ search }, { page, items: 25 }).then((response) => {
       setMeta(response.meta);
       setUsers(response.data);
     });
