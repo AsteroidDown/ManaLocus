@@ -6,4 +6,6 @@ export interface User {
   memberSince: string;
 
   deckCount?: number;
+  deckFavorites?: number;
+  deckViews?: number;
 }

@@ -6,7 +6,9 @@ export function mapDatabaseUser(user: any): User {
     name: user.username,
     email: user.email,
     verified: user.verified,
-    deckCount: user.deckCount,
     memberSince: user.date_joined,
+    deckCount: user.deckCount,
+    deckFavorites: user.deckFavorites,
+    deckViews: user.deckViews,
   };
 }

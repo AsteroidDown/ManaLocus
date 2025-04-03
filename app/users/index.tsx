@@ -72,6 +72,14 @@ export default function UsersPage() {
                 row: (user) => <Text>{user.deckCount}</Text>,
               },
               {
+                title: "Favorites",
+                row: (user) => <Text>{user.deckFavorites}</Text>,
+              },
+              {
+                title: "Views",
+                row: (user) => <Text>{user.deckViews}</Text>,
+              },
+              {
                 title: "Member Since",
                 row: (user) => (
                   <Text>{moment(user.memberSince).format("MMM Do, YYYY")}</Text>
