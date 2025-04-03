@@ -114,26 +114,39 @@ export default function Login() {
 
     UserService.register(username, password, email, {
       username,
-      verifyUrl: `${process.env.BASE_URL}/verify?token=${encode(
+      link: `${process.env.BASE_URL}/verify?token=${encode(
         username,
         process.env.VERIFICATION_SECRET
       )}`,
-    }).then(() => {
-      UserService.login(username, password).then((user) => {
-        setLoading(false);
-
-        if (user) {
-          setUser(user);
-          router.push(`../users/${user.id}`);
-
+    })
+      .then((response) => {
+        if (!response) {
           addToast({
-            action: "success",
-            title: "Registered!",
-            subtitle: `Welcome to Mana Locus, ${username}!`,
+            action: "danger",
+            title: "Error Registering",
+            subtitle: `The username or email provided is already in use`,
           });
+
+          setLoading(false);
+          return;
         }
-      });
-    });
+
+        UserService.login(username, password).then((user) => {
+          setLoading(false);
+
+          if (user) {
+            setUser(user);
+            router.push(`../users/${user.id}`);
+
+            addToast({
+              action: "success",
+              title: "Registered!",
+              subtitle: `Welcome to Mana Locus, ${username}!`,
+            });
+          }
+        });
+      })
+      .catch((error) => console.error(`Error registering user: ${error}`));
   }
 
   async function sendResetEmail() {
