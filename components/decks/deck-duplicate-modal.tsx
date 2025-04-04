@@ -1,6 +1,7 @@
 import Text from "@/components/ui/text/text";
 import { BoardTypes } from "@/constants/boards";
 import ToastContext from "@/contexts/ui/toast.context";
+import UserContext from "@/contexts/user/user.context";
 import DeckService from "@/hooks/services/deck.service";
 import { Deck } from "@/models/deck/deck";
 import { faCopy, faRotate } from "@fortawesome/free-solid-svg-icons";
@@ -24,6 +25,7 @@ export default function DeckDuplicateModal({
   open,
   setOpen,
 }: DeckDuplicateModalProps) {
+  const { user } = useContext(UserContext);
   const { addToast } = useContext(ToastContext);
 
   const [name, setName] = React.useState(deck.name);
@@ -31,7 +33,7 @@ export default function DeckDuplicateModal({
   const [saving, setSaving] = React.useState(false);
 
   function copyDeck() {
-    if (!name) return;
+    if (!name || !user || !user.verified) return;
 
     setSaving(true);
 

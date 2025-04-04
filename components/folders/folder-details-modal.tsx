@@ -39,7 +39,7 @@ export default function FolderDetailsModal({
   }, [folder]);
 
   function createFolder() {
-    if (!user) return;
+    if (!user || !user.verified || !name) return;
     setSaving(true);
 
     FolderService.create(user.id, name ?? "New Folder").then((response) => {
@@ -71,7 +71,7 @@ export default function FolderDetailsModal({
   }
 
   function updateFolder() {
-    if (!user || !folder || !name) return;
+    if (!user || !user.verified || !folder || !name) return;
     setSaving(true);
 
     FolderService.update(user.id, folder.id, name).then(() => {
@@ -94,16 +94,19 @@ export default function FolderDetailsModal({
       setOpen={setOpen}
       title={folder ? `Update ${folder.name}` : "Create Folder"}
       footer={
-        <View className="flex flex-row justify-end">
-          <Button
-            size="sm"
-            type="outlined"
-            icon={faSave}
-            disabled={!name || saving}
-            text={saving ? "Saving..." : folder ? "Update" : "Create"}
-            onClick={() => (!folder ? createFolder() : updateFolder())}
-          />
-        </View>
+        user &&
+        user.verified && (
+          <View className="flex flex-row justify-end">
+            <Button
+              size="sm"
+              type="outlined"
+              icon={faSave}
+              disabled={!name || saving}
+              text={saving ? "Saving..." : folder ? "Update" : "Create"}
+              onClick={() => (!folder ? createFolder() : updateFolder())}
+            />
+          </View>
+        )
       }
     >
       <View className="flex gap-4 min-w-96 max-w-2xl max-h-[80vh]">

@@ -13,7 +13,7 @@ export default function DecksPage() {
   const { user } = useContext(UserContext);
 
   function createDeck() {
-    if (!user) return;
+    if (!user || !user.verified) return;
 
     DeckService.create({}).then((response) => {
       localStorage.removeItem("builderCardsMain");
@@ -35,7 +35,8 @@ export default function DecksPage() {
           title="Discover Decks"
           startIcon={faSearch}
           end={
-            user && (
+            user &&
+            user.verified && (
               <Button
                 size="sm"
                 text="Deck"

@@ -1,4 +1,5 @@
 import { LegalityEvaluation } from "@/constants/mtg/mtg-legality";
+import UserContext from "@/contexts/user/user.context";
 import { groupCardsByType } from "@/functions/cards/card-grouping";
 import { currency, titleCase } from "@/functions/text-manipulation";
 import { Deck } from "@/models/deck/deck";
@@ -8,7 +9,7 @@ import {
   faCopy,
   faFileArrowDown,
 } from "@fortawesome/free-solid-svg-icons";
-import React, { useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import { Image, useWindowDimensions, View } from "react-native";
 import CardImportExportModal from "../cards/card-import-export-modal";
 import Box from "../ui/box/box";
@@ -27,6 +28,8 @@ export default function DeckFooter({
   deck,
   legalityEvaluation,
 }: DeckFooterProps) {
+  const { user } = useContext(UserContext);
+
   const width = useWindowDimensions().width;
 
   const [legalityOpen, setLegalityOpen] = React.useState(false);
@@ -245,13 +248,15 @@ export default function DeckFooter({
             />
           </View>
 
-          <View className="-mx-2">
-            <DeckDuplicateModal
-              deck={deck}
-              open={copyOpen}
-              setOpen={setCopyOpen}
-            />
-          </View>
+          {user && user.verified && (
+            <View className="-mx-2">
+              <DeckDuplicateModal
+                deck={deck}
+                open={copyOpen}
+                setOpen={setCopyOpen}
+              />
+            </View>
+          )}
 
           <View className="-mx-2">
             <CardImportExportModal

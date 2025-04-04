@@ -296,13 +296,9 @@ export default function NewTradePage() {
   }
 
   function create() {
-    if (!user) return;
+    if (!user || !user.verified) return;
 
     setLoading(true);
-
-    const tradeUserTotal = evenTrade
-      ? Math.max(tradingUserTotal, tradedToUserTotal)
-      : 0;
 
     const dto: TradeDTO = {
       tradingUserId: user.id,

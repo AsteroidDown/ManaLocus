@@ -49,7 +49,7 @@ export default function UserTradesPage() {
   return (
     <SafeAreaView className="flex-1 w-full h-full bg-background-100">
       <View className="flex my-4 lg:px-16 px-4 min-h-[100dvh]">
-        {user.id === userPageUser.id && (
+        {user.id === userPageUser.id && user.verified && (
           <BoxHeader
             title="Your Trades"
             subtitle="View and manage your trades"

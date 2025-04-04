@@ -135,34 +135,38 @@ export default function TradedToUserPage() {
               />
             }
             end={
-              <View className="flex flex-row gap-2 lg:mt-0 mt-4 lg:w-fit w-full">
-                <Button
-                  size="sm"
-                  type="outlined"
-                  text="Settle Up"
-                  icon={faReceipt}
-                  className="flex-1 lg:max-w-fit"
-                  disabled={!tradedToUser || tradesTotal === 0}
-                  onClick={() => setSettleUpOpen(true)}
-                />
+              user &&
+              user.verified &&
+              user.id === userPageUser.id && (
+                <View className="flex flex-row gap-2 lg:mt-0 mt-4 lg:w-fit w-full">
+                  <Button
+                    size="sm"
+                    type="outlined"
+                    text="Settle Up"
+                    icon={faReceipt}
+                    className="flex-1 lg:max-w-fit"
+                    disabled={!tradedToUser || tradesTotal === 0}
+                    onClick={() => setSettleUpOpen(true)}
+                  />
 
-                <Button
-                  size="sm"
-                  type="outlined"
-                  text="New Trade"
-                  className="flex-1 lg:max-w-fit"
-                  icon={faPlus}
-                  onClick={() =>
-                    router.push(
-                      `users/${userPageUser.id}/trades/new-trade${
-                        tradedToUserId
-                          ? `?tradedToUserId=${tradedToUser?.id}`
-                          : ""
-                      }`
-                    )
-                  }
-                />
-              </View>
+                  <Button
+                    size="sm"
+                    type="outlined"
+                    text="New Trade"
+                    className="flex-1 lg:max-w-fit"
+                    icon={faPlus}
+                    onClick={() =>
+                      router.push(
+                        `users/${userPageUser.id}/trades/new-trade${
+                          tradedToUserId
+                            ? `?tradedToUserId=${tradedToUser?.id}`
+                            : ""
+                        }`
+                      )
+                    }
+                  />
+                </View>
+              )
             }
           />
         )}

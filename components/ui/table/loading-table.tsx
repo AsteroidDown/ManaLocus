@@ -19,19 +19,19 @@ export default function LoadingTable() {
         {
           fit: true,
           row: () => (
-            <View className="rounded-md px-2 py-3 bg-background-300 w-16 animate-pulse" />
+            <View className="rounded-md px-2 py-3 bg-background-200 w-16 animate-pulse" />
           ),
         },
         {
           row: (value) => (
-            <View className="rounded-md px-2 py-0.5 bg-background-300 animate-pulse">
+            <View className="rounded-md px-2 py-0.5 bg-background-200 animate-pulse">
               <Text>{Array(value).fill(" ").join(" ")}</Text>
             </View>
           ),
         },
         {
           row: (value, index) => (
-            <View className="rounded-md px-2 py-0.5 bg-background-300 animate-pulse">
+            <View className="rounded-md px-2 py-0.5 bg-background-200 animate-pulse">
               <Text>{Array(data2[index]).fill(" ").join(" ")}</Text>
             </View>
           ),
@@ -39,14 +39,14 @@ export default function LoadingTable() {
         {
           fit: true,
           row: () => (
-            <View className="rounded-md px-2 py-3 bg-background-300 w-24 animate-pulse" />
+            <View className="rounded-md px-2 py-3 bg-background-200 w-24 animate-pulse" />
           ),
         },
         {
           fit: true,
           row: () => (
-            <View className="flex justify-center h-full pl-4 border-l border-background-300">
-              <View className="rounded-md px-2 py-3 bg-background-300 w-8 animate-pulse" />
+            <View className="flex justify-center h-full pl-4 border-l border-background-200">
+              <View className="rounded-md px-2 py-3 bg-background-200 w-8 animate-pulse" />
             </View>
           ),
         },

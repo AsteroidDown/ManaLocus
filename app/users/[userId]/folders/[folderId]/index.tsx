@@ -92,19 +92,23 @@ export default function FolderPage() {
           <DeckGallery
             noLoadScreen
             includeIds={deckIds}
-            endColumns={[
-              {
-                fit: true,
-                row: (deck) => (
-                  <FolderRemoveDeckModal
-                    folder={folder}
-                    deck={deck}
-                    deckIds={deckIds}
-                    setDeckIds={setDeckIds}
-                  />
-                ),
-              },
-            ]}
+            endColumns={
+              user && user.id === userPageUser?.id && user.verified
+                ? [
+                    {
+                      fit: true,
+                      row: (deck) => (
+                        <FolderRemoveDeckModal
+                          folder={folder}
+                          deck={deck}
+                          deckIds={deckIds}
+                          setDeckIds={setDeckIds}
+                        />
+                      ),
+                    },
+                  ]
+                : []
+            }
           />
         ) : (
           <Placeholder
@@ -153,7 +157,7 @@ export function FolderRemoveDeckModal({
   const [saving, setSaving] = useState(false);
 
   function removeDeck() {
-    if (!user) return;
+    if (!user || !user.verified) return;
 
     setSaving(true);
     FolderService.removeDeck(user.id, folder.id, deck.id).then(() => {

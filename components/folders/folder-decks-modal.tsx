@@ -53,7 +53,7 @@ export default function FolderDecksModal({
   }, [search, page]);
 
   function toggleDeckInFolder(deck: Deck) {
-    if (!user) return;
+    if (!user || !user.verified) return;
 
     if (folder.deckIds.includes(deck.id)) {
       FolderService.removeDeck(user.id, folder.id, deck.id).then(() => {

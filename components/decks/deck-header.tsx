@@ -53,7 +53,7 @@ export default function DeckHeader({ deck }: { deck: Deck }) {
   }, [deckViewed]);
 
   function addFavorite() {
-    if (!deck) return;
+    if (!deck || !user || !user.verified) return;
 
     DeckService.addFavorite(deck.id).then((response) => {
       if (response) {
@@ -67,7 +67,7 @@ export default function DeckHeader({ deck }: { deck: Deck }) {
   }
 
   function removeFavorite() {
-    if (!deck) return;
+    if (!deck || !user || !user.verified) return;
 
     DeckService.removeFavorite(deck.id).then((response) => {
       if (response) {
@@ -120,7 +120,7 @@ export default function DeckHeader({ deck }: { deck: Deck }) {
         </Text>
       </View>
 
-      {user?.id === deck.userId && (
+      {user?.id === deck.userId && user.verified && (
         <View className="absolute top-4 right-6 flex-row gap-2">
           <Link
             href={`${deck.id}/builder/main-board`}
@@ -182,7 +182,9 @@ export default function DeckHeader({ deck }: { deck: Deck }) {
             type="clear"
             icon={faHeart}
             text={deck.favorites + ""}
-            onClick={() => (deckFavorited ? removeFavorite() : addFavorite())}
+            onClick={() =>
+              user?.verified && deckFavorited ? removeFavorite() : addFavorite()
+            }
           />
         </View>
       </View>

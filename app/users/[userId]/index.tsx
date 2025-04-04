@@ -17,7 +17,7 @@ export default function Login() {
   if (!userPageUser) return null;
 
   function createDeck() {
-    if (!user) return;
+    if (!user || !user.verified) return;
 
     DeckService.create({}).then((response) => {
       localStorage.removeItem("builderCardsMain");
@@ -35,17 +35,26 @@ export default function Login() {
     <SafeAreaView className="flex-1 flex w-full h-full bg-background-100">
       <View className="lg:px-16 px-4 py-4 min-h-[100dvh] bg-background-100">
         <BoxHeader
-          title="Your Decks"
-          subtitle="View and manage your decks"
+          title={`${
+            user?.id === userPageUser?.id ? "Your" : `${userPageUser?.name}'s`
+          } Decks`}
+          subtitle={
+            user?.id === userPageUser?.id
+              ? "View and manage your decks"
+              : `See what ${userPageUser?.name} has created`
+          }
           end={
-            <Button
-              size="sm"
-              text="Deck"
-              type="outlined"
-              icon={faPlus}
-              className="self-end"
-              onClick={createDeck}
-            />
+            user &&
+            user.verified && (
+              <Button
+                size="sm"
+                text="Deck"
+                type="outlined"
+                icon={faPlus}
+                className="self-end"
+                onClick={createDeck}
+              />
+            )
           }
         />
 

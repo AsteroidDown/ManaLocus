@@ -88,7 +88,7 @@ export default function CardsPage() {
           title="Find Cards"
           subtitle="Search for cards or view full sets"
           className="!pb-0"
-          // end={<Button text={"Import All Cards"} onClick={importAllCards} />}
+          end={<Button text={"Import All Cards"} onClick={importAllCards} />}
         />
 
         <SearchBar

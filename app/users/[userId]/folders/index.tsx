@@ -27,7 +27,7 @@ export default function UserFoldersPage() {
   const { user } = useContext(UserContext);
   const { userPageUser } = useContext(UserPageContext);
 
-  if (!user || !userPageUser) return null;
+  if (!userPageUser) return null;
 
   const [page, setPage] = useState(1);
   const [meta, setMeta] = useState(null as PaginationMeta | null);
@@ -57,8 +57,14 @@ export default function UserFoldersPage() {
     <SafeAreaView className="flex-1 w-full h-full bg-background-100">
       <View className="lg:px-16 px-4 py-4 min-h-[100dvh] bg-background-100">
         <BoxHeader
-          title="Folders"
-          subtitle="View and manage your deck folders"
+          title={`${
+            user?.id === userPageUser.id ? "Your" : `${userPageUser.name}'s`
+          } Folders`}
+          subtitle={
+            user?.id === userPageUser.id
+              ? "View and manage your folder"
+              : `See how ${userPageUser.name} manages their collection`
+          }
           end={
             <Button
               size="sm"
@@ -71,7 +77,7 @@ export default function UserFoldersPage() {
           }
         />
 
-        {user.id === userPageUser.id && (
+        {user?.id === userPageUser.id && (
           <View className="flex flex-row justify-between gap-4 mb-6">
             <Input
               label="Search"
@@ -125,7 +131,7 @@ export default function UserFoldersPage() {
                     <Text>{moment(folder.updated).format("MMM Do, YYYY")}</Text>
                   ),
                 },
-                ...(user.id === userPageUser.id
+                ...(user?.id === userPageUser.id && user.verified
                   ? [
                       {
                         fit: true,

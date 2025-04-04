@@ -40,7 +40,7 @@ export function FolderOptionsMenu({
   const [saving, setSaving] = React.useState(false);
 
   function removeFolder() {
-    if (!user) return;
+    if (!user || !user.verified) return;
     setSaving(true);
 
     FolderService.remove(user.id, folder.id).then(() => {

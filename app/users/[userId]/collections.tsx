@@ -14,10 +14,10 @@ export default function UserCollectionsPage() {
   const { user } = useContext(UserContext);
   const { userPageUser } = useContext(UserPageContext);
 
-  if (!user || !userPageUser) return null;
+  if (!userPageUser) return null;
 
   function createCollection() {
-    if (!user) return;
+    if (!user || !user.verified) return;
 
     DeckService.create({
       name: "New Collection",
@@ -39,17 +39,26 @@ export default function UserCollectionsPage() {
     <SafeAreaView className="flex-1 flex w-full h-full bg-background-100">
       <View className="lg:px-16 px-4 py-4 min-h-[100dvh] bg-background-100">
         <BoxHeader
-          title="Collections"
-          subtitle="View and manage your collections"
+          title={`${
+            user?.id === userPageUser.id ? "Your" : `${userPageUser.name}'s`
+          } Collections`}
+          subtitle={
+            user?.id === userPageUser.id
+              ? "View and manage your collections"
+              : `See what ${userPageUser.name} has collected`
+          }
           end={
-            <Button
-              size="sm"
-              icon={faPlus}
-              type="outlined"
-              text="Collection"
-              className="self-end"
-              onClick={createCollection}
-            />
+            user &&
+            user.verified && (
+              <Button
+                size="sm"
+                icon={faPlus}
+                type="outlined"
+                text="Collection"
+                className="self-end"
+                onClick={createCollection}
+              />
+            )
           }
         />
 
