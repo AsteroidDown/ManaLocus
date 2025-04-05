@@ -89,8 +89,14 @@ export default function DeckExampleHand({ deck }: DeckTestHandProps) {
 
         {width > 600 && (
           <View className="flex flex-row gap-2">
-            <Button text="New Hand" type="outlined" onClick={drawHand} />
             <Button
+              size="sm"
+              text="New Hand"
+              type="outlined"
+              onClick={drawHand}
+            />
+            <Button
+              size="sm"
               text="Draw Card"
               type="outlined"
               onClick={drawCard}

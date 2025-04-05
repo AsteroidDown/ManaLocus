@@ -19,6 +19,7 @@ export type ButtonProps = ViewProps & {
   action?: ActionColor;
   size?: Size;
   type?: ButtonType;
+  dark?: boolean;
   rounded?: boolean;
   square?: boolean;
 
@@ -45,6 +46,7 @@ export default function Button({
   action = "primary",
   size = "md",
   type = "default",
+  dark = false,
   disabled = false,
   tabbable = true,
   stopPropagation = false,
@@ -65,7 +67,7 @@ export default function Button({
 
   const baseColor = getButtonBaseColor(action, type, disabled);
   const hoverColor = getButtonHoverColor(action, type, disabled);
-  const textColor = getButtonTextColor(action, type, disabled);
+  const textColor = getButtonTextColor(action, type, disabled, dark);
   const focusColor = getButtonFocusColor(action, type, disabled);
 
   const buttonHeight = getButtonHeight(size);
@@ -250,9 +252,11 @@ function getButtonFocusColor(
 function getButtonTextColor(
   action: ActionColor,
   type: ButtonType,
-  disabled: boolean
+  disabled: boolean,
+  dark: boolean
 ) {
-  if (disabled) return "text-gray-300";
+  if (disabled) return "!text-gray-300";
+  if (dark) return "!text-background-200";
 
   return `${
     type === "default"

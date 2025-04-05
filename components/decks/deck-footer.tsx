@@ -1,4 +1,6 @@
 import { LegalityEvaluation } from "@/constants/mtg/mtg-legality";
+import { PreferenceColor } from "@/constants/ui/colors";
+import UserPreferencesContext from "@/contexts/user/user-preferences.context";
 import UserContext from "@/contexts/user/user.context";
 import { groupCardsByType } from "@/functions/cards/card-grouping";
 import { currency, titleCase } from "@/functions/text-manipulation";
@@ -9,7 +11,7 @@ import {
   faCopy,
   faFileArrowDown,
 } from "@fortawesome/free-solid-svg-icons";
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Image, useWindowDimensions, View } from "react-native";
 import CardImportExportModal from "../cards/card-import-export-modal";
 import Box from "../ui/box/box";
@@ -29,25 +31,38 @@ export default function DeckFooter({
   legalityEvaluation,
 }: DeckFooterProps) {
   const { user } = useContext(UserContext);
+  const { preferences } = useContext(UserPreferencesContext);
 
   const width = useWindowDimensions().width;
 
-  const [legalityOpen, setLegalityOpen] = React.useState(false);
-  const [copyOpen, setCopyOpen] = React.useState(false);
-  const [importOpen, setImportOpen] = React.useState(false);
+  const [legalityOpen, setLegalityOpen] = useState(false);
+  const [copyOpen, setCopyOpen] = useState(false);
+  const [importOpen, setImportOpen] = useState(false);
 
-  const [mainCards, setMainCards] = React.useState(0);
-  const [sideCards, setSideCards] = React.useState(0);
-  const [totalValue, setTotalValue] = React.useState(0);
+  const [mainCards, setMainCards] = useState(0);
+  const [sideCards, setSideCards] = useState(0);
+  const [totalValue, setTotalValue] = useState(0);
 
-  const [creatureCount, setCreatureCount] = React.useState(0);
-  const [instantCount, setInstantCount] = React.useState(0);
-  const [sorceryCount, setSorceryCount] = React.useState(0);
-  const [artifactCount, setArtifactCount] = React.useState(0);
-  const [enchantmentCount, setEnchantmentCount] = React.useState(0);
-  const [planeswalkerCount, setPlaneswalkerCount] = React.useState(0);
-  const [battleCount, setBattleCount] = React.useState(0);
-  const [landCount, setLandCount] = React.useState(0);
+  const [creatureCount, setCreatureCount] = useState(0);
+  const [instantCount, setInstantCount] = useState(0);
+  const [sorceryCount, setSorceryCount] = useState(0);
+  const [artifactCount, setArtifactCount] = useState(0);
+  const [enchantmentCount, setEnchantmentCount] = useState(0);
+  const [planeswalkerCount, setPlaneswalkerCount] = useState(0);
+  const [battleCount, setBattleCount] = useState(0);
+  const [landCount, setLandCount] = useState(0);
+
+  const darkText =
+    preferences?.color &&
+    [
+      PreferenceColor.LIME,
+      PreferenceColor.YELLOW,
+      PreferenceColor.PINK,
+      PreferenceColor.TEAL,
+      PreferenceColor.GRAY,
+    ].includes(preferences?.color)
+      ? true
+      : false;
 
   useEffect(() => {
     if (!deck) return;
@@ -94,16 +109,22 @@ export default function DeckFooter({
   }, [deck]);
 
   return (
-    <View className="sticky bottom-[-1px] flex flex-row gap-4 justify-between items-center lg:px-16 px-4 py-4 max-h-14 bg-gradient-to-b from-primary-200 to-primary-100 shadow-[0_0_16px] shadow-background-100">
+    <View className="sticky bottom-[-1px] flex flex-row gap-4 justify-between items-center lg:px-16 px-4 py-4 max-h-14 bg-gradient-to-b from-primary-200 to-primary-100 shadow-[0_0_16px] shadow-background-300">
       <View className="flex flex-row lg:justify-start justify-around lg:w-fit w-full items-center gap-2">
         {!deck.isCollection && !deck.isKit && (
           <>
             <View className="flex flex-row items-center gap-2">
-              <Text weight="bold">{titleCase(deck.format)}</Text>
+              <Text
+                weight="bold"
+                className={darkText ? "!text-background-300" : ""}
+              >
+                {titleCase(deck.format)}
+              </Text>
 
               <Button
                 rounded
                 type="clear"
+                dark={darkText}
                 action="default"
                 className="-ml-3.5 -mr-2"
                 icon={legalityEvaluation.legal ? faCheckCircle : faCircleXmark}
@@ -115,7 +136,7 @@ export default function DeckFooter({
                     expanded={legalityOpen}
                     setExpanded={setLegalityOpen}
                   >
-                    <Box className="flex justify-start items-start border-2 border-primary-300 !bg-background-100 !bg-opacity-90 overflow-auto max-w-[450px]">
+                    <Box className="flex justify-start items-start border-2 border-primary-300 !bg-background-300 !bg-opacity-90 overflow-auto max-w-[450px]">
                       <DeckLegalityInfo
                         format={deck.format}
                         legalityEvaluation={legalityEvaluation}
@@ -126,20 +147,36 @@ export default function DeckFooter({
               </Button>
             </View>
 
-            <View className="h-5 border-r rounded-lg border-white" />
+            <View
+              className={`h-5 border-r rounded-lg ${
+                darkText ? "border-background-300" : "border-white"
+              }`}
+            />
           </>
         )}
 
-        <Text>
+        <Text
+          weight="medium"
+          className={darkText ? "!text-background-300" : ""}
+        >
           {mainCards} {width > 600 ? "Card Mainboard" : "Main"}
           {sideCards
             ? ` + ${sideCards} ${width > 600 ? "Card Sideboard" : "Side"}`
             : ""}
         </Text>
 
-        <View className="h-5 border-r rounded-lg border-white" />
+        <View
+          className={`h-5 border-r rounded-lg ${
+            darkText ? "border-background-300" : "border-white"
+          }`}
+        />
 
-        <Text>{currency(totalValue)}</Text>
+        <Text
+          weight="medium"
+          className={darkText ? "!text-background-300" : ""}
+        >
+          {currency(totalValue)}
+        </Text>
       </View>
 
       {width > 600 && (
@@ -148,50 +185,95 @@ export default function DeckFooter({
             <Image
               resizeMode="contain"
               className="max-h-4 max-w-4"
-              source={require("assets/mtg-types/creature.png")}
+              source={
+                darkText
+                  ? require("assets/mtg-types/creature-dark.png")
+                  : require("assets/mtg-types/creature.png")
+              }
             />
 
-            <Text>{creatureCount}</Text>
+            <Text
+              weight="medium"
+              className={darkText ? "!text-background-300" : ""}
+            >
+              {creatureCount}
+            </Text>
           </View>
 
           <View className="flex flex-row items-center gap-2">
             <Image
               resizeMode="contain"
               className="max-h-4 max-w-4"
-              source={require("assets/mtg-types/instant.png")}
+              source={
+                darkText
+                  ? require("assets/mtg-types/instant-dark.png")
+                  : require("assets/mtg-types/instant.png")
+              }
             />
 
-            <Text>{instantCount}</Text>
+            <Text
+              weight="medium"
+              className={darkText ? "!text-background-300" : ""}
+            >
+              {instantCount}
+            </Text>
           </View>
 
           <View className="flex flex-row items-center gap-2">
             <Image
               resizeMode="contain"
               className="max-h-4 max-w-4"
-              source={require("assets/mtg-types/sorcery.png")}
+              source={
+                darkText
+                  ? require("assets/mtg-types/sorcery-dark.png")
+                  : require("assets/mtg-types/sorcery.png")
+              }
             />
 
-            <Text>{sorceryCount}</Text>
+            <Text
+              weight="medium"
+              className={darkText ? "!text-background-300" : ""}
+            >
+              {sorceryCount}
+            </Text>
           </View>
 
           <View className="flex flex-row items-center gap-2">
             <Image
               resizeMode="contain"
               className="max-h-4 max-w-4"
-              source={require("assets/mtg-types/artifact.png")}
+              source={
+                darkText
+                  ? require("assets/mtg-types/artifact-dark.png")
+                  : require("assets/mtg-types/artifact.png")
+              }
             />
 
-            <Text>{artifactCount}</Text>
+            <Text
+              weight="medium"
+              className={darkText ? "!text-background-300" : ""}
+            >
+              {artifactCount}
+            </Text>
           </View>
 
           <View className="flex flex-row items-center gap-2">
             <Image
               resizeMode="contain"
               className="max-h-4 max-w-4"
-              source={require("assets/mtg-types/enchantment.png")}
+              source={
+                darkText
+                  ? require("assets/mtg-types/enchantment-dark.png")
+                  : require("assets/mtg-types/enchantment.png")
+              }
             />
 
-            <Text>{enchantmentCount}</Text>
+            <Text
+              weight="medium"
+              className={darkText ? "!text-background-300" : ""}
+            >
+              {enchantmentCount}
+            </Text>
           </View>
 
           {planeswalkerCount > 0 && (
@@ -199,10 +281,19 @@ export default function DeckFooter({
               <Image
                 resizeMode="contain"
                 className="max-h-4 max-w-4"
-                source={require("assets/mtg-types/planeswalker.png")}
+                source={
+                  darkText
+                    ? require("assets/mtg-types/planeswalker-dark.png")
+                    : require("assets/mtg-types/planeswalker.png")
+                }
               />
 
-              <Text>{planeswalkerCount}</Text>
+              <Text
+                weight="medium"
+                className={darkText ? "!text-background-300" : ""}
+              >
+                {planeswalkerCount}
+              </Text>
             </View>
           )}
 
@@ -211,10 +302,19 @@ export default function DeckFooter({
               <Image
                 resizeMode="contain"
                 className="max-h-4 max-w-4"
-                source={require("assets/mtg-types/battle.png")}
+                source={
+                  darkText
+                    ? require("assets/mtg-types/battle-dark.png")
+                    : require("assets/mtg-types/battle.png")
+                }
               />
 
-              <Text>{battleCount}</Text>
+              <Text
+                weight="medium"
+                className={darkText ? "!text-background-300" : ""}
+              >
+                {battleCount}
+              </Text>
             </View>
           )}
 
@@ -222,26 +322,41 @@ export default function DeckFooter({
             <Image
               resizeMode="contain"
               className="max-h-4 max-w-4"
-              source={require("assets/mtg-types/land.png")}
+              source={
+                darkText
+                  ? require("assets/mtg-types/land-dark.png")
+                  : require("assets/mtg-types/land.png")
+              }
             />
 
-            <Text>{landCount}</Text>
+            <Text
+              weight="medium"
+              className={darkText ? "!text-background-300" : ""}
+            >
+              {landCount}
+            </Text>
           </View>
 
-          <View className="h-5 border-r rounded-lg border-white -mr-2 ml-1" />
+          <View
+            className={`h-5 border-r rounded-lg ${
+              darkText ? "border-background-300" : "border-white"
+            }`}
+          />
 
           <View className="flex flex-row">
             <Button
               rounded
               type="clear"
-              action="default"
               icon={faCopy}
+              action="default"
+              dark={darkText}
               onClick={() => setCopyOpen(true)}
             />
 
             <Button
               rounded
               type="clear"
+              dark={darkText}
               action="default"
               icon={faFileArrowDown}
               onClick={() => setImportOpen(true)}
