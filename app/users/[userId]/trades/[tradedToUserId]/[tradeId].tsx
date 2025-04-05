@@ -138,8 +138,8 @@ export default function TradePage() {
               {trade.tradingUserCards?.map((card, index) => (
                 <TradeCardDetails
                   readonly
-                  key={`${card.scryfallId}-${index}`}
                   tradeCard={card}
+                  key={`${card?.scryfallId}-${index}`}
                 />
               ))}
             </View>
@@ -164,11 +164,11 @@ export default function TradePage() {
             </Text>
 
             <View className="flex gap-2 min-h-fit mb-2">
-              {trade.tradedToUserCards?.map((card) => (
+              {trade.tradedToUserCards?.map((card, index) => (
                 <TradeCardDetails
                   readonly
-                  key={card.scryfallId}
                   tradeCard={card}
+                  key={`${card.scryfallId}-${index}`}
                 />
               ))}
             </View>

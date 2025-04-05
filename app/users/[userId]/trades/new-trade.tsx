@@ -84,7 +84,12 @@ export default function NewTradePage() {
   const [error, setError] = useState(false);
 
   useEffect(() => {
-    if (tradedToUser || !tradedToUserId || typeof tradedToUserId !== "string") {
+    if (
+      tradedToUser ||
+      !tradedToUserId ||
+      typeof tradedToUserId !== "string" ||
+      tradedToUserId === "new-trade"
+    ) {
       return;
     }
 
