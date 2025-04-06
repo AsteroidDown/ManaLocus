@@ -14,7 +14,7 @@ export function getLocalStorageUser(): UserDetails | null {
   if (!user) return null;
 
   const savedUser = JSON.parse(user) as UserDetails;
-  savedUser.password = decode(savedUser.password);
+  savedUser.password = decode(savedUser.password, savedUser.name);
 
   return savedUser;
 }
