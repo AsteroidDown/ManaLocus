@@ -255,7 +255,7 @@ function getButtonTextColor(
   disabled: boolean,
   dark: boolean
 ) {
-  if (disabled) return "!text-gray-300";
+  if (disabled) return "!text-gray-500";
   if (dark) return "!text-background-200";
 
   return `${
