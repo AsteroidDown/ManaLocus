@@ -56,6 +56,7 @@ export default function AddKitModal({
 
   const [page, setPage] = useState(1);
   const [meta, setMeta] = useState(null as PaginationMeta | null);
+  const [loading, setLoading] = useState(false);
 
   const [search, setSearch] = useState("");
   const [userKits, setUserKits] = useState(false);
@@ -67,6 +68,7 @@ export default function AddKitModal({
 
   useEffect(() => {
     if (!deck || !open) return;
+    setLoading(true);
 
     DeckService.getMany({
       search,
@@ -74,6 +76,7 @@ export default function AddKitModal({
       userDecks: userKits,
       excludeIds: deckKits?.map((kit) => kit.id),
     }).then((response) => {
+      setLoading(false);
       setKits(response.data);
       setMeta(response.meta);
     });
@@ -194,6 +197,7 @@ export default function AddKitModal({
           </Pressable>
 
           <Table
+            loading={loading}
             className="max-h-[250px] -mt-4"
             data={selectedKit?.main || []}
             rowClick={(card) => setSelectedCard(card)}

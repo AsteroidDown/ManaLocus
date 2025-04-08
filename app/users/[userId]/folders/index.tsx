@@ -5,7 +5,6 @@ import Button from "@/components/ui/button/button";
 import Input from "@/components/ui/input/input";
 import Footer from "@/components/ui/navigation/footer";
 import Pagination from "@/components/ui/pagination/pagination";
-import LoadingTable from "@/components/ui/table/loading-table";
 import Table, { TableColumn } from "@/components/ui/table/table";
 import Text from "@/components/ui/text/text";
 import UserPageContext from "@/contexts/user/user-page.context";
@@ -87,70 +86,67 @@ export default function UserFoldersPage() {
           </View>
         )}
 
-        {loading ? (
-          <LoadingTable />
-        ) : (
-          <Table
-            className="mb-2"
-            data={folders}
-            rowClick={(folder) =>
-              router.push(`users/${userPageUser.id}/folders/${folder.id}`)
-            }
-            columns={
-              [
-                {
-                  fit: true,
-                  row: (folder) => (
-                    <Button
-                      square
-                      type="clear"
-                      action="default"
-                      className="-ml-2 -mr-4"
-                      icon={folder.deckIds?.length ? faFolderOpen : faFolder}
-                      onClick={() =>
-                        router.push(
-                          `users/${userPageUser.id}/folders/${folder.id}`
-                        )
-                      }
-                    />
-                  ),
-                },
-                {
-                  fit: true,
-                  title: "Name",
-                  row: (folder) => <Text>{folder.name}</Text>,
-                },
-                {
-                  title: "Decks",
-                  row: (folder) => <Text>{folder.deckIds?.length || 0}</Text>,
-                },
-                {
-                  fit: true,
-                  title: "Last Updated",
-                  row: (folder) => (
-                    <Text>{moment(folder.updated).format("MMM Do, YYYY")}</Text>
-                  ),
-                },
-                ...(user?.id === userPageUser.id && user.verified
-                  ? [
-                      {
-                        fit: true,
-                        center: true,
-                        row: (folder: DeckFolder) => (
-                          <FolderOptionsMenu
-                            folder={folder}
-                            deckIds={folder.deckIds}
-                            setSelectedFolderId={setSelectedFolderId}
-                          />
-                        ),
-                      },
-                    ]
-                  : []),
-                ,
-              ] as TableColumn<DeckFolder>[]
-            }
-          />
-        )}
+        <Table
+          className="mb-2"
+          loading={loading}
+          data={folders}
+          rowClick={(folder) =>
+            router.push(`users/${userPageUser.id}/folders/${folder.id}`)
+          }
+          columns={
+            [
+              {
+                fit: true,
+                row: (folder) => (
+                  <Button
+                    square
+                    type="clear"
+                    action="default"
+                    className="-ml-2 -mr-4"
+                    icon={folder.deckIds?.length ? faFolderOpen : faFolder}
+                    onClick={() =>
+                      router.push(
+                        `users/${userPageUser.id}/folders/${folder.id}`
+                      )
+                    }
+                  />
+                ),
+              },
+              {
+                fit: true,
+                title: "Name",
+                row: (folder) => <Text>{folder.name}</Text>,
+              },
+              {
+                title: "Decks",
+                row: (folder) => <Text>{folder.deckIds?.length || 0}</Text>,
+              },
+              {
+                fit: true,
+                title: "Last Updated",
+                row: (folder) => (
+                  <Text>{moment(folder.updated).format("MMM Do, YYYY")}</Text>
+                ),
+              },
+              ...(user?.id === userPageUser.id && user.verified
+                ? [
+                    {
+                      fit: true,
+                      center: true,
+                      row: (folder: DeckFolder) => (
+                        <FolderOptionsMenu
+                          folder={folder}
+                          deckIds={folder.deckIds}
+                          setSelectedFolderId={setSelectedFolderId}
+                        />
+                      ),
+                    },
+                  ]
+                : []),
+              ,
+            ] as TableColumn<DeckFolder>[]
+          }
+        />
 
         {meta && <Pagination meta={meta} onChange={setPage} />}
 

@@ -8,7 +8,6 @@ import { View } from "react-native";
 import CardDetailedPreview from "../cards/card-detailed-preview";
 import CardText from "../cards/card-text";
 import Modal from "../ui/modal/modal";
-import LoadingTable from "../ui/table/loading-table";
 import Table from "../ui/table/table";
 import Text from "../ui/text/text";
 
@@ -43,41 +42,38 @@ export default function KitModal({ kit, open, setOpen }: KitModalProps) {
   return (
     <Modal open={open} setOpen={setOpen} title={kit.name}>
       <View className="flex gap-4 min-w-[400px] max-w-2xl max-h-[80vh]">
-        {loading ? (
-          <LoadingTable />
-        ) : (
-          <Table
-            className="max-h-[500px]"
-            data={kitCards}
-            rowClick={(card) => setSelectedCard(card)}
-            columns={[
-              {
-                fit: true,
-                row: (card) => <Text>{card.count}</Text>,
-              },
-              {
-                title: "Name",
-                row: (card) => <Text>{card.name}</Text>,
-              },
-              {
-                fit: true,
-                title: "Type",
-                row: (card) => <Text>{titleCase(getCardType(card))}</Text>,
-              },
-              {
-                fit: true,
-                center: true,
-                title: "Mana Cost",
-                row: (card) =>
-                  card.manaCost && (
-                    <View className="max-w-fit py-0.5 px-1 bg-background-100 rounded-full overflow-hidden">
-                      <CardText text={card.manaCost} />
-                    </View>
-                  ),
-              },
-            ]}
-          />
-        )}
+        <Table
+          className="max-h-[500px]"
+          data={kitCards}
+          loading={loading}
+          rowClick={(card) => setSelectedCard(card)}
+          columns={[
+            {
+              fit: true,
+              row: (card) => <Text>{card.count}</Text>,
+            },
+            {
+              title: "Name",
+              row: (card) => <Text>{card.name}</Text>,
+            },
+            {
+              fit: true,
+              title: "Type",
+              row: (card) => <Text>{titleCase(getCardType(card))}</Text>,
+            },
+            {
+              fit: true,
+              center: true,
+              title: "Mana Cost",
+              row: (card) =>
+                card.manaCost && (
+                  <View className="max-w-fit py-0.5 px-1 bg-background-100 rounded-full overflow-hidden">
+                    <CardText text={card.manaCost} />
+                  </View>
+                ),
+            },
+          ]}
+        />
       </View>
 
       {selectedCard && (

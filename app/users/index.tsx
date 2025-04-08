@@ -20,9 +20,14 @@ export default function UsersPage() {
   const [search, setSearch] = useState("");
   const [users, setUsers] = useState([] as User[]);
 
+  const [loading, setLoading] = useState(false);
+
   function searchUsers() {
+    setLoading(true);
+
     UserService.getMany({ search }, { items: meta?.items || 25, page }).then(
       (response) => {
+        setLoading(false);
         setMeta(response.meta);
         setUsers(response.data);
       }
@@ -60,6 +65,7 @@ export default function UsersPage() {
 
         <Table
           data={users}
+          loading={loading}
           rowClick={(user) => router.push(`users/${user.id}`)}
           columns={
             [

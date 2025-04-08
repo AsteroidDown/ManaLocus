@@ -3,7 +3,6 @@ import BoxHeader from "@/components/ui/box/box-header";
 import Button from "@/components/ui/button/button";
 import Footer from "@/components/ui/navigation/footer";
 import Pagination from "@/components/ui/pagination/pagination";
-import LoadingTable from "@/components/ui/table/loading-table";
 import Table, { TableColumn } from "@/components/ui/table/table";
 import Text from "@/components/ui/text/text";
 import UserPageContext from "@/contexts/user/user-page.context";
@@ -171,65 +170,62 @@ export default function TradedToUserPage() {
           />
         )}
 
-        {loading ? (
-          <LoadingTable />
-        ) : (
-          <Table
-            className="mb-2"
-            data={trades}
-            rowClick={(trade: Trade) =>
-              router.push(
-                `users/${userPageUser.id}/trades/${
-                  tradedToUser?.id ?? "anonymous"
-                }/${trade.id}`
-              )
-            }
-            columns={
-              [
-                {
-                  title: "Date",
-                  row: (trade) => (
-                    <Text>
-                      {moment(trade.created).format(
-                        `${width > 600 ? "MMM Do, YYYY" : "MMM Do"}`
-                      )}
-                    </Text>
-                  ),
-                },
-                {
-                  title: `${width > 600 ? "You " : ""}Traded`,
-                  row: (trade) => (
-                    <Text>{currency(trade.tradingUserTotal / 100)}</Text>
-                  ),
-                },
-                {
-                  title: `${width > 600 ? "You " : ""}Received`,
-                  row: (trade) => (
-                    <Text>{currency(trade.tradedToUserTotal / 100)}</Text>
-                  ),
-                },
-                {
-                  fit: true,
-                  title: "Total",
-                  row: (trade) => (
-                    <Text
-                      weight="semi"
-                      action={
-                        trade.total < 0
-                          ? "danger"
-                          : trade.total > 0
-                          ? "success"
-                          : "default"
-                      }
-                    >
-                      {currency(trade.total / 100)}
-                    </Text>
-                  ),
-                },
-              ] as TableColumn<Trade>[]
-            }
-          />
-        )}
+        <Table
+          className="mb-2"
+          data={trades}
+          loading={loading}
+          rowClick={(trade: Trade) =>
+            router.push(
+              `users/${userPageUser.id}/trades/${
+                tradedToUser?.id ?? "anonymous"
+              }/${trade.id}`
+            )
+          }
+          columns={
+            [
+              {
+                title: "Date",
+                row: (trade) => (
+                  <Text>
+                    {moment(trade.created).format(
+                      `${width > 600 ? "MMM Do, YYYY" : "MMM Do"}`
+                    )}
+                  </Text>
+                ),
+              },
+              {
+                title: `${width > 600 ? "You " : ""}Traded`,
+                row: (trade) => (
+                  <Text>{currency(trade.tradingUserTotal / 100)}</Text>
+                ),
+              },
+              {
+                title: `${width > 600 ? "You " : ""}Received`,
+                row: (trade) => (
+                  <Text>{currency(trade.tradedToUserTotal / 100)}</Text>
+                ),
+              },
+              {
+                fit: true,
+                title: "Total",
+                row: (trade) => (
+                  <Text
+                    weight="semi"
+                    action={
+                      trade.total < 0
+                        ? "danger"
+                        : trade.total > 0
+                        ? "success"
+                        : "default"
+                    }
+                  >
+                    {currency(trade.total / 100)}
+                  </Text>
+                ),
+              },
+            ] as TableColumn<Trade>[]
+          }
+        />
 
         {meta && <Pagination meta={meta} onChange={setPage} />}
       </View>
