@@ -8,9 +8,11 @@ import ScryfallService from "@/hooks/services/scryfall.service";
 import { Card } from "@/models/card/card";
 import { DeckViewType } from "@/models/deck/dtos/deck-filters.dto";
 import {
+  faArrowCircleDown,
+  faArrowLeft,
   faBorderAll,
   faList,
-  faSearch,
+  faRotate,
 } from "@fortawesome/free-solid-svg-icons";
 import { router, useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
@@ -26,12 +28,17 @@ export default function CardSearchPage() {
   const [total, setTotal] = useState(0);
   const [nextPage, setNextPage] = useState(undefined as string | undefined);
 
+  const [loading, setLoading] = useState(false);
+
   useEffect(() => findCards(), [query]);
 
   function findCards() {
     if (query !== search) router.push(`cards/search?query=${search}`);
     else {
+      setLoading(true);
+
       ScryfallService.findCards(search).then((response) => {
+        setLoading(false);
         setTotal(response.total);
         setCards(response.cards);
         setNextPage(response.nextPage);
@@ -42,9 +49,12 @@ export default function CardSearchPage() {
   function loadMore() {
     if (!nextPage) return;
 
+    setLoading(true);
+
     ScryfallService.findCardsByPage(nextPage).then((response) => {
       setCards([...cards, ...response.cards]);
       setNextPage(response.nextPage);
+      setLoading(false);
     });
   }
 
@@ -52,10 +62,20 @@ export default function CardSearchPage() {
     <SafeAreaView>
       <View className="flex flex-1 gap-4 lg:px-16 px-4 py-4 min-h-[100dvh] bg-background-100">
         <BoxHeader
-          startIcon={faSearch}
           className="!pb-0"
           title="Find Cards"
-          subtitle="Search for cards or view full sets"
+          subtitle="Search for cards using Scryfall's powerful search engine"
+          start={
+            <Button
+              rounded
+              size="lg"
+              type="clear"
+              action="default"
+              className="-ml-2 -mr-3"
+              icon={faArrowLeft}
+              onClick={() => router.push(`cards`)}
+            />
+          }
           end={
             <View className="flex flex-row">
               <Button
@@ -93,6 +113,10 @@ export default function CardSearchPage() {
             </Text>
           )}
 
+          {!cards?.length && loading && (
+            <Button disabled type="clear" text="Loading..." icon={faRotate} />
+          )}
+
           <CardList cards={cards} viewType={viewType} />
         </View>
 
@@ -102,6 +126,8 @@ export default function CardSearchPage() {
             type="outlined"
             text="Load More"
             className="max-w-fit ml-auto"
+            icon={loading ? faRotate : faArrowCircleDown}
+            disabled={loading}
             onClick={loadMore}
           />
         )}

@@ -8,28 +8,18 @@ import SearchBar from "@/components/ui/search-bar/search-bar";
 import Table, { TableColumn } from "@/components/ui/table/table";
 import Text from "@/components/ui/text/text";
 import { MTGSetType, MTGSetTypes } from "@/constants/mtg/mtg-set-types";
-import LoadingContext from "@/contexts/ui/loading.context";
 import { titleCase } from "@/functions/text-manipulation";
 import { PaginationMeta } from "@/hooks/pagination";
 import ScryfallService from "@/hooks/services/scryfall.service";
 import { faCheck, faFilter, faSearch } from "@fortawesome/free-solid-svg-icons";
 import { router } from "expo-router";
-import React, {
-  Dispatch,
-  SetStateAction,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { Image, SafeAreaView, View } from "react-native";
 import { Set } from "../../models/card/set";
 
 export default function CardsPage() {
-  const { setLoading } = useContext(LoadingContext);
-
   const [search, setSearch] = useState("");
-
-  const [allCardsLoading, setAllCardsLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const [page, setPage] = useState(1);
   const [items, setItems] = useState(25);
@@ -45,13 +35,15 @@ export default function CardsPage() {
   const [selectedSets, setSelectedSets] = useState([] as MTGSetType[]);
 
   useEffect(() => {
+    if (sets?.length) return;
+
     setLoading(true);
 
     ScryfallService.getSets().then((sets) => {
       setSets(sets.filter((set) => set.code.length === 3));
       setLoading(false);
     });
-  }, []);
+  }, [sets]);
 
   useEffect(() => {
     const setsToView: Set[] = [];
@@ -76,8 +68,7 @@ export default function CardsPage() {
   }, [sets, selectedSets, page, sets]);
 
   function importAllCards() {
-    setAllCardsLoading(true);
-    ScryfallService.getAllCards().then(() => setAllCardsLoading(false));
+    ScryfallService.getAllCards();
   }
 
   return (
@@ -88,7 +79,7 @@ export default function CardsPage() {
           title="Find Cards"
           subtitle="Search for cards or view full sets"
           className="!pb-0"
-          end={<Button text={"Import All Cards"} onClick={importAllCards} />}
+          // end={<Button text={"Import All Cards"} onClick={importAllCards} />}
         />
 
         <SearchBar
@@ -99,6 +90,7 @@ export default function CardsPage() {
 
         <View className="flex z-[-1]">
           <Table
+            loading={loading}
             data={filteredSets}
             rowClick={(set) => router.push(`cards/${set.code}`)}
             columns={
