@@ -1,21 +1,23 @@
-import React from "react";
+import React, { ReactNode, useState } from "react";
 import { Pressable, View, ViewProps } from "react-native";
 import Text from "../text/text";
+import LoadingTable from "./loading-table";
 
 export interface TableColumn<T> {
   title?: string;
-  titleEnd?: React.ReactNode;
+  titleEnd?: ReactNode;
 
   fit?: boolean;
   center?: boolean;
 
-  row: (arg: T, index: number) => React.ReactNode;
+  row: (arg: T, index: number) => ReactNode;
 }
 
 export type TableProps<T> = ViewProps & {
   data: T[];
   columns: TableColumn<T>[];
 
+  loading?: boolean;
   hideHeader?: boolean;
 
   rowClick?: (arg: T) => void;
@@ -24,11 +26,14 @@ export type TableProps<T> = ViewProps & {
 export default function Table({
   data,
   columns,
+  loading,
   hideHeader,
   rowClick,
   className,
 }: TableProps<any>) {
-  const [hoveredIndex, setHoveredIndex] = React.useState(-1);
+  const [hoveredIndex, setHoveredIndex] = useState(-1);
+
+  if (loading) return <LoadingTable />;
 
   if (!data?.length) return null;
 
