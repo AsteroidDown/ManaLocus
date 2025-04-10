@@ -6,6 +6,7 @@ import { faRotateRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useMemo } from "react";
 import { Image, Pressable, View } from "react-native";
+import Skeleton from "../ui/skeleton/skeleton";
 
 export interface CardImageProps {
   card?: Card;
@@ -47,7 +48,7 @@ export default function CardImage({
     "flex h-full max-h-[350px] aspect-[2.5/3.5] rounded-lg overflow-hidden";
 
   const imagePlaceHolder = (
-    <View className="h-full max-h-[350px] aspect-[2.5/3.5] rounded-xl transition-all bg-background-300 animate-pulse"></View>
+    <Skeleton className="h-full max-h-[350px] aspect-[2.5/3.5] !rounded-xl" />
   );
 
   const cardImage = useMemo(() => {
