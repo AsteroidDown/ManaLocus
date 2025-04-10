@@ -22,7 +22,7 @@ export default function Placeholder({
 }: PlaceholderProps) {
   return (
     <Box
-      className={`${className} flex gap-1 justify-center items-center py-6 w-full h-full !bg-background-100 border-2 border-background-200`}
+      className={`${className} flex gap-1 justify-center items-center py-6 w-full h-full max-h-fit !bg-background-100 border-2 border-background-200`}
     >
       <FontAwesomeIcon
         size="4x"

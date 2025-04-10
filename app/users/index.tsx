@@ -3,6 +3,7 @@ import Button from "@/components/ui/button/button";
 import Input from "@/components/ui/input/input";
 import Footer from "@/components/ui/navigation/footer";
 import Pagination from "@/components/ui/pagination/pagination";
+import Placeholder from "@/components/ui/placeholder/placeholder";
 import Table, { TableColumn } from "@/components/ui/table/table";
 import Text from "@/components/ui/text/text";
 import { PaginationMeta } from "@/hooks/pagination";
@@ -44,7 +45,7 @@ export default function UsersPage() {
   return (
     <SafeAreaView>
       <View className="flex flex-1 gap-4 lg:px-16 px-4 py-4 min-h-[100dvh] bg-background-100">
-        <BoxHeader title="Find Users" className="!pb-0" />
+        <BoxHeader title="Find Builders" className="!pb-0" />
 
         <View className="flex flex-row items-center">
           <Input
@@ -52,6 +53,7 @@ export default function UsersPage() {
             label="Search"
             placeholder="Search for a user"
             onChange={setSearch}
+            enterAction={searchUsers}
           />
 
           <Button
@@ -95,7 +97,17 @@ export default function UsersPage() {
           }
         />
 
-        {meta && <Pagination meta={meta} onChange={(page) => setPage(page)} />}
+        {!users?.length && (
+          <Placeholder
+            icon={faSearch}
+            title="No Builders Found"
+            subtitle="Try adjusting your search filters to find builders!"
+          />
+        )}
+
+        {meta && users.length > 0 && (
+          <Pagination meta={meta} onChange={(page) => setPage(page)} />
+        )}
       </View>
 
       <Footer />
