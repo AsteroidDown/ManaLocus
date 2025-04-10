@@ -92,7 +92,7 @@ export default function CardList({ cards, viewType }: CardListProps) {
               },
             ]}
           />
-          {meta && (
+          {meta && meta.totalItems > 0 && (
             <Pagination meta={meta} onChange={(page) => setPage(page)} />
           )}
         </View>
