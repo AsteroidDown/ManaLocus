@@ -33,6 +33,7 @@ import {
 import { Link, router } from "expo-router";
 import React, { useContext, useEffect, useState } from "react";
 import { useWindowDimensions, View } from "react-native";
+import Skeleton from "../ui/skeleton/skeleton";
 import DeckCard from "./deck-card";
 import DecksTable from "./decks-table";
 
@@ -104,6 +105,8 @@ export default function DeckGallery({
   } as DeckFiltersDTO);
 
   const [resultsText, setResultsText] = useState("");
+
+  const loadingDecks = Array(24).fill(undefined);
 
   useEffect(() => {
     if (noLoadScreen) return;
@@ -578,22 +581,29 @@ export default function DeckGallery({
 
       {!listView && (
         <View className="flex flex-row flex-wrap lg:justify-start justify-center gap-4 z-[10]">
-          {decks?.map((deck, index) => (
-            <Link
-              key={deck.id + deck.name + index}
-              href={`${
-                includeIds?.length
-                  ? "../../../"
-                  : collections || kits
-                  ? "../../"
-                  : userId
-                  ? "../"
-                  : ""
-              }decks/${deck.id}`}
-            >
-              <DeckCard deck={deck} />
-            </Link>
-          ))}
+          {decksLoading
+            ? loadingDecks.map((_, index) => (
+                <Skeleton
+                  key={index}
+                  className="w-[296px] h-[200px] !rounded-xl"
+                />
+              ))
+            : decks?.map((deck, index) => (
+                <Link
+                  key={deck.id + deck.name + index}
+                  href={`${
+                    includeIds?.length
+                      ? "../../../"
+                      : collections || kits
+                      ? "../../"
+                      : userId
+                      ? "../"
+                      : ""
+                  }decks/${deck.id}`}
+                >
+                  <DeckCard deck={deck} />
+                </Link>
+              ))}
         </View>
       )}
 
