@@ -105,7 +105,7 @@ export default function SearchBar({
                     key={name + index}
                     onFocus={onFocus}
                     onBlur={onBlur}
-                    className="px-4 py-1 rounded-full hover:bg-background-200 focus:bg-background-100 outline-none"
+                    className="px-4 py-1 rounded-full hover:bg-background-200 focus:bg-background-200 outline-none"
                     onPress={() => {
                       searchChange(name);
                       searchAction?.(name);
