@@ -28,6 +28,7 @@ import {
   faBorderAll,
   faFilter,
   faList,
+  faPlus,
   faSearch,
 } from "@fortawesome/free-solid-svg-icons";
 import { Link, router } from "expo-router";
@@ -355,6 +356,27 @@ export default function DeckGallery({
     setResultsText(resultsText);
   }
 
+  function createDeck() {
+    if (!user || !user.verified) return;
+
+    DeckService.create({
+      ...(kits ? { isKit: true } : {}),
+      ...(collections
+        ? { isCollection: true, format: "Collection" as any }
+        : {}),
+      name: `New ${kits ? "Kit" : collections ? "Collection" : "Deck"}`,
+    }).then((response) => {
+      localStorage.removeItem("builderCardsMain");
+      localStorage.removeItem("builderCardsSide");
+      localStorage.removeItem("builderCardsMaybe");
+      localStorage.removeItem("builderCardsAcquire");
+      localStorage.removeItem("builderKits");
+      localStorage.removeItem("dashboard");
+
+      router.push(`decks/${response.deckId}/builder/main-board`);
+    });
+  }
+
   return (
     <View className="flex gap-4">
       <View className="flex flex-row flex-wrap gap-4">
@@ -581,29 +603,71 @@ export default function DeckGallery({
 
       {!listView && (
         <View className="flex flex-row flex-wrap lg:justify-start justify-center gap-4 z-[10]">
-          {decksLoading
-            ? loadingDecks.map((_, index) => (
-                <Skeleton
-                  key={index}
-                  className="w-[296px] h-[200px] !rounded-xl"
-                />
-              ))
-            : decks?.map((deck, index) => (
-                <Link
-                  key={deck.id + deck.name + index}
-                  href={`${
-                    includeIds?.length
-                      ? "../../../"
-                      : collections || kits
-                      ? "../../"
-                      : userId
-                      ? "../"
-                      : ""
-                  }decks/${deck.id}`}
-                >
-                  <DeckCard deck={deck} />
-                </Link>
-              ))}
+          {decksLoading ? (
+            loadingDecks.map((_, index) => (
+              <Skeleton
+                key={index}
+                className="w-[296px] h-[200px] !rounded-xl"
+              />
+            ))
+          ) : decks?.length > 0 ? (
+            decks?.map((deck, index) => (
+              <Link
+                key={deck.id + deck.name + index}
+                href={`${
+                  includeIds?.length
+                    ? "../../../"
+                    : collections || kits
+                    ? "../../"
+                    : userId
+                    ? "../"
+                    : ""
+                }decks/${deck.id}`}
+              >
+                <DeckCard deck={deck} />
+              </Link>
+            ))
+          ) : (
+            <Placeholder
+              icon={faSearch}
+              title={
+                userId
+                  ? kits
+                    ? "No Kits Found"
+                    : collections
+                    ? "No Collections Found"
+                    : "No Decks Found"
+                  : "No Decks Found"
+              }
+              subtitle={
+                userId
+                  ? kits
+                    ? search
+                      ? "Try searching for something else"
+                      : "Create a kit and it will show up here!"
+                    : collections
+                    ? search
+                      ? "Try searching for something else"
+                      : "Create a collection and it will show up here!"
+                    : search
+                    ? "Try searching for something else"
+                    : "Create a deck and it will show up here!"
+                  : "Try adjusting your search filters to find something else!"
+              }
+            >
+              {userId &&
+                user?.verified &&
+                (userPageUser ? userPageUser.id === user.id : true) && (
+                  <Button
+                    size="sm"
+                    icon={faPlus}
+                    className="self-end"
+                    text={kits ? "Kit" : collections ? "Collection" : "Deck"}
+                    onClick={createDeck}
+                  />
+                )}
+            </Placeholder>
+          )}
         </View>
       )}
 
@@ -625,7 +689,7 @@ export default function DeckGallery({
         </>
       )}
 
-      {meta && (
+      {meta && meta.totalItems > 0 && (
         <Pagination
           meta={meta}
           center={!listView}
