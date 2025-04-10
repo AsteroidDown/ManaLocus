@@ -112,8 +112,8 @@ export default function Button({
             : ""
         } ${hideLeftBorder ? "!border-l-0" : ""} ${
           hideRightBorder ? "!border-r-0" : ""
-        } ${squareLeft ? "!rounded-l-none" : ""} ${
-          squareRight ? "!rounded-r-none" : ""
+        } ${squareLeft ? "!rounded-l-none !border-l-[1px]" : ""} ${
+          squareRight ? "!rounded-r-none !border-r-[1px]" : ""
         }`}
       >
         {icon && !iconRight && (

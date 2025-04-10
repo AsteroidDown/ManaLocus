@@ -174,7 +174,7 @@ export default function CardSearch({
               <View className="flex flex-row justify-center items-end w-full gap-2">
                 <CardPrints card={card} setCard={setCard} />
 
-                <View className="flex flex-row gap-0.5">
+                <View className="flex flex-row">
                   <Button
                     squareRight
                     size="sm"
