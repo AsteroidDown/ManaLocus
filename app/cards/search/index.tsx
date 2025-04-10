@@ -40,6 +40,12 @@ export default function CardSearchPage() {
       setLoading(true);
 
       ScryfallService.findCards(search).then((response) => {
+        if (response.total === 1) {
+          router.push(
+            `cards/${response.cards[0].set}/${response.cards[0].collectorNumber}`
+          );
+        }
+
         setLoading(false);
         setTotal(response.total);
         setCards(response.cards);
