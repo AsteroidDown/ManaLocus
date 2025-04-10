@@ -48,7 +48,7 @@ export default function DecksPage() {
           }
         />
 
-        <DeckGallery />
+        <DeckGallery noLoadScreen />
       </View>
 
       <Footer />
