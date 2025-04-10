@@ -1,4 +1,5 @@
 import { View } from "react-native";
+import Skeleton from "../skeleton/skeleton";
 import Text from "../text/text";
 import Table from "./table";
 
@@ -18,35 +19,31 @@ export default function LoadingTable() {
       columns={[
         {
           fit: true,
-          row: () => (
-            <View className="rounded-md px-2 py-3 bg-background-200 w-16 animate-pulse" />
-          ),
+          row: () => <Skeleton className="px-2 py-3 w-16" />,
         },
         {
           row: (value) => (
-            <View className="rounded-md px-2 py-0.5 bg-background-200 animate-pulse">
+            <Skeleton className="px-2 py-0.5 ">
               <Text>{Array(value).fill(" ").join(" ")}</Text>
-            </View>
+            </Skeleton>
           ),
         },
         {
           row: (value, index) => (
-            <View className="rounded-md px-2 py-0.5 bg-background-200 animate-pulse">
+            <Skeleton className="px-2 py-0.5 ">
               <Text>{Array(data2[index]).fill(" ").join(" ")}</Text>
-            </View>
+            </Skeleton>
           ),
         },
         {
           fit: true,
-          row: () => (
-            <View className="rounded-md px-2 py-3 bg-background-200 w-24 animate-pulse" />
-          ),
+          row: () => <Skeleton className="px-2 py-3 w-24" />,
         },
         {
           fit: true,
           row: () => (
             <View className="flex justify-center h-full pl-4 border-l border-background-200">
-              <View className="rounded-md px-2 py-3 bg-background-200 w-8 animate-pulse" />
+              <Skeleton className="px-2 py-3 w-8" />
             </View>
           ),
         },

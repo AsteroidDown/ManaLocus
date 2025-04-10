@@ -13,6 +13,11 @@ module.exports = {
           "0%": { transform: "rotate(360deg)" },
           "100%": { transform: "rotate(0deg)" },
         },
+        translate: {
+          "0%": { "background-position-x": "100%", opacity: "40%" },
+          "50%": { opacity: "100%" },
+          "100%": { "background-position": "-75%", opacity: "40%" },
+        },
       },
       animation: {
         bottomToTopGrow: "bottomToTopGrow 1s ease forwards",
