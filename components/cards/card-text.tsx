@@ -16,7 +16,11 @@ export default function CardText({ text, flavor, size = "md" }: CardTextProps) {
     let loyalty: "add" | "remove" | undefined = undefined;
     let value: string | undefined = undefined;
 
-    if (line[0] === "+" || line[0] === "−" || line.substring(0, 2) === "0:") {
+    if (
+      (!text.includes("Spree") && line[0] === "+") ||
+      line[0] === "−" ||
+      line.substring(0, 2) === "0:"
+    ) {
       loyalty =
         line[0] === "+" ? "add" : line[0] === "−" ? "remove" : undefined;
       value = line
