@@ -2,6 +2,7 @@ import CardList from "@/components/cards/card-list";
 import BoxHeader from "@/components/ui/box/box-header";
 import Button from "@/components/ui/button/button";
 import Footer from "@/components/ui/navigation/footer";
+import Placeholder from "@/components/ui/placeholder/placeholder";
 import SearchBar from "@/components/ui/search-bar/search-bar";
 import Text from "@/components/ui/text/text";
 import ScryfallService from "@/hooks/services/scryfall.service";
@@ -13,6 +14,7 @@ import {
   faBorderAll,
   faList,
   faRotate,
+  faSearch,
 } from "@fortawesome/free-solid-svg-icons";
 import { router, useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
@@ -113,9 +115,16 @@ export default function CardSearchPage() {
             </Text>
           )}
 
-          {!cards?.length && loading && (
-            <Button disabled type="clear" text="Loading..." icon={faRotate} />
-          )}
+          {!cards?.length &&
+            (loading ? (
+              <Button disabled type="clear" text="Loading..." icon={faRotate} />
+            ) : (
+              <Placeholder
+                icon={faSearch}
+                title="No Cards Found"
+                subtitle="Try adjusting your search filters to find cards!"
+              />
+            ))}
 
           <CardList cards={cards} viewType={viewType} />
         </View>
