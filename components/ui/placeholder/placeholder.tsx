@@ -24,15 +24,13 @@ export default function Placeholder({
     <Box
       className={`${className} flex gap-1 justify-center items-center py-6 w-full h-full !bg-background-100 border-2 border-background-200`}
     >
-      <View className="border-2 border-white p-2 mb-3 rounded-full">
-        <FontAwesomeIcon
-          className="text-white"
-          size="4x"
-          icon={icon ?? faInfoCircle}
-        />
-      </View>
+      <FontAwesomeIcon
+        size="4x"
+        icon={icon ?? faInfoCircle}
+        className="text-dark-500 border-2 border-background-300 p-6 mb-3 rounded-full"
+      />
 
-      <Text size="xl" weight="bold">
+      <Text size="lg" weight="medium">
         {title}
       </Text>
 
