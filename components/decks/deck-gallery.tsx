@@ -631,12 +631,10 @@ export default function DeckGallery({
             <Placeholder
               icon={faSearch}
               title={
-                userId
-                  ? kits
-                    ? "No Kits Found"
-                    : collections
-                    ? "No Collections Found"
-                    : "No Decks Found"
+                kits
+                  ? "No Kits Found"
+                  : collections
+                  ? "No Collections Found"
                   : "No Decks Found"
               }
               subtitle={
