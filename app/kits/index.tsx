@@ -36,7 +36,13 @@ export default function DecksPage() {
           end={
             user &&
             user.verified && (
-              <Button icon={faPlus} text="Kit" onClick={createDeck} />
+              <Button
+                size="sm"
+                text="Kit"
+                icon={faPlus}
+                type="outlined"
+                onClick={createDeck}
+              />
             )
           }
         />

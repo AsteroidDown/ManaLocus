@@ -35,7 +35,7 @@ export default function DeckKits({ deck, readonly }: DeckKitProps) {
   const [kitIndex, setKitIndex] = useState(0);
 
   useEffect(() => {
-    if (!deck) return;
+    if (!deck || getLocalStorageKits()?.length) return;
     setLoading(true);
 
     DeckService.getDeckKits(deck.id).then((deckKits) => {
@@ -49,9 +49,7 @@ export default function DeckKits({ deck, readonly }: DeckKitProps) {
     });
   }, [deck]);
 
-  useEffect(() => {
-    setDeckKits(getLocalStorageKits());
-  }, [kitIndex]);
+  useEffect(() => setDeckKits(getLocalStorageKits()), [kitIndex]);
 
   if (readonly && !deckKits?.length) return null;
 
