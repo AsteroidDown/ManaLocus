@@ -97,14 +97,11 @@ export default function Select({
         return;
       }
 
-      console.log("Not found option");
       const optionsFiltered = options.filter((option) =>
         option.label.toLowerCase().includes(search.toLowerCase())
       );
 
       setFilteredOptions(optionsFiltered);
-
-      console.log(search, options, filteredOptions);
     }, 300);
 
     return () => clearTimeout(delayDebounceFn);
@@ -135,7 +132,7 @@ export default function Select({
       setHovered(false);
       onChange(option.value);
       setSearch(option.label);
-      setTimeout(() => setFilteredOptions(options), 100);
+      setFilteredOptions(options);
     }
   }
 
@@ -161,9 +158,9 @@ export default function Select({
       )}
 
       <View
-        style={multiple && { maxHeight: offsetHeight }}
-        className={`${open ? "overflow-visible" : "overflow-hidden"} ${
-          !multiple && "max-h-8 min-h-8"
+        style={{ maxHeight: multiple ? offsetHeight : 32, minHeight: 32 }}
+        className={`${
+          open ? "overflow-visible" : "overflow-hidden"
         } min-w-0 relative flex-1`}
       >
         <View
@@ -183,16 +180,18 @@ export default function Select({
             open ? "!rounded-b-none" : ""
           } ${squareLeft ? "!rounded-l-none" : ""} ${
             squareRight ? "!rounded-r-none" : ""
-          } flex-1 flex flex-row flex-wrap items-center gap-2 min-w-0 min-h-8 max-h-8 px-3 py-2 rounded-lg border-2 overflow-hidden transition-all`}
+          } ${
+            multiple ? "min-h-fit" : "min-h-8 max-h-8"
+          } flex-1 flex flex-row flex-wrap items-center gap-2 min-w-0 px-3 py-2 rounded-lg border-2 overflow-hidden transition-all`}
         >
           {multiple && selectedOptions.length > 0 && (
-            <View className="flex flex-row flex-wrap gap-2 items-center max-w-full">
+            <View className="flex flex-row flex-wrap gap-1 items-center max-w-full -mt-[5px] -mb-[5px]">
               {selectedOptions.map((option, index) => (
                 <View
                   key={index}
-                  className="flex flex-row items-center gap-1 pl-3 pr-2 py-px bg-background-300 rounded-xl"
+                  className="flex flex-row items-center gap-1 pl-3 pr-2 py-px bg-background-300 bg-opacity-50 rounded-xl"
                 >
-                  <Text key={index} size="sm">
+                  <Text key={index} size="sm" className="!text-gray-200">
                     {option.label}
                   </Text>
 
@@ -216,7 +215,9 @@ export default function Select({
             placeholder={placeholder}
             tabIndex={disabled ? -1 : 0}
             placeholderTextColor="#8b8b8b"
-            className={`flex-1 color-white -mt-1 text-sm min-w-0 outline-none`}
+            className={`flex-1 color-white -mt-1 text-sm min-w-0 outline-none ${
+              multiple ? "max-h-4 -mb-1" : ""
+            }`}
             onFocus={() => (disabled ? null : onFocus())}
             onBlur={() => setTimeout(() => onBlur(), 200)}
             onChangeText={(change) => setSearch(change)}
@@ -224,7 +225,7 @@ export default function Select({
 
           <Pressable
             tabIndex={disabled ? -1 : 0}
-            className="-mt-1"
+            className={`${multiple ? "max-h-4 -mb-1" : "-mt-1"}`}
             onPress={() => (disabled ? null : setOpen(!open))}
             onBlur={() => setTimeout(() => onBlur(), 200)}
           >
@@ -248,7 +249,7 @@ export default function Select({
           className={`${
             open
               ? `${maxHeight ?? "max-h-[500px]"} border-2 -mt-0.5`
-              : `max-h-0 border-0`
+              : `${multiple ? "!border-0" : ""} max-h-0 border-0`
           } ${
             focused || open
               ? "border-primary-300"
