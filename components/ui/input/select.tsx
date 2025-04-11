@@ -84,32 +84,27 @@ export default function Select({
           : option.value === value
       )?.label ?? "";
 
-    if (!multiple && foundOption) setSearch(foundOption);
+    if (foundOption && !multiple) setSearch(foundOption);
   }, [value, options]);
 
   useEffect(() => {
     const delayDebounceFn = setTimeout(() => {
       onSearchChange?.(search);
 
-      if (!search) {
+      if (!search || (options.length === 1 && options[0].label === search)) {
         setFilteredOptions(options);
         if (!multiple) onChange(null);
         return;
       }
 
-      const foundOption = options.find(
-        (option) => option.label.toLowerCase() === search.toLowerCase()
+      console.log("Not found option");
+      const optionsFiltered = options.filter((option) =>
+        option.label.toLowerCase().includes(search.toLowerCase())
       );
 
-      if (!multiple && options.length === 1 && foundOption) {
-        selectOption(foundOption);
-      } else {
-        const filteredOptions = options.filter((option) =>
-          option.label.toLowerCase().includes(search.toLowerCase())
-        );
+      setFilteredOptions(optionsFiltered);
 
-        setFilteredOptions(filteredOptions);
-      }
+      console.log(search, options, filteredOptions);
     }, 300);
 
     return () => clearTimeout(delayDebounceFn);
@@ -136,11 +131,11 @@ export default function Select({
       onSearchChange?.("");
     } else {
       onBlur();
-      setHovered(false);
       setOpen(false);
+      setHovered(false);
       onChange(option.value);
       setSearch(option.label);
-      setFilteredOptions(options);
+      setTimeout(() => setFilteredOptions(options), 100);
     }
   }
 

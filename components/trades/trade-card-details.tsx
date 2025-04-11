@@ -206,10 +206,10 @@ export default function TradeCardDetails({
                       value={print}
                       onChange={setPrint}
                       options={prints.map((print) => ({
+                        value: print,
                         label: `${print.set.toUpperCase()} ${
                           print.collectorNumber
                         }`,
-                        value: print,
                       }))}
                     />
                   )
