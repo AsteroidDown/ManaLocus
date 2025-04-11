@@ -38,6 +38,7 @@ export default function TabBar({
   const [focusedIndex, setFocusedIndex] = useState(0);
 
   const [details, setDetails] = useState({} as any);
+  const [XOffset, setXOffset] = useState(0);
 
   useEffect(() => {
     if (!tabs?.[0]?.link) return;
@@ -69,7 +70,11 @@ export default function TabBar({
   return (
     <View
       key={tabs.length}
+      ref={containerRef}
       className={`${className} relative flex-1 flex min-h-fit`}
+      onLayout={() =>
+        containerRef.current?.measureInWindow((x) => setXOffset(x))
+      }
     >
       <TabsLayout
         tabs={tabs}
@@ -82,10 +87,16 @@ export default function TabBar({
 
       {details && (
         <View
-          className={`absolute bottom-0 border-b-2 border-primary-200 transition-all duration-500 ease-out`}
+          className={`absolute border-b-2 border-primary-200 transition-all duration-500 ease-out ${
+            tabs[0]?.link ? "bottom-0" : "top-[34px]"
+          }`}
           style={{
             width: details[focusedIndex]?.width ?? 0,
-            left: width > 600 ? details[focusedIndex]?.offset ?? 0 : 0,
+            left:
+              width > 600
+                ? (details[focusedIndex]?.offset ?? 0) -
+                  (!tabs[0]?.link ? XOffset : 0)
+                : 0,
           }}
         />
       )}
