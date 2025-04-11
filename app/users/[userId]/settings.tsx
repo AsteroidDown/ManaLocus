@@ -8,6 +8,7 @@ import Select from "@/components/ui/input/select";
 import Footer from "@/components/ui/navigation/footer";
 import Text from "@/components/ui/text/text";
 import { EmailType } from "@/constants/emails";
+import { Environment } from "@/constants/environment";
 import { EmailMask } from "@/constants/masks/text-masks";
 import { SortType, SortTypes } from "@/constants/sorting";
 import {
@@ -255,9 +256,9 @@ export default function UserSettingsPage() {
       "Verify Your Account",
       {
         username: user.name,
-        link: `${process.env.BASE_URL}/verify?token=${encode(
+        link: `${Environment.BASE_URL}/verify?token=${encode(
           user.name,
-          process.env.VERIFICATION_SECRET
+          Environment.VERIFICATION_SECRET as any
         )}`,
       }
     ).then(() => {

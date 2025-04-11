@@ -3,6 +3,7 @@ import Divider from "@/components/ui/divider/divider";
 import Input from "@/components/ui/input/input";
 import Footer from "@/components/ui/navigation/footer";
 import Text from "@/components/ui/text/text";
+import { Environment } from "@/constants/environment";
 import ToastContext from "@/contexts/ui/toast.context";
 import UserContext from "@/contexts/user/user.context";
 import { decode } from "@/functions/encoding";
@@ -41,7 +42,7 @@ export default function ResetPage() {
   useEffect(() => {
     if (!token || typeof token !== "string") return;
 
-    const decoded = decode(token, process.env.RESET_SECRET);
+    const decoded = decode(token, Environment.RESET_SECRET as any);
     UserService.getByEmail(decoded).then((foundUser) => {
       if (!foundUser) router.push("");
       else setUser(foundUser);

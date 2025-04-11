@@ -1,4 +1,5 @@
 import { EmailType } from "@/constants/emails";
+import { Environment } from "@/constants/environment";
 import ToastContext from "@/contexts/ui/toast.context";
 import { currency } from "@/functions/text-manipulation";
 import EmailService from "@/hooks/services/email.service";
@@ -67,7 +68,7 @@ export default function SettleUpModal({
           {
             username: tradedToUser.name,
             tradedWithUsername: user.name,
-            link: `${process.env.BASE_URL}/users/${tradedToUser.id}/trades/${user.id}`,
+            link: `${Environment.BASE_URL}/users/${tradedToUser.id}/trades/${user.id}`,
           }
         );
 
@@ -105,7 +106,7 @@ export default function SettleUpModal({
           {
             username: tradedToUser.name,
             tradedWithUsername: user.name,
-            link: `${process.env.BASE_URL}/users/${tradedToUser.id}/trades/${user.id}`,
+            link: `${Environment.BASE_URL}/users/${tradedToUser.id}/trades/${user.id}`,
           }
         );
 

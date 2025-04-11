@@ -4,6 +4,7 @@ import Button from "@/components/ui/button/button";
 import Divider from "@/components/ui/divider/divider";
 import Footer from "@/components/ui/navigation/footer";
 import Text from "@/components/ui/text/text";
+import { Environment } from "@/constants/environment";
 import UserPageContext from "@/contexts/user/user-page.context";
 import UserContext from "@/contexts/user/user.context";
 import { currency } from "@/functions/text-manipulation";
@@ -32,7 +33,7 @@ export default function TradePage() {
   useEffect(() => {
     if (!user || !userPageUser || user?.id !== userPageUser?.id) {
       router.push(
-        `login?redirect=${process.env.BASE_URL}/users/${userId}/trades/${tradedToUserId}/${tradeId}`
+        `login?redirect=${Environment.BASE_URL}/users/${userId}/trades/${tradedToUserId}/${tradeId}`
       );
     }
   }, [user, userPageUser]);

@@ -4,6 +4,7 @@ import Input from "@/components/ui/input/input";
 import Footer from "@/components/ui/navigation/footer";
 import Text from "@/components/ui/text/text";
 import { EmailType } from "@/constants/emails";
+import { Environment } from "@/constants/environment";
 import ToastContext from "@/contexts/ui/toast.context";
 import UserContext from "@/contexts/user/user.context";
 import { encode } from "@/functions/encoding";
@@ -114,9 +115,9 @@ export default function Login() {
 
     UserService.register(username, password, email, {
       username,
-      link: `${process.env.BASE_URL}/verify?token=${encode(
+      link: `${Environment.BASE_URL}/verify?token=${encode(
         username,
-        process.env.VERIFICATION_SECRET
+        Environment.VERIFICATION_SECRET as any
       )}`,
     })
       .then((response) => {
@@ -171,9 +172,9 @@ export default function Login() {
       "Reset Password",
       {
         username: foundUser.name,
-        link: `${process.env.BASE_URL}/reset?token=${encode(
+        link: `${Environment.BASE_URL}/reset?token=${encode(
           foundUser.email,
-          process.env.RESET_SECRET
+          Environment.RESET_SECRET as any
         )}`,
       }
     ).then(() => {

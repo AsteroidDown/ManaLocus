@@ -7,6 +7,7 @@ import Select from "@/components/ui/input/select";
 import Footer from "@/components/ui/navigation/footer";
 import Text from "@/components/ui/text/text";
 import { EmailType } from "@/constants/emails";
+import { Environment } from "@/constants/environment";
 import ToastContext from "@/contexts/ui/toast.context";
 import UserContext from "@/contexts/user/user.context";
 import { currency } from "@/functions/text-manipulation";
@@ -339,7 +340,7 @@ export default function NewTradePage() {
             {
               username: tradedToUser.name,
               tradedWithUsername: user.name,
-              link: `${process.env.BASE_URL}/users/${tradedToUser.id}/trades/${
+              link: `${Environment.BASE_URL}/users/${tradedToUser.id}/trades/${
                 user.id
               }/${(response as any).tradeId}`,
               tradeResult: !evenTrade

@@ -1,6 +1,7 @@
 import Button from "@/components/ui/button/button";
 import Footer from "@/components/ui/navigation/footer";
 import Text from "@/components/ui/text/text";
+import { Environment } from "@/constants/environment";
 import UserContext from "@/contexts/user/user.context";
 import { decode } from "@/functions/encoding";
 import { updateLocalStorageUser } from "@/functions/local-storage/user-local-storage";
@@ -25,7 +26,7 @@ export default function VerifyPage() {
 
     if (!user || !token || typeof token !== "string") return;
 
-    const decoded = decode(token, process.env.VERIFICATION_SECRET);
+    const decoded = decode(token, Environment.VERIFICATION_SECRET as any);
     if (!decoded || decoded !== user.name) return;
 
     UserService.verify().then(() => {
