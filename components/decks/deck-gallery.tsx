@@ -30,6 +30,7 @@ import {
   faList,
   faPlus,
   faSearch,
+  faX,
 } from "@fortawesome/free-solid-svg-icons";
 import { Link, router } from "expo-router";
 import React, { useContext, useEffect, useState } from "react";
@@ -147,11 +148,9 @@ export default function DeckGallery({
       return;
     }
 
-    ScryfallService.autocomplete(commanderCardSearch).then((names) => {
-      if (!names.includes(commanderCardSearch))
-        setCommanderCardAutoComplete(names);
-      else setCommanderCardAutoComplete([]);
-    });
+    ScryfallService.autocomplete(commanderCardSearch).then((names) =>
+      setCommanderCardAutoComplete(names)
+    );
   }, [commanderCardSearch]);
 
   useEffect(() => {
@@ -161,10 +160,9 @@ export default function DeckGallery({
       return;
     }
 
-    ScryfallService.autocomplete(partnerCardSearch).then((names) => {
-      if (!names.includes(partnerCardSearch)) setPartnerCardAutoComplete(names);
-      else setPartnerCardAutoComplete([]);
-    });
+    ScryfallService.autocomplete(partnerCardSearch).then((names) =>
+      setPartnerCardAutoComplete(names)
+    );
   }, [partnerCardSearch]);
 
   useEffect(() => {
@@ -253,7 +251,6 @@ export default function DeckGallery({
   }
 
   function clearFilters() {
-    console.log("clear");
     setSearch("");
     setCards([]);
     setCommanderSearch("");
@@ -585,13 +582,21 @@ export default function DeckGallery({
         </View>
 
         <View className="flex flex-row justify-end gap-4">
-          {/* <Button text="Clear" type="outlined" onClick={clearFilters} /> */}
+          <Button
+            size="sm"
+            icon={faX}
+            text="Clear"
+            type="outlined"
+            className="lg:max-w-fit flex-1"
+            onClick={clearFilters}
+          />
 
           <Button
             size="sm"
             text="Search"
             icon={faSearch}
             disabled={decksLoading}
+            className="lg:max-w-fit flex-1"
             onClick={searchWithFilters}
           />
         </View>

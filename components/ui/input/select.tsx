@@ -75,6 +75,14 @@ export default function Select({
   useEffect(() => setFilteredOptions(options), [options]);
 
   useEffect(() => {
+    if (!multiple && !value && search) setSearch("");
+    else if (!value?.length) {
+      setSearch("");
+      setSelectedOptions([]);
+    }
+  }, [value]);
+
+  useEffect(() => {
     if (!options?.length) return;
 
     const foundOption =
