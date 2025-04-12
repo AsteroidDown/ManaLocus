@@ -33,17 +33,22 @@ export interface CardFiltersModalProps {
   type?: CardFilterSortType;
   open: boolean;
   setOpen: Dispatch<SetStateAction<boolean>>;
+
+  filters?: CardFilters;
+  setFilters?: Dispatch<SetStateAction<CardFilters>>;
 }
 
 export default function CardFiltersModal({
   type = "cost",
   open,
   setOpen,
+  filters,
+  setFilters,
 }: CardFiltersModalProps) {
   const { setPreferences } = useContext(BuilderPreferencesContext);
 
   const [cardFilters, setCardFilters] = useState(
-    getLocalStorageBuilderPreferences()?.filters || {}
+    filters || getLocalStorageBuilderPreferences()?.filters || {}
   );
   const [filterLength, setFilterLength] = useState(0);
   const [resetFilters, setResetFilters] = useState(false);
@@ -91,32 +96,43 @@ export default function CardFiltersModal({
   ]);
 
   function applyFilters() {
-    console.log(cardFilters);
-    setLocalStorageBuilderPreferences({ filters: cardFilters });
-    setPreferences(getLocalStorageBuilderPreferences() || {});
     setOpen(false);
+    if (filters) setFilters?.(cardFilters);
+    else {
+      setLocalStorageBuilderPreferences({ filters: cardFilters });
+      setPreferences(getLocalStorageBuilderPreferences() || {});
+    }
   }
 
   function clearFilters() {
+    setOpen(false);
     setColorFilter([]);
     setTypeFilter([]);
     setRarityFilter([]);
     setManaValueSort(null);
     setPriceSort(null);
     setResetFilters(!resetFilters);
-    setLocalStorageBuilderPreferences({
-      filters: { colorFilter: [], typeFilter: [], rarityFilter: [] },
-    });
-    setPreferences(getLocalStorageBuilderPreferences() || {});
-    setOpen(false);
+
+    if (filters) {
+      setFilters?.({
+        colorFilter: [],
+        typeFilter: [],
+        rarityFilter: [],
+      });
+    } else {
+      setLocalStorageBuilderPreferences({
+        filters: { colorFilter: [], typeFilter: [], rarityFilter: [] },
+      });
+      setPreferences(getLocalStorageBuilderPreferences() || {});
+    }
   }
 
   return (
     <Modal
-      icon={faFilter}
-      title="Set Filters"
       open={open}
+      icon={faFilter}
       setOpen={setOpen}
+      title="Set Filters"
       footer={
         <View className="flex-1 flex flex-row justify-end gap-2">
           <Button

@@ -1,7 +1,7 @@
+import CardFiltersModal from "@/components/cards/card-filters-modal";
 import CardList from "@/components/cards/card-list";
 import BoxHeader from "@/components/ui/box/box-header";
 import Button from "@/components/ui/button/button";
-import FilterBar from "@/components/ui/filters/filter-bar";
 import Footer from "@/components/ui/navigation/footer";
 import Placeholder from "@/components/ui/placeholder/placeholder";
 import SearchBar from "@/components/ui/search-bar/search-bar";
@@ -18,7 +18,11 @@ import { Card } from "@/models/card/card";
 import { Set } from "@/models/card/set";
 import { DeckViewType } from "@/models/deck/dtos/deck-filters.dto";
 import { CardFilters } from "@/models/sorted-cards/sorted-cards";
-import { faBorderAll, faList } from "@fortawesome/free-solid-svg-icons";
+import {
+  faBorderAll,
+  faFilter,
+  faList,
+} from "@fortawesome/free-solid-svg-icons";
 import { useLocalSearchParams } from "expo-router";
 import React, { useContext, useEffect, useState } from "react";
 import { Image, SafeAreaView, View } from "react-native";
@@ -30,6 +34,7 @@ export default function SetPage() {
   const [set, setSet] = useState(null as Set | null);
   const [cards, setCards] = useState([] as Card[]);
   const [filteredCards, setFilteredCards] = useState([] as Card[]);
+  const [cardFiltersOpen, setCardFiltersOpen] = useState(false);
 
   const [search, setSearch] = useState("");
 
@@ -150,7 +155,14 @@ export default function SetPage() {
               className="h-10 w-10 fill-white invert-[1]"
             />
           }
-          end={<FilterBar setFilters={setFilters} />}
+          end={
+            <Button
+              rounded
+              type="clear"
+              icon={faFilter}
+              onClick={() => setCardFiltersOpen(true)}
+            />
+          }
         />
 
         <SearchBar
@@ -191,6 +203,13 @@ export default function SetPage() {
           </View>
         )}
       </View>
+
+      <CardFiltersModal
+        open={cardFiltersOpen}
+        setOpen={setCardFiltersOpen}
+        filters={filters}
+        setFilters={setFilters}
+      />
 
       <Footer />
     </SafeAreaView>
