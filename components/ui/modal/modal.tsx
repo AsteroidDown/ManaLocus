@@ -45,6 +45,7 @@ export default function Modal({
   children,
 }: ModalProps) {
   const [animate, setAnimate] = useState(true);
+  const [modalOpen, setModalOpen] = useState(false);
 
   const transParentClasses = transparent
     ? "!bg-opacity-0 !border-none shadow-none"
@@ -53,18 +54,22 @@ export default function Modal({
   useEffect(() => {
     if (open) {
       setAnimate(true);
+      setModalOpen(true);
       setTimeout(() => setAnimate(false), 10);
-    }
+    } else fadeOut();
   }, [open]);
 
   function fadeOut() {
     setAnimate(true);
-    setTimeout(() => setOpen(false), 500);
+    setTimeout(() => {
+      setOpen(false);
+      setModalOpen(false);
+    }, 500);
   }
 
   return (
     <>
-      {open && (
+      {modalOpen && (
         <Pressable onPress={fadeOut}>
           <ReactModal transparent style={[{ opacity: 0 }]}>
             <View
