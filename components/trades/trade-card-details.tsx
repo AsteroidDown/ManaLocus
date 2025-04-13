@@ -42,7 +42,7 @@ export default function TradeCardDetails({
 
   const [foil, setFoil] = useState(false);
   const [print, setPrint] = useState(tradeCard.card);
-  const [prints, setPrints] = useState([tradeCard.card] as Card[]);
+  const [prints, setPrints] = useState([] as Card[]);
   const [price, setPrice] = useState(tradeCard.price);
   const [count, setCount] = useState(1);
   const [name, setName] = useState(tradeCard.name ?? "");
@@ -56,12 +56,15 @@ export default function TradeCardDetails({
   const cardIsItem = !tradeCard.card && tradeCard.name !== undefined;
 
   useEffect(() => {
-    if (!print || prints.length > 1) return;
+    if (!print || prints.length) return;
 
-    ScryfallService.getCardPrints(print.name).then((prints) =>
-      setPrints(prints)
-    );
-  }, [tradeCard]);
+    ScryfallService.getCardPrints(print.name).then((prints) => {
+      setPrints(prints);
+      setPrint(
+        prints.find((print) => print.scryfallId === tradeCard.card?.scryfallId)
+      );
+    });
+  }, [readonly]);
 
   useEffect(() => {
     if (

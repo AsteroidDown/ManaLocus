@@ -253,13 +253,18 @@ export default function DeckGallery({
   function clearFilters() {
     setSearch("");
     setCards([]);
-    setCommanderSearch("");
+    setCommanderSearch(" ");
     setCommanderCardSearch("");
-    setPartnerSearch("");
+    setPartnerSearch(" ");
     setPartnerCardSearch("");
     setPartnerCardAutoComplete([]);
     setCommanderCardSearch("");
     setCommanderCardAutoComplete([]);
+
+    setTimeout(() => {
+      setCommanderSearch("");
+      setPartnerSearch("");
+    }, 10);
   }
 
   function searchWithFilters() {

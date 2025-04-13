@@ -75,8 +75,8 @@ export default function Select({
   useEffect(() => setFilteredOptions(options), [options]);
 
   useEffect(() => {
-    if (!multiple && !value && search) setSearch("");
-    else if (!value?.length) {
+    if (!multiple && !value) setSearch("");
+    else if (multiple && !value?.length) {
       setSearch("");
       setSelectedOptions([]);
     }
@@ -99,9 +99,15 @@ export default function Select({
     const delayDebounceFn = setTimeout(() => {
       onSearchChange?.(search);
 
-      if (!search || (options.length === 1 && options[0].label === search)) {
+      if (
+        !search ||
+        filteredOptions.length === 1 ||
+        filteredOptions
+          .map((option) => option.label.toLowerCase())
+          .includes(search.toLowerCase())
+      ) {
         setFilteredOptions(options);
-        if (!multiple) onChange(null);
+
         return;
       }
 
@@ -140,7 +146,7 @@ export default function Select({
       setHovered(false);
       onChange(option.value);
       setSearch(option.label);
-      setFilteredOptions(options);
+      setFilteredOptions([...options]);
     }
   }
 
