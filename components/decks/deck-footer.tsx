@@ -109,7 +109,7 @@ export default function DeckFooter({
   }, [deck]);
 
   return (
-    <View className="sticky bottom-[-1px] flex flex-row gap-4 justify-between items-center lg:px-16 px-4 py-4 max-h-14 bg-gradient-to-b from-primary-200 to-primary-100 shadow-[0_0_16px] shadow-background-300">
+    <View className="sticky bottom-[-1px] flex flex-row gap-4 justify-between items-center lg:px-16 px-4 py-4 max-h-14 bg-gradient-to-b from-primary-200 to-primary-100 shadow-[0_0_16px] shadow-background-100">
       <View className="flex flex-row lg:justify-start justify-around lg:w-fit w-full items-center gap-2">
         {!deck.isCollection && !deck.isKit && (
           <>
