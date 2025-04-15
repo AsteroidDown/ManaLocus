@@ -111,12 +111,12 @@ export default function DeckGallery({
   const loadingDecks = Array(24).fill(undefined);
 
   useEffect(() => {
+    updateResultsText();
+
     if (noLoadScreen) return;
 
     if (!decks?.length && decksLoading) setLoading(true);
     else if (!decksLoading) setLoading(false);
-
-    updateResultsText();
   }, [decks, decksLoading]);
 
   useEffect(() => {
