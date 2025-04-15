@@ -7,12 +7,14 @@ import Placeholder from "@/components/ui/placeholder/placeholder";
 import SearchBar from "@/components/ui/search-bar/search-bar";
 import { TabProps } from "@/components/ui/tabs/tab";
 import TabBar from "@/components/ui/tabs/tab-bar";
+import Text from "@/components/ui/text/text";
 import LoadingContext from "@/contexts/ui/loading.context";
 import { filterCards } from "@/functions/cards/card-filtering";
 import {
   sortCards,
   sortCardsByCollectorNumber,
 } from "@/functions/cards/card-sorting";
+import { currency } from "@/functions/text-manipulation";
 import ScryfallService from "@/hooks/services/scryfall.service";
 import { Card } from "@/models/card/card";
 import { Set } from "@/models/card/set";
@@ -217,10 +219,26 @@ export default function SetPage() {
 }
 
 function getTabContent(title: string, cards: Card[], viewType: DeckViewType) {
+  const total = cards.reduce((acc, card) => acc + (card.prices.usd ?? 0), 0);
+  const euroTotal = cards.reduce(
+    (acc, card) => acc + (card.prices.eur ?? 0),
+    0
+  );
+  const tixTotal = cards.reduce((acc, card) => acc + (card.prices.tix ?? 0), 0);
+
   return [
     {
       title,
-      children: <CardList cards={cards} viewType={viewType} />,
+      children: (
+        <View className="flex mt-4">
+          <Text size="sm" className="!text-dark-600 -mb-2">
+            {cards.length} {title} Cards | {currency(total)} |{" "}
+            {currency(euroTotal, true)} | {currency(tixTotal)}
+          </Text>
+
+          <CardList cards={cards} viewType={viewType} />
+        </View>
+      ),
     },
   ];
 }
