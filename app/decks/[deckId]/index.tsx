@@ -16,18 +16,19 @@ import TabBar from "@/components/ui/tabs/tab-bar";
 import { BoardTypes } from "@/constants/boards";
 import { LegalityEvaluation } from "@/constants/mtg/mtg-legality";
 import DeckContext from "@/contexts/deck/deck.context";
+import UserContext from "@/contexts/user/user.context";
 import { graphCardsByCost } from "@/functions/cards/card-graphing";
 import { evaluateDeckLegality } from "@/functions/decks/deck-legality";
 import { setLocalStorageCards } from "@/functions/local-storage/card-local-storage";
 import { setLocalStorageDashboard } from "@/functions/local-storage/dashboard-local-storage";
 import { faChartSimple, faDatabase } from "@fortawesome/free-solid-svg-icons";
-import React, { useContext, useEffect, useRef } from "react";
+import { router } from "expo-router";
+import React, { useContext, useEffect } from "react";
 import { SafeAreaView, View } from "react-native";
 
 export default function DeckPage() {
+  const { user } = useContext(UserContext);
   const { deck } = useContext(DeckContext);
-
-  const containerRef = useRef<SafeAreaView>(null);
 
   const [legalityEvaluation, setLegalityEvaluation] = React.useState(
     {} as LegalityEvaluation
@@ -37,6 +38,10 @@ export default function DeckPage() {
 
   useEffect(() => {
     if (!deck) return;
+
+    if (deck.private && (!user || deck.userId !== user.id)) {
+      router.push("/decks");
+    }
 
     setLocalStorageCards([], BoardTypes.MAIN);
     setLocalStorageCards([], BoardTypes.SIDE);
