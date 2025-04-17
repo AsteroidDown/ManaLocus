@@ -30,7 +30,7 @@ async function getMany(
 }
 
 async function get(deckId: string): Promise<Deck> {
-  return await API.get(`decks/${deckId}`)
+  return await API.get(`decks/${deckId}/details`)
     .then((data) => mapDatabaseDeck(data, true) as any)
     .catch((error) => {
       console.error(
@@ -121,7 +121,7 @@ async function create(data: DeckDTO) {
 }
 
 async function update(deckId: string, data: DeckDTO) {
-  return await API.patch(`decks/${deckId}/`, { ...data }, true).catch(
+  return await API.patch(`decks/${deckId}/details`, { ...data }, true).catch(
     (error) => {
       console.error(
         `Error updating deck with id: (${deckId}).\nError: ${error}`
@@ -131,7 +131,7 @@ async function update(deckId: string, data: DeckDTO) {
 }
 
 async function remove(deckId: string) {
-  return await API.delete(`decks/${deckId}/`, true).catch((error) => {
+  return await API.delete(`decks/${deckId}/details`, true).catch((error) => {
     console.error(`Error removing deck with id: (${deckId}).\nError: ${error}`);
   });
 }
