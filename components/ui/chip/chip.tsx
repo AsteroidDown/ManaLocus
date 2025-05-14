@@ -18,6 +18,8 @@ export type ChipProps = ViewProps & {
   startIcon?: IconProp;
   endIcon?: IconProp;
 
+  textClasses?: string;
+
   onClick?: () => void;
 };
 
@@ -32,21 +34,21 @@ export default function Chip({
   onClick,
   style,
   className,
+  textClasses,
   children,
 }: ChipProps) {
+  const chipSize = getChipSize(size);
   const baseColor = getChipBaseColor(action, type, disabled);
   const hoverColor = getChipHoverColor(action, type, disabled);
   const textColor = getChipTextColor(action, type, disabled);
 
-  const chipHeight = getChipHeight(size);
-
   const baseChipClasses =
-    "flex flex-row px-4 py-2 gap-2 justify-center items-center rounded-full transition-all";
+    "flex flex-row gap-2 justify-center items-center rounded-full transition-all";
 
   return (
     <Pressable
       style={style}
-      className={`${className} ${baseChipClasses} ${baseColor} ${hoverColor} ${chipHeight}`}
+      className={`${className} ${baseChipClasses} ${chipSize} ${baseColor} ${hoverColor}`}
       onPress={onClick}
     >
       {startIcon && (
@@ -58,7 +60,12 @@ export default function Chip({
       )}
 
       {text && (
-        <Text noWrap size={size} weight="bold" className={`${textColor}`}>
+        <Text
+          noWrap
+          size={size}
+          weight="bold"
+          className={`${textClasses ?? textColor}`}
+        >
           {text}
         </Text>
       )}
@@ -74,6 +81,20 @@ export default function Chip({
       )}
     </Pressable>
   );
+}
+
+function getChipSize(size: Size) {
+  return size === "xs"
+    ? "px-1.5 py-0.5"
+    : size === "sm"
+    ? "px-2 py-0.5"
+    : size === "md"
+    ? "px-2.5 py-1"
+    : size === "lg"
+    ? "px-3 py-1"
+    : size === "xl"
+    ? "px-4 py-1.5"
+    : "px-4 py-2";
 }
 
 function getChipBaseColor(
@@ -226,16 +247,4 @@ function getChipTextColor(
       ? "!text-mtg-colorless"
       : "!text-mtg-blue"
   }`;
-}
-
-function getChipHeight(size: Size) {
-  return size === "xs"
-    ? "h-6"
-    : size === "sm"
-    ? "h-8"
-    : size === "md"
-    ? "h-10"
-    : size === "lg"
-    ? "h-12"
-    : "h-14";
 }
