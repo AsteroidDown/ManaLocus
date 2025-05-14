@@ -136,7 +136,7 @@ export default function DeckFooter({
                     expanded={legalityOpen}
                     setExpanded={setLegalityOpen}
                   >
-                    <Box className="flex justify-start items-start border-2 border-primary-300 !bg-background-300 !bg-opacity-90 overflow-auto max-w-[450px]">
+                    <Box className="flex justify-start items-start !px-4 !py-2 border-2 border-primary-300 !bg-background-200 !bg-opacity-90 overflow-auto max-w-[450px]">
                       <DeckLegalityInfo
                         format={deck.format}
                         legalityEvaluation={legalityEvaluation}

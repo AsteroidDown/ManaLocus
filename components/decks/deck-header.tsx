@@ -1,3 +1,4 @@
+import { BracketDetails, BracketNumber } from "@/constants/mtg/brackets";
 import { LostURL } from "@/constants/urls";
 import DeckContext from "@/contexts/deck/deck.context";
 import ToastContext from "@/contexts/ui/toast.context";
@@ -14,23 +15,33 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "expo-router";
 import moment from "moment";
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Image, View } from "react-native";
+import Box from "../ui/box/box";
 import Button from "../ui/button/button";
+import Chip from "../ui/chip/chip";
 import Dropdown from "../ui/dropdown/dropdown";
 import Text from "../ui/text/text";
+import DeckBracketInfo from "./deck-bracket-info";
 import DeckDeleteModal from "./deck-delete-modal";
 
-export default function DeckHeader({ deck }: { deck: Deck }) {
+export default function DeckHeader({
+  deck,
+  bracket,
+}: {
+  deck: Deck;
+  bracket?: BracketDetails;
+}) {
   const { user } = useContext(UserContext);
   const { setDeck } = useContext(DeckContext);
   const { addToast } = useContext(ToastContext);
 
-  const [deckFavorited, setDeckFavorited] = React.useState(false);
-  const [deckViewed, setDeckViewed] = React.useState(null as boolean | null);
+  const [deckFavorited, setDeckFavorited] = useState(false);
+  const [deckViewed, setDeckViewed] = useState(null as boolean | null);
 
-  const [optionsExpanded, setOptionsExpanded] = React.useState(false);
-  const [deleteModalOpen, setDeleteModalOpen] = React.useState(false);
+  const [bracketExpanded, setBracketExpanded] = useState(false);
+  const [optionsExpanded, setOptionsExpanded] = useState(false);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
 
   useEffect(() => {
     if (!deck) return;
@@ -97,13 +108,48 @@ export default function DeckHeader({ deck }: { deck: Deck }) {
       <View className="absolute w-full h-full bg-gradient-to-b from-transparent to-black opacity-40" />
 
       <View className="absolute flex justify-center gap-1 w-full h-full lg:px-16 px-4 top-0 left-0">
-        <Text
-          size="sm"
-          weight="bold"
-          className={`px-2 py-1 bg-dark-200 bg-opacity-85 rounded-xl w-fit h-fit`}
-        >
-          {deck.format?.length ? titleCase(deck.format) : "TBD"}
-        </Text>
+        <View className="flex flex-row items-center gap-1 -ml-2">
+          <Chip
+            size="sm"
+            type="outlined"
+            textClasses="text-white"
+            className="bg-background-100 bg-opacity-75"
+            text={deck.format?.length ? titleCase(deck.format) : "TBD"}
+          />
+
+          {bracket && (
+            <Chip
+              size="sm"
+              type="outlined"
+              className="bg-background-100 bg-opacity-75"
+              onClick={() => setBracketExpanded(!bracketExpanded)}
+            >
+              <Text size="sm" weight="medium">
+                {BracketNumber[bracket.bracket]}
+              </Text>
+
+              <View className="h-[16px] w-px mt-0.5 bg-white" />
+
+              <Text size="sm" weight="medium">
+                {bracket.bracket}
+              </Text>
+            </Chip>
+          )}
+
+          {bracket && (
+            <View className="mt-6">
+              <Dropdown
+                xOffset={-120}
+                expanded={bracketExpanded}
+                setExpanded={setBracketExpanded}
+              >
+                <Box className="flex justify-start items-start border-2 !px-4 !py-2 border-primary-300 !bg-background-200 !bg-opacity-95 overflow-auto max-w-[450px]">
+                  <DeckBracketInfo bracket={bracket} />
+                </Box>
+              </Dropdown>
+            </View>
+          )}
+        </View>
 
         <Text weight="bold" className="lg:!text-5xl !text-3xl">
           {deck.name}

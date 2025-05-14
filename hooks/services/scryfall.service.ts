@@ -37,6 +37,8 @@ async function findCards(
     q: query + " game:paper",
   }).catch((error) => console.error(error));
 
+  console.log(response.data.map((card) => card.name).join("\n"));
+
   return {
     total: response?.total_cards ?? 0,
     nextPage: response?.next_page?.split("search?")[1],
@@ -50,6 +52,8 @@ async function findCardsByPage(
   const response: ScryfallCardList = await ScryfallAPI.get(
     `cards/search?${href}`
   ).catch((error) => console.error(error));
+
+  console.log(response.data.map((card) => card.name).join("\n"));
 
   return {
     total: response.total_cards,

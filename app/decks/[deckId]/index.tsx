@@ -14,27 +14,31 @@ import Divider from "@/components/ui/divider/divider";
 import Footer from "@/components/ui/navigation/footer";
 import TabBar from "@/components/ui/tabs/tab-bar";
 import { BoardTypes } from "@/constants/boards";
+import { BaseBracketDetails } from "@/constants/mtg/brackets";
+import { MTGFormats } from "@/constants/mtg/mtg-format";
 import { LegalityEvaluation } from "@/constants/mtg/mtg-legality";
 import DeckContext from "@/contexts/deck/deck.context";
 import UserContext from "@/contexts/user/user.context";
 import { graphCardsByCost } from "@/functions/cards/card-graphing";
+import { getBracketDetails } from "@/functions/decks/deck-bracket";
 import { evaluateDeckLegality } from "@/functions/decks/deck-legality";
 import { setLocalStorageCards } from "@/functions/local-storage/card-local-storage";
 import { setLocalStorageDashboard } from "@/functions/local-storage/dashboard-local-storage";
 import { faChartSimple, faDatabase } from "@fortawesome/free-solid-svg-icons";
 import { router } from "expo-router";
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { SafeAreaView, View } from "react-native";
 
 export default function DeckPage() {
   const { user } = useContext(UserContext);
   const { deck } = useContext(DeckContext);
 
-  const [legalityEvaluation, setLegalityEvaluation] = React.useState(
+  const [stacked, setStacked] = useState(true);
+
+  const [bracket, setBracket] = useState(BaseBracketDetails);
+  const [legalityEvaluation, setLegalityEvaluation] = useState(
     {} as LegalityEvaluation
   );
-
-  const [stacked, setStacked] = React.useState(true);
 
   useEffect(() => {
     if (!deck) return;
@@ -49,6 +53,9 @@ export default function DeckPage() {
     setLocalStorageCards([], BoardTypes.ACQUIRE);
     setLocalStorageDashboard({ sections: [] });
 
+    if (deck.format === MTGFormats.COMMANDER) {
+      setBracket(getBracketDetails(deck));
+    }
     setLegalityEvaluation(evaluateDeckLegality(deck));
   }, [deck]);
 
@@ -56,7 +63,7 @@ export default function DeckPage() {
 
   return (
     <SafeAreaView>
-      <DeckHeader deck={deck} />
+      <DeckHeader deck={deck} bracket={bracket} />
 
       <View className="flex flex-1 gap-8 lg:px-16 px-4 py-4 border-t-2 border-background-200 bg-background-100">
         {(deck.dashboard?.sections?.length || 0) > 0 ? (

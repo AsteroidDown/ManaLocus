@@ -29,7 +29,7 @@ export default function DeckLegalityInfo({
       <Text size="lg" weight="semi">
         This deck is
         <Text
-          size="lg"
+          size="md"
           weight="semi"
           action={legalityEvaluation.legal ? "success" : "danger"}
         >
@@ -47,7 +47,7 @@ export default function DeckLegalityInfo({
                 : "text-danger-400"
             }
           />
-          <Text>This deck has a legal commander</Text>
+          <Text size="sm">This deck has a legal commander</Text>
         </View>
       )}
 
@@ -58,7 +58,7 @@ export default function DeckLegalityInfo({
             legalityEvaluation.size ? "text-success-400" : "text-danger-400"
           }
         />
-        <Text>
+        <Text size="sm">
           {legalityEvaluation.size
             ? restrictions?.deckMaxSize
               ? `This deck is the correct size (${restrictions.deckMaxSize} cards)`
@@ -78,7 +78,7 @@ export default function DeckLegalityInfo({
             legalityEvaluation.cards ? "text-success-400" : "text-danger-400"
           }
         />
-        <Text>
+        <Text size="sm">
           {legalityEvaluation.cards
             ? `Each card is ${titleCase(format)} legal`
             : `Not all cards are ${titleCase(format)} legal`}
@@ -97,7 +97,7 @@ export default function DeckLegalityInfo({
                 : "text-danger-400"
             }
           />
-          <Text>
+          <Text size="sm">
             {legalityEvaluation.colorIdentity
               ? `Each card is in the commander's color identity`
               : `Some cards are outside the commander's color identity`}
@@ -112,7 +112,7 @@ export default function DeckLegalityInfo({
             legalityEvaluation.unique ? "text-success-400" : "text-danger-400"
           }
         />
-        <Text>
+        <Text size="sm">
           {legalityEvaluation.unique
             ? `Each card in this deck has no more than ${restrictions?.uniqueCardCount} copies`
             : `Cards in this deck exceed the ${restrictions?.uniqueCardCount} copy limit`}
@@ -127,7 +127,7 @@ export default function DeckLegalityInfo({
               legalityEvaluation.rarity ? "text-success-400" : "text-danger-400"
             }
           />
-          <Text>
+          <Text size="sm">
             {restrictions?.maxRarity
               ? `Each card is the correct rarity (${
                   restrictions.maxRarity === MTGRarities.COMMON
@@ -140,7 +140,7 @@ export default function DeckLegalityInfo({
       )}
 
       {"tix" in legalityEvaluation && (
-        <Text>
+        <Text size="sm">
           {restrictions?.maxTix
             ? `Each cards is under the specified tix amount (${restrictions.maxTix})`
             : `Cards in this deck exceed the specified tix amount (${restrictions?.maxTix})`}
