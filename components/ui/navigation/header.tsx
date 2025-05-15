@@ -114,6 +114,16 @@ export default function Header() {
                   </Dropdown>
                 </View>
               </Button>
+
+              <Link href="/help">
+                <Button
+                  square
+                  size="md"
+                  type="clear"
+                  text="Help"
+                  buttonClasses="min-h-12"
+                />
+              </Link>
             </View>
           )}
         </View>
@@ -206,6 +216,19 @@ export default function Header() {
               className="w-full"
               buttonClasses="gap-1.5"
               onClick={() => navigate("/kits")}
+            />
+
+            <Divider thick />
+
+            <Button
+              start
+              square
+              size="lg"
+              type="clear"
+              text="Help"
+              className="w-full"
+              buttonClasses="gap-1.5"
+              onClick={() => navigate("/help")}
             />
 
             <Divider thick />

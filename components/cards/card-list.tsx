@@ -14,10 +14,15 @@ import CardText from "./card-text";
 
 export interface CardListProps {
   cards: Card[];
+  includeSet?: boolean;
   viewType?: DeckViewType;
 }
 
-export default function CardList({ cards, viewType }: CardListProps) {
+export default function CardList({
+  cards,
+  includeSet,
+  viewType,
+}: CardListProps) {
   const { setId } = useLocalSearchParams();
 
   const [page, setPage] = useState(1);
@@ -76,19 +81,24 @@ export default function CardList({ cards, viewType }: CardListProps) {
             columns={[
               {
                 fit: true,
-                row: (card) => <Text>{card.collectorNumber}</Text>,
+                row: (card) => (
+                  <Text>
+                    {includeSet ? card.set.toUpperCase() + " " : ""}{" "}
+                    {card.collectorNumber}
+                  </Text>
+                ),
               },
               {
                 title: "Name",
                 row: (card) => <Text>{card.name}</Text>,
               },
               {
-                title: "Type",
-                row: (card) => <Text>{titleCase(getCardType(card))}</Text>,
-              },
-              {
                 title: "Mana Cost",
                 row: (card) => <CardText text={card.manaCost}></CardText>,
+              },
+              {
+                title: "Type",
+                row: (card) => <Text>{titleCase(getCardType(card))}</Text>,
               },
             ]}
           />

@@ -47,7 +47,7 @@ export const Brackets: { [key: string]: Bracket } = {
   Exhibition: {
     gameChangers: false,
     massLandDenial: false,
-    extraTurns: true,
+    extraTurns: false,
     chainingExtraTurns: false,
     twoCardInfinites: false,
     tutors: true,
