@@ -31,7 +31,7 @@ export default function GameChangersPage() {
                   className="text-primary-400"
                   href="mailto:support@manalocus.com"
                 >
-                  manalocus@gmail.com
+                  support@manalocus.com
                 </Link>{" "}
                 or on our{" "}
                 <Link

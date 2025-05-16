@@ -171,7 +171,10 @@ export default function DeckBracketInfo({
         <Text size="xs" className="italic">
           This is a guess and may not be accurate. If you believe we've made a
           mistake, please contact us by{" "}
-          <Link className="text-primary-400" href="mailto:manalocus@gmail.com">
+          <Link
+            className="text-primary-400"
+            href="mailto:support@manalocus.com"
+          >
             email
           </Link>{" "}
           or on our{" "}

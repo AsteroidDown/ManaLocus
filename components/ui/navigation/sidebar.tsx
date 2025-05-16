@@ -28,36 +28,42 @@ export default function Sidebar({
   const [open, setOpen] = useState(width > 600);
 
   return (
-    <View
-      className={`relative flex flex-row min-w-[256] max-w-[256px] min-h-[100dvh] bg-background-100 border-r-2 border-r-dark-200 transition-all duration-300 ${
-        !open ? "-ml-[206px]" : ""
-      }`}
-    >
-      <View className="flex-1 px-4 py-2">
-        {sections.map((section) => (
-          <View className="flex gap-1" key={section.title}>
-            <Text size="lg" weight="medium">
-              {section.title}
-            </Text>
+    <View className="relative z-10">
+      <View className={`relative flex flex-row min-w-[50px]`} />
 
-            {section?.links.map((link) => (
-              <SidebarLinkLayout
-                current={current}
-                link={link}
-                key={link.title}
-              />
+      <View className="sticky top-0">
+        <View
+          className={`flex-1 flex flex-row px-4 py-2 min-w-[256] max-w-[256px] min-h-[100dvh] bg-background-100 border-r-2 border-r-dark-200 transition-all duration-300 ${
+            width <= 600 ? "absolute" : ""
+          } ${!open ? "-ml-[206px]" : ""}`}
+        >
+          <View className="flex-1">
+            {sections.map((section) => (
+              <View className="flex gap-1" key={section.title}>
+                <Text size="lg" weight="medium">
+                  {section.title}
+                </Text>
+
+                {section?.links.map((link) => (
+                  <SidebarLinkLayout
+                    current={current}
+                    link={link}
+                    key={link.title}
+                  />
+                ))}
+              </View>
             ))}
           </View>
-        ))}
-      </View>
 
-      <View className="flex flex-row justify-end">
-        <Button
-          size="sm"
-          type="clear"
-          icon={faBars}
-          onClick={() => setOpen(!open)}
-        />
+          <View className="flex flex-row justify-end -mr-4">
+            <Button
+              size="sm"
+              type="clear"
+              icon={faBars}
+              onClick={() => setOpen(!open)}
+            />
+          </View>
+        </View>
       </View>
     </View>
   );

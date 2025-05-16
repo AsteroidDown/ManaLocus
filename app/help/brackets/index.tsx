@@ -8,7 +8,7 @@ import { HelpSections } from "../_layout";
 
 export default function BracketsPage() {
   return (
-    <View className="flex">
+    <View className="flex -z-[1]">
       <View className="flex flex-row">
         <Sidebar current="Brackets" sections={HelpSections} />
 
