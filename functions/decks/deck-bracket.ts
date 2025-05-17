@@ -49,14 +49,6 @@ export function getBracketDetails(deck: Deck): BracketDetails {
     bracket = BracketType.Optimized;
   }
 
-  console.log({
-    bracket,
-    gameChangers,
-    tutors,
-    massLandDenial,
-    extraTurns,
-  });
-
   return {
     bracket,
     gameChangers,

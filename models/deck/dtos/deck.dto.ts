@@ -5,6 +5,7 @@ import { DeckCard } from "../deck";
 export interface DeckDTO {
   name?: string;
   description?: string;
+  bracket?: number;
 
   private?: boolean;
   format?: MTGFormat;

@@ -1,11 +1,19 @@
+import DeckBracketInfo from "@/components/decks/deck-bracket-info";
 import DeckKits from "@/components/decks/deck-kits";
+import Box from "@/components/ui/box/box";
 import BoxHeader from "@/components/ui/box/box-header";
 import Button from "@/components/ui/button/button";
 import Checkbox from "@/components/ui/checkbox/checkbox";
+import Dropdown from "@/components/ui/dropdown/dropdown";
 import Input from "@/components/ui/input/input";
 import Select from "@/components/ui/input/select";
 import Text from "@/components/ui/text/text";
 import { BoardTypes } from "@/constants/boards";
+import {
+  BracketDetails,
+  BracketNumber,
+  BracketType,
+} from "@/constants/mtg/brackets";
 import { MTGColorSymbols } from "@/constants/mtg/mtg-colors";
 import { FormatsWithCommander, MTGFormats } from "@/constants/mtg/mtg-format";
 import { MTGCardTypes } from "@/constants/mtg/mtg-types";
@@ -13,6 +21,7 @@ import StoredCardsContext from "@/contexts/cards/stored-cards.context";
 import DeckContext from "@/contexts/deck/deck.context";
 import ToastContext from "@/contexts/ui/toast.context";
 import { getCardType } from "@/functions/cards/card-information";
+import { getBracketDetails } from "@/functions/decks/deck-bracket";
 import { getLocalStorageStoredCards } from "@/functions/local-storage/card-local-storage";
 import { getLocalStorageDashboard } from "@/functions/local-storage/dashboard-local-storage";
 import { getLocalStorageKits } from "@/functions/local-storage/kits-local-storage";
@@ -22,7 +31,7 @@ import { titleCase } from "@/functions/text-manipulation";
 import DeckService from "@/hooks/services/deck.service";
 import { Card } from "@/models/card/card";
 import { DeckDTO } from "@/models/deck/dtos/deck.dto";
-import { faSave } from "@fortawesome/free-solid-svg-icons";
+import { faInfoCircle, faSave } from "@fortawesome/free-solid-svg-icons";
 import { router } from "expo-router";
 import React, { useContext, useEffect, useState } from "react";
 import { Image, SafeAreaView, useWindowDimensions, View } from "react-native";
@@ -43,11 +52,19 @@ export default function DeckSettingsPage() {
   const width = useWindowDimensions().width;
 
   const [saving, setSaving] = useState(false);
+  const [bracketExpanded, setBracketExpanded] = useState(false);
 
   const [name, setName] = useState("");
   const [privateView, setPrivateView] = useState(false);
   const [isKit, setIsKit] = useState(false);
   const [description, setDescription] = useState("");
+  const [bracket, setBracket] = useState(undefined as number | undefined);
+  const [bracketGuess, setBracketGuess] = useState(
+    undefined as number | undefined
+  );
+  const [bracketInfo, setBracketInfo] = useState(
+    undefined as BracketDetails | undefined
+  );
   const [inProgress, setInProgress] = useState(false);
 
   const [featuredCardSearch, setFeaturedCardSearch] = useState("");
@@ -67,6 +84,9 @@ export default function DeckSettingsPage() {
     setName(deck.name);
     setPrivateView(deck.private);
     setDescription(deck.description || "");
+    setBracket(deck.bracket);
+    setBracketGuess(BracketNumber[getBracketDetails(deck).bracket]);
+    setBracketInfo(getBracketDetails(deck));
     setFormat(deck.format);
     setIsKit(!!deck.isKit);
     setInProgress(!!deck.inProgress);
@@ -272,6 +292,7 @@ export default function DeckSettingsPage() {
 
     const dto: DeckDTO = {
       name,
+      bracket,
       description,
       private: privateView,
       format: format ?? undefined,
@@ -361,22 +382,96 @@ export default function DeckSettingsPage() {
 
           <View className="flex-1 flex gap-4">
             {width <= 600 && (
-              <Input
-                label="Name"
-                placeholder="Name"
-                value={name}
-                onChange={setName}
-              />
-            )}
-
-            <View className="flex flex-row flex-wrap gap-4">
-              {width > 600 && (
+              <>
                 <Input
                   label="Name"
                   placeholder="Name"
                   value={name}
                   onChange={setName}
                 />
+
+                {commanderFormat && (
+                  <View className="z-[30]">
+                    <Select
+                      label="Bracket"
+                      placeholder="Bracket"
+                      value={bracket}
+                      onChange={setBracket}
+                      options={Object.values(BracketType).map((bracket) => ({
+                        label: BracketNumber[bracket] + " " + bracket,
+                        value: BracketNumber[bracket],
+                      }))}
+                    />
+                  </View>
+                )}
+              </>
+            )}
+
+            <View className="flex flex-row flex-wrap gap-4">
+              {width > 600 && (
+                <View className="flex-1 flex flex-row">
+                  <Input
+                    label="Name"
+                    className="flex-1"
+                    placeholder="Name"
+                    value={name}
+                    onChange={setName}
+                    squareRight={commanderFormat}
+                  />
+
+                  {commanderFormat && (
+                    <View className="z-[30]">
+                      <Select
+                        squareLeft
+                        label="Bracket"
+                        placeholder="Bracket"
+                        className="max-w-[164px]"
+                        value={bracket}
+                        onChange={setBracket}
+                        options={Object.values(BracketType).map((bracket) => ({
+                          label: BracketNumber[bracket] + " " + bracket,
+                          value: BracketNumber[bracket],
+                        }))}
+                        labelEnd={
+                          <>
+                            <Button
+                              rounded
+                              type="clear"
+                              action="default"
+                              icon={faInfoCircle}
+                              buttonClasses="!w-2 !h-2"
+                              onClick={() =>
+                                setBracketExpanded(!bracketExpanded)
+                              }
+                            />
+
+                            <View className="mt-5">
+                              <Dropdown
+                                xOffset={-100}
+                                expanded={bracketExpanded}
+                                setExpanded={setBracketExpanded}
+                              >
+                                <Box className="flex justify-start items-start border-2 !px-4 !py-2 border-primary-300 !bg-background-200 !bg-opacity-95 overflow-auto max-w-[450px]">
+                                  {deck && bracketInfo && (
+                                    <DeckBracketInfo
+                                      user={deck.user!}
+                                      bracket={bracketInfo}
+                                      bracketSet={bracket}
+                                      bracketGuess={
+                                        bracketGuess ??
+                                        BracketNumber[bracketInfo.bracket]
+                                      }
+                                    />
+                                  )}
+                                </Box>
+                              </Dropdown>
+                            </View>
+                          </>
+                        }
+                      />
+                    </View>
+                  )}
+                </View>
               )}
 
               {width <= 600 && (
@@ -440,7 +535,7 @@ export default function DeckSettingsPage() {
               )}
             </View>
 
-            <View className="flex flex-row flex-wrap gap-4">
+            <View className="flex flex-row flex-wrap gap-4 z-[-1]">
               {width > 600 && (
                 <Input
                   label="Featured Card"

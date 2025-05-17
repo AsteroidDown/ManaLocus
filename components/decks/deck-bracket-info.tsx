@@ -4,6 +4,7 @@ import {
   Brackets,
 } from "@/constants/mtg/brackets";
 import { Card } from "@/models/card/card";
+import { User } from "@/models/user/user";
 import {
   faArrowUpRightFromSquare,
   faCheckCircle,
@@ -17,11 +18,19 @@ import CardViewMultipleModal from "../cards/card-view-multiple-modal";
 import Text from "../ui/text/text";
 
 export default function DeckBracketInfo({
+  user,
   bracket,
+  bracketSet,
+  bracketGuess,
 }: {
+  user: User;
+  bracketSet?: number;
+  bracketGuess: number;
   bracket: BracketDetails;
 }) {
-  const bracketInfo = Brackets[bracket.bracket];
+  const bracketNumber = bracketSet ?? bracketGuess;
+  const bracketType = BracketNumber[bracketNumber];
+  const bracketInfo = Brackets[bracketType];
 
   const [open, setOpen] = useState(false);
   const [viewType, setViewType] = useState("Game Changers");
@@ -36,8 +45,7 @@ export default function DeckBracketInfo({
   return (
     <View className="flex mb-1">
       <Text size="md" weight="semi">
-        This deck is in bracket {BracketNumber[bracket.bracket]},{" "}
-        {bracket.bracket}
+        {`This deck is bracket ${bracketNumber}: ${bracketType}`}
       </Text>
 
       <Pressable
@@ -168,22 +176,23 @@ export default function DeckBracketInfo({
       <View className="flex flex-row items-center gap-2 mt-2">
         <FontAwesomeIcon icon={faInfoCircle} className="text-white" />
 
-        <Text size="xs" className="italic">
-          This is a guess and may not be accurate. If you believe we've made a
-          mistake, please contact us by{" "}
-          <Link
-            className="text-primary-400"
-            href="mailto:support@manalocus.com"
-          >
-            email
+        <Text size="xs" className="italic max-w-[304px]">
+          {bracketSet
+            ? `${
+                user?.name ?? "This user"
+              } has set their deck to ${bracketNumber}: ${bracketType}, our guess is ${
+                BracketNumber[bracket.bracket]
+              }: ${bracket.bracket}. `
+            : "This is a guess and may not be accurate. "}
+          If you believe we've made a mistake,{" "}
+          <Link className="text-primary-400" href="help/contact">
+            please contact us
           </Link>{" "}
-          or on our{" "}
-          <Link
-            className="text-primary-400"
-            href="https://discord.gg/qmsPDd9pva"
-          >
-            Discord
+          or view our{" "}
+          <Link className="text-primary-400" href="help/brackets">
+            bracket guide
           </Link>
+          .
         </Text>
       </View>
 

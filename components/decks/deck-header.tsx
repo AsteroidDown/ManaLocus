@@ -125,13 +125,17 @@ export default function DeckHeader({
               onClick={() => setBracketExpanded(!bracketExpanded)}
             >
               <Text size="sm" weight="medium">
-                {BracketNumber[bracket.bracket]}
+                {deck.bracket ??
+                  deck.bracketGuess ??
+                  BracketNumber[bracket.bracket]}
               </Text>
 
               <View className="h-[16px] w-px mt-0.5 bg-white" />
 
               <Text size="sm" weight="medium">
-                {bracket.bracket}
+                {deck.bracket || deck.bracketGuess
+                  ? BracketNumber[deck.bracket ?? deck.bracketGuess ?? 1]
+                  : bracket.bracket}
               </Text>
             </Chip>
           )}
@@ -144,7 +148,14 @@ export default function DeckHeader({
                 setExpanded={setBracketExpanded}
               >
                 <Box className="flex justify-start items-start border-2 !px-4 !py-2 border-primary-300 !bg-background-200 !bg-opacity-95 overflow-auto max-w-[450px]">
-                  <DeckBracketInfo bracket={bracket} />
+                  <DeckBracketInfo
+                    user={deck.user!}
+                    bracket={bracket}
+                    bracketSet={deck.bracket}
+                    bracketGuess={
+                      deck.bracketGuess ?? BracketNumber[bracket.bracket]
+                    }
+                  />
                 </Box>
               </Dropdown>
             </View>

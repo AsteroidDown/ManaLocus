@@ -15,6 +15,9 @@ export interface Deck {
 
   name: string;
   description?: string;
+  bracket?: number;
+  bracketGuess?: number;
+
   favorites: number;
   views: number;
 

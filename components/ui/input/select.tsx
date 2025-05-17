@@ -2,6 +2,7 @@ import { faChevronDown, faX } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, {
   Dispatch,
+  ReactNode,
   SetStateAction,
   useEffect,
   useRef,
@@ -20,6 +21,7 @@ export type InputProps = ViewProps & {
   options: SelectOption[];
 
   label?: string;
+  labelEnd?: ReactNode;
   placeholder?: string;
   notFoundText?: string;
   multiple?: boolean;
@@ -41,6 +43,7 @@ export default function Select({
   options,
 
   label,
+  labelEnd,
   placeholder,
   notFoundText,
   multiple,
@@ -166,9 +169,15 @@ export default function Select({
       onPointerLeave={() => setHovered(false)}
     >
       {label && (
-        <Text noWrap weight="medium">
-          {label}
-        </Text>
+        <View className="flex flex-row items-center gap-2">
+          <Text noWrap weight="medium">
+            {label}
+          </Text>
+
+          <View className="flex flex-row items-center max-h-[20px]">
+            {labelEnd}
+          </View>
+        </View>
       )}
 
       <View

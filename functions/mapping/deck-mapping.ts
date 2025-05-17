@@ -18,6 +18,8 @@ export function mapDatabaseDeck(data: any, withCards = false): Deck {
 
     name: deck.name,
     description: deck.description,
+    bracket: deck.bracket,
+    bracketGuess: deck.bracketGuess,
     favorites: data.favorites || 0,
     views: data.views || 0,
 
