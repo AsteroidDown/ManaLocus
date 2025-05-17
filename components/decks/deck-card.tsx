@@ -1,3 +1,4 @@
+import { BracketNumber } from "@/constants/mtg/brackets";
 import { LostURL } from "@/constants/urls";
 import { titleCase } from "@/functions/text-manipulation";
 import { Deck } from "@/models/deck/deck";
@@ -15,6 +16,8 @@ export interface DeckCardProps {
 
 export default function DeckCard({ deck, hideFormat }: DeckCardProps) {
   const [hovered, setHovered] = React.useState(false);
+
+  const bracket = deck.bracket || deck.bracketGuess;
 
   return (
     <Pressable
@@ -42,13 +45,25 @@ export default function DeckCard({ deck, hideFormat }: DeckCardProps) {
       >
         <View className="flex flex-row justify-between items-center">
           {!hideFormat && (
-            <Text
-              size="xs"
-              weight="bold"
-              className={`px-2 py-1 bg-primary-200 bg-opacity-85 rounded-xl w-fit h-fit`}
-            >
-              {deck.format?.length ? titleCase(deck.format) : "TBD"}
-            </Text>
+            <View className="flex flex-row items-center gap-1">
+              <Text
+                size="xs"
+                weight="bold"
+                className={`px-2 py-1 bg-primary-200 bg-opacity-85 rounded-xl w-fit h-fit`}
+              >
+                {deck.format?.length ? titleCase(deck.format) : "TBD"}
+              </Text>
+
+              {bracket && (
+                <Text
+                  size="xs"
+                  weight="bold"
+                  className={`px-2 py-1 bg-dark-200 bg-opacity-85 rounded-xl w-fit h-fit`}
+                >
+                  {bracket}: {BracketNumber[bracket]}
+                </Text>
+              )}
+            </View>
           )}
 
           {deck.colors?.length > 0 && (
