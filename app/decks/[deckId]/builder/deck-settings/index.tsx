@@ -294,6 +294,7 @@ export default function DeckSettingsPage() {
       name,
       bracket,
       description,
+      bracketGuess,
       private: privateView,
       format: format ?? undefined,
       colors: `{${deckColors.join("}{")}}`,
@@ -401,6 +402,40 @@ export default function DeckSettingsPage() {
                         label: BracketNumber[bracket] + " " + bracket,
                         value: BracketNumber[bracket],
                       }))}
+                      labelEnd={
+                        <>
+                          <Button
+                            rounded
+                            type="clear"
+                            action="default"
+                            icon={faInfoCircle}
+                            buttonClasses="!w-2 !h-2"
+                            onClick={() => setBracketExpanded(!bracketExpanded)}
+                          />
+
+                          <View className="mt-5">
+                            <Dropdown
+                              xOffset={-100}
+                              expanded={bracketExpanded}
+                              setExpanded={setBracketExpanded}
+                            >
+                              <Box className="flex justify-start items-start border-2 !px-4 !py-2 border-primary-300 !bg-background-200 !bg-opacity-95 overflow-auto max-w-[450px]">
+                                {deck && bracketInfo && (
+                                  <DeckBracketInfo
+                                    user={deck.user!}
+                                    bracket={bracketInfo}
+                                    bracketSet={bracket}
+                                    bracketGuess={
+                                      bracketGuess ??
+                                      BracketNumber[bracketInfo.bracket]
+                                    }
+                                  />
+                                )}
+                              </Box>
+                            </Dropdown>
+                          </View>
+                        </>
+                      }
                     />
                   </View>
                 )}

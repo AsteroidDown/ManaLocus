@@ -6,6 +6,7 @@ export interface DeckDTO {
   name?: string;
   description?: string;
   bracket?: number;
+  bracketGuess?: number;
 
   private?: boolean;
   format?: MTGFormat;
