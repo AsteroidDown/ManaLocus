@@ -59,7 +59,7 @@ export default function UserTradesPage() {
                 text="New Trade"
                 icon={faPlus}
                 onClick={() =>
-                  router.push(`users/${userPageUser.id}/trades/new-trade`)
+                  router.push(`users/${userPageUser.name}/trades/new-trade`)
                 }
               />
             }
@@ -72,8 +72,8 @@ export default function UserTradesPage() {
           loading={loading}
           rowClick={(trade: TradeSummary) =>
             router.push(
-              `users/${userPageUser.id}/trades/${
-                trade.tradedToUser?.id ?? "anonymous"
+              `users/${userPageUser.name}/trades/${
+                trade.tradedToUser?.name ?? "anonymous"
               }`
             )
           }
@@ -82,9 +82,7 @@ export default function UserTradesPage() {
               {
                 title: "User",
                 row: (trade) => (
-                  <Text>
-                    {(trade.tradedToUser as any)?.username ?? "Anonymous"}
-                  </Text>
+                  <Text>{trade.tradedToUser?.name ?? "Anonymous"}</Text>
                 ),
               },
               ...(width > 600

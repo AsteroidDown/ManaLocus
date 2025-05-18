@@ -68,7 +68,7 @@ export default function SettleUpModal({
           {
             username: tradedToUser.name,
             tradedWithUsername: user.name,
-            link: `${Environment.BASE_URL}/users/${tradedToUser.id}/trades/${user.id}`,
+            link: `${Environment.BASE_URL}/users/${tradedToUser.name}/trades/${user.name}`,
           }
         );
 
@@ -106,7 +106,7 @@ export default function SettleUpModal({
           {
             username: tradedToUser.name,
             tradedWithUsername: user.name,
-            link: `${Environment.BASE_URL}/users/${tradedToUser.id}/trades/${user.id}`,
+            link: `${Environment.BASE_URL}/users/${tradedToUser.name}/trades/${user.name}`,
           }
         );
 

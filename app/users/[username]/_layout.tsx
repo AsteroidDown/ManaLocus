@@ -31,27 +31,27 @@ export default function UserLayout() {
   const tabs: TabProps[] = [
     {
       title: "Decks",
-      link: `users/${userPageUser.id}`,
+      link: `users/${userPageUser.name}`,
       name: "decks",
     },
     {
       title: "Collections",
-      link: `users/${userPageUser.id}/collections`,
+      link: `users/${userPageUser.name}/collections`,
       name: "collections",
     },
     {
       title: "Favorites",
-      link: `users/${userPageUser.id}/favorites`,
+      link: `users/${userPageUser.name}/favorites`,
       name: "favorites",
     },
     {
       title: "Kits",
-      link: `users/${userPageUser.id}/kits`,
+      link: `users/${userPageUser.name}/kits`,
       name: "kits",
     },
     {
       title: "Folders",
-      link: `users/${userPageUser.id}/folders`,
+      link: `users/${userPageUser.name}/folders`,
       name: "folders",
     },
   ];
@@ -60,12 +60,12 @@ export default function UserLayout() {
     tabs.push(
       {
         title: "Trades",
-        link: `users/${userPageUser.id}/trades`,
+        link: `users/${userPageUser.name}/trades`,
         name: "settings",
       },
       {
         title: "Settings",
-        link: `users/${userPageUser.id}/settings`,
+        link: `users/${userPageUser.name}/settings`,
         name: "settings",
       }
     );

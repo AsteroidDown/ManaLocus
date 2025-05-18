@@ -64,7 +64,7 @@ export default function UserSettingsPage() {
   const { preferences, setPreferences } = useContext(UserPreferencesContext);
 
   if (user?.id !== userPageUser?.id) {
-    router.push(`users/${userPageUser?.id}`);
+    router.push(`users/${userPageUser?.name}`);
     return null;
   }
 

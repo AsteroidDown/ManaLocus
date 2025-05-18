@@ -29,7 +29,7 @@ export default function TradedToUserPage() {
   if (!user || !userPageUser) return null;
   if (user?.id !== userPageUser?.id) return null;
 
-  const { tradedToUserId } = useLocalSearchParams();
+  const { tradedToUserName } = useLocalSearchParams();
 
   const width = useWindowDimensions().width;
 
@@ -46,31 +46,31 @@ export default function TradedToUserPage() {
 
   useEffect(() => {
     if (
-      !tradedToUserId ||
-      tradedToUserId === "anonymous" ||
-      typeof tradedToUserId !== "string"
+      !tradedToUserName ||
+      tradedToUserName === "anonymous" ||
+      typeof tradedToUserName !== "string"
     ) {
       return;
     }
 
     setLoading(true);
 
-    UserService.get({ id: tradedToUserId }).then((user) =>
+    UserService.get({ username: tradedToUserName }).then((user) =>
       setTradedToUser(user)
     );
-  }, [tradedToUserId]);
+  }, [tradedToUserName]);
 
   useEffect(() => {
-    if (!tradedToUserId || typeof tradedToUserId !== "string") return;
+    if (!tradedToUserName || typeof tradedToUserName !== "string") return;
 
     TradeService.getTotalBetweenUsers(
       userPageUser.id,
-      tradedToUserId === "anonymous" ? "0" : tradedToUserId
+      tradedToUserName === "anonymous" ? "0" : tradedToUserName
     ).then((response) => setTradesTotal(response?.total ?? 0));
-  }, [tradedToUserId]);
+  }, [tradedToUserName]);
 
   useEffect(() => {
-    if (!tradedToUser && tradedToUserId !== "anonymous") return;
+    if (!tradedToUser && tradedToUserName !== "anonymous") return;
 
     setLoading(true);
 
@@ -132,7 +132,7 @@ export default function TradedToUserPage() {
                 action="default"
                 className="-mx-2"
                 icon={faArrowLeft}
-                onClick={() => router.push(`users/${userPageUser.id}/trades`)}
+                onClick={() => router.push(`users/${userPageUser.name}/trades`)}
               />
             }
             end={
@@ -158,9 +158,9 @@ export default function TradedToUserPage() {
                     icon={faPlus}
                     onClick={() =>
                       router.push(
-                        `users/${userPageUser.id}/trades/new-trade${
-                          tradedToUserId
-                            ? `?tradedToUserId=${tradedToUser?.id}`
+                        `users/${userPageUser.name}/trades/new-trade${
+                          tradedToUser
+                            ? `?tradedToUserName=${tradedToUser.name}`
                             : ""
                         }`
                       )
@@ -178,8 +178,8 @@ export default function TradedToUserPage() {
           loading={loading}
           rowClick={(trade: Trade) =>
             router.push(
-              `users/${userPageUser.id}/trades/${
-                tradedToUser?.id ?? "anonymous"
+              `users/${userPageUser.name}/trades/${
+                tradedToUser?.name ?? "anonymous"
               }/${trade.id}`
             )
           }

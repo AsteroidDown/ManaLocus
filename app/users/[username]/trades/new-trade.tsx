@@ -25,7 +25,7 @@ import { useContext, useEffect, useState } from "react";
 import { SafeAreaView, useWindowDimensions, View } from "react-native";
 
 export default function NewTradePage() {
-  const { tradedToUserId } = useLocalSearchParams();
+  const { tradedToUserName } = useLocalSearchParams();
 
   const { user } = useContext(UserContext);
   const { addToast } = useContext(ToastContext);
@@ -87,14 +87,14 @@ export default function NewTradePage() {
   useEffect(() => {
     if (
       tradedToUser ||
-      !tradedToUserId ||
-      typeof tradedToUserId !== "string" ||
-      tradedToUserId === "new-trade"
+      !tradedToUserName ||
+      typeof tradedToUserName !== "string" ||
+      tradedToUserName === "new-trade"
     ) {
       return;
     }
 
-    UserService.get({ id: tradedToUserId }).then((user) => {
+    UserService.get({ username: tradedToUserName }).then((user) => {
       if (user) {
         setTradedToUser(user);
         setTradedToUserOptions([user]);
@@ -106,7 +106,7 @@ export default function NewTradePage() {
         });
       }
     });
-  }, [tradedToUserId]);
+  }, [tradedToUserName]);
 
   useEffect(() => {
     if (!tradedToUser) return;
@@ -348,9 +348,9 @@ export default function NewTradePage() {
             {
               username: tradedToUser.name,
               tradedWithUsername: user.name,
-              link: `${Environment.BASE_URL}/users/${tradedToUser.id}/trades/${
-                user.id
-              }/${(response as any).tradeId}`,
+              link: `${Environment.BASE_URL}/users/${
+                tradedToUser.name
+              }/trades/${user.name}/${(response as any).tradeId}`,
               tradeResult: !evenTrade
                 ? total < 0
                   ? ` where they owe you ${currency(Math.abs(total / 100))}`
@@ -367,9 +367,9 @@ export default function NewTradePage() {
         });
 
         if (tradedToUser) {
-          router.push(`users/${user.id}/trades/${tradedToUser.id}`);
+          router.push(`users/${user.name}/trades/${tradedToUser.name}`);
         } else {
-          router.push(`users/${user.id}/trades`);
+          router.push(`users/${user.name}/trades`);
         }
       } else {
         setError(true);
@@ -395,9 +395,11 @@ export default function NewTradePage() {
               className="-mx-2"
               icon={faArrowLeft}
               onClick={() =>
-                tradedToUserId
-                  ? router.push(`users/${user!.id}/trades/${tradedToUserId}`)
-                  : router.push(`users/${user!.id}/trades`)
+                tradedToUser
+                  ? router.push(
+                      `users/${user!.name}/trades/${tradedToUser.name}`
+                    )
+                  : router.push(`users/${user!.name}/trades`)
               }
             />
           }

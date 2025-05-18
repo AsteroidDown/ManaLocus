@@ -62,7 +62,7 @@ export default function FolderPage() {
               action="default"
               className="-ml-4"
               icon={faChevronLeft}
-              onClick={() => router.push(`users/${userPageUser?.id}/folders`)}
+              onClick={() => router.push(`users/${userPageUser?.name}/folders`)}
             />
 
             <Text size="2xl" weight="bold">

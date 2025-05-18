@@ -131,7 +131,7 @@ export default function Header() {
         {width > 600 && (
           <View className="flex flex-row items-center gap-2">
             {user?.name ? (
-              <Link href={`/users/${user.id}`}>
+              <Link href={`/users/${user.name}`}>
                 <Button
                   square
                   size="md"
@@ -251,7 +251,7 @@ export default function Header() {
                 text="My Account"
                 type="outlined"
                 className="w-full"
-                onClick={() => navigate("/users/" + user.id)}
+                onClick={() => navigate("/users/" + user.name)}
               />
             )}
           </View>

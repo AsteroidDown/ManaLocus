@@ -1,3 +1,4 @@
+import { mapDatabaseUser } from "@/functions/mapping/user-mapping";
 import { TradeFiltersDto } from "@/models/trade/dtos/trade-filters.dto";
 import { TradeDTO } from "@/models/trade/dtos/trade.dto";
 import { Trade, TradeSummary } from "@/models/trade/trade";
@@ -14,7 +15,18 @@ async function getUserSummaries(
   pagination?: PaginationOptions
 ): Promise<PaginatedResponse<TradeSummary>> {
   if (!pagination) pagination = DefaultPagination;
-  return await API.get(`trades/${userId}/`, { ...dto, ...pagination });
+  return await API.get(`trades/${userId}/`, { ...dto, ...pagination }).then(
+    (response) => ({
+      ...response,
+      data: response.data.map((trade: TradeSummary) => ({
+        ...trade,
+        tradingUser: mapDatabaseUser(trade.tradingUser),
+        tradedToUser: trade?.tradedToUser
+          ? mapDatabaseUser(trade.tradedToUser)
+          : null,
+      })),
+    })
+  );
 }
 
 async function getBetweenUsers(

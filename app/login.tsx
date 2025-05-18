@@ -44,7 +44,9 @@ export default function Login() {
   useEffect(() => {
     if (user) {
       router.push(
-        redirect && typeof redirect === "string" ? redirect : `users/${user.id}`
+        redirect && typeof redirect === "string"
+          ? redirect
+          : `users/${user.name}`
       );
     }
   }, [user]);
@@ -137,7 +139,7 @@ export default function Login() {
 
           if (user) {
             setUser(user);
-            router.push(`../users/${user.id}`);
+            router.push(`../users/${user.name}`);
 
             addToast({
               action: "success",

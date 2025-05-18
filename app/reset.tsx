@@ -36,7 +36,7 @@ export default function ResetPage() {
   const [passwordsMatch, setPasswordsMatch] = useState(false);
 
   useEffect(() => {
-    if (loggedInUser) router.push(`users/${loggedInUser.id}`);
+    if (loggedInUser) router.push(`users/${loggedInUser.name}`);
   }, [loggedInUser]);
 
   useEffect(() => {

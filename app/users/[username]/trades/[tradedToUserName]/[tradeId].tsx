@@ -19,7 +19,7 @@ import { useContext, useEffect, useState } from "react";
 import { SafeAreaView, View } from "react-native";
 
 export default function TradePage() {
-  const { userId, tradeId, tradedToUserId } = useLocalSearchParams();
+  const { username, tradeId, tradedToUserName } = useLocalSearchParams();
 
   const { user } = useContext(UserContext);
   const { userPageUser } = useContext(UserPageContext);
@@ -33,7 +33,7 @@ export default function TradePage() {
   useEffect(() => {
     if (!user || !userPageUser || user?.id !== userPageUser?.id) {
       router.push(
-        `login?redirect=${Environment.BASE_URL}/users/${userId}/trades/${tradedToUserId}/${tradeId}`
+        `login?redirect=${Environment.BASE_URL}/users/${username}/trades/${tradedToUserName}/${tradeId}`
       );
     }
   }, [user, userPageUser]);
@@ -42,63 +42,66 @@ export default function TradePage() {
     if (
       !userPageUser ||
       typeof tradeId !== "string" ||
-      typeof tradedToUserId !== "string"
+      typeof tradedToUserName !== "string"
     ) {
       return;
     }
 
     setLoading(true);
 
-    if (tradedToUserId !== "anonymous") {
-      UserService.get({ id: tradedToUserId }).then((user) =>
-        setTradedToUser(user)
-      );
+    if (tradedToUserName !== "anonymous") {
+      UserService.get({ username: tradedToUserName }).then((user) => {
+        setTradedToUser(user);
+        if (user) getTrade(tradeId, userPageUser, user);
+      });
+    } else {
+      getTrade(tradeId, userPageUser);
     }
+  }, [tradeId, tradedToUserName]);
 
-    TradeService.get(
-      userPageUser.id,
-      tradedToUserId === "anonymous" ? "0" : tradedToUserId,
-      tradeId
-    ).then((trade) => {
-      if (trade?.tradedToUser?.id === userPageUser.id) {
-        const tradingUserTotal = trade.tradingUserTotal;
-        trade.tradingUserTotal = trade.tradedToUserTotal;
-        trade.tradedToUserTotal = tradingUserTotal;
+  function getTrade(tradeId: string, tradingUser: User, tradedToUser?: User) {
+    TradeService.get(tradingUser.id, tradedToUser?.id ?? "0", tradeId).then(
+      (trade) => {
+        if (trade?.tradedToUser?.id === userPageUser?.id) {
+          const tradingUserTotal = trade.tradingUserTotal;
+          trade.tradingUserTotal = trade.tradedToUserTotal;
+          trade.tradedToUserTotal = tradingUserTotal;
 
-        const tradingUserCards = trade.tradingUserCards;
-        trade.tradingUserCards = trade.tradedToUserCards;
-        trade.tradedToUserCards = tradingUserCards;
+          const tradingUserCards = trade.tradingUserCards;
+          trade.tradingUserCards = trade.tradedToUserCards;
+          trade.tradedToUserCards = tradingUserCards;
 
-        trade.total *= -1;
+          trade.total *= -1;
+        }
+
+        if (!trade.tradingUserCards?.length) {
+          trade.tradingUserCards = [
+            {
+              count: 1,
+              name: "No Cards Traded",
+              foil: false,
+              id: "",
+              tradeId: "",
+            },
+          ];
+        }
+
+        if (!trade.tradedToUserCards?.length) {
+          trade.tradedToUserCards = [
+            {
+              count: 1,
+              name: "No Cards Traded",
+              foil: false,
+              id: "",
+              tradeId: "",
+            },
+          ];
+        }
+
+        setTrade(trade);
       }
-
-      if (!trade.tradingUserCards?.length) {
-        trade.tradingUserCards = [
-          {
-            count: 1,
-            name: "No Cards Traded",
-            foil: false,
-            id: "",
-            tradeId: "",
-          },
-        ];
-      }
-
-      if (!trade.tradedToUserCards?.length) {
-        trade.tradedToUserCards = [
-          {
-            count: 1,
-            name: "No Cards Traded",
-            foil: false,
-            id: "",
-            tradeId: "",
-          },
-        ];
-      }
-
-      setTrade(trade);
-    });
-  }, [tradeId, tradedToUserId]);
+    );
+  }
 
   if (!trade) return;
 
@@ -121,8 +124,8 @@ export default function TradePage() {
                 icon={faArrowLeft}
                 onClick={() =>
                   router.push(
-                    `users/${userPageUser?.id}/trades${
-                      tradedToUserId ? `/${tradedToUserId}` : "anonymous"
+                    `users/${userPageUser?.name}/trades${
+                      tradedToUserName ? `/${tradedToUserName}` : "anonymous"
                     }`
                   )
                 }

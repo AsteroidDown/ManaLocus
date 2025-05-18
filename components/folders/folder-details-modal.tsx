@@ -61,7 +61,7 @@ export default function FolderDetailsModal({
             className="ml-auto"
             onClick={() =>
               router.push(
-                `users/${user.id}/folders/${(response as any).folderId}`
+                `users/${user.name}/folders/${(response as any).folderId}`
               )
             }
           />

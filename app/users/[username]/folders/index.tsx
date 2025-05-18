@@ -91,7 +91,7 @@ export default function UserFoldersPage() {
           loading={loading}
           data={folders}
           rowClick={(folder) =>
-            router.push(`users/${userPageUser.id}/folders/${folder.id}`)
+            router.push(`users/${userPageUser.name}/folders/${folder.id}`)
           }
           columns={
             [
@@ -106,7 +106,7 @@ export default function UserFoldersPage() {
                     icon={folder.deckIds?.length ? faFolderOpen : faFolder}
                     onClick={() =>
                       router.push(
-                        `users/${userPageUser.id}/folders/${folder.id}`
+                        `users/${userPageUser.name}/folders/${folder.id}`
                       )
                     }
                   />
