@@ -6,6 +6,7 @@ import Placeholder from "@/components/ui/placeholder/placeholder";
 import { TableColumn } from "@/components/ui/table/table";
 import Text from "@/components/ui/text/text";
 import { BoardType, BoardTypes } from "@/constants/boards";
+import { BracketNumber, BracketType } from "@/constants/mtg/brackets";
 import { FormatsWithCommander, MTGFormats } from "@/constants/mtg/mtg-format";
 import { SortTypes } from "@/constants/sorting";
 import LoadingContext from "@/contexts/ui/loading.context";
@@ -99,6 +100,7 @@ export default function DeckGallery({
     [] as string[]
   );
   const [partnerSearch, setPartnerSearch] = useState("");
+  const [bracket, setBracket] = useState(null as number | null);
 
   const [searchDto, setSearchDto] = useState({
     includeIds,
@@ -272,6 +274,7 @@ export default function DeckGallery({
       ...(sort && { sort }),
       ...(board && { board }),
       ...(search && { search }),
+      ...(bracket && { bracket }),
       ...(kits && { onlyKits: true }),
       ...(includeIds && { includeIds }),
       ...(format && { deckFormat: format }),
@@ -423,10 +426,10 @@ export default function DeckGallery({
       <View
         className={`${filtersOpen ? "max-h-[1000px]" : "max-h-0"} ${
           !overflow && "overflow-hidden"
-        } flex gap-4 z-[26] transition-all duration-300`}
+        } flex gap-4 z-[28] transition-all duration-300`}
       >
-        <View className="flex flex-row flex-wrap gap-4 z-[24]">
-          <View className="flex flex-row gap-4 flex-[2] z-[22] min-w-[250px]">
+        <View className="flex flex-row flex-wrap gap-4 z-[26]">
+          <View className="flex flex-row gap-4 flex-[2] z-[24] min-w-[250px]">
             <Select
               label="Format"
               value={format}
@@ -453,7 +456,7 @@ export default function DeckGallery({
             )}
           </View>
 
-          <View className="flex-1 z-[20] min-w-[250px]">
+          <View className="flex-1 z-[22] min-w-[250px]">
             <Select
               label="Sort"
               value={sort}
@@ -484,7 +487,7 @@ export default function DeckGallery({
           </View>
 
           {!kits && commanderFormat && (
-            <View className="flex-1 z-[18] min-w-[250px]">
+            <View className="flex-1 z-[20] min-w-[250px]">
               <Select
                 label="Commander"
                 value={commanderSearch}
@@ -509,7 +512,7 @@ export default function DeckGallery({
           )}
 
           {!kits && commanderFormat && (
-            <View className="flex-1 z-[16] min-w-[250px]">
+            <View className="flex-1 z-[18] min-w-[250px]">
               <Select
                 label="Partner"
                 value={partnerSearch}
@@ -529,6 +532,21 @@ export default function DeckGallery({
                     ? "No cards found with that name"
                     : "Enter a card name"
                 }
+              />
+            </View>
+          )}
+
+          {!kits && commanderFormat && (
+            <View className="flex-1 z-[16] min-w-[250px]">
+              <Select
+                label="Bracket"
+                placeholder="Bracket"
+                value={bracket}
+                onChange={setBracket}
+                options={Object.values(BracketType).map((bracket) => ({
+                  label: BracketNumber[bracket] + " " + bracket,
+                  value: BracketNumber[bracket],
+                }))}
               />
             </View>
           )}
