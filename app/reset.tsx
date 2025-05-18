@@ -43,7 +43,7 @@ export default function ResetPage() {
     if (!token || typeof token !== "string") return;
 
     const decoded = decode(token, Environment.RESET_SECRET as any);
-    UserService.getByEmail(decoded).then((foundUser) => {
+    UserService.get({ email: decoded }).then((foundUser) => {
       if (!foundUser) router.push("");
       else setUser(foundUser);
     });

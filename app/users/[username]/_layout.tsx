@@ -11,18 +11,20 @@ import React, { useContext, useEffect, useState } from "react";
 import { SafeAreaView, View } from "react-native";
 
 export default function UserLayout() {
-  const { userId } = useLocalSearchParams();
+  const { username } = useLocalSearchParams();
 
   const { user } = useContext(UserContext);
 
   const [userPageUser, setPageUser] = useState(null as User | null);
 
   useEffect(() => {
-    if (typeof userId !== "string") return;
+    if (typeof username !== "string") return;
 
-    if (userId === user?.id) setPageUser(user);
-    else UserService.get(userId).then((foundUser) => setPageUser(foundUser));
-  }, [userId]);
+    if (username === user?.name) setPageUser(user);
+    else {
+      UserService.get({ username }).then((foundUser) => setPageUser(foundUser));
+    }
+  }, [username]);
 
   if (!userPageUser) return null;
 

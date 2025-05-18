@@ -2,7 +2,10 @@ import { WelcomeEmail } from "@/constants/emails";
 import { setLocalStorageJwt } from "@/functions/local-storage/auth-token-local-storage";
 import { setLocalStorageUser } from "@/functions/local-storage/user-local-storage";
 import { mapDatabaseUser } from "@/functions/mapping/user-mapping";
-import { UserFiltersDTO } from "@/models/user/dtos/user-filters.dto";
+import {
+  UserFiltersDTO,
+  UserIdentifierDTO,
+} from "@/models/user/dtos/user-filters.dto";
 import { UpdateUserDTO } from "@/models/user/dtos/user-update.dto";
 import { User } from "@/models/user/user";
 import API from "../api-methods/api-methods";
@@ -29,17 +32,10 @@ async function getMany(
   };
 }
 
-async function get(userId: string): Promise<User> {
-  return await API.get(`users/${userId}`).then((response) =>
-    mapDatabaseUser(response)
-  );
-}
-
-async function getByEmail(email: string): Promise<User | null> {
-  return await API.get(`users/email/`, { email }).then((response) => {
-    if (!response?.data) return null;
-    else return mapDatabaseUser(response.data);
-  });
+async function get(dto: UserIdentifierDTO): Promise<User | null> {
+  return await API.get(`users/find`, {
+    ...dto,
+  }).then((response) => mapDatabaseUser(response));
 }
 
 async function getCurrentUser(): Promise<User | null> {
@@ -133,7 +129,6 @@ async function logout() {
 const UserService = {
   getMany,
   get,
-  getByEmail,
   getCurrentUser,
   update,
   login,

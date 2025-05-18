@@ -154,7 +154,7 @@ export default function Login() {
     if (!email) return;
     setLoading(true);
 
-    const foundUser = await UserService.getByEmail(email);
+    const foundUser = await UserService.get({ email });
 
     if (!foundUser) {
       setLoading(false);

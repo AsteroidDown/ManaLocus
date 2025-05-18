@@ -94,9 +94,17 @@ export default function NewTradePage() {
       return;
     }
 
-    UserService.get(tradedToUserId).then((user) => {
-      setTradedToUser(user);
-      setTradedToUserOptions([user]);
+    UserService.get({ id: tradedToUserId }).then((user) => {
+      if (user) {
+        setTradedToUser(user);
+        setTradedToUserOptions([user]);
+      } else {
+        addToast({
+          action: "danger",
+          title: "Error Retrieving User",
+          subtitle: "The user you are trying to trade with does not exist",
+        });
+      }
     });
   }, [tradedToUserId]);
 

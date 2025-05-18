@@ -55,7 +55,9 @@ export default function TradedToUserPage() {
 
     setLoading(true);
 
-    UserService.get(tradedToUserId).then((user) => setTradedToUser(user));
+    UserService.get({ id: tradedToUserId }).then((user) =>
+      setTradedToUser(user)
+    );
   }, [tradedToUserId]);
 
   useEffect(() => {

@@ -50,7 +50,9 @@ export default function TradePage() {
     setLoading(true);
 
     if (tradedToUserId !== "anonymous") {
-      UserService.get(tradedToUserId).then((user) => setTradedToUser(user));
+      UserService.get({ id: tradedToUserId }).then((user) =>
+        setTradedToUser(user)
+      );
     }
 
     TradeService.get(

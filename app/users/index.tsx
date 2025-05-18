@@ -68,7 +68,7 @@ export default function UsersPage() {
         <Table
           data={users}
           loading={loading}
-          rowClick={(user) => router.push(`users/${user.id}`)}
+          rowClick={(user) => router.push(`users/${user.name}`)}
           columns={
             [
               {
