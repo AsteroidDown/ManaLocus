@@ -292,12 +292,20 @@ export default function DeckSettingsPage() {
 
     const dto: DeckDTO = {
       name,
+      isKit,
       bracket,
+      inProgress,
       description,
-      bracketGuess,
       private: privateView,
       format: format ?? undefined,
+      partnerId: partner?.scryfallId,
+      commanderId: commander?.scryfallId,
       colors: `{${deckColors.join("}{")}}`,
+      ...(commanderFormat && { bracketGuess }),
+
+      kits: getLocalStorageKits().map((kit) => kit.id),
+      dashboard: getLocalStorageDashboard()?.sections || [],
+
       featuredArtUrl:
         featuredCard?.imageURIs?.artCrop ??
         featuredCard?.faces?.front.imageUris?.artCrop,
@@ -318,16 +326,6 @@ export default function DeckSettingsPage() {
         ),
         ...mapCardsToDeckCard(getLocalStorageStoredCards("trade"), "trade"),
       ],
-
-      dashboard: getLocalStorageDashboard()?.sections || [],
-
-      commanderId: commander?.scryfallId,
-      partnerId: partner?.scryfallId,
-
-      isKit,
-      inProgress,
-
-      kits: getLocalStorageKits().map((kit) => kit.id),
     };
 
     DeckService.update(deck.id, dto)
