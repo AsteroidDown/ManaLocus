@@ -4,11 +4,11 @@ import { isOnScreen } from "@/hooks/on-screen";
 import { Card } from "@/models/card/card";
 import { faRotateRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useEffect, useMemo } from "react";
-import { Image, Pressable, View } from "react-native";
+import React, { useEffect, useMemo, useRef, useState } from "react";
+import { Image, Pressable, View, ViewProps } from "react-native";
 import Skeleton from "../ui/skeleton/skeleton";
 
-export interface CardImageProps {
+export interface CardImageProps extends ViewProps {
   card?: Card;
   focusable?: boolean;
   placeHolder?: string;
@@ -26,23 +26,25 @@ export default function CardImage({
   placeHolder,
   shouldLoad,
   enlargeOnHover,
+  className,
   onClick,
   onLoad,
 }: CardImageProps) {
-  const [hovered, setHovered] = React.useState(false);
-  const [focused, setFocused] = React.useState(false);
-  const [showFront, setShowFront] = React.useState(true);
+  const [hovered, setHovered] = useState(false);
+  const [focused, setFocused] = useState(false);
+  const [showFront, setShowFront] = useState(true);
 
-  const [frontLoading, setFrontLoading] = React.useState(false);
-  const [frontLoaded, setFrontLoaded] = React.useState(false);
-  const [backLoading, setBackLoading] = React.useState(false);
-  const [backLoaded, setBackLoaded] = React.useState(false);
+  const [frontLoading, setFrontLoading] = useState(false);
+  const [frontLoaded, setFrontLoaded] = useState(false);
+  const [backLoading, setBackLoading] = useState(false);
+  const [backLoaded, setBackLoaded] = useState(false);
 
-  const ref = React.useRef<View>(null);
+  const ref = useRef<View>(null);
   const onScreen = isOnScreen(ref);
 
-  const containerClasses =
-    "min-w-[228px] max-h-fit border-2 border-primary-200 border-opacity-0 focus:border-opacity-100 rounded-xl overflow-hidden outline-none transition-all duration-300";
+  console.log(className);
+
+  const containerClasses = `${className} min-w-[228px] max-h-fit border-2 border-primary-200 border-opacity-0 focus:border-opacity-100 rounded-xl overflow-hidden outline-none transition-all duration-300`;
 
   const baseClasses =
     "flex h-full max-h-[350px] aspect-[2.5/3.5] rounded-lg overflow-hidden";

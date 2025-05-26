@@ -126,7 +126,7 @@ export default function CardSearch({
           className={`flex-[2] !bg-background-100 border-background-200 rounded-xl z-[-1] transition-all duration-300 ${
             !searchedCards?.length
               ? "max-h-0 !p-0"
-              : "min-h-[350px] h-full !px-4 !py-2 border-2"
+              : "lg:min-h-[350px] min-h-[200px] h-full !px-4 !py-2 border-2"
           }`}
         >
           <View className="h-full rounded-xl overflow-x-auto overflow-y-hidden">
@@ -144,10 +144,18 @@ export default function CardSearch({
                   <View key={card.scryfallId + index}>
                     {linkToCardPage ? (
                       <Link href={`cards/${card.set}/${card.collectorNumber}`}>
-                        <CardImage card={card} onClick={() => setCard(card)} />
+                        <CardImage
+                          card={card}
+                          onClick={() => setCard(card)}
+                          className="lg:max-h-[350px] !max-h-[200px]"
+                        />
                       </Link>
                     ) : (
-                      <CardImage card={card} onClick={() => setCard(card)} />
+                      <CardImage
+                        card={card}
+                        onClick={() => setCard(card)}
+                        className="lg:!max-h-[350px] !max-h-[200px] lg:!max-w-[250px] !max-w-[142px] lg:!min-w-[228px] !min-w-[142px]"
+                      />
                     )}
                   </View>
                 ))}
@@ -163,51 +171,24 @@ export default function CardSearch({
         </Box>
       </View>
 
-      {!hideCardPreview && (
+      {!hideCardPreview && card && (
         <View
           className={`${
-            card ? "max-w-[1000px] max-h-[490px]" : "max-w-0 max-h-0"
-          } transition-all duration-300 overflow-hidden`}
+            card ? "max-w-[1000px] max-h-[600px]" : "max-w-0 max-h-0"
+          } rounded-xl border-2 border-background-200 transition-all duration-300 overflow-hidden`}
         >
-          <Box className="!bg-background-100 border-2 border-background-200">
+          <Box className="!bg-background-100">
             <CardDetailedPreview hidePrices card={card}>
               <View className="flex flex-row justify-center items-end w-full gap-2">
                 <CardPrints card={card} setCard={setCard} />
 
-                <View className="flex flex-row">
-                  <Button
-                    squareRight
-                    size="sm"
-                    text="Add"
-                    type="outlined"
-                    icon={faPlus}
-                    disabled={
-                      !card ||
-                      (board === "side" && sideboardCount >= SideBoardLimit)
-                    }
-                    onClick={() => saveCard(card)}
-                  />
-
-                  <Button
-                    squareLeft
-                    size="sm"
-                    type="outlined"
-                    icon={faEllipsisV}
-                    disabled={
-                      !card ||
-                      (board === "side" && sideboardCount >= SideBoardLimit)
-                    }
-                    onClick={() => setAddMultipleOpen(true)}
-                  />
-                </View>
-
                 <View className="-mx-px">
                   <Dropdown
-                    xOffset={-104}
+                    xOffset={24}
                     expanded={addMultipleOpen}
                     setExpanded={setAddMultipleOpen}
                   >
-                    <Box className="flex justify-start items-start !p-0 border-2 border-primary-300 !bg-background-100 !bg-opacity-90 overflow-hidden">
+                    <Box className="flex justify-start items-start !p-0 border-2 border-primary-300 !bg-background-100 overflow-hidden">
                       <Button
                         start
                         square
@@ -257,6 +238,34 @@ export default function CardSearch({
                       />
                     </Box>
                   </Dropdown>
+                </View>
+
+                <View className="flex-1 flex flex-row">
+                  <Button
+                    squareRight
+                    size="sm"
+                    text="Add"
+                    type="outlined"
+                    className="flex-1"
+                    icon={faPlus}
+                    disabled={
+                      !card ||
+                      (board === "side" && sideboardCount >= SideBoardLimit)
+                    }
+                    onClick={() => saveCard(card)}
+                  />
+
+                  <Button
+                    squareLeft
+                    size="sm"
+                    type="outlined"
+                    icon={faEllipsisV}
+                    disabled={
+                      !card ||
+                      (board === "side" && sideboardCount >= SideBoardLimit)
+                    }
+                    onClick={() => setAddMultipleOpen(true)}
+                  />
                 </View>
               </View>
             </CardDetailedPreview>

@@ -3,7 +3,7 @@ import { currency } from "@/functions/text-manipulation";
 import { Card } from "@/models/card/card";
 import { faShop } from "@fortawesome/free-solid-svg-icons";
 import React from "react";
-import { Linking, View, ViewProps } from "react-native";
+import { Linking, useWindowDimensions, View, ViewProps } from "react-native";
 import Divider from "../ui/divider/divider";
 import CardImage from "./card-image";
 import { CardInfo } from "./card-info";
@@ -30,6 +30,8 @@ export default function CardDetailedPreview({
 }: CardDetailedPreview) {
   if (!card) return null;
 
+  const width = useWindowDimensions().width;
+
   return (
     <View
       className={`flex flex-row flex-wrap flex-1 max-w-max min-w-fit justify-center gap-3 h-fit ${className}`}
@@ -37,6 +39,7 @@ export default function CardDetailedPreview({
       <View className="flex gap-3 min-w-[250px]">
         <CardImage
           card={card}
+          className="lg:!max-h-[350px] !max-h-[264px]"
           placeHolder="Search for a card and it will be previewed here"
         />
 
@@ -70,12 +73,12 @@ export default function CardDetailedPreview({
           </View>
         )}
 
-        {children}
+        {width > 600 && children}
       </View>
 
       <View
         className={`flex gap-3 lg:w-[400px] w-full overflow-y-auto ${
-          fullHeight ? "h-fit" : "max-h-[458px]"
+          fullHeight ? "h-fit" : "lg:max-h-[458px] max-h-[160px]"
         }`}
       >
         {!card?.faces && (
@@ -98,6 +101,8 @@ export default function CardDetailedPreview({
           <CardLegalities card={card} />
         </View>
       </View>
+
+      {width <= 600 && children}
     </View>
   );
 }
