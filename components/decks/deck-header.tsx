@@ -1,4 +1,5 @@
 import { BracketDetails, BracketNumber } from "@/constants/mtg/brackets";
+import { MTGFormats } from "@/constants/mtg/mtg-format";
 import { LostURL } from "@/constants/urls";
 import DeckContext from "@/contexts/deck/deck.context";
 import ToastContext from "@/contexts/ui/toast.context";
@@ -117,48 +118,48 @@ export default function DeckHeader({
             text={deck.format?.length ? titleCase(deck.format) : "TBD"}
           />
 
-          {bracket && (
-            <Chip
-              size="sm"
-              type="outlined"
-              className="bg-background-100 bg-opacity-75"
-              onClick={() => setBracketExpanded(!bracketExpanded)}
-            >
-              <Text size="sm" weight="medium">
-                {deck.bracket ??
-                  deck.bracketGuess ??
-                  BracketNumber[bracket.bracket]}
-              </Text>
-
-              <View className="h-[16px] w-px mt-0.5 bg-white" />
-
-              <Text size="sm" weight="medium">
-                {deck.bracket || deck.bracketGuess
-                  ? BracketNumber[deck.bracket ?? deck.bracketGuess ?? 1]
-                  : bracket.bracket}
-              </Text>
-            </Chip>
-          )}
-
-          {bracket && (
-            <View className="mt-6">
-              <Dropdown
-                xOffset={-120}
-                expanded={bracketExpanded}
-                setExpanded={setBracketExpanded}
+          {bracket && deck.format === MTGFormats.COMMANDER && (
+            <>
+              <Chip
+                size="sm"
+                type="outlined"
+                className="bg-background-100 bg-opacity-75"
+                onClick={() => setBracketExpanded(!bracketExpanded)}
               >
-                <Box className="flex justify-start items-start border-2 !px-4 !py-2 border-primary-300 !bg-background-200 !bg-opacity-95 overflow-auto max-w-[450px]">
-                  <DeckBracketInfo
-                    user={deck.user!}
-                    bracket={bracket}
-                    bracketSet={deck.bracket}
-                    bracketGuess={
-                      deck.bracketGuess ?? BracketNumber[bracket.bracket]
-                    }
-                  />
-                </Box>
-              </Dropdown>
-            </View>
+                <Text size="sm" weight="medium">
+                  {deck.bracket ??
+                    deck.bracketGuess ??
+                    BracketNumber[bracket.bracket]}
+                </Text>
+
+                <View className="h-[16px] w-px mt-0.5 bg-white" />
+
+                <Text size="sm" weight="medium">
+                  {deck.bracket || deck.bracketGuess
+                    ? BracketNumber[deck.bracket ?? deck.bracketGuess ?? 1]
+                    : bracket.bracket}
+                </Text>
+              </Chip>
+
+              <View className="mt-6">
+                <Dropdown
+                  xOffset={-120}
+                  expanded={bracketExpanded}
+                  setExpanded={setBracketExpanded}
+                >
+                  <Box className="flex justify-start items-start border-2 !px-4 !py-2 border-primary-300 !bg-background-200 !bg-opacity-95 overflow-auto max-w-[450px]">
+                    <DeckBracketInfo
+                      user={deck.user!}
+                      bracket={bracket}
+                      bracketSet={deck.bracket}
+                      bracketGuess={
+                        deck.bracketGuess ?? BracketNumber[bracket.bracket]
+                      }
+                    />
+                  </Box>
+                </Dropdown>
+              </View>
+            </>
           )}
         </View>
 
