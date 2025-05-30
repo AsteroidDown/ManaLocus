@@ -31,9 +31,8 @@ async function post(url: string, data?: Record<string, any>) {
   const headers = getHeaders();
 
   return handleResponse(
-    await axios.post(`${SpellbookURL}/${url}`, {
+    await axios.post(`${SpellbookURL}/${url}`, data, {
       headers,
-      ...data,
     })
   );
 }

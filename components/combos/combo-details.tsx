@@ -113,8 +113,8 @@ export default function ComboDetails({
           <View className="flex flex-wrap">
             {steps.map((step, index) =>
               step?.length > 0 ? (
-                <>
-                  <View key={index} className="flex flex-row items-start gap-3">
+                <View key={index}>
+                  <View className="flex flex-row items-start gap-3">
                     <View className="flex items-center w-[28px] min-h-full">
                       <Chip size="sm" text={index + 1 + ""} />
 
@@ -131,7 +131,7 @@ export default function ComboDetails({
                       }`}
                     />
                   </View>
-                </>
+                </View>
               ) : null
             )}
           </View>
