@@ -42,8 +42,6 @@ export default function CardImage({
   const ref = useRef<View>(null);
   const onScreen = isOnScreen(ref);
 
-  console.log(className);
-
   const containerClasses = `${className} min-w-[228px] max-h-fit border-2 border-primary-200 border-opacity-0 focus:border-opacity-100 rounded-xl overflow-hidden outline-none transition-all duration-300`;
 
   const baseClasses =
