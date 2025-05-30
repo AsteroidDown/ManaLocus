@@ -1,10 +1,17 @@
+import { SpellbookURL } from "@/constants/urls";
 import { Card } from "@/models/card/card";
 import { Deck } from "@/models/deck/deck";
 import {
   SpellbookCombo,
   SpellbookComboResult,
 } from "@/models/spellbook/spellbook-combo";
-import { faInfinity, faPlus } from "@fortawesome/free-solid-svg-icons";
+import {
+  faExternalLinkAlt,
+  faInfinity,
+  faPlus,
+} from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Link } from "expo-router";
 import { useEffect, useState } from "react";
 import { Image, Pressable, View } from "react-native";
 import CardText from "../cards/card-text";
@@ -100,7 +107,24 @@ export default function ComboCard({
         <ComboProduces combo={combo} openModal={openModal} />
       </View>
 
-      <Modal title="Combo Details" open={open} setOpen={setOpen}>
+      <Modal
+        title="Combo Details"
+        open={open}
+        setOpen={setOpen}
+        footer={
+          <Link
+            href={`${SpellbookURL}/combo/${combo.id}`}
+            target="_blank"
+            className="!text-primary-200 ml-auto"
+          >
+            View on Commander Spellbook
+            <FontAwesomeIcon
+              icon={faExternalLinkAlt}
+              className="ml-2 text-primary-200"
+            />
+          </Link>
+        }
+      >
         <ComboDetails combo={combo} comboCards={comboCards} setOpen={setOpen} />
       </Modal>
     </Pressable>

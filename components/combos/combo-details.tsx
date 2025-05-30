@@ -1,6 +1,17 @@
 import { Card } from "@/models/card/card";
-import { SpellbookCombo } from "@/models/spellbook/spellbook-combo";
-import { faInfinity, faShop } from "@fortawesome/free-solid-svg-icons";
+import {
+  SpellbookCombo,
+  SpellbookComboCard,
+} from "@/models/spellbook/spellbook-combo";
+import {
+  faHand,
+  faInfinity,
+  faPersonDigging,
+  faQuestion,
+  faShop,
+  faTableCells,
+  faXmark,
+} from "@fortawesome/free-solid-svg-icons";
 import { router } from "expo-router";
 import { Dispatch, SetStateAction } from "react";
 import { Linking, Pressable, useWindowDimensions, View } from "react-native";
@@ -27,6 +38,19 @@ export default function ComboDetails({
     .split("\n")
     .filter((step) => step.length > 0)
     .map((step) => step.trim().substring(0, step.length - 1));
+
+  function getLocationText(card: SpellbookComboCard) {
+    let text = card.card.name;
+
+    if (card.zoneLocations.length === 1) {
+      if (card.zoneLocations[0] === "H") text += " in hand";
+      else if (card.zoneLocations[0] === "B") text += " on the battlefield";
+      else if (card.zoneLocations[0] === "G") text += " in the graveyard";
+      else if (card.zoneLocations[0] === "E") text += " in exile";
+    }
+
+    return text;
+  }
 
   return (
     <View className="flex gap-4 max-w-[75dvw] lg:min-w-[600px] min-w-[350px]">
@@ -80,27 +104,93 @@ export default function ComboDetails({
       </View>
 
       <View className="flex-1 flex lg:flex-row gap-4">
-        <View className="lg:flex-1 flex gap-2">
+        <View className="lg:flex-1 flex gap-4">
           <Text size="lg" weight="medium">
-            Prerequisites
+            Setup
           </Text>
 
-          <Divider thick />
+          <Divider thick className="-my-2" />
 
-          <View className="flex flex-wrap gap-1">
-            {combo.easyPrerequisites?.length > 0 && (
-              <CardText
-                text={combo.easyPrerequisites}
-                className={width > 600 ? "flex-1" : "max-w-[256px]"}
-              />
-            )}
-            {combo.notablePrerequisites?.length > 0 && (
-              <CardText
-                text={combo.notablePrerequisites}
-                className={width > 600 ? "flex-1" : "max-w-[256px]"}
-              />
-            )}
+          <View className="flex gap-2">
+            <Text size="md" weight="medium">
+              Initial Card State
+            </Text>
+
+            <Divider />
+
+            {combo.uses
+              .map((card) => getLocationText(card))
+              .map((card) => (
+                <View className="flex flex-row items-center gap-2" key={card}>
+                  <View>
+                    <Chip
+                      size="sm"
+                      startIcon={
+                        card.includes("battlefield")
+                          ? faTableCells
+                          : card.includes("hand")
+                          ? faHand
+                          : card.includes("exile")
+                          ? faXmark
+                          : card.includes("graveyard")
+                          ? faPersonDigging
+                          : faQuestion
+                      }
+                    />
+                  </View>
+
+                  <Text size="sm">{card}</Text>
+                </View>
+              ))}
           </View>
+
+          {combo.easyPrerequisites?.length > 0 && (
+            <View className="flex gap-1">
+              <Text size="md" weight="medium">
+                Easy Prerequisites
+              </Text>
+
+              <Divider />
+
+              <CardText
+                size="sm"
+                text={combo.easyPrerequisites}
+                className={width > 600 ? "" : "max-w-[256px]"}
+              />
+            </View>
+          )}
+
+          {combo.notablePrerequisites?.length > 0 && (
+            <View className="flex gap-1">
+              <Text size="md" weight="medium">
+                Notable Prerequisites
+              </Text>
+
+              <Divider />
+
+              <CardText
+                size="sm"
+                text={combo.notablePrerequisites}
+                className={width > 600 ? "" : "max-w-[256px]"}
+              />
+            </View>
+          )}
+
+          {combo.manaNeeded?.length > 0 && (
+            <View className="flex gap-1">
+              <Text size="md" weight="medium">
+                Mana Needed
+              </Text>
+
+              <Divider />
+
+              <CardText
+                size="sm"
+                text={combo.manaNeeded}
+                className={width > 600 ? "" : "max-w-[256px]"}
+              />
+            </View>
+          )}
         </View>
 
         <View className="lg:flex-1 flex gap-2">

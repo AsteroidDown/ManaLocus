@@ -33,7 +33,7 @@ export enum SpellbookComboStatus {
 
 export interface SpellbookComboCard {
   card: SpellbookCard;
-  zoneLocations: any;
+  zoneLocations: string[];
   battlefieldCardState: string;
   exileCardState: string;
   libraryCardState: string;
