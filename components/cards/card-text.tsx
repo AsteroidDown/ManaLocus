@@ -1,15 +1,20 @@
 import Text from "@/components/ui/text/text";
 import { SymbolMap } from "@/constants/mtg/mtg-symbols";
 import { Size } from "@/constants/ui/sizes";
-import { Image, View } from "react-native";
+import { Image, View, ViewProps } from "react-native";
 
-export interface CardTextProps {
+export type CardTextProps = ViewProps & {
   text: string;
   flavor?: string;
   size?: Size;
-}
+};
 
-export default function CardText({ text, flavor, size = "md" }: CardTextProps) {
+export default function CardText({
+  text,
+  flavor,
+  size = "md",
+  className,
+}: CardTextProps) {
   if (!text) return;
 
   const lines = text.split("\n").map((line) => {
@@ -76,7 +81,7 @@ export default function CardText({ text, flavor, size = "md" }: CardTextProps) {
   });
 
   return (
-    <View className="flex gap-4">
+    <View className={`flex gap-4 ${className}`}>
       <View className="flex flex-row flex-wrap gap-2 items-center">
         {lines.map((line, index) => (
           <Text className="items-center" key={index}>
