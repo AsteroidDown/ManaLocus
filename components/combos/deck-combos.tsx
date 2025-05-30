@@ -41,8 +41,12 @@ export default function DeckCombos({ deck }: { deck: Deck }) {
 
       <View className="flex flex-row justify-center flex-wrap gap-4">
         {combos?.map((combo, index) => {
-          if (allCombos) return <ComboCard key={combo.id} combo={combo} />;
-          if (index < 3) return <ComboCard key={combo.id} combo={combo} />;
+          if (allCombos) {
+            return <ComboCard key={combo.id} combo={combo} deck={deck} />;
+          }
+          if (index < 3) {
+            return <ComboCard key={combo.id} combo={combo} deck={deck} />;
+          }
         })}
       </View>
 

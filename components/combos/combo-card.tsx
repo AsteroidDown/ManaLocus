@@ -1,5 +1,5 @@
-import ScryfallService from "@/hooks/services/scryfall.service";
 import { Card } from "@/models/card/card";
+import { Deck } from "@/models/deck/deck";
 import {
   SpellbookCombo,
   SpellbookComboResult,
@@ -14,16 +14,23 @@ import Modal from "../ui/modal/modal";
 import Text from "../ui/text/text";
 import ComboDetails from "./combo-details";
 
-export default function ComboCard({ combo }: { combo: SpellbookCombo }) {
+export default function ComboCard({
+  combo,
+  deck,
+}: {
+  combo: SpellbookCombo;
+  deck: Deck;
+}) {
   const [hovered, setHovered] = useState(false);
   const [open, setOpen] = useState(false);
 
   const [comboCards, setComboCards] = useState([] as Card[]);
 
   useEffect(() => {
-    ScryfallService.getCardsFromCollection(
-      combo.uses.map((card) => ({ name: card.card.name.replace("//", "") }))
-    ).then((cards) => setComboCards(cards));
+    if (!combo || !deck) return;
+    const cardsInCombo = combo.uses.map((card) => card.card.name);
+
+    setComboCards(deck.main.filter((card) => cardsInCombo.includes(card.name)));
   }, [combo]);
 
   function openModal() {
