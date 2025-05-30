@@ -2,8 +2,11 @@ import { Card } from "@/models/card/card";
 import {
   SpellbookCombo,
   SpellbookComboCard,
+  SpellbookComboResult,
 } from "@/models/spellbook/spellbook-combo";
 import {
+  faCertificate,
+  faCrown,
   faHand,
   faInfinity,
   faPersonDigging,
@@ -240,7 +243,7 @@ export default function ComboDetails({
                 key={result.feature.id}
                 className="flex flex-row items-center gap-2"
               >
-                <Chip size="sm" startIcon={faInfinity} />
+                <Chip size="sm" startIcon={getComboResultIcon(result)} />
 
                 <CardText
                   size="sm"
@@ -254,4 +257,16 @@ export default function ComboDetails({
       </View>
     </View>
   );
+}
+
+export function getComboResultIcon(feature: SpellbookComboResult) {
+  const name = feature.feature.name.toLowerCase();
+
+  if (name.includes("infinite")) {
+    return faInfinity;
+  } else if (name.includes("win")) {
+    return faCrown;
+  } else if (name.includes("exile")) {
+    return faCertificate;
+  } else return undefined;
 }

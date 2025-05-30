@@ -5,21 +5,17 @@ import {
   SpellbookCombo,
   SpellbookComboResult,
 } from "@/models/spellbook/spellbook-combo";
-import {
-  faExternalLinkAlt,
-  faInfinity,
-  faPlus,
-} from "@fortawesome/free-solid-svg-icons";
+import { faExternalLinkAlt, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link } from "expo-router";
 import { useEffect, useState } from "react";
-import { Image, Pressable, View } from "react-native";
+import { Image, Pressable, useWindowDimensions, View } from "react-native";
 import CardText from "../cards/card-text";
 import Chip from "../ui/chip/chip";
 import Divider from "../ui/divider/divider";
 import Modal from "../ui/modal/modal";
 import Text from "../ui/text/text";
-import ComboDetails from "./combo-details";
+import ComboDetails, { getComboResultIcon } from "./combo-details";
 
 export default function ComboCard({
   combo,
@@ -28,6 +24,8 @@ export default function ComboCard({
   combo: SpellbookCombo;
   deck: Deck;
 }) {
+  const width = useWindowDimensions().width;
+
   const [hovered, setHovered] = useState(false);
   const [open, setOpen] = useState(false);
 
@@ -105,6 +103,29 @@ export default function ComboCard({
         </Text>
 
         <ComboProduces combo={combo} openModal={openModal} />
+
+        <View className="flex flex-row flex-wrap justify-between pt-2 mt-auto -mb-2">
+          <Text size="xs" className="italic !text-dark-500">
+            {width > 600 ? "Combo " : ""}
+            <Link
+              target="_blank"
+              className="underline"
+              href={`${SpellbookURL}/combo/${combo.id}`}
+              onPress={(event) => event.stopPropagation()}
+            >
+              {combo.id}
+            </Link>
+            {width > 600 ? " powered by the " : " powered by "}
+            <Link
+              target="_blank"
+              className="underline"
+              href={`${SpellbookURL}`}
+              onPress={(event) => event.stopPropagation()}
+            >
+              Commander Spellbook
+            </Link>
+          </Text>
+        </View>
       </View>
 
       <Modal
@@ -163,11 +184,7 @@ function ComboProduces({
           className="!gap-1"
           key={result.feature.id}
           text={result.feature.name}
-          startIcon={
-            result.feature.name.toLowerCase().includes("infinite")
-              ? faInfinity
-              : undefined
-          }
+          startIcon={getComboResultIcon(result)}
         />
       ))}
 

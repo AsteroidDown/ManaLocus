@@ -15,7 +15,7 @@ export default function DeckCombos({ deck }: { deck: Deck }) {
   useEffect(() => {
     SpellbookService.getCombos(deck).then((combos) =>
       setCombos(
-        combos.results.included.sort((a, b) => a.popularity - b.popularity)
+        combos.results.included.sort((a, b) => b.popularity - a.popularity)
       )
     );
   }, [deck]);
