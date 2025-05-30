@@ -1,3 +1,4 @@
+import DeckCombos from "@/components/combos/deck-combos";
 import DashboardSectionView from "@/components/dashboard/dashboard-section";
 import DeckCardGallery from "@/components/decks/deck-card-gallery";
 import DeckChangeLog from "@/components/decks/deck-change-log";
@@ -104,6 +105,8 @@ export default function DeckPage() {
         )}
 
         <Divider thick />
+
+        <DeckCombos deck={deck} />
 
         <View className="flex flex-row flex-wrap gap-12">
           <Box
