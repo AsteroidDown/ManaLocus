@@ -15,7 +15,7 @@ export default function Divider({
       className={`
         ${className} border-background-200 ${
         vertical
-          ? "  " + (thick ? "border-x" : "border-l")
+          ? " h-full " + (thick ? "border-x" : "border-l")
           : " w-full " + (thick ? "border-y" : "border-b")
       }
       `}
