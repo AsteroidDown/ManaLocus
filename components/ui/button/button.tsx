@@ -126,7 +126,7 @@ export default function Button({
           />
         )}
 
-        {text && (
+        {(text?.length || 0) > 0 && (
           <Text
             noWrap
             size={size}
