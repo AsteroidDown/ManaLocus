@@ -52,7 +52,7 @@ export default function Chip({
       onPress={onClick}
     >
       {startIcon && (
-        <Icon size={size} icon={startIcon} className={`!${textColor}`} />
+        <Icon size={size} icon={startIcon} className={`${textColor}`} />
       )}
 
       {text && (
@@ -69,7 +69,7 @@ export default function Chip({
       {children}
 
       {endIcon && (
-        <Icon size={size} icon={endIcon} className={`!${textColor}`} />
+        <Icon size={size} icon={endIcon} className={`${textColor}`} />
       )}
     </Pressable>
   );
