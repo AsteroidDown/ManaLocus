@@ -2,9 +2,9 @@ import { PreferenceColor } from "@/constants/ui/colors";
 import { Size } from "@/constants/ui/sizes";
 import UserPreferencesContext from "@/contexts/user/user-preferences.context";
 import { faCheck } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useContext, useState } from "react";
 import { Pressable, View, ViewProps } from "react-native";
+import Icon from "../icon/icon";
 import Text from "../text/text";
 
 export interface CheckboxProps extends ViewProps {
@@ -61,14 +61,14 @@ export default function Checkbox({
             checked ? "w-6 h-6" : "w-0 h-0"
           } relative flex justify-center items-center bg-primary-300 rounded-full overflow-hidden transition-all duration-150`}
         >
-          <FontAwesomeIcon
+          <Icon
             icon={faCheck}
             className={
               disabled
-                ? "text-dark-300"
+                ? "!text-dark-300"
                 : darkText
-                ? "text-background-200"
-                : "text-white"
+                ? "!text-background-200"
+                : "!text-white"
             }
           />
         </View>

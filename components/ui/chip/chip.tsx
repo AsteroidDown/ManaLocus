@@ -3,8 +3,8 @@ import { MTGColor } from "@/constants/mtg/mtg-colors";
 import { ActionColor } from "@/constants/ui/colors";
 import { Size } from "@/constants/ui/sizes";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Pressable, ViewProps } from "react-native";
+import Icon from "../icon/icon";
 
 export type ChipType = "default" | "outlined";
 
@@ -52,11 +52,7 @@ export default function Chip({
       onPress={onClick}
     >
       {startIcon && (
-        <FontAwesomeIcon
-          icon={startIcon}
-          className={`${textColor}`}
-          size={size !== "md" ? size : undefined}
-        />
+        <Icon size={size} icon={startIcon} className={`!${textColor}`} />
       )}
 
       {text && (
@@ -73,11 +69,7 @@ export default function Chip({
       {children}
 
       {endIcon && (
-        <FontAwesomeIcon
-          icon={endIcon}
-          className={`${textColor}`}
-          size={size !== "md" ? size : undefined}
-        />
+        <Icon size={size} icon={endIcon} className={`!${textColor}`} />
       )}
     </Pressable>
   );

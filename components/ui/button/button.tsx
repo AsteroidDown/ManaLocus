@@ -4,9 +4,9 @@ import { Size } from "@/constants/ui/sizes";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import { IconDefinition as BrandIconDefinition } from "@fortawesome/free-brands-svg-icons";
 import { faRotate, IconDefinition } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect } from "react";
 import { Pressable, View, ViewProps } from "react-native";
+import Icon from "../icon/icon";
 
 export type ButtonType = "default" | "outlined" | "clear";
 
@@ -117,9 +117,9 @@ export default function Button({
         }`}
       >
         {icon && !iconRight && (
-          <FontAwesomeIcon
+          <Icon
+            size={size}
             icon={icon as any}
-            size={size !== "md" ? size : undefined}
             className={`${iconClasses} ${textColor} ${
               text || children ? "mr-2" : ""
             } ${icon === faRotate ? "animate-spin" : ""}`}
@@ -142,12 +142,12 @@ export default function Button({
         {children}
 
         {icon && iconRight && (
-          <FontAwesomeIcon
+          <Icon
+            size={size}
             icon={icon as any}
             className={`${textColor} ${
               children || text ? "pl-2" : ""
             } ml-auto select-none`}
-            size={size !== "md" ? size : undefined}
           />
         )}
       </View>

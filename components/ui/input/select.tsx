@@ -1,5 +1,4 @@
 import { faChevronDown, faX } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, {
   Dispatch,
   ReactNode,
@@ -10,6 +9,7 @@ import React, {
 } from "react";
 import { Pressable, TextInput, View, ViewProps } from "react-native";
 import Button from "../button/button";
+import Icon from "../icon/icon";
 import Text from "../text/text";
 
 export interface SelectOption {
@@ -252,16 +252,16 @@ export default function Select({
             onPress={() => (disabled ? null : setOpen(!open))}
             onBlur={() => setTimeout(() => onBlur(), 200)}
           >
-            <FontAwesomeIcon
+            <Icon
               icon={faChevronDown}
               className={`${open ? "rotate-180" : ""} ${
                 disabled
-                  ? "text-dark-300"
+                  ? "!text-dark-300"
                   : focused || open
-                  ? "text-primary-300"
+                  ? "!text-primary-300"
                   : hovered
-                  ? "text-primary-200"
-                  : "text-background-500"
+                  ? "!text-primary-200"
+                  : "!text-background-500"
               } -mt-0.5 transition-all`}
             />
           </Pressable>

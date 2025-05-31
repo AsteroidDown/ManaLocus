@@ -1,9 +1,9 @@
 import Text from "@/components/ui/text/text";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ReactNode } from "react";
 import { useWindowDimensions, View, ViewProps } from "react-native";
 import Divider from "../divider/divider";
+import Icon from "../icon/icon";
 
 export type BoxHeaderProps = ViewProps & {
   title?: string;
@@ -40,11 +40,7 @@ export default function BoxHeader({
           {start}
 
           {startIcon && (
-            <FontAwesomeIcon
-              icon={startIcon}
-              className="text-white"
-              size={width > 600 ? "lg" : undefined}
-            />
+            <Icon icon={startIcon} size={width > 600 ? "lg" : undefined} />
           )}
 
           <View className="flex-1 flex">

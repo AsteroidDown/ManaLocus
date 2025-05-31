@@ -5,13 +5,13 @@ import {
   faToolbox,
   faUsers,
 } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link, router } from "expo-router";
 import { useContext, useState } from "react";
 import { Image, useWindowDimensions, View } from "react-native";
 import Button from "../button/button";
 import Divider from "../divider/divider";
 import Dropdown from "../dropdown/dropdown";
+import Icon from "../icon/icon";
 import Text from "../text/text";
 
 export default function Header() {
@@ -69,8 +69,9 @@ export default function Header() {
                 buttonClasses="min-h-12"
                 onClick={() => setExploreOpen(!exploreOpen)}
               >
-                <FontAwesomeIcon
+                <Icon
                   size="sm"
+                  action="primary"
                   icon={faChevronDown}
                   className={`${
                     exploreOpen ? "rotate-180" : ""

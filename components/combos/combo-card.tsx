@@ -6,13 +6,13 @@ import {
   SpellbookComboResult,
 } from "@/models/spellbook/spellbook-combo";
 import { faExternalLinkAlt, faPlus } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link } from "expo-router";
 import { useEffect, useState } from "react";
 import { Image, Pressable, useWindowDimensions, View } from "react-native";
 import CardText from "../cards/card-text";
 import Chip from "../ui/chip/chip";
 import Divider from "../ui/divider/divider";
+import Icon from "../ui/icon/icon";
 import Modal from "../ui/modal/modal";
 import Text from "../ui/text/text";
 import ComboDetails, { getComboResultIcon } from "./combo-details";
@@ -139,10 +139,7 @@ export default function ComboCard({
             className="!text-primary-200 ml-auto"
           >
             View on Commander Spellbook
-            <FontAwesomeIcon
-              icon={faExternalLinkAlt}
-              className="ml-2 text-primary-200"
-            />
+            <Icon action="primary" className="ml-2" icon={faExternalLinkAlt} />
           </Link>
         }
       >

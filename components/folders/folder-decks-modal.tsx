@@ -10,9 +10,9 @@ import FolderService from "@/hooks/services/folder.service";
 import { Deck } from "@/models/deck/deck";
 import { DeckFolder } from "@/models/folder/folder";
 import { faCheck } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useContext, useEffect } from "react";
 import { View } from "react-native";
+import Icon from "../ui/icon/icon";
 
 export interface FolderDecksModalProps {
   folder: DeckFolder;
@@ -100,9 +100,7 @@ export default function FolderDecksModal({
             {
               fit: true,
               row: (deck) =>
-                folder.deckIds.includes(deck.id) && (
-                  <FontAwesomeIcon icon={faCheck} className="text-white" />
-                ),
+                folder.deckIds.includes(deck.id) && <Icon icon={faCheck} />,
             },
           ]}
         />

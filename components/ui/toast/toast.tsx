@@ -1,10 +1,10 @@
 import { ActionColor } from "@/constants/ui/colors";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import { faInfoCircle, faX } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ReactNode, useEffect, useState } from "react";
 import { View } from "react-native";
 import Button from "../button/button";
+import Icon from "../icon/icon";
 import Text from "../text/text";
 
 export interface ToastProps {
@@ -93,9 +93,9 @@ export default function Toast({
     >
       <View className="flex flex-row justify-between items-center gap-2 px-4 py-2">
         <View className="flex-1 flex flex-row items-center gap-3">
-          <FontAwesomeIcon
+          <Icon
             icon={icon ?? faInfoCircle}
-            className={`${textColor} w-6 h-6`}
+            className={`!${textColor} w-6 h-6`}
           />
 
           <View className="flex-1 flex">

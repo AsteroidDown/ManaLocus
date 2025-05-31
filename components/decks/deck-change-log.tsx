@@ -4,11 +4,11 @@ import DeckService from "@/hooks/services/deck.service";
 import { Deck } from "@/models/deck/deck";
 import { DeckCardChange, DeckChange } from "@/models/deck/deck-change";
 import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import moment from "moment";
 import React, { useEffect } from "react";
 import { Pressable, View, ViewProps } from "react-native";
 import Divider from "../ui/divider/divider";
+import Icon from "../ui/icon/icon";
 import TabBar from "../ui/tabs/tab-bar";
 import Text from "../ui/text/text";
 
@@ -114,10 +114,10 @@ export default function DeckChangeLog({ deck, className }: DeckChangeLogProps) {
                     >
                       <View className="flex-1 flex flex-row justify-between items-center gap-2 px-2 py-1 w-full min-h-8 hover:bg-primary-200 hover:bg-opacity-30 transition-all duration-300">
                         <View className="flex flex-row items-center gap-4 pl-2">
-                          <FontAwesomeIcon
+                          <Icon
                             size="sm"
                             icon={faChevronRight}
-                            className={`text-white transition-all duration-300 ${
+                            className={`transition-all duration-300 ${
                               openIndex === timeIndex ? "rotate-[450deg]" : ""
                             }`}
                           />

@@ -3,9 +3,9 @@ import { CardBackIds } from "@/constants/scryfall/ids";
 import { isOnScreen } from "@/hooks/on-screen";
 import { Card } from "@/models/card/card";
 import { faRotateRight } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Image, Pressable, View, ViewProps } from "react-native";
+import Icon from "../ui/icon/icon";
 import Skeleton from "../ui/skeleton/skeleton";
 
 export interface CardImageProps extends ViewProps {
@@ -254,12 +254,12 @@ export default function CardImage({
               (hovered ? "bg-opacity-100" : "bg-opacity-75")
             }
           >
-            <FontAwesomeIcon
+            <Icon
+              icon={faRotateRight}
               className={
                 "text-white transition-all " +
                 (!showFront ? "rotate-[270deg]" : "")
               }
-              icon={faRotateRight}
             />
           </View>
         </Pressable>

@@ -3,10 +3,10 @@ import { LostURL } from "@/constants/urls";
 import { titleCase } from "@/functions/text-manipulation";
 import { Deck } from "@/models/deck/deck";
 import { faEye, faHeart } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import { Image, Pressable, View } from "react-native";
 import CardText from "../cards/card-text";
+import Icon from "../ui/icon/icon";
 import Text from "../ui/text/text";
 
 export interface DeckCardProps {
@@ -85,11 +85,7 @@ export default function DeckCard({ deck, hideFormat }: DeckCardProps) {
 
             <View className="flex flex-row items-center gap-2">
               <View className="flex flex-row items-center gap-1">
-                <FontAwesomeIcon
-                  size="xs"
-                  icon={faEye}
-                  className="text-white"
-                />
+                <Icon size="xs" icon={faEye} />
 
                 <Text size="xs" weight="medium">
                   {deck.views}
@@ -97,11 +93,7 @@ export default function DeckCard({ deck, hideFormat }: DeckCardProps) {
               </View>
 
               <View className="flex flex-row items-center gap-1">
-                <FontAwesomeIcon
-                  size="xs"
-                  icon={faHeart}
-                  className="text-white"
-                />
+                <Icon size="xs" icon={faHeart} />
 
                 <Text size="xs" weight="medium">
                   {deck.favorites}

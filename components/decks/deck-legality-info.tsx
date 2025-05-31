@@ -9,8 +9,8 @@ import {
   faCheckCircle,
   faCircleXmark,
 } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { View } from "react-native";
+import Icon from "../ui/icon/icon";
 import Text from "../ui/text/text";
 
 export interface DeckLegalityProps {
@@ -39,12 +39,12 @@ export default function DeckLegalityInfo({
 
       {"commander" in legalityEvaluation && (
         <View className="flex flex-row items-center gap-2">
-          <FontAwesomeIcon
+          <Icon
             icon={legalityEvaluation.commander ? faCheckCircle : faCircleXmark}
             className={
               legalityEvaluation.commander
-                ? "text-success-400"
-                : "text-danger-400"
+                ? "!text-success-400"
+                : "!text-danger-400"
             }
           />
           <Text size="sm">This deck has a legal commander</Text>
@@ -52,10 +52,10 @@ export default function DeckLegalityInfo({
       )}
 
       <View className="flex flex-row items-center gap-2">
-        <FontAwesomeIcon
+        <Icon
           icon={legalityEvaluation.size ? faCheckCircle : faCircleXmark}
           className={
-            legalityEvaluation.size ? "text-success-400" : "text-danger-400"
+            legalityEvaluation.size ? "!text-success-400" : "!text-danger-400"
           }
         />
         <Text size="sm">
@@ -72,10 +72,10 @@ export default function DeckLegalityInfo({
       </View>
 
       <View className="flex flex-row items-center gap-2">
-        <FontAwesomeIcon
+        <Icon
           icon={legalityEvaluation.cards ? faCheckCircle : faCircleXmark}
           className={
-            legalityEvaluation.cards ? "text-success-400" : "text-danger-400"
+            legalityEvaluation.cards ? "!text-success-400" : "!text-danger-400"
           }
         />
         <Text size="sm">
@@ -87,14 +87,14 @@ export default function DeckLegalityInfo({
 
       {"colorIdentity" in legalityEvaluation && (
         <View className="flex flex-row items-center gap-2">
-          <FontAwesomeIcon
+          <Icon
             icon={
               legalityEvaluation.colorIdentity ? faCheckCircle : faCircleXmark
             }
             className={
               legalityEvaluation.colorIdentity
-                ? "text-success-400"
-                : "text-danger-400"
+                ? "!text-success-400"
+                : "!text-danger-400"
             }
           />
           <Text size="sm">
@@ -106,10 +106,10 @@ export default function DeckLegalityInfo({
       )}
 
       <View className="flex flex-row items-center gap-2">
-        <FontAwesomeIcon
+        <Icon
           icon={legalityEvaluation.unique ? faCheckCircle : faCircleXmark}
           className={
-            legalityEvaluation.unique ? "text-success-400" : "text-danger-400"
+            legalityEvaluation.unique ? "!text-success-400" : "!text-danger-400"
           }
         />
         <Text size="sm">
@@ -121,10 +121,12 @@ export default function DeckLegalityInfo({
 
       {"rarity" in legalityEvaluation && (
         <View className="flex flex-row items-center gap-2">
-          <FontAwesomeIcon
+          <Icon
             icon={legalityEvaluation.rarity ? faCheckCircle : faCircleXmark}
             className={
-              legalityEvaluation.rarity ? "text-success-400" : "text-danger-400"
+              legalityEvaluation.rarity
+                ? "!text-success-400"
+                : "!text-danger-400"
             }
           />
           <Text size="sm">

@@ -1,10 +1,10 @@
 import Text from "@/components/ui/text/text";
 import ScryfallService from "@/hooks/services/scryfall.service";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { Pressable, TextInput, View } from "react-native";
 import Box from "../box/box";
+import Icon from "../icon/icon";
 
 export interface SearchBarProps {
   search: string;
@@ -60,15 +60,15 @@ export default function SearchBar({
           noSearchResults ? noSearchResultClasses : hovered ? hoverClasses : ""
         }`}
       >
-        <FontAwesomeIcon
-          className={`${
-            focused
-              ? "color-primary-300"
-              : hovered
-              ? "color-primary-200"
-              : "color-background-500"
-          } transition-colors duration-300`}
+        <Icon
           icon={faSearch}
+          className={`!${
+            focused
+              ? "text-primary-300"
+              : hovered
+              ? "text-primary-200"
+              : "text-background-500"
+          } transition-colors duration-300`}
         />
 
         <View className="relative flex-1">

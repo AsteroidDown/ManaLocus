@@ -6,9 +6,9 @@ import {
   faUpLong,
   IconDefinition,
 } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect } from "react";
 import { View, ViewProps } from "react-native";
+import Icon from "../icon/icon";
 import { getFilterTextColor } from "./filter";
 
 export type SortingFilterProps = ViewProps & {
@@ -65,7 +65,7 @@ export default function SortingFilter({
         <View
           className={`text-dark-100 rounded-full px-[7px] py-[3px] ${textColor}`}
         >
-          <FontAwesomeIcon
+          <Icon
             size="sm"
             icon={sortDirection === SortTypes.ASC ? faUpLong : faDownLong}
             className={`${textColor} ${

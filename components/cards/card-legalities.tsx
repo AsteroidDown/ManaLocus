@@ -6,8 +6,8 @@ import {
   faCircleInfo,
   faCircleXmark,
 } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useWindowDimensions, View } from "react-native";
+import Icon from "../ui/icon/icon";
 import Text from "../ui/text/text";
 
 export interface CardLegalitiesProps {
@@ -108,7 +108,8 @@ function Legality({
       <View
         className={`${legalityColor} flex justify-center items-center w-5 h-5 p-px rounded-full`}
       >
-        <FontAwesomeIcon
+        <Icon
+          className="!text-dark-100"
           icon={
             legality === "legal"
               ? faCircleCheck

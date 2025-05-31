@@ -1,5 +1,4 @@
 import TabBar from "@/components/ui/tabs/tab-bar";
-import Text from "@/components/ui/text/text";
 import { BoardTypes } from "@/constants/boards";
 import BuilderPreferencesContext from "@/contexts/cards/builder-preferences.context";
 import StoredCardsContext from "@/contexts/cards/stored-cards.context";
@@ -16,10 +15,7 @@ import DeckService from "@/hooks/services/deck.service";
 import { Card } from "@/models/card/card";
 import { Dashboard } from "@/models/dashboard/dashboard";
 import { BuilderPreferences } from "@/models/preferences/builder-preferences";
-import { IconDefinition } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useContext, useEffect } from "react";
-import { useWindowDimensions, View } from "react-native";
 
 export default function TabLayout() {
   const { deck } = useContext(DeckContext);
@@ -122,35 +118,5 @@ export default function TabLayout() {
         </BuilderPreferencesContext.Provider>
       </DashboardContext.Provider>
     </StoredCardsContext.Provider>
-  );
-}
-
-function Tab({
-  focused,
-  icon,
-  title,
-}: {
-  title: string;
-  focused: boolean;
-  icon: IconDefinition;
-}) {
-  const width = useWindowDimensions().width;
-
-  return (
-    <View className="flex lg:flex-row justify-center items-center lg:gap-2 gap-1 bg-background-100">
-      <FontAwesomeIcon
-        size="lg"
-        icon={icon}
-        className={focused ? "color-gray-200" : "color-primary-200"}
-      />
-
-      <Text
-        noWrap
-        size={width > 600 ? "sm" : "xs"}
-        action={focused ? "default" : "primary"}
-      >
-        {title}
-      </Text>
-    </View>
   );
 }

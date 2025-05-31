@@ -8,13 +8,12 @@ import { User } from "@/models/user/user";
 import {
   faArrowUpRightFromSquare,
   faCheckCircle,
-  faInfoCircle,
 } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link } from "expo-router";
 import { useState } from "react";
 import { Pressable, View } from "react-native";
 import CardViewMultipleModal from "../cards/card-view-multiple-modal";
+import Icon from "../ui/icon/icon";
 import Text from "../ui/text/text";
 
 export default function DeckBracketInfo({
@@ -55,7 +54,7 @@ export default function DeckBracketInfo({
           viewCards("Game Changers", bracket.gameChangers)
         }
       >
-        <FontAwesomeIcon icon={faCheckCircle} className={"text-success-400"} />
+        <Icon className="!text-success-400" icon={faCheckCircle} />
 
         <Text size="sm">
           {bracketInfo.gameChangers
@@ -66,11 +65,7 @@ export default function DeckBracketInfo({
         </Text>
 
         {(bracket.gameChangers?.length || 0) > 0 && (
-          <FontAwesomeIcon
-            size="sm"
-            icon={faArrowUpRightFromSquare}
-            className="text-white"
-          />
+          <Icon size="xs" icon={faArrowUpRightFromSquare} />
         )}
       </Pressable>
 
@@ -80,7 +75,7 @@ export default function DeckBracketInfo({
           bracket.tutors?.length && viewCards("Tutors", bracket.tutors)
         }
       >
-        <FontAwesomeIcon icon={faCheckCircle} className={"text-success-400"} />
+        <Icon className="!text-success-400" icon={faCheckCircle} />
 
         <Text size="sm">
           {bracketInfo.tutors
@@ -91,11 +86,7 @@ export default function DeckBracketInfo({
         </Text>
 
         {(bracket.tutors?.length || 0) > 0 && (
-          <FontAwesomeIcon
-            size="sm"
-            icon={faArrowUpRightFromSquare}
-            className="text-white"
-          />
+          <Icon size="xs" icon={faArrowUpRightFromSquare} />
         )}
       </Pressable>
 
@@ -106,7 +97,7 @@ export default function DeckBracketInfo({
           viewCards("Extra Turns", bracket.extraTurns)
         }
       >
-        <FontAwesomeIcon icon={faCheckCircle} className={"text-success-400"} />
+        <Icon className="!text-success-400" icon={faCheckCircle} />
 
         <Text size="sm">
           {bracketInfo.extraTurns
@@ -115,11 +106,7 @@ export default function DeckBracketInfo({
         </Text>
 
         {(bracket.extraTurns?.length || 0) > 0 && (
-          <FontAwesomeIcon
-            size="sm"
-            icon={faArrowUpRightFromSquare}
-            className="text-white"
-          />
+          <Icon size="xs" icon={faArrowUpRightFromSquare} />
         )}
       </Pressable>
 
@@ -130,7 +117,7 @@ export default function DeckBracketInfo({
           viewCards("Mass Land Denial", bracket.massLandDenial)
         }
       >
-        <FontAwesomeIcon icon={faCheckCircle} className={"text-success-400"} />
+        <Icon className="!text-success-400" icon={faCheckCircle} />
 
         <Text size="sm">
           {bracketInfo.massLandDenial
@@ -139,16 +126,12 @@ export default function DeckBracketInfo({
         </Text>
 
         {(bracket.massLandDenial?.length || 0) > 0 && (
-          <FontAwesomeIcon
-            size="sm"
-            icon={faArrowUpRightFromSquare}
-            className="text-white"
-          />
+          <Icon size="xs" icon={faArrowUpRightFromSquare} />
         )}
       </Pressable>
 
       <View className="flex flex-row items-center gap-2">
-        <FontAwesomeIcon icon={faCheckCircle} className={"text-success-400"} />
+        <Icon className="!text-success-400" icon={faCheckCircle} />
 
         <Text size="sm">
           {bracketInfo.chainingExtraTurns
@@ -161,7 +144,7 @@ export default function DeckBracketInfo({
       </View>
 
       <View className="flex flex-row items-center gap-2">
-        <FontAwesomeIcon icon={faCheckCircle} className={"text-success-400"} />
+        <Icon className="!text-success-400" icon={faCheckCircle} />
 
         <Text size="sm">
           {bracketInfo.chainingExtraTurns
@@ -174,7 +157,7 @@ export default function DeckBracketInfo({
       </View>
 
       <View className="flex flex-row items-center gap-2 mt-2">
-        <FontAwesomeIcon icon={faInfoCircle} className="text-white" />
+        <Icon className="!text-success-400" icon={faCheckCircle} />
 
         <Text size="xs" className="italic max-w-[304px]">
           {bracketSet
