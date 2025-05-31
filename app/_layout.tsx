@@ -23,6 +23,7 @@ import { Stack } from "expo-router";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { ScrollView } from "react-native";
+import { Host } from "react-native-portalize";
 
 export default function RootLayout() {
   const [loading, setLoading] = useState(false);
@@ -67,27 +68,31 @@ export default function RootLayout() {
   }, [user]);
 
   return (
-    <UserContext.Provider value={{ user, setUser }}>
-      <UserPreferencesContext.Provider value={{ preferences, setPreferences }}>
-        <LoadingContext.Provider value={{ loading, setLoading }}>
-          <ToastProvider>
-            <Header />
+    <Host>
+      <UserContext.Provider value={{ user, setUser }}>
+        <UserPreferencesContext.Provider
+          value={{ preferences, setPreferences }}
+        >
+          <LoadingContext.Provider value={{ loading, setLoading }}>
+            <ToastProvider>
+              <Header />
 
-            <ScrollView className="flex w-full bg-background-100">
-              <Stack screenOptions={{ headerShown: false }}>
-                <Stack.Screen name="index" />
-                <Stack.Screen name="users" />
-                <Stack.Screen name="login" />
-                <Stack.Screen name="reset" />
-                <Stack.Screen name="verify" />
-                <Stack.Screen name="+not-found" />
-              </Stack>
+              <ScrollView className="flex w-full bg-background-100">
+                <Stack screenOptions={{ headerShown: false }}>
+                  <Stack.Screen name="index" />
+                  <Stack.Screen name="users" />
+                  <Stack.Screen name="login" />
+                  <Stack.Screen name="reset" />
+                  <Stack.Screen name="verify" />
+                  <Stack.Screen name="+not-found" />
+                </Stack>
 
-              <LoadingView />
-            </ScrollView>
-          </ToastProvider>
-        </LoadingContext.Provider>
-      </UserPreferencesContext.Provider>
-    </UserContext.Provider>
+                <LoadingView />
+              </ScrollView>
+            </ToastProvider>
+          </LoadingContext.Provider>
+        </UserPreferencesContext.Provider>
+      </UserContext.Provider>
+    </Host>
   );
 }

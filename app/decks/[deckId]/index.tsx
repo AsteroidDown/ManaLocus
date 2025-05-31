@@ -72,7 +72,13 @@ export default function DeckPage() {
             tabs={[
               {
                 title: "Deck",
-                children: <DeckCardGallery className="py-8" deck={deck} />,
+                children: (
+                  <DeckCardGallery
+                    className="py-8"
+                    deck={deck}
+                    bracket={bracket}
+                  />
+                ),
               },
               {
                 title: "Dashboard",
@@ -93,7 +99,7 @@ export default function DeckPage() {
             ]}
           />
         ) : (
-          <DeckCardGallery deck={deck} />
+          <DeckCardGallery deck={deck} bracket={bracket} />
         )}
 
         {!!deck.description && (

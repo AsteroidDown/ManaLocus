@@ -3,7 +3,9 @@ import Divider from "@/components/ui/divider/divider";
 import Modal from "@/components/ui/modal/modal";
 import Text from "@/components/ui/text/text";
 import { BoardType, BoardTypes } from "@/constants/boards";
+import { BracketDetails } from "@/constants/mtg/brackets";
 import { SideBoardLimit } from "@/constants/mtg/limits";
+import { MTGFormat, MTGFormats } from "@/constants/mtg/mtg-format";
 import BoardContext from "@/contexts/cards/board.context";
 import StoredCardsContext from "@/contexts/cards/stored-cards.context";
 import DeckContext from "@/contexts/deck/deck.context";
@@ -21,12 +23,16 @@ import {
 import { currency, titleCase } from "@/functions/text-manipulation";
 import { Card } from "@/models/card/card";
 import {
+  faBurst,
+  faCalendarPlus,
   faCircleInfo,
   faClipboardList,
   faClipboardQuestion,
   faList,
   faListCheck,
+  faMagnifyingGlassPlus,
   faMinus,
+  faMountain,
   faPlus,
   faRightFromBracket,
   faShop,
@@ -42,7 +48,9 @@ import React, {
 import { Linking, Pressable, View } from "react-native";
 import Box from "../ui/box/box";
 import Dropdown from "../ui/dropdown/dropdown";
+import Icon from "../ui/icon/icon";
 import Select, { SelectOption } from "../ui/input/select";
+import Tooltip from "../ui/tooltip/tooltip";
 import CardCost from "./card-cost";
 import CardDetailedPreview from "./card-detailed-preview";
 import CardImage from "./card-image";
@@ -51,6 +59,7 @@ import CardText from "./card-text";
 
 export interface CardItemProps {
   card: Card;
+  bracket?: BracketDetails;
   groups?: string[];
   hideImage?: boolean;
 }
@@ -58,6 +67,7 @@ export interface CardItemProps {
 export default function CardItem({
   card,
   groups,
+  bracket,
   hideImage = false,
   itemsExpanded,
   setItemsExpanded,
@@ -71,8 +81,6 @@ export default function CardItem({
   const [modalOpen, setModalOpen] = useState(false);
   const [focused, setFocused] = useState(false);
   const [hovered, setHovered] = useState(false);
-
-  const [previewOpen, setPreviewOpen] = useState(false);
 
   const [legal, setLegal] = useState(true);
   const [reasons, setReasons] = useState([] as string[]);
@@ -102,7 +110,11 @@ export default function CardItem({
   );
 
   return (
-    <>
+    <Tooltip
+      delay={500}
+      className="!p-0 !rounded-xl"
+      content={!expanded && <CardImage card={card} />}
+    >
       <Pressable
         onFocus={() => setFocused(true)}
         onBlur={() => setFocused(false)}
@@ -129,9 +141,11 @@ export default function CardItem({
       >
         <CardItemHeader
           card={card}
-          focused={focused}
           legal={legal}
+          focused={focused}
+          bracket={bracket}
           restricted={restricted}
+          format={format ?? undefined}
         />
 
         {expanded && (
@@ -157,6 +171,7 @@ export default function CardItem({
 
                   <CardText text={reasons.join("\n")} />
                 </View>
+
                 <Divider thick />
               </>
             )}
@@ -203,17 +218,35 @@ export default function CardItem({
           />
         </CardDetailedPreview>
       </Modal>
-    </>
+    </Tooltip>
   );
 }
 
 export function CardItemHeader({
   card,
-  focused,
   legal,
+  format,
+  bracket,
   restricted,
-}: CardItemProps & { focused: boolean; legal: boolean; restricted: boolean }) {
+}: CardItemProps & {
+  format?: MTGFormat;
+  bracket?: BracketDetails;
+  focused: boolean;
+  legal: boolean;
+  restricted: boolean;
+}) {
   const [hovered, setHovered] = useState(false);
+
+  const isTutor = cardListIncludes(bracket?.tutors, card);
+  const isExtraTurn = cardListIncludes(bracket?.extraTurns, card);
+  const isGameChanger = cardListIncludes(bracket?.gameChangers, card);
+  const isLandDenial = cardListIncludes(bracket?.massLandDenial, card);
+
+  function cardListIncludes(list: Card[] | undefined, card: Card) {
+    return !!list?.some(
+      (cardInList) => cardInList.scryfallId === card.scryfallId
+    );
+  }
 
   return (
     <View
@@ -223,7 +256,7 @@ export function CardItemHeader({
       onPointerEnter={() => setHovered(true)}
       onPointerLeave={() => setHovered(false)}
     >
-      <View className="flex flex-row gap-2 flex-1">
+      <View className="flex flex-row items-center gap-2 flex-1">
         <Text action={!legal ? "danger" : restricted ? "warning" : "default"}>
           {card.count}
         </Text>
@@ -233,6 +266,49 @@ export function CardItemHeader({
         >
           {card.name}
         </Text>
+
+        <View className="mt-0">
+          {format === MTGFormats.COMMANDER &&
+            (isTutor || isExtraTurn || isGameChanger || isLandDenial) && (
+              <Tooltip
+                placement="top"
+                elevation={10}
+                content={
+                  <Text>
+                    {card.name} is
+                    {isGameChanger || isTutor
+                      ? " a "
+                      : isExtraTurn
+                      ? " an "
+                      : " "}
+                    <Text action="primary">
+                      {isGameChanger
+                        ? "Game Changer"
+                        : isTutor
+                        ? "Tutor"
+                        : isExtraTurn
+                        ? "Extra Turn spell"
+                        : "Mass Land Denial"}
+                    </Text>
+                  </Text>
+                }
+              >
+                <Icon
+                  size="xs"
+                  className="-my-1 p-[3px] !text-[10px] border rounded-full"
+                  icon={
+                    isGameChanger
+                      ? faBurst
+                      : isTutor
+                      ? faMagnifyingGlassPlus
+                      : isExtraTurn
+                      ? faCalendarPlus
+                      : faMountain
+                  }
+                />
+              </Tooltip>
+            )}
+        </View>
       </View>
 
       {card.faces ? (
@@ -387,7 +463,7 @@ export function CardItemFooter({
         />
 
         <View className="-mx-1">
-          <Dropdown xOffset={-32} expanded={moveOpen} setExpanded={setMoveOpen}>
+          <Dropdown expanded={moveOpen} setExpanded={setMoveOpen}>
             <Box className="flex justify-start items-start !p-0 border-2 border-primary-300 !bg-background-100 !bg-opacity-90 overflow-hidden">
               {board !== BoardTypes.MAIN && (
                 <Button

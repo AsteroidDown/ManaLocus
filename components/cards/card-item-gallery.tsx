@@ -1,6 +1,7 @@
 import Box from "@/components/ui/box/box";
 import BoxHeader from "@/components/ui/box/box-header";
 import { BoardTypes } from "@/constants/boards";
+import { BracketDetails } from "@/constants/mtg/brackets";
 import { MTGColors } from "@/constants/mtg/mtg-colors";
 import { MTGFormats } from "@/constants/mtg/mtg-format";
 import { MTGCardTypes } from "@/constants/mtg/mtg-types";
@@ -24,6 +25,7 @@ import {
   getCountOfCards,
   getTotalValueOfCards,
 } from "@/functions/cards/card-stats";
+import { getBracketDetails } from "@/functions/decks/deck-bracket";
 import { getLocalStorageStoredCards } from "@/functions/local-storage/card-local-storage";
 import { titleCase } from "@/functions/text-manipulation";
 import { Card } from "@/models/card/card";
@@ -76,6 +78,9 @@ export default function CardItemGallery({
   const [saveAsChartOpen, setSaveAsChartOpen] = useState(false);
 
   const [cards, setCards] = useState([] as Card[]);
+  const [bracket, setBracket] = useState(
+    undefined as BracketDetails | undefined
+  );
 
   const [group, setGroup] = useState("");
   const [groupOptions, setGroupOptions] = useState([] as string[]);
@@ -104,6 +109,10 @@ export default function CardItemGallery({
   useEffect(() => {
     setCards(sortCardsAlphabetically(getLocalStorageStoredCards(board)));
   }, []);
+
+  useEffect(() => {
+    if (deck) setBracket(getBracketDetails(deck));
+  }, [deck]);
 
   useEffect(() => {
     let sortedCards: Card[] = [];
@@ -226,6 +235,7 @@ export default function CardItemGallery({
                       ? "Oathbreaker"
                       : "Commander"
                   }
+                  bracket={bracket}
                   hideImages={hideImages}
                   itemsExpanded={itemsExpanded}
                   setItemExpanded={setItemsExpanded}
@@ -237,6 +247,7 @@ export default function CardItemGallery({
               {cardsSortedByCost.zero?.length > 0 && (
                 <CardItemGalleryColumn
                   title="0 Cost"
+                  bracket={bracket}
                   hideImages={hideImages}
                   itemsExpanded={itemsExpanded}
                   setItemExpanded={setItemsExpanded}
@@ -246,6 +257,7 @@ export default function CardItemGallery({
               )}
               <CardItemGalleryColumn
                 title="1 Cost"
+                bracket={bracket}
                 hideImages={hideImages}
                 itemsExpanded={itemsExpanded}
                 setItemExpanded={setItemsExpanded}
@@ -254,6 +266,7 @@ export default function CardItemGallery({
               />
               <CardItemGalleryColumn
                 title="2 Cost"
+                bracket={bracket}
                 hideImages={hideImages}
                 itemsExpanded={itemsExpanded}
                 setItemExpanded={setItemsExpanded}
@@ -262,6 +275,7 @@ export default function CardItemGallery({
               />
               <CardItemGalleryColumn
                 title="3 Cost"
+                bracket={bracket}
                 hideImages={hideImages}
                 itemsExpanded={itemsExpanded}
                 setItemExpanded={setItemsExpanded}
@@ -270,6 +284,7 @@ export default function CardItemGallery({
               />
               <CardItemGalleryColumn
                 title="4 Cost"
+                bracket={bracket}
                 hideImages={hideImages}
                 itemsExpanded={itemsExpanded}
                 setItemExpanded={setItemsExpanded}
@@ -278,6 +293,7 @@ export default function CardItemGallery({
               />
               <CardItemGalleryColumn
                 title="5 Cost"
+                bracket={bracket}
                 hideImages={hideImages}
                 itemsExpanded={itemsExpanded}
                 setItemExpanded={setItemsExpanded}
@@ -287,6 +303,7 @@ export default function CardItemGallery({
               {cardsSortedByCost.six?.length > 0 && (
                 <CardItemGalleryColumn
                   title="6+ Cost"
+                  bracket={bracket}
                   hideImages={hideImages}
                   itemsExpanded={itemsExpanded}
                   setItemExpanded={setItemsExpanded}
@@ -297,6 +314,7 @@ export default function CardItemGallery({
               {cardsSortedByCost.land?.length > 0 && (
                 <CardItemGalleryColumn
                   title="Lands"
+                  bracket={bracket}
                   hideImages={hideImages}
                   itemsExpanded={itemsExpanded}
                   setItemExpanded={setItemsExpanded}
@@ -316,6 +334,7 @@ export default function CardItemGallery({
                       ? "Oathbreaker"
                       : "Commander"
                   }
+                  bracket={bracket}
                   hideImages={hideImages}
                   itemsExpanded={itemsExpanded}
                   setItemExpanded={setItemsExpanded}
@@ -337,6 +356,7 @@ export default function CardItemGallery({
                 <CardItemGalleryColumn
                   key={index}
                   title={titleCase(color)}
+                  bracket={bracket}
                   hideImages={hideImages}
                   itemsExpanded={itemsExpanded}
                   setItemExpanded={setItemsExpanded}
@@ -356,6 +376,7 @@ export default function CardItemGallery({
                       ? "Oathbreaker"
                       : "Commander"
                   }
+                  bracket={bracket}
                   hideImages={hideImages}
                   itemsExpanded={itemsExpanded}
                   setItemExpanded={setItemsExpanded}
@@ -374,6 +395,7 @@ export default function CardItemGallery({
                 <CardItemGalleryColumn
                   key={index}
                   title={titleCase(type)}
+                  bracket={bracket}
                   hideImages={hideImages}
                   itemsExpanded={itemsExpanded}
                   setItemExpanded={setItemsExpanded}
@@ -384,6 +406,7 @@ export default function CardItemGallery({
               {cardsSortedByType.planeswalker?.length > 0 && (
                 <CardItemGalleryColumn
                   title="Planeswalker"
+                  bracket={bracket}
                   hideImages={hideImages}
                   itemsExpanded={itemsExpanded}
                   setItemExpanded={setItemsExpanded}
@@ -394,6 +417,7 @@ export default function CardItemGallery({
               {cardsSortedByType.battle?.length > 0 && (
                 <CardItemGalleryColumn
                   title="Battle"
+                  bracket={bracket}
                   hideImages={hideImages}
                   itemsExpanded={itemsExpanded}
                   setItemExpanded={setItemsExpanded}
@@ -403,6 +427,7 @@ export default function CardItemGallery({
               )}
               <CardItemGalleryColumn
                 title="Land"
+                bracket={bracket}
                 hideImages={hideImages}
                 itemsExpanded={itemsExpanded}
                 setItemExpanded={setItemsExpanded}
@@ -421,6 +446,7 @@ export default function CardItemGallery({
                       ? "Oathbreaker"
                       : "Commander"
                   }
+                  bracket={bracket}
                   hideImages={hideImages}
                   itemsExpanded={itemsExpanded}
                   setItemExpanded={setItemsExpanded}
@@ -434,6 +460,7 @@ export default function CardItemGallery({
                   key={index}
                   groups={groupOptions}
                   title={titleCase(group)}
+                  bracket={bracket}
                   hideImages={hideImages}
                   itemsExpanded={itemsExpanded}
                   setItemExpanded={setItemsExpanded}

@@ -1,4 +1,5 @@
 import { BoardTypes } from "@/constants/boards";
+import { BracketDetails } from "@/constants/mtg/brackets";
 import { MTGFormats } from "@/constants/mtg/mtg-format";
 import { SortTypes } from "@/constants/sorting";
 import UserPreferencesContext from "@/contexts/user/user-preferences.context";
@@ -33,10 +34,12 @@ import DeckColumn from "./deck-column";
 
 export type DeckCardGalleryProps = ViewProps & {
   deck: Deck;
+  bracket?: BracketDetails;
 };
 
 export default function DeckCardGallery({
   deck,
+  bracket,
   className,
 }: DeckCardGalleryProps) {
   const { preferences } = useContext(UserPreferencesContext);
@@ -571,6 +574,7 @@ export default function DeckCardGallery({
             key={title}
             cards={cards}
             title={title}
+            bracket={bracket}
             format={deck.format}
             viewType={viewType}
             showPrice={showPrice}

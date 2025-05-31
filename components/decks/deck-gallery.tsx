@@ -37,6 +37,7 @@ import { Link, router } from "expo-router";
 import React, { useContext, useEffect, useState } from "react";
 import { useWindowDimensions, View } from "react-native";
 import Skeleton from "../ui/skeleton/skeleton";
+import Tooltip from "../ui/tooltip/tooltip";
 import DeckCard from "./deck-card";
 import DecksTable from "./decks-table";
 
@@ -405,13 +406,19 @@ export default function DeckGallery({
         />
 
         {width > 600 && (
-          <Button
-            size="sm"
-            type="outlined"
-            className="max-w-12 self-end"
-            icon={listView ? faBorderAll : faList}
-            onClick={toggleListView}
-          />
+          <View className="self-end">
+            <Tooltip
+              text={listView ? "Switch to Card View" : "Switch to List View"}
+            >
+              <Button
+                size="sm"
+                type="outlined"
+                className="max-w-12"
+                icon={listView ? faBorderAll : faList}
+                onClick={toggleListView}
+              />
+            </Tooltip>
+          </View>
         )}
 
         <Button
@@ -446,13 +453,21 @@ export default function DeckGallery({
             />
 
             {width <= 600 && (
-              <Button
-                size="sm"
-                type="outlined"
-                className="max-w-12 self-end"
-                icon={listView ? faBorderAll : faList}
-                onClick={toggleListView}
-              />
+              <View className="self-end">
+                <Tooltip
+                  text={
+                    listView ? "Switch to Card View" : "Switch to List View"
+                  }
+                >
+                  <Button
+                    size="sm"
+                    type="outlined"
+                    className="max-w-12"
+                    icon={listView ? faBorderAll : faList}
+                    onClick={toggleListView}
+                  />
+                </Tooltip>
+              </View>
             )}
           </View>
 

@@ -1,3 +1,4 @@
+import { BracketDetails } from "@/constants/mtg/brackets";
 import { MTGColorSymbol } from "@/constants/mtg/mtg-colors";
 import { MTGFormat, MTGFormats } from "@/constants/mtg/mtg-format";
 import { groupCardsByColorMulti } from "@/functions/cards/card-grouping";
@@ -8,6 +9,12 @@ import {
   DeckCardGalleryViewType,
   DeckCardGalleryViewTypes,
 } from "@/models/deck/deck-gallery-filters";
+import {
+  faBurst,
+  faCalendarPlus,
+  faMagnifyingGlassPlus,
+  faMountain,
+} from "@fortawesome/free-solid-svg-icons";
 import React, { useEffect, useState } from "react";
 import { Pressable, View } from "react-native";
 import CardDetailedPreview from "../cards/card-detailed-preview";
@@ -15,8 +22,10 @@ import CardImage from "../cards/card-image";
 import CardText from "../cards/card-text";
 import CardViewMultipleModal from "../cards/card-view-multiple-modal";
 import Divider from "../ui/divider/divider";
+import Icon from "../ui/icon/icon";
 import Modal from "../ui/modal/modal";
 import Text from "../ui/text/text";
+import Tooltip from "../ui/tooltip/tooltip";
 
 export interface DeckColumnCardGrouping {
   title: string;
@@ -28,6 +37,7 @@ export interface DeckColumnCardGrouping {
 export interface DeckColumnProps {
   title: string;
   cards?: Card[];
+  bracket?: BracketDetails;
   format?: MTGFormat;
   viewType: DeckCardGalleryViewType;
 
@@ -43,9 +53,9 @@ export interface DeckColumnProps {
 export default function DeckColumn({
   title,
   cards,
+  bracket,
   format,
   viewType,
-
   showPrice,
   showManaValue,
   groupMulticolored,
@@ -125,6 +135,7 @@ export default function DeckColumn({
             <DeckCard
               key={index}
               card={card}
+              bracket={bracket}
               last={index === cards.length - 1}
               format={format}
               viewType={viewType}
@@ -201,6 +212,7 @@ interface DeckCardProps {
   card: Card;
   last: boolean;
   format?: MTGFormat;
+  bracket?: BracketDetails;
   viewType: DeckCardGalleryViewType;
 
   showPrice?: boolean;
@@ -214,6 +226,7 @@ function DeckCard({
   card,
   last,
   format,
+  bracket,
   viewType,
   showPrice,
   showManaValue,
@@ -229,6 +242,17 @@ function DeckCard({
   const [reasons, setReasons] = useState([] as string[]);
 
   const cardCount = Array(card.count).fill(undefined);
+
+  const isTutor = cardListIncludes(bracket?.tutors, card);
+  const isExtraTurn = cardListIncludes(bracket?.extraTurns, card);
+  const isGameChanger = cardListIncludes(bracket?.gameChangers, card);
+  const isLandDenial = cardListIncludes(bracket?.massLandDenial, card);
+
+  function cardListIncludes(list: Card[] | undefined, card: Card) {
+    return !!list?.some(
+      (cardInList) => cardInList.scryfallId === card.scryfallId
+    );
+  }
 
   useEffect(() => {
     if (!format || format === MTGFormats.CUBE) return;
@@ -253,18 +277,37 @@ function DeckCard({
   return (
     <>
       {viewType === DeckCardGalleryViewTypes.LIST && (
-        <Pressable
-          className={`${
-            commander
-              ? "border-2 hover:border-primary-200 border-transparent"
-              : ""
-          } flex hover:bg-primary-200 rounded-xl overflow-hidden transition-all duration-300`}
-          onPress={() => setOpen(true)}
+        <Tooltip
+          className="!p-0 !rounded-xl"
+          content={<CardImage card={card} />}
         >
-          <View className="flex flex-row gap-2 justify-between items-center px-2 py-0.5">
-            <View className="flex-1 flex flex-row items-center gap-2">
-              {!hideCount && !commander && (
+          <Pressable
+            className={`${
+              commander
+                ? "border-2 hover:border-primary-200 border-transparent"
+                : ""
+            } flex hover:bg-primary-200 rounded-xl overflow-hidden transition-all duration-300`}
+            onPress={() => setOpen(true)}
+          >
+            <View className="flex flex-row gap-2 justify-between items-center px-2 py-0.5">
+              <View className="flex-1 flex flex-row items-center gap-2">
+                {!hideCount && !commander && (
+                  <Text
+                    className={`${
+                      banned
+                        ? "!text-red-500"
+                        : restricted
+                        ? "!text-orange-500"
+                        : ""
+                    }`}
+                  >
+                    {card.count}
+                  </Text>
+                )}
+
                 <Text
+                  truncate
+                  weight="medium"
                   className={`${
                     banned
                       ? "!text-red-500"
@@ -273,50 +316,77 @@ function DeckCard({
                       : ""
                   }`}
                 >
-                  {card.count}
+                  {card.name}
                 </Text>
+
+                {format === MTGFormats.COMMANDER &&
+                  (isTutor || isExtraTurn || isGameChanger || isLandDenial) && (
+                    <Tooltip
+                      placement="top"
+                      elevation={10}
+                      content={
+                        <Text>
+                          {card.name} is
+                          {isGameChanger || isTutor
+                            ? " a "
+                            : isExtraTurn
+                            ? " an "
+                            : " "}
+                          <Text action="primary">
+                            {isGameChanger
+                              ? "Game Changer"
+                              : isTutor
+                              ? "Tutor"
+                              : isExtraTurn
+                              ? "Extra Turn spell"
+                              : "Mass Land Denial"}
+                          </Text>
+                        </Text>
+                      }
+                    >
+                      <Icon
+                        size="xs"
+                        className="-my-1 p-[3px] !text-[10px] border rounded-full"
+                        icon={
+                          isGameChanger
+                            ? faBurst
+                            : isTutor
+                            ? faMagnifyingGlassPlus
+                            : isExtraTurn
+                            ? faCalendarPlus
+                            : faMountain
+                        }
+                      />
+                    </Tooltip>
+                  )}
+              </View>
+
+              {showManaValue && (
+                <CardText
+                  text={
+                    card.faces
+                      ? card.faces.front.manaCost && card.faces.back.manaCost
+                        ? `${card.faces.front.manaCost} // ${card.faces.back.manaCost}`
+                        : card.faces.front.manaCost || card.faces.back.manaCost
+                      : card.manaCost
+                  }
+                />
               )}
 
-              <Text
-                truncate
-                weight="medium"
-                className={`${
-                  banned
-                    ? "!text-red-500"
-                    : restricted
-                    ? "!text-orange-500"
-                    : ""
-                }`}
-              >
-                {card.name}
-              </Text>
+              {showPrice && (
+                <Text className="w-14 text-right">
+                  {currency(card.prices?.usd)}
+                </Text>
+              )}
             </View>
 
-            {showManaValue && (
-              <CardText
-                text={
-                  card.faces
-                    ? card.faces.front.manaCost && card.faces.back.manaCost
-                      ? `${card.faces.front.manaCost} // ${card.faces.back.manaCost}`
-                      : card.faces.front.manaCost || card.faces.back.manaCost
-                    : card.manaCost
-                }
-              />
+            {commander && (
+              <View className="flex flex-row justify-center pt-2 bg-background-100">
+                <CardImage card={card} />
+              </View>
             )}
-
-            {showPrice && (
-              <Text className="w-14 text-right">
-                {currency(card.prices?.usd)}
-              </Text>
-            )}
-          </View>
-
-          {commander && (
-            <View className="flex flex-row justify-center pt-2 bg-background-100">
-              <CardImage card={card} />
-            </View>
-          )}
-        </Pressable>
+          </Pressable>
+        </Tooltip>
       )}
 
       {viewType === DeckCardGalleryViewTypes.CARD &&
@@ -347,6 +417,7 @@ function DeckCard({
                 <Text size="sm" weight="semi" className="mb-1">
                   Legality Issues
                 </Text>
+
                 {reasons.map((reason, index) => (
                   <View
                     key={index}

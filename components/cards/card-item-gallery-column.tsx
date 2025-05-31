@@ -1,10 +1,11 @@
 import Divider from "@/components/ui/divider/divider";
 import Text from "@/components/ui/text/text";
+import { BracketDetails } from "@/constants/mtg/brackets";
 import { groupCardsByColorMulti } from "@/functions/cards/card-grouping";
 import { getCountOfCards } from "@/functions/cards/card-stats";
 import { titleCase } from "@/functions/text-manipulation";
 import { Card } from "@/models/card/card";
-import React from "react";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { View } from "react-native";
 import CardItem from "./card-item";
 
@@ -18,16 +19,18 @@ export interface CardItemGalleryColumnProps {
   title: string;
   cards: Card[];
   groups?: string[];
+  bracket?: BracketDetails;
   hideImages?: boolean;
   groupMulticolored?: boolean;
   itemsExpanded?: number;
-  setItemExpanded: React.Dispatch<React.SetStateAction<number>>;
+  setItemExpanded: Dispatch<SetStateAction<number>>;
 }
 
 export default function CardItemGalleryColumn({
   title,
   cards,
   groups,
+  bracket,
   hideImages = false,
   groupMulticolored = false,
   itemsExpanded,
@@ -35,11 +38,11 @@ export default function CardItemGalleryColumn({
 }: CardItemGalleryColumnProps) {
   const cardCount = getCountOfCards(cards);
 
-  const [cardGroupings, setCardGroupings] = React.useState(
+  const [cardGroupings, setCardGroupings] = useState(
     [] as CardItemGalleryColumnCardGrouping[] | null
   );
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!cards?.length || !groupMulticolored) return;
 
     const cardGroupings = [] as CardItemGalleryColumnCardGrouping[];
@@ -84,6 +87,7 @@ export default function CardItemGalleryColumn({
               key={card.scryfallId + index}
               card={card}
               groups={groups}
+              bracket={bracket}
               hideImage={hideImages}
               itemsExpanded={itemsExpanded}
               setItemsExpanded={setItemExpanded}

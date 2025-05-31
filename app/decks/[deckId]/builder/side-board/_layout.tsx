@@ -3,7 +3,7 @@ import CardSearch from "@/components/cards/card-search";
 import Button from "@/components/ui/button/button";
 import { TabProps } from "@/components/ui/tabs/tab";
 import TabBar from "@/components/ui/tabs/tab-bar";
-import { Tooltip } from "@/components/ui/tooltip/tooltip";
+import Tooltip from "@/components/ui/tooltip/tooltip";
 import { BoardType, BoardTypes } from "@/constants/boards";
 import BoardContext from "@/contexts/cards/board.context";
 import BuilderPreferencesContext from "@/contexts/cards/builder-preferences.context";
@@ -107,7 +107,7 @@ export default function SideBoardLayout() {
               onClick={() => setOpen(!open)}
             />
 
-            <Tooltip title="Group Multicolored Cards">
+            <Tooltip text="Group Multicolored Cards">
               <Button
                 size="sm"
                 icon={faPalette}
@@ -121,7 +121,7 @@ export default function SideBoardLayout() {
             </Tooltip>
 
             <Tooltip
-              title={hideImages ? "Show Card Images" : "Hide Card Images"}
+              text={hideImages ? "Show Card Images" : "Hide Card Images"}
             >
               <Button
                 size="sm"
