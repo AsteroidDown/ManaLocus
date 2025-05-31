@@ -4,7 +4,7 @@ import { Size } from "@/constants/ui/sizes";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import { IconDefinition as BrandIconDefinition } from "@fortawesome/free-brands-svg-icons";
 import { faRotate, IconDefinition } from "@fortawesome/free-solid-svg-icons";
-import React, { useEffect } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Pressable, View, ViewProps } from "react-native";
 import Icon from "../icon/icon";
 
@@ -60,10 +60,10 @@ export default function Button({
   hideLeftBorder = false,
   hideRightBorder = false,
 }: ButtonProps) {
-  const [focused, setFocused] = React.useState(false);
-  const [useFocus, setUseFocus] = React.useState(false);
+  const [focused, setFocused] = useState(false);
+  const [useFocus, setUseFocus] = useState(false);
 
-  const ref = React.useRef<View>(null);
+  const ref = useRef<View>(null);
 
   const baseColor = getButtonBaseColor(action, type, disabled);
   const hoverColor = getButtonHoverColor(action, type, disabled);
