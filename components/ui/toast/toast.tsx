@@ -95,7 +95,7 @@ export default function Toast({
         <View className="flex-1 flex flex-row items-center gap-3">
           <Icon
             icon={icon ?? faInfoCircle}
-            className={`!${textColor} w-6 h-6`}
+            className={`${textColor} w-6 h-6`}
           />
 
           <View className="flex-1 flex">
@@ -132,16 +132,16 @@ export default function Toast({
 
 function getToastTextColor(action: ActionColor) {
   return action === "default"
-    ? "text-white"
+    ? "!text-white"
     : action === "success"
-    ? "text-success-300"
+    ? "!text-success-300"
     : action === "danger"
-    ? "text-danger-300"
+    ? "!text-danger-300"
     : action === "info"
-    ? "text-info-300"
+    ? "!text-info-300"
     : action === "warning"
-    ? "text-warning-300"
-    : "text-primary-300";
+    ? "!text-warning-300"
+    : "!text-primary-300";
 }
 
 function getToastBarColor(action: ActionColor) {
