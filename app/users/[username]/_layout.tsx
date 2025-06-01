@@ -80,13 +80,13 @@ export default function UserLayout() {
           <BoxHeader
             title={userPageUser?.name}
             titleEnd={
-              user?.patreon && (
+              userPageUser?.patreon && (
                 <Chip
                   size="sm"
                   type="outlined"
                   action="primary"
                   startIcon={faPatreon as any}
-                  text={user.patreon.tierName}
+                  text={userPageUser.patreon.tierName}
                 />
               )
             }
