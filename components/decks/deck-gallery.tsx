@@ -295,9 +295,15 @@ export default function DeckGallery({
   }, [searchDto]);
 
   function getDeckURL(deck: Deck) {
-    if (deck.isCollection) return `decks/${deck.id}`;
-    else if (deck.isKit) return `decks/${deck.id}/kits`;
-    else return `decks/${deck.id}/builder/main-board`;
+    return `${
+      includeIds?.length
+        ? "../../../"
+        : collections || kits
+        ? "../../"
+        : userId
+        ? "../"
+        : ""
+    }decks/${deck.id}`;
   }
 
   function toggleListView() {
