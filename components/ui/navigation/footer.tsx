@@ -1,7 +1,14 @@
 import {
+  BlueskyURL,
+  DiscordURL,
+  GithubURL,
+  PatreonURL,
+} from "@/constants/urls";
+import {
   faBluesky,
   faDiscord,
   faGithub,
+  faPatreon,
 } from "@fortawesome/free-brands-svg-icons";
 import { faEnvelope } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "expo-router";
@@ -44,15 +51,19 @@ export default function Footer() {
       </Text>
 
       <View className="flex flex-row -my-2">
-        <Link target="_blank" href="https://discord.gg/qmsPDd9pva">
+        <Link target="_blank" href={DiscordURL}>
           <Button rounded type="clear" icon={faDiscord} />
         </Link>
 
-        <Link target="_blank" href="https://bsky.app/profile/manalocus.com">
+        <Link target="_blank" href={PatreonURL}>
+          <Button rounded type="clear" icon={faPatreon} />
+        </Link>
+
+        <Link target="_blank" href={BlueskyURL}>
           <Button rounded type="clear" icon={faBluesky} />
         </Link>
 
-        <Link target="_blank" href="https://github.com/asteroiddown/ManaLocus">
+        <Link target="_blank" href={GithubURL}>
           <Button rounded type="clear" icon={faGithub} />
         </Link>
 
