@@ -43,6 +43,10 @@ module.exports = {
         patreon: "#f96854",
         "patreon-secondary": "#052d49",
 
+        discord: "#7289da",
+
+        bluesky: "#0099ff",
+
         "primary-100": "rgba(var(--primary-100) / <alpha-value>)",
         "primary-200": "rgba(var(--primary-200) / <alpha-value>)",
         "primary-300": "rgba(var(--primary-300) / <alpha-value>)",
