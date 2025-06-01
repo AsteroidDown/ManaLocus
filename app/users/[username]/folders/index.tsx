@@ -5,6 +5,7 @@ import Button from "@/components/ui/button/button";
 import Input from "@/components/ui/input/input";
 import Footer from "@/components/ui/navigation/footer";
 import Pagination from "@/components/ui/pagination/pagination";
+import Placeholder from "@/components/ui/placeholder/placeholder";
 import Table, { TableColumn } from "@/components/ui/table/table";
 import Text from "@/components/ui/text/text";
 import UserPageContext from "@/contexts/user/user-page.context";
@@ -65,25 +66,51 @@ export default function UserFoldersPage() {
               : `See how ${userPageUser.name} manages their collection`
           }
           end={
-            <Button
-              size="sm"
-              text="Folder"
-              icon={faPlus}
-              type="outlined"
-              className="self-end"
-              onClick={() => setCreateFolderModalOpen(true)}
-            />
+            user &&
+            userPageUser.id === user.id &&
+            user.verified && (
+              <Button
+                size="sm"
+                text="Folder"
+                icon={faPlus}
+                type="outlined"
+                className="self-end"
+                onClick={() => setCreateFolderModalOpen(true)}
+              />
+            )
           }
         />
 
-        {user?.id === userPageUser.id && (
-          <View className="flex flex-row justify-between gap-4 mb-6">
-            <Input
-              label="Search"
-              placeholder="Search for a folder"
-              onChange={setSearch}
-            />
-          </View>
+        <View className="flex flex-row justify-between gap-4 mb-6">
+          <Input
+            label="Search"
+            placeholder="Search for a folder"
+            onChange={setSearch}
+          />
+        </View>
+
+        {!folders.length && (
+          <Placeholder
+            title="No Folders Found"
+            subtitle={
+              search
+                ? `Try searching for something else`
+                : user?.id === userPageUser.id
+                ? `Create a folder and it will show up here!`
+                : `${userPageUser.name} doesn't have any folders yet`
+            }
+          >
+            {user?.id === userPageUser.id && (
+              <Button
+                size="sm"
+                text="Folder"
+                icon={faPlus}
+                type="outlined"
+                className="self-end"
+                onClick={() => setCreateFolderModalOpen(true)}
+              />
+            )}
+          </Placeholder>
         )}
 
         <Table

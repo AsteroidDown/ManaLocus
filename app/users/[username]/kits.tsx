@@ -48,6 +48,7 @@ export default function UserKitsPage() {
           }
           end={
             user &&
+            userPageUser.id === user.id &&
             user.verified && (
               <Button
                 size="sm"

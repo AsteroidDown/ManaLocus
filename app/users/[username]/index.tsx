@@ -45,6 +45,7 @@ export default function Login() {
           }
           end={
             user &&
+            user.id === userPageUser.id &&
             user.verified && (
               <Button
                 size="sm"

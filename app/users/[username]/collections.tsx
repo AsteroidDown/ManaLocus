@@ -49,6 +49,7 @@ export default function UserCollectionsPage() {
           }
           end={
             user &&
+            userPageUser.id === user.id &&
             user.verified && (
               <Button
                 size="sm"
