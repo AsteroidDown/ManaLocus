@@ -100,9 +100,7 @@ export default function DeckBracketInfo({
         <Icon className="!text-success-400" icon={faCheckCircle} />
 
         <Text size="sm">
-          {bracketInfo.extraTurns
-            ? "Extra turns allowed"
-            : "No mass extra turns"}
+          {bracketInfo.extraTurns ? "Extra turns allowed" : "No extra turns"}
         </Text>
 
         {(bracket.extraTurns?.length || 0) > 0 && (
