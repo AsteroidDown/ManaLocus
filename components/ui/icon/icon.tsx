@@ -1,11 +1,12 @@
 import { ActionColor } from "@/constants/ui/colors";
 import { Size } from "@/constants/ui/sizes";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
+import { IconDefinition } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ViewProps } from "react-native";
 
 export type IconProps = ViewProps & {
-  icon: IconProp;
+  icon: IconProp | IconDefinition;
   size?: Size;
   action?: ActionColor;
 };
@@ -20,7 +21,7 @@ export default function Icon({
 
   return (
     <FontAwesomeIcon
-      icon={icon}
+      icon={icon as any}
       size={size !== "md" ? size : undefined}
       className={`${className} ${iconColor}`}
     />
