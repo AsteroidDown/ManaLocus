@@ -53,7 +53,7 @@ export function PatreonAd() {
     <View className="flex justify-center items-center gap-2 w-full h-full px-8">
       <Icon
         icon={faPatreon}
-        className="text-patreon text-[48px] p-5 bg-patreon-secondary border-2 border-patreon border-opacity-90 rounded-full"
+        className="!text-patreon text-[48px] p-5 bg-patreon-secondary border-2 border-patreon border-opacity-90 rounded-full"
       />
 
       <Text center size="sm" className="!text-dark-600">

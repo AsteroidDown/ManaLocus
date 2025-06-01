@@ -45,7 +45,7 @@ import Tooltip from "../ui/tooltip/tooltip";
 import DeckCard from "./deck-card";
 import DecksTable, { DeckTableAd } from "./decks-table";
 
-const AD_THRESHOLD = 6;
+const AD_THRESHOLD = 10;
 
 export interface DeckGalleryProps {
   userId?: string;
