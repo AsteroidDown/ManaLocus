@@ -9,6 +9,7 @@ import { BoardType, BoardTypes } from "@/constants/boards";
 import { BracketNumber, BracketType } from "@/constants/mtg/brackets";
 import { FormatsWithCommander, MTGFormats } from "@/constants/mtg/mtg-format";
 import { SortTypes } from "@/constants/sorting";
+import { PatreonURL } from "@/constants/urls";
 import LoadingContext from "@/contexts/ui/loading.context";
 import UserPageContext from "@/contexts/user/user-page.context";
 import UserPreferencesContext from "@/contexts/user/user-preferences.context";
@@ -18,6 +19,7 @@ import { titleCase } from "@/functions/text-manipulation";
 import { PaginationMeta } from "@/hooks/pagination";
 import DeckService from "@/hooks/services/deck.service";
 import ScryfallService from "@/hooks/services/scryfall.service";
+import { AdType } from "@/models/ads/ads";
 import { Deck } from "@/models/deck/deck";
 import {
   DeckFiltersDTO,
@@ -25,6 +27,7 @@ import {
   DeckSortTypes,
   DeckViewType,
 } from "@/models/deck/dtos/deck-filters.dto";
+import { faPatreon } from "@fortawesome/free-brands-svg-icons";
 import {
   faBorderAll,
   faFilter,
@@ -34,12 +37,15 @@ import {
   faX,
 } from "@fortawesome/free-solid-svg-icons";
 import { Link, router } from "expo-router";
-import React, { useContext, useEffect, useState } from "react";
+import React, { ReactNode, useContext, useEffect, useState } from "react";
 import { useWindowDimensions, View } from "react-native";
+import AdCard from "../ads/ad-card";
 import Skeleton from "../ui/skeleton/skeleton";
 import Tooltip from "../ui/tooltip/tooltip";
 import DeckCard from "./deck-card";
-import DecksTable from "./decks-table";
+import DecksTable, { DeckTableAd } from "./decks-table";
+
+const AD_THRESHOLD = 6;
 
 export interface DeckGalleryProps {
   userId?: string;
@@ -109,6 +115,9 @@ export default function DeckGallery({
     onlyCollections: collections,
   } as DeckFiltersDTO);
 
+  const [deckCards, setDeckCards] = useState([] as ReactNode[]);
+  const [deckList, setDeckList] = useState([] as (Deck | DeckTableAd)[]);
+
   const [resultsText, setResultsText] = useState("");
 
   const loadingDecks = Array(24).fill(undefined);
@@ -116,6 +125,45 @@ export default function DeckGallery({
   useEffect(() => {
     updateResultsText();
 
+    if (!decks?.length) return;
+
+    if (listView) {
+      const decksToShow = decks.reduce((acc, deck, index) => {
+        if (index >= AD_THRESHOLD && index % AD_THRESHOLD === 0) {
+          acc.push({
+            url: PatreonURL,
+            icon: faPatreon,
+            type: AdType.PATREON,
+            title: "Join our Patreon to remove ads and more!",
+          } as DeckTableAd);
+        }
+        acc.push(deck);
+
+        return acc;
+      }, [] as (Deck | DeckTableAd)[]);
+
+      setDeckList(decksToShow);
+    } else {
+      const cardsToShow = decks.reduce((acc, deck, index) => {
+        if (index >= AD_THRESHOLD && index % AD_THRESHOLD === 0) {
+          acc.push(<AdCard type={AdType.PATREON} />);
+        }
+
+        const deckCard = (
+          <Link href={getDeckURL(deck)} key={deck.id + deck.name + index}>
+            <DeckCard deck={deck} />
+          </Link>
+        );
+        acc.push(deckCard);
+
+        return acc;
+      }, [] as ReactNode[]);
+
+      setDeckCards(cardsToShow);
+    }
+  }, [decks, listView]);
+
+  useEffect(() => {
     if (noLoadScreen) return;
 
     if (!decks?.length && decksLoading) setLoading(true);
@@ -245,6 +293,12 @@ export default function DeckGallery({
       });
     }
   }, [searchDto]);
+
+  function getDeckURL(deck: Deck) {
+    if (deck.isCollection) return `decks/${deck.id}`;
+    else if (deck.isKit) return `decks/${deck.id}/kits`;
+    else return `decks/${deck.id}/builder/main-board`;
+  }
 
   function toggleListView() {
     setLocalStorageUserPreferences({
@@ -654,21 +708,8 @@ export default function DeckGallery({
               />
             ))
           ) : decks?.length > 0 ? (
-            decks?.map((deck, index) => (
-              <Link
-                key={deck.id + deck.name + index}
-                href={`${
-                  includeIds?.length
-                    ? "../../../"
-                    : collections || kits
-                    ? "../../"
-                    : userId
-                    ? "../"
-                    : ""
-                }decks/${deck.id}`}
-              >
-                <DeckCard deck={deck} />
-              </Link>
+            deckCards.map((deckCard, index) => (
+              <View key={index}>{deckCard}</View>
             ))
           ) : (
             <Placeholder
@@ -715,10 +756,10 @@ export default function DeckGallery({
       {listView && (
         <>
           <DecksTable
-            decks={decks}
+            decks={deckList}
             loading={decksLoading}
-            rowClick={(deck) => router.push(`decks/${deck.id}`)}
-            endColumns={endColumns}
+            endColumns={endColumns as any}
+            rowClick={(deck: any) => router.push(`decks/${deck?.id}`)}
           />
 
           {!decks?.length && !decksLoading && (

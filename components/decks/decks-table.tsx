@@ -1,15 +1,28 @@
 import { LostURL } from "@/constants/urls";
 import { titleCase } from "@/functions/text-manipulation";
+import { AdType } from "@/models/ads/ads";
 import { Deck } from "@/models/deck/deck";
+import { IconProp } from "@fortawesome/fontawesome-svg-core";
+import { faPatreon, IconDefinition } from "@fortawesome/free-brands-svg-icons";
 import moment from "moment";
 import { Image, View, ViewProps } from "react-native";
 import CardText from "../cards/card-text";
+import Icon from "../ui/icon/icon";
 import LoadingTable from "../ui/table/loading-table";
 import Table, { TableColumn } from "../ui/table/table";
 import Text from "../ui/text/text";
 
+export interface DeckTableAd {
+  type: AdType;
+  title: string;
+  url: string;
+
+  imageURL?: string;
+  icon?: IconProp | IconDefinition;
+}
+
 export type DecksTableProps = ViewProps & {
-  decks: Deck[];
+  decks: (Deck | DeckTableAd)[];
   loading?: boolean;
 
   hideHeader?: boolean;
@@ -19,10 +32,10 @@ export type DecksTableProps = ViewProps & {
   hideFavorites?: boolean;
   hideViews?: boolean;
 
-  startColumns?: TableColumn<Deck>[];
-  endColumns?: TableColumn<Deck>[];
+  startColumns?: TableColumn<Deck | DeckTableAd>[];
+  endColumns?: TableColumn<Deck | DeckTableAd>[];
 
-  rowClick?: (arg: Deck) => void;
+  rowClick?: (arg: Deck | DeckTableAd) => void;
 };
 
 export default function DecksTable({
@@ -41,7 +54,7 @@ export default function DecksTable({
 }: DecksTableProps) {
   if (loading) return <LoadingTable />;
 
-  const columns: TableColumn<Deck>[] = [];
+  const columns: TableColumn<Deck | DeckTableAd>[] = [];
 
   if (startColumns?.length) {
     columns.push(...startColumns);
@@ -50,48 +63,60 @@ export default function DecksTable({
   columns.push(
     {
       fit: true,
-      row: (deck) => (
-        <Image
-          source={{
-            uri: deck.featuredArtUrl?.length ? deck.featuredArtUrl : LostURL,
-          }}
-          className="h-7 w-10 rounded"
-        />
-      ),
+      row: (deck: any) =>
+        deck?.icon ? (
+          <Icon
+            icon={deck.icon}
+            className={`${
+              deck.icon === faPatreon ? "text-patreon" : ""
+            } h-4 w-10 rounded`}
+          />
+        ) : (
+          <Image
+            className="h-7 w-10 rounded"
+            source={{
+              uri: deck?.featuredArtUrl?.length ? deck.featuredArtUrl : LostURL,
+            }}
+          />
+        ),
     },
     {
       title: "Name",
-      row: (deck) => <Text>{deck.name}</Text>,
+      row: (deck: any) => <Text>{deck?.name || deck?.title}</Text>,
     },
     {
       fit: true,
       center: true,
-      row: (deck) => (
-        <View className="max-w-fit py-0.5 px-1 bg-background-200 rounded-full overflow-hidden">
-          <CardText text={deck.colors} />
-        </View>
-      ),
+      row: (deck: any) =>
+        (deck?.colors?.length || 0) > 0 && (
+          <View className="max-w-fit py-0.5 px-1 bg-background-200 rounded-full overflow-hidden">
+            <CardText text={deck?.colors} />
+          </View>
+        ),
     }
   );
 
   if (!hideFormat) {
     columns.push({
       title: "Format",
-      row: (deck) => <Text>{titleCase(deck.format)}</Text>,
+      row: (deck: any) => <Text>{titleCase(deck?.format)}</Text>,
     });
   }
 
   if (!hideCreator) {
     columns.push({
       title: "Creator",
-      row: (deck) => <Text>{deck.user?.name}</Text>,
+      row: (deck: any) => <Text>{deck?.user?.name}</Text>,
     });
   }
 
   if (!hideModified) {
     columns.push({
       title: "Modified",
-      row: (deck) => <Text>{moment(deck.updated).format("MMM Do, YYYY")}</Text>,
+      row: (deck: any) =>
+        deck?.updated && (
+          <Text>{moment(deck?.updated).format("MMM Do, YYYY")}</Text>
+        ),
     });
   }
 
@@ -100,7 +125,7 @@ export default function DecksTable({
       fit: true,
       center: true,
       title: "Favorites",
-      row: (deck) => <Text>{deck.favorites}</Text>,
+      row: (deck: any) => <Text>{deck?.favorites}</Text>,
     });
   }
 
@@ -109,7 +134,7 @@ export default function DecksTable({
       fit: true,
       center: true,
       title: "Views",
-      row: (deck) => <Text>{deck.views}</Text>,
+      row: (deck: any) => <Text>{deck?.views}</Text>,
     });
   }
 
