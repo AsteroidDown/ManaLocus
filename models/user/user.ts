@@ -1,3 +1,5 @@
+import { Patreon } from "../patreon/patreon";
+
 export interface User {
   id: string;
   name: string;
@@ -8,4 +10,6 @@ export interface User {
   deckCount?: number;
   deckFavorites?: number;
   deckViews?: number;
+
+  patreon?: Patreon;
 }

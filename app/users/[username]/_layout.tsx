@@ -1,4 +1,5 @@
 import BoxHeader from "@/components/ui/box/box-header";
+import Chip from "@/components/ui/chip/chip";
 import { TabProps } from "@/components/ui/tabs/tab";
 import TabBar from "@/components/ui/tabs/tab-bar";
 import UserPageContext from "@/contexts/user/user-page.context";
@@ -6,6 +7,7 @@ import UserContext from "@/contexts/user/user.context";
 import "@/global.css";
 import UserService from "@/hooks/services/user.service";
 import { User } from "@/models/user/user";
+import { faPatreon } from "@fortawesome/free-brands-svg-icons";
 import { useLocalSearchParams } from "expo-router";
 import React, { useContext, useEffect, useState } from "react";
 import { SafeAreaView, View } from "react-native";
@@ -75,7 +77,20 @@ export default function UserLayout() {
     <UserPageContext.Provider value={{ userPageUser, setPageUser }}>
       <SafeAreaView className="flex w-full h-full bg-background-100">
         <View className="lg:px-16 px-4 mt-4">
-          <BoxHeader title={userPageUser?.name} />
+          <BoxHeader
+            title={userPageUser?.name}
+            titleEnd={
+              user?.patreon && (
+                <Chip
+                  size="sm"
+                  type="outlined"
+                  action="primary"
+                  startIcon={faPatreon as any}
+                  text={user.patreon.tierName}
+                />
+              )
+            }
+          />
         </View>
 
         <TabBar tabs={tabs} containerClasses="lg:px-16 px-4" />

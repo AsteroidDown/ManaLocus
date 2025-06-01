@@ -10,5 +10,6 @@ export function mapDatabaseUser(user: any): User {
     deckCount: user.deckCount,
     deckFavorites: user.deckFavorites,
     deckViews: user.deckViews,
+    patreon: user?.patreon,
   };
 }
