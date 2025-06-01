@@ -1,5 +1,6 @@
 import BoxHeader from "@/components/ui/box/box-header";
 import Button from "@/components/ui/button/button";
+import Chip from "@/components/ui/chip/chip";
 import Input from "@/components/ui/input/input";
 import Footer from "@/components/ui/navigation/footer";
 import Pagination from "@/components/ui/pagination/pagination";
@@ -9,6 +10,7 @@ import Text from "@/components/ui/text/text";
 import { PaginationMeta } from "@/hooks/pagination";
 import UserService from "@/hooks/services/user.service";
 import { User } from "@/models/user/user";
+import { faPatreon } from "@fortawesome/free-brands-svg-icons";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import { router } from "expo-router";
 import moment from "moment";
@@ -72,8 +74,24 @@ export default function UsersPage() {
           columns={
             [
               {
+                fit: true,
+                row: (user) => <></>,
+              },
+              {
                 title: "Name",
                 row: (user) => <Text>{user.name}</Text>,
+              },
+              {
+                center: true,
+                row: (user) =>
+                  user.patreon && (
+                    <Chip
+                      size="xs"
+                      type="outlined"
+                      startIcon={faPatreon as any}
+                      text={user.patreon.tierName}
+                    />
+                  ),
               },
               {
                 title: "Decks",
