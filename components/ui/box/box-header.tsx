@@ -35,7 +35,7 @@ export default function BoxHeader({
         className={`flex flex-row flex-wrap justify-between items-center gap-2 px-6 pb-4 ${className}`}
       >
         <View
-          className={`flex-1 flex flex-row items-center gap-4 min-w-[100px]`}
+          className={`flex-1 flex flex-row items-center gap-4 min-w-[100px] max-w-fit`}
         >
           {start}
 
