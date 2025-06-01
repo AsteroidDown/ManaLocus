@@ -66,6 +66,8 @@ export default function Tooltip({
     setActualPlacement(placement);
   }
 
+  if (!text && !content) return children;
+
   return (
     <Pressable className="relative">
       <View
