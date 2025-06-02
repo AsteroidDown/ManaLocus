@@ -7,6 +7,10 @@ export function encode(data: string, prefix = "") {
 }
 
 export function decode(data: string, prefix = "") {
+  if (typeof data !== "string" || typeof prefix !== "string") {
+    throw new TypeError("Invalid parameters for decode()");
+  }
+
   return Buffer.from(data, "base64")
     .toString("utf8")
     .split(`${prefix ? `${prefix}_` : ""}`)[prefix ? 1 : 0];
