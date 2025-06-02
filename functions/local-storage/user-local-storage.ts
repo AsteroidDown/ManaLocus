@@ -1,3 +1,4 @@
+import { getAccess } from "@/models/user/access";
 import { User } from "@/models/user/user";
 import { Platform } from "react-native";
 import { decode, encode } from "../encoding";
@@ -14,7 +15,19 @@ export function getLocalStorageUser(): UserDetails | null {
   if (!user) return null;
 
   const savedUser = JSON.parse(user) as UserDetails;
-  savedUser.password = decode(savedUser.password, savedUser.name);
+
+  if (!savedUser.name || !savedUser.password) {
+    removeLocalStorageUser();
+    return null;
+  }
+
+  try {
+    savedUser.password = decode(savedUser.password, savedUser.name);
+  } catch (err) {
+    console.error("Failed to decode password:", err);
+    removeLocalStorageUser();
+    return null;
+  }
 
   return savedUser;
 }
@@ -24,8 +37,9 @@ export function setLocalStorageUser(user: User, password: string) {
     "user-details",
     JSON.stringify({
       ...user,
-      password: encode(password, user.name),
       lastLogin: new Date(),
+      access: getAccess(user),
+      password: encode(password, user.name),
     })
   );
 }
@@ -34,11 +48,18 @@ export function updateLocalStorageUser(user: User, password?: string) {
   const savedUser = getLocalStorageUser();
   if (!savedUser) return;
 
+  const encodedPassword =
+    password !== undefined
+      ? encode(password, user.name)
+      : encode(savedUser.password, user.name);
+
   localStorage.setItem(
     "user-details",
     JSON.stringify({
       ...user,
-      password: password ? encode(password, user.name) : savedUser.password,
+      access: getAccess(user),
+      password: encodedPassword,
+      lastLogin: savedUser.lastLogin ?? new Date(),
     })
   );
 }

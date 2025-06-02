@@ -1,4 +1,5 @@
 import { Patreon } from "../patreon/patreon";
+import { AppAccess } from "./access";
 
 export interface User {
   id: string;
@@ -10,6 +11,12 @@ export interface User {
   deckCount?: number;
   deckFavorites?: number;
   deckViews?: number;
+  kitCount?: number;
+  collectionCount?: number;
+  folderCount?: number;
+  tradesThisMonth?: number;
 
   patreon?: Patreon;
+
+  access?: AppAccess;
 }
