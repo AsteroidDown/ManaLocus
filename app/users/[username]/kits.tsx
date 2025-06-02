@@ -2,6 +2,7 @@ import DeckGallery from "@/components/decks/deck-gallery";
 import BoxHeader from "@/components/ui/box/box-header";
 import Button from "@/components/ui/button/button";
 import Footer from "@/components/ui/navigation/footer";
+import Tooltip from "@/components/ui/tooltip/tooltip";
 import UserPageContext from "@/contexts/user/user-page.context";
 import UserContext from "@/contexts/user/user.context";
 import DeckService from "@/hooks/services/deck.service";
@@ -50,14 +51,26 @@ export default function UserKitsPage() {
             user &&
             userPageUser.id === user.id &&
             user.verified && (
-              <Button
-                size="sm"
-                text="Kit"
-                type="outlined"
-                icon={faPlus}
-                className="self-end"
-                onClick={createKit}
-              />
+              <Tooltip
+                text={
+                  (user?.access?.kitCount || 0) > 0
+                    ? `Kits created (${user?.kitCount}/${user?.access?.kitCount})`
+                    : ""
+                }
+              >
+                <Button
+                  size="sm"
+                  text="Kit"
+                  type="outlined"
+                  icon={faPlus}
+                  className="self-end"
+                  onClick={createKit}
+                  disabled={
+                    (user?.access?.kitCount || 0) > 0 &&
+                    (user?.kitCount || 0) >= (user?.access?.kitCount || 0)
+                  }
+                />
+              </Tooltip>
             )
           }
         />

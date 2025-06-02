@@ -2,6 +2,7 @@ import DeckGallery from "@/components/decks/deck-gallery";
 import BoxHeader from "@/components/ui/box/box-header";
 import Button from "@/components/ui/button/button";
 import Footer from "@/components/ui/navigation/footer";
+import Tooltip from "@/components/ui/tooltip/tooltip";
 import UserPageContext from "@/contexts/user/user-page.context";
 import UserContext from "@/contexts/user/user.context";
 import DeckService from "@/hooks/services/deck.service";
@@ -47,14 +48,26 @@ export default function Login() {
             user &&
             user.id === userPageUser.id &&
             user.verified && (
-              <Button
-                size="sm"
-                text="Deck"
-                type="outlined"
-                icon={faPlus}
-                className="self-end"
-                onClick={createDeck}
-              />
+              <Tooltip
+                text={
+                  (user?.access?.deckCount || 0) > 0
+                    ? `Decks created (${user?.deckCount}/${user?.access?.deckCount})`
+                    : ""
+                }
+              >
+                <Button
+                  size="sm"
+                  text="Deck"
+                  type="outlined"
+                  icon={faPlus}
+                  className="self-end"
+                  onClick={createDeck}
+                  disabled={
+                    (user?.access?.deckCount || 0) > 0 &&
+                    (user?.deckCount || 0) >= (user?.access?.deckCount || 0)
+                  }
+                />
+              </Tooltip>
             )
           }
         />

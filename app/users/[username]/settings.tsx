@@ -387,30 +387,34 @@ export default function UserSettingsPage() {
           expanded={preferencesOpen}
           setExpanded={setPreferencesOpen}
         >
-          <Text size="md" weight="bold">
-            Color
-          </Text>
+          {user?.access?.colorAccess && (
+            <>
+              <Text size="md" weight="bold">
+                Color
+              </Text>
 
-          <Divider thick />
+              <Divider thick />
 
-          <View className="flex flex-row flex-wrap gap-4 mt-2">
-            {Object.values(PreferenceColor).map((key) => (
-              <Pressable
-                key={key}
-                className="hover:w-12 w-10 hover:h-12 h-10 hover:-m-1 rounded-lg transition-all duration-300"
-                style={{
-                  backgroundColor: `rgb(${PreferenceColorMap[key]["primary-200"]})`,
-                }}
-                onPress={() => setColorKey(key)}
-              />
-            ))}
-          </View>
+              <View className="flex flex-row flex-wrap gap-4 mt-2">
+                {Object.values(PreferenceColor).map((key) => (
+                  <Pressable
+                    key={key}
+                    className="hover:w-12 w-10 hover:h-12 h-10 hover:-m-1 rounded-lg transition-all duration-300"
+                    style={{
+                      backgroundColor: `rgb(${PreferenceColorMap[key]["primary-200"]})`,
+                    }}
+                    onPress={() => setColorKey(key)}
+                  />
+                ))}
+              </View>
 
-          <Text size="md" weight="bold" className="mt-4">
-            Decks Page
-          </Text>
+              <Text size="md" weight="bold" className="mt-4">
+                Decks Page
+              </Text>
 
-          <Divider thick />
+              <Divider thick />
+            </>
+          )}
 
           <View className="flex flex-row flex-wrap gap-4 z-10">
             <Select

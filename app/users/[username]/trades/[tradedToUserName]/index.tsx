@@ -5,6 +5,7 @@ import Footer from "@/components/ui/navigation/footer";
 import Pagination from "@/components/ui/pagination/pagination";
 import Table, { TableColumn } from "@/components/ui/table/table";
 import Text from "@/components/ui/text/text";
+import Tooltip from "@/components/ui/tooltip/tooltip";
 import UserPageContext from "@/contexts/user/user-page.context";
 import UserContext from "@/contexts/user/user.context";
 import { currency } from "@/functions/text-manipulation";
@@ -150,22 +151,35 @@ export default function TradedToUserPage() {
                     onClick={() => setSettleUpOpen(true)}
                   />
 
-                  <Button
-                    size="sm"
-                    type="outlined"
-                    text="New Trade"
-                    className="flex-1 lg:max-w-fit"
-                    icon={faPlus}
-                    onClick={() =>
-                      router.push(
-                        `users/${userPageUser.name}/trades/new-trade${
-                          tradedToUser
-                            ? `?tradedToUserName=${tradedToUser.name}`
-                            : ""
-                        }`
-                      )
+                  <Tooltip
+                    containerClasses="flex-1 lg:max-w-fit"
+                    text={
+                      (user?.access?.tradesThisMonth || 0) > 0
+                        ? `Trades this month (${user?.tradesThisMonth}/${user?.access?.tradesThisMonth})`
+                        : ""
                     }
-                  />
+                  >
+                    <Button
+                      size="sm"
+                      type="outlined"
+                      text="New Trade"
+                      icon={faPlus}
+                      disabled={
+                        (user?.access?.tradesThisMonth || 0) > 0 &&
+                        (user?.tradesThisMonth || 0) >=
+                          (user?.access?.tradesThisMonth || 0)
+                      }
+                      onClick={() =>
+                        router.push(
+                          `users/${userPageUser.name}/trades/new-trade${
+                            tradedToUser
+                              ? `?tradedToUserName=${tradedToUser.name}`
+                              : ""
+                          }`
+                        )
+                      }
+                    />
+                  </Tooltip>
                 </View>
               )
             }

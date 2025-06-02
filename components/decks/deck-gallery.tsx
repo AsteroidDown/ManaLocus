@@ -129,7 +129,11 @@ export default function DeckGallery({
 
     if (listView) {
       const decksToShow = decks.reduce((acc, deck, index) => {
-        if (index >= AD_THRESHOLD && index % AD_THRESHOLD === 0) {
+        if (
+          user?.access?.showAds &&
+          index >= AD_THRESHOLD &&
+          index % AD_THRESHOLD === 0
+        ) {
           acc.push({
             url: PatreonURL,
             icon: faPatreon,
@@ -145,7 +149,11 @@ export default function DeckGallery({
       setDeckList(decksToShow);
     } else {
       const cardsToShow = decks.reduce((acc, deck, index) => {
-        if (index >= AD_THRESHOLD && index % AD_THRESHOLD === 0) {
+        if (
+          user?.access?.showAds &&
+          index >= AD_THRESHOLD &&
+          index % AD_THRESHOLD === 0
+        ) {
           acc.push(<AdCard type={AdType.PATREON} />);
         }
 

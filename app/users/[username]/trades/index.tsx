@@ -4,6 +4,7 @@ import Footer from "@/components/ui/navigation/footer";
 import Pagination from "@/components/ui/pagination/pagination";
 import Table, { TableColumn } from "@/components/ui/table/table";
 import Text from "@/components/ui/text/text";
+import Tooltip from "@/components/ui/tooltip/tooltip";
 import UserPageContext from "@/contexts/user/user-page.context";
 import UserContext from "@/contexts/user/user.context";
 import { currency } from "@/functions/text-manipulation";
@@ -53,15 +54,28 @@ export default function UserTradesPage() {
             title="Your Trades"
             subtitle="View and manage your trades"
             end={
-              <Button
-                size="sm"
-                type="outlined"
-                text="New Trade"
-                icon={faPlus}
-                onClick={() =>
-                  router.push(`users/${userPageUser.name}/trades/new-trade`)
+              <Tooltip
+                text={
+                  (user?.access?.tradesThisMonth || 0) > 0
+                    ? `Trades this month (${user?.tradesThisMonth}/${user?.access?.tradesThisMonth})`
+                    : ""
                 }
-              />
+              >
+                <Button
+                  size="sm"
+                  type="outlined"
+                  text="Trade"
+                  icon={faPlus}
+                  onClick={() =>
+                    router.push(`users/${userPageUser.name}/trades/new-trade`)
+                  }
+                  disabled={
+                    (user?.access?.tradesThisMonth || 0) > 0 &&
+                    (user?.tradesThisMonth || 0) >=
+                      (user?.access?.tradesThisMonth || 0)
+                  }
+                />
+              </Tooltip>
             }
           />
         )}

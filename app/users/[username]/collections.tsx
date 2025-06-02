@@ -2,6 +2,7 @@ import DeckGallery from "@/components/decks/deck-gallery";
 import BoxHeader from "@/components/ui/box/box-header";
 import Button from "@/components/ui/button/button";
 import Footer from "@/components/ui/navigation/footer";
+import Tooltip from "@/components/ui/tooltip/tooltip";
 import UserPageContext from "@/contexts/user/user-page.context";
 import UserContext from "@/contexts/user/user.context";
 import DeckService from "@/hooks/services/deck.service";
@@ -51,14 +52,27 @@ export default function UserCollectionsPage() {
             user &&
             userPageUser.id === user.id &&
             user.verified && (
-              <Button
-                size="sm"
-                icon={faPlus}
-                type="outlined"
-                text="Collection"
-                className="self-end"
-                onClick={createCollection}
-              />
+              <Tooltip
+                text={
+                  (user?.access?.collectionCount || 0) > 0
+                    ? `Collections created (${user?.collectionCount}/${user?.access?.collectionCount})`
+                    : ""
+                }
+              >
+                <Button
+                  size="sm"
+                  icon={faPlus}
+                  type="outlined"
+                  text="Collection"
+                  className="self-end"
+                  onClick={createCollection}
+                  disabled={
+                    (user?.access?.collectionCount || 0) > 0 &&
+                    (user?.collectionCount || 0) >=
+                      (user?.access?.collectionCount || 0)
+                  }
+                />
+              </Tooltip>
             )
           }
         />

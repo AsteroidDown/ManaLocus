@@ -8,6 +8,7 @@ import Pagination from "@/components/ui/pagination/pagination";
 import Placeholder from "@/components/ui/placeholder/placeholder";
 import Table, { TableColumn } from "@/components/ui/table/table";
 import Text from "@/components/ui/text/text";
+import Tooltip from "@/components/ui/tooltip/tooltip";
 import UserPageContext from "@/contexts/user/user-page.context";
 import UserContext from "@/contexts/user/user.context";
 import { PaginationMeta } from "@/hooks/pagination";
@@ -69,14 +70,26 @@ export default function UserFoldersPage() {
             user &&
             userPageUser.id === user.id &&
             user.verified && (
-              <Button
-                size="sm"
-                text="Folder"
-                icon={faPlus}
-                type="outlined"
-                className="self-end"
-                onClick={() => setCreateFolderModalOpen(true)}
-              />
+              <Tooltip
+                text={
+                  (user?.access?.folderCount || 0) > 0
+                    ? `Folders created (${user?.folderCount}/${user?.access?.folderCount})`
+                    : ""
+                }
+              >
+                <Button
+                  size="sm"
+                  text="Folder"
+                  icon={faPlus}
+                  type="outlined"
+                  className="self-end"
+                  onClick={() => setCreateFolderModalOpen(true)}
+                  disabled={
+                    (user?.access?.folderCount || 0) > 0 &&
+                    (user?.folderCount || 0) >= (user?.access?.folderCount || 0)
+                  }
+                />
+              </Tooltip>
             )
           }
         />
