@@ -15,19 +15,16 @@ import DeckService from "@/hooks/services/deck.service";
 import { Card } from "@/models/card/card";
 import { Dashboard } from "@/models/dashboard/dashboard";
 import { BuilderPreferences } from "@/models/preferences/builder-preferences";
-import React, { useContext, useEffect } from "react";
+import { router } from "expo-router";
+import React, { useContext, useEffect, useState } from "react";
 
-export default function TabLayout() {
+export default function BuilderLayout() {
   const { deck } = useContext(DeckContext);
   const { user } = useContext(UserContext);
 
-  const [builderHeight, setBuilderHeight] = React.useState(0);
-
-  const [storedCards, setStoredCards] = React.useState([] as Card[]);
-  const [dashboard, setDashboard] = React.useState(null as Dashboard | null);
-  const [preferences, setPreferences] = React.useState(
-    {} as BuilderPreferences
-  );
+  const [storedCards, setStoredCards] = useState([] as Card[]);
+  const [dashboard, setDashboard] = useState(null as Dashboard | null);
+  const [preferences, setPreferences] = useState({} as BuilderPreferences);
 
   useEffect(() => {
     if (
@@ -35,6 +32,7 @@ export default function TabLayout() {
       deck.userId !== user?.id ||
       getLocalStorageStoredCards(BoardTypes.MAIN)?.length
     ) {
+      router.push(`decks`);
       return;
     }
 
