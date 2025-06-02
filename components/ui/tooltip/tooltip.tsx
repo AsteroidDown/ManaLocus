@@ -18,6 +18,7 @@ export type TooltipProps = ViewProps & {
   elevation?: number;
   delay?: number;
   placement?: "top" | "bottom";
+  containerClasses?: string;
 };
 
 export default function Tooltip({
@@ -28,6 +29,7 @@ export default function Tooltip({
   className,
   delay = 250,
   placement = "bottom",
+  containerClasses,
 }: TooltipProps) {
   const window = useWindowDimensions();
 
@@ -69,7 +71,7 @@ export default function Tooltip({
   if (!text && !content) return children;
 
   return (
-    <Pressable className="relative">
+    <Pressable className={`relative ${containerClasses}`}>
       <View
         ref={childRef}
         onPointerEnter={show}
