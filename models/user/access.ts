@@ -33,10 +33,10 @@ export function getAccess(user: User): AppAccess {
       showAds: false,
       colorAccess: true,
       tradeCount: 30,
-      deckCount: 50,
-      collectionCount: 30,
-      kitCount: 50,
-      folderCount: 50,
+      deckCount: 100,
+      collectionCount: 25,
+      kitCount: 25,
+      folderCount: 25,
       tradesThisMonth: -1,
     };
   } else {
