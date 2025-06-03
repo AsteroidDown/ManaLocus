@@ -38,7 +38,7 @@ export default function RootLayout() {
           Mana Locus
         </Text>
 
-        <Text size="lg" className="px-6 italic">
+        <Text italic size="lg" className="px-6">
           Make a Splash
         </Text>
       </View>

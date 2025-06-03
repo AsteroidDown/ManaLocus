@@ -154,7 +154,7 @@ export default function CardText({
       </View>
 
       {flavor && (
-        <Text className="italic" size="sm">
+        <Text italic size="sm">
           {flavor}
         </Text>
       )}

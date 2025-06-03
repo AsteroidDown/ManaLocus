@@ -174,7 +174,7 @@ export default function DeckChangeLog({ deck, className }: DeckChangeLogProps) {
                   </View>
                 ))
               ) : (
-                <Text className="italic px-3 py-2">
+                <Text italic className="px-3 py-2">
                   No changes have been made to this board!
                 </Text>
               )}

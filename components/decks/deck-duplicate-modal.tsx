@@ -127,7 +127,7 @@ export default function DeckDuplicateModal({
           onChange={setName}
         />
 
-        <Text size="xs" className="italic">
+        <Text size="xs" italic>
           This will create a new deck with the same cards and settings as the
           original and the copy will be marked as private
         </Text>

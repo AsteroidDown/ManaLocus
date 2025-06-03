@@ -135,7 +135,7 @@ export default function DeckBracketInfo({
           {bracketInfo.chainingExtraTurns
             ? "Chaining extra turns allowed"
             : "No chaining extra turns"}{" "}
-          <Text size="xs" className="italic">
+          <Text size="xs" italic>
             (Not tracked)
           </Text>
         </Text>
@@ -148,7 +148,7 @@ export default function DeckBracketInfo({
           {bracketInfo.chainingExtraTurns
             ? "Two card infinites allowed"
             : "No two card infinites"}{" "}
-          <Text size="xs" className="italic">
+          <Text size="xs" italic>
             (Not tracked)
           </Text>
         </Text>

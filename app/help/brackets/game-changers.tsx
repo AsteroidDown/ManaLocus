@@ -51,7 +51,7 @@ export default function GameChangersPage() {
               </Text>
 
               <View className="flex gap-2 pl-4 mt-2 border-l-2 border-l-dark-300">
-                <Text size="md" className="italic">
+                <Text italic size="md">
                   Game Changers dramatically warp Commander games, allowing
                   players to run away with resources, shift games in ways that
                   many players dislike, block people from play, efficiently

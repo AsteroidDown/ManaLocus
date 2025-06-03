@@ -123,7 +123,7 @@ function BracketGuidelines({
       </Text>
 
       <View className="flex gap-1 ml-4 mb-2 pl-4 border-l-2 border-l-dark-300">
-        <Text className="italic">{quote}</Text>
+        <Text italic>{quote}</Text>
 
         <Text>
           <Link href={bracketsHref} className="text-primary-400">

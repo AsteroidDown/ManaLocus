@@ -50,7 +50,7 @@ export default function MassLandDenialPage() {
               </Text>
 
               <View className="flex gap-2 pl-4 mt-2 border-l-2 border-l-dark-300">
-                <Text size="md" className="italic">
+                <Text size="md" italic>
                   These cards regularly destroy, exile, and bounce other lands,
                   keep lands tapped, or change what mana is produced by four or
                   more lands per player without replacing them.

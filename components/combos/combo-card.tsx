@@ -105,7 +105,7 @@ export default function ComboCard({
         <ComboProduces combo={combo} openModal={openModal} />
 
         <View className="flex flex-row flex-wrap justify-between pt-2 mt-auto -mb-2">
-          <Text size="xs" className="italic !text-dark-500">
+          <Text italic size="xs" className="!text-dark-500">
             {width > 600 ? "Combo " : ""}
             <Link
               target="_blank"
