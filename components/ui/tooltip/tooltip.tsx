@@ -117,9 +117,12 @@ export default function Tooltip({
                   ? position.y - height - OFFSET
                   : position.y + layout.height + OFFSET,
 
-              left: Math.min(
-                position.x + layout.width / 2 - width / 2,
-                window.width - width
+              left: Math.max(
+                OFFSET,
+                Math.min(
+                  position.x + layout.width / 2 - width / 2,
+                  window.width - width - OFFSET
+                )
               ),
             }}
           >
