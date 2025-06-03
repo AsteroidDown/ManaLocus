@@ -25,7 +25,13 @@ import {
   faInfoCircle,
   faRotate,
 } from "@fortawesome/free-solid-svg-icons";
-import React, { useContext, useEffect } from "react";
+import React, {
+  Dispatch,
+  SetStateAction,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { View } from "react-native";
 import Button from "../ui/button/button";
 import Chip from "../ui/chip/chip";
@@ -38,7 +44,7 @@ import Modal from "../ui/modal/modal";
 
 export interface CardImportExportModalProps {
   open: boolean;
-  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setOpen: Dispatch<SetStateAction<boolean>>;
 
   exportOnly?: boolean;
   exportCards?: Card[];
@@ -67,29 +73,27 @@ export default function CardImportExportModal({
   const { addToast } = useContext(ToastContext);
   const { setStoredCards } = useContext(StoredCardsContext);
 
-  const [filtersOpen, setFiltersOpen] = React.useState(false);
+  const [filtersOpen, setFiltersOpen] = useState(false);
 
-  const [colorSort, setColorSort] = React.useState(false);
-  const [manaValueSort, setManaValueSort] = React.useState(null as SortType);
-  const [alphabeticalSort, setAlphabeticalSort] = React.useState(
-    null as SortType
-  );
+  const [colorSort, setColorSort] = useState(false);
+  const [manaValueSort, setManaValueSort] = useState(null as SortType);
+  const [alphabeticalSort, setAlphabeticalSort] = useState(null as SortType);
 
-  const [colorFilter, setColorFilter] = React.useState(
+  const [colorFilter, setColorFilter] = useState(
     undefined as MTGColor[] | undefined
   );
-  const [typeFilter, setTypeFilter] = React.useState(
+  const [typeFilter, setTypeFilter] = useState(
     undefined as MTGCardType[] | undefined
   );
-  const [rarityFilter, setRarityFilter] = React.useState(
+  const [rarityFilter, setRarityFilter] = useState(
     undefined as MTGRarity[] | undefined
   );
 
-  const [cards, setCards] = React.useState("");
-  const [disabled, setDisabled] = React.useState(false);
-  const [error, setError] = React.useState(false);
+  const [cards, setCards] = useState("");
+  const [disabled, setDisabled] = useState(false);
+  const [error, setError] = useState(false);
 
-  const [copyDisabled, setCopyDisabled] = React.useState(false);
+  const [copyDisabled, setCopyDisabled] = useState(false);
 
   useEffect(() => {
     setCards(getCardsForExport());
@@ -416,7 +420,7 @@ export default function CardImportExportModal({
         </View>
       }
     >
-      <View className="flex-1 flex gap-3 lg:max-w-[450px]">
+      <View className="flex-1 flex gap-3 lg:max-w-full">
         <View
           className={`${
             filtersOpen ? "max-h-[1000px]" : "max-h-0"
