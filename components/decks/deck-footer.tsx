@@ -18,6 +18,7 @@ import Box from "../ui/box/box";
 import Button from "../ui/button/button";
 import Dropdown from "../ui/dropdown/dropdown";
 import Text from "../ui/text/text";
+import Tooltip from "../ui/tooltip/tooltip";
 import DeckDuplicateModal from "./deck-duplicate-modal";
 import DeckLegalityInfo from "./deck-legality-info";
 
@@ -344,23 +345,36 @@ export default function DeckFooter({
           />
 
           <View className="flex flex-row">
-            <Button
-              rounded
-              type="clear"
-              icon={faCopy}
-              action="default"
-              dark={darkText}
-              onClick={() => setCopyOpen(true)}
-            />
+            {user &&
+              (deck.isKit
+                ? user.access?.kitCount === -1 ||
+                  (user.access?.kitCount || 0) > (user.kitCount || 0)
+                : deck.isCollection
+                ? user.access?.collectionCount === -1 ||
+                  (user.access?.collectionCount || 0) >
+                    (user.collectionCount || 0)
+                : user.access?.deckCount === -1 ||
+                  (user.access?.deckCount || 0) > (user.deckCount || 0)) && (
+                <Button
+                  rounded
+                  type="clear"
+                  icon={faCopy}
+                  action="default"
+                  dark={darkText}
+                  onClick={() => setCopyOpen(true)}
+                />
+              )}
 
-            <Button
-              rounded
-              type="clear"
-              dark={darkText}
-              action="default"
-              icon={faFileArrowDown}
-              onClick={() => setImportOpen(true)}
-            />
+            <Tooltip text="Export Deck">
+              <Button
+                rounded
+                type="clear"
+                dark={darkText}
+                action="default"
+                icon={faFileArrowDown}
+                onClick={() => setImportOpen(true)}
+              />
+            </Tooltip>
           </View>
 
           {user && user.verified && (
