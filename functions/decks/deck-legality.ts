@@ -136,9 +136,11 @@ export function evaluateCardLegality(
 
   if (
     card.count > (MTGFormatRestrictionsMap.get(format)?.uniqueCardCount || 1) &&
-    (!MTGBasicLands.includes(card.name) ||
-      (card.oracleText?.includes("A deck can have") &&
-        card.oracleText?.includes("cards named")))
+    !MTGBasicLands.includes(card.name) &&
+    !(
+      card.oracleText?.toLowerCase()?.includes("a deck can have") &&
+      card.oracleText?.toLowerCase()?.includes("cards named")
+    )
   ) {
     legal = false;
     reasons.push(
