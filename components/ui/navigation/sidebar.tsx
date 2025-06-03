@@ -33,7 +33,7 @@ export default function Sidebar({
 
       <View className="sticky top-0">
         <View
-          className={`flex-1 flex flex-row px-4 py-2 min-w-[256] max-w-[256px] min-h-[100dvh] bg-background-100 border-r-2 border-r-dark-200 transition-all duration-300 ${
+          className={`flex-1 flex flex-row px-4 py-2 min-w-[256px] max-w-[256px] min-h-[100dvh] bg-background-100 border-r-2 border-r-dark-200 transition-all duration-300 ${
             width <= 600 ? "absolute" : ""
           } ${!open ? "-ml-[206px]" : ""}`}
         >
