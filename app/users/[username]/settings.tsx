@@ -147,7 +147,7 @@ export default function UserSettingsPage() {
   }, [user]);
 
   useEffect(() => {
-    if (email.includes("@") && email.includes(".")) {
+    if (email?.includes("@") && email.includes(".")) {
       if (email.match(EmailMask)) setEmailError(false);
       else setEmailError(true);
     } else setEmailError(false);
