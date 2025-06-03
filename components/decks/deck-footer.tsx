@@ -365,7 +365,7 @@ export default function DeckFooter({
                 />
               )}
 
-            <Tooltip text="Export Deck">
+            <Tooltip placement="top" text="Export Deck">
               <Button
                 rounded
                 type="clear"
@@ -388,13 +388,15 @@ export default function DeckFooter({
           )}
 
           <View className="-mx-2">
-            <CardImportExportModal
-              exportOnly
-              open={importOpen}
-              setOpen={setImportOpen}
-              exportCards={deck.main}
-              exportSideboard={deck.side}
-            />
+            <Tooltip placement="top" text="Export Deck">
+              <CardImportExportModal
+                exportOnly
+                open={importOpen}
+                setOpen={setImportOpen}
+                exportCards={deck.main}
+                exportSideboard={deck.side}
+              />
+            </Tooltip>
           </View>
         </View>
       )}

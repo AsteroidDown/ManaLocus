@@ -99,14 +99,16 @@ export default function CardsLayout() {
 
         <TabBar tabs={tabs} className="z-[-1]" containerClasses="lg:px-6 px-4">
           <View className="flex flex-row">
-            <Button
-              size="sm"
-              type="clear"
-              icon={faFileArrowDown}
-              onClick={() => setOpen(!open)}
-            />
+            <Tooltip placement="top" text="Import/Export Deck">
+              <Button
+                size="sm"
+                type="clear"
+                icon={faFileArrowDown}
+                onClick={() => setOpen(!open)}
+              />
+            </Tooltip>
 
-            <Tooltip text="Group Multicolored Cards">
+            <Tooltip placement="top" text="Group Multicolored Cards">
               <Button
                 size="sm"
                 icon={faPalette}
@@ -120,6 +122,7 @@ export default function CardsLayout() {
             </Tooltip>
 
             <Tooltip
+              placement="top"
               text={hideImages ? "Show Card Images" : "Hide Card Images"}
             >
               <Button

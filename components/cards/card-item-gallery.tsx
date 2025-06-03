@@ -47,6 +47,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { useWindowDimensions, View } from "react-native";
 import Button from "../ui/button/button";
 import Input from "../ui/input/input";
+import Tooltip from "../ui/tooltip/tooltip";
 import CardFiltersModal from "./card-filters-modal";
 import CardItemGalleryColumn from "./card-item-gallery-column";
 import CardSaveAsChartModal from "./card-save-as-chart-modal";
@@ -182,19 +183,23 @@ export default function CardItemGallery({
               <View className="flex flex-row">
                 {board === BoardTypes.MAIN && width > 600 && (
                   <>
-                    <Button
-                      size="sm"
-                      type="clear"
-                      icon={faChartSimple}
-                      onClick={() => setSaveAsGraphOpen(true)}
-                    />
+                    <Tooltip placement="top" text="Create Graph">
+                      <Button
+                        size="sm"
+                        type="clear"
+                        icon={faChartSimple}
+                        onClick={() => setSaveAsGraphOpen(true)}
+                      />
+                    </Tooltip>
 
-                    <Button
-                      size="sm"
-                      icon={faTable}
-                      type="clear"
-                      onClick={() => setSaveAsChartOpen(true)}
-                    />
+                    <Tooltip placement="top" text="Create Chart">
+                      <Button
+                        size="sm"
+                        icon={faTable}
+                        type="clear"
+                        onClick={() => setSaveAsChartOpen(true)}
+                      />
+                    </Tooltip>
                   </>
                 )}
 
@@ -204,22 +209,27 @@ export default function CardItemGallery({
                       itemsExpanded ? "lg:max-w-10 mx-0" : "max-w-0"
                     } overflow-hidden transition-all duration-300`}
                   >
-                    <Button
-                      size="sm"
-                      square={width <= 600}
-                      iconClasses="-rotate-45"
-                      icon={faDownLeftAndUpRightToCenter}
-                      onClick={() => setItemsExpanded(0)}
-                    />
+                    <Tooltip placement="top" text="Collapse Cards">
+                      <Button
+                        size="sm"
+                        type="clear"
+                        square={width <= 600}
+                        iconClasses="-rotate-45"
+                        icon={faDownLeftAndUpRightToCenter}
+                        onClick={() => setItemsExpanded(0)}
+                      />
+                    </Tooltip>
                   </View>
                 )}
 
-                <Button
-                  size="sm"
-                  type="clear"
-                  icon={faFilter}
-                  onClick={() => setCardFiltersOpen(true)}
-                />
+                <Tooltip placement="top" text="Filter Cards">
+                  <Button
+                    size="sm"
+                    type="clear"
+                    icon={faFilter}
+                    onClick={() => setCardFiltersOpen(true)}
+                  />
+                </Tooltip>
               </View>
             </>
           }
