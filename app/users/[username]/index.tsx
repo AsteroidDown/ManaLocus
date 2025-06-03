@@ -2,6 +2,7 @@ import DeckGallery from "@/components/decks/deck-gallery";
 import BoxHeader from "@/components/ui/box/box-header";
 import Button from "@/components/ui/button/button";
 import Footer from "@/components/ui/navigation/footer";
+import Text from "@/components/ui/text/text";
 import Tooltip from "@/components/ui/tooltip/tooltip";
 import UserPageContext from "@/contexts/user/user-page.context";
 import UserContext from "@/contexts/user/user.context";
@@ -40,34 +41,39 @@ export default function Login() {
             user?.id === userPageUser?.id ? "Your" : `${userPageUser?.name}'s`
           } Decks`}
           subtitle={
-            user?.id === userPageUser?.id
-              ? "View and manage your decks"
-              : `See what ${userPageUser?.name} has created`
+            <View className="flex items-start">
+              <Text>
+                {user?.id === userPageUser?.id
+                  ? "View and manage your decks"
+                  : `See what ${userPageUser?.name} has created`}
+              </Text>
+              {user?.id === userPageUser.id &&
+                (user?.access?.deckCount || 0) > 0 && (
+                  <Tooltip text="To get more deck space, join our Patreon!">
+                    <Text center italic size="xs" className="!text-dark-600">
+                      (Decks created {user?.deckCount}/{user?.access?.deckCount}
+                      )
+                    </Text>
+                  </Tooltip>
+                )}
+            </View>
           }
           end={
             user &&
             user.id === userPageUser.id &&
             user.verified && (
-              <Tooltip
-                text={
-                  (user?.access?.deckCount || 0) > 0
-                    ? `Decks created (${user?.deckCount}/${user?.access?.deckCount})`
-                    : ""
+              <Button
+                size="sm"
+                text="Deck"
+                type="outlined"
+                icon={faPlus}
+                className="self-end"
+                onClick={createDeck}
+                disabled={
+                  (user?.access?.deckCount || 0) > 0 &&
+                  (user?.deckCount || 0) >= (user?.access?.deckCount || 0)
                 }
-              >
-                <Button
-                  size="sm"
-                  text="Deck"
-                  type="outlined"
-                  icon={faPlus}
-                  className="self-end"
-                  onClick={createDeck}
-                  disabled={
-                    (user?.access?.deckCount || 0) > 0 &&
-                    (user?.deckCount || 0) >= (user?.access?.deckCount || 0)
-                  }
-                />
-              </Tooltip>
+              />
             )
           }
         />

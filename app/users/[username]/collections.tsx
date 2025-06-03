@@ -2,6 +2,7 @@ import DeckGallery from "@/components/decks/deck-gallery";
 import BoxHeader from "@/components/ui/box/box-header";
 import Button from "@/components/ui/button/button";
 import Footer from "@/components/ui/navigation/footer";
+import Text from "@/components/ui/text/text";
 import Tooltip from "@/components/ui/tooltip/tooltip";
 import UserPageContext from "@/contexts/user/user-page.context";
 import UserContext from "@/contexts/user/user.context";
@@ -44,35 +45,40 @@ export default function UserCollectionsPage() {
             user?.id === userPageUser.id ? "Your" : `${userPageUser.name}'s`
           } Collections`}
           subtitle={
-            user?.id === userPageUser.id
-              ? "View and manage your collections"
-              : `See what ${userPageUser.name} has collected`
+            <View className="flex items-start">
+              <Text>
+                {user?.id === userPageUser.id
+                  ? "View and manage your collections"
+                  : `See what ${userPageUser.name} has collected`}
+              </Text>
+              {user?.id === userPageUser.id &&
+                (user?.access?.collectionCount || 0) > 0 && (
+                  <Tooltip text="To get more collection space, join our Patreon!">
+                    <Text center italic size="xs" className="!text-dark-600">
+                      (Collections created {user?.collectionCount}/
+                      {user?.access?.collectionCount})
+                    </Text>
+                  </Tooltip>
+                )}
+            </View>
           }
           end={
             user &&
             userPageUser.id === user.id &&
             user.verified && (
-              <Tooltip
-                text={
-                  (user?.access?.collectionCount || 0) > 0
-                    ? `Collections created (${user?.collectionCount}/${user?.access?.collectionCount})`
-                    : ""
+              <Button
+                size="sm"
+                icon={faPlus}
+                type="outlined"
+                text="Collection"
+                className="self-end"
+                onClick={createCollection}
+                disabled={
+                  (user?.access?.collectionCount || 0) > 0 &&
+                  (user?.collectionCount || 0) >=
+                    (user?.access?.collectionCount || 0)
                 }
-              >
-                <Button
-                  size="sm"
-                  icon={faPlus}
-                  type="outlined"
-                  text="Collection"
-                  className="self-end"
-                  onClick={createCollection}
-                  disabled={
-                    (user?.access?.collectionCount || 0) > 0 &&
-                    (user?.collectionCount || 0) >=
-                      (user?.access?.collectionCount || 0)
-                  }
-                />
-              </Tooltip>
+              />
             )
           }
         />

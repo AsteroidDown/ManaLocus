@@ -62,34 +62,39 @@ export default function UserFoldersPage() {
             user?.id === userPageUser.id ? "Your" : `${userPageUser.name}'s`
           } Folders`}
           subtitle={
-            user?.id === userPageUser.id
-              ? "View and manage your folder"
-              : `See how ${userPageUser.name} manages their collection`
+            <View className="flex items-start">
+              <Text>
+                {user?.id === userPageUser.id
+                  ? "View and manage your folder"
+                  : `See how ${userPageUser.name} manages their collection`}
+              </Text>
+              {user?.id === userPageUser.id &&
+                (user?.access?.folderCount || 0) > 0 && (
+                  <Tooltip text="To get more folder space, join our Patreon!">
+                    <Text center italic size="xs" className="!text-dark-600">
+                      (Folders created {user?.folderCount}/
+                      {user?.access?.folderCount})
+                    </Text>
+                  </Tooltip>
+                )}
+            </View>
           }
           end={
             user &&
             userPageUser.id === user.id &&
             user.verified && (
-              <Tooltip
-                text={
-                  (user?.access?.folderCount || 0) > 0
-                    ? `Folders created (${user?.folderCount}/${user?.access?.folderCount})`
-                    : ""
+              <Button
+                size="sm"
+                text="Folder"
+                icon={faPlus}
+                type="outlined"
+                className="self-end"
+                onClick={() => setCreateFolderModalOpen(true)}
+                disabled={
+                  (user?.access?.folderCount || 0) > 0 &&
+                  (user?.folderCount || 0) >= (user?.access?.folderCount || 0)
                 }
-              >
-                <Button
-                  size="sm"
-                  text="Folder"
-                  icon={faPlus}
-                  type="outlined"
-                  className="self-end"
-                  onClick={() => setCreateFolderModalOpen(true)}
-                  disabled={
-                    (user?.access?.folderCount || 0) > 0 &&
-                    (user?.folderCount || 0) >= (user?.access?.folderCount || 0)
-                  }
-                />
-              </Tooltip>
+              />
             )
           }
         />
