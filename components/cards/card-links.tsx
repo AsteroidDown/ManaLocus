@@ -63,7 +63,7 @@ export function CardLinks({ card }: { card: Card }) {
           From the Web
         </Text>
 
-        <Divider thick className="!border-background-300" />
+        <Divider thick />
 
         {card.relatedUris.edhrec && (
           <Button
@@ -119,7 +119,7 @@ export function CardLinks({ card }: { card: Card }) {
           Buy Card
         </Text>
 
-        <Divider thick className="!border-background-300" />
+        <Divider thick />
 
         {card.priceUris.tcgplayer && (
           <Button
@@ -160,7 +160,7 @@ export function CardLinks({ card }: { card: Card }) {
           Card Data
         </Text>
 
-        <Divider thick className="!border-background-300" />
+        <Divider thick />
 
         {card.imageURIs?.png && (
           <Button
