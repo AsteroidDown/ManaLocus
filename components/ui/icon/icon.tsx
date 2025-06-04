@@ -9,12 +9,14 @@ export type IconProps = ViewProps & {
   icon: IconProp | IconDefinition;
   size?: Size;
   action?: ActionColor;
+  onClick?: () => void;
 };
 
 export default function Icon({
   icon,
   size = "sm",
   action = "default",
+  onClick,
   className,
 }: IconProps) {
   const iconColor = getIconColor(action);
@@ -23,7 +25,8 @@ export default function Icon({
     <FontAwesomeIcon
       icon={icon as any}
       size={size !== "md" ? size : undefined}
-      className={`${className} ${iconColor}`}
+      className={`${className} ${iconColor} ${onClick ? "cursor-pointer" : ""}`}
+      onClick={onClick}
     />
   );
 }
