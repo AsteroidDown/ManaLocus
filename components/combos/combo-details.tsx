@@ -5,6 +5,7 @@ import {
   SpellbookComboResult,
 } from "@/models/spellbook/spellbook-combo";
 import {
+  faArrowUpRightFromSquare,
   faCertificate,
   faCrown,
   faHand,
@@ -24,6 +25,7 @@ import Box from "../ui/box/box";
 import Button from "../ui/button/button";
 import Chip from "../ui/chip/chip";
 import Divider from "../ui/divider/divider";
+import Icon from "../ui/icon/icon";
 import Text from "../ui/text/text";
 
 export default function ComboDetails({
@@ -114,7 +116,7 @@ export default function ComboDetails({
 
           <Divider thick className="-my-2" />
 
-          <View className="flex gap-2">
+          <View className="flex gap-1">
             <Text size="md" weight="medium">
               Initial Card State
             </Text>
@@ -146,6 +148,37 @@ export default function ComboDetails({
                 </View>
               ))}
           </View>
+
+          {combo.requires?.length > 0 && (
+            <View className="flex gap-1">
+              <Text size="md" weight="medium">
+                Requires
+              </Text>
+
+              <Divider />
+
+              {combo.requires.map((requirement) => (
+                <Text
+                  key={requirement.template.id}
+                  size="sm"
+                  className={width > 600 ? "" : "max-w-[256px]"}
+                >
+                  {requirement.template.name}
+
+                  <Icon
+                    className="ml-2"
+                    icon={faArrowUpRightFromSquare}
+                    onClick={() => {
+                      setOpen?.(false);
+                      router.push(
+                        `cards/search?query=${requirement.template.scryfallQuery}`
+                      );
+                    }}
+                  />
+                </Text>
+              ))}
+            </View>
+          )}
 
           {combo.easyPrerequisites?.length > 0 && (
             <View className="flex gap-1">
