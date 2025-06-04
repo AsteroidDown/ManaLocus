@@ -96,6 +96,15 @@ export default function ComboCard({
               text={card.card.name}
             />
           ))}
+
+          {combo.requires.map((requirement) => (
+            <Chip
+              size="xs"
+              type="outlined"
+              key={requirement.template.id}
+              text={requirement.template.name}
+            />
+          ))}
         </View>
 
         <Text size="sm" weight="medium">
