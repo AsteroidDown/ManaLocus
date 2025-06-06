@@ -143,7 +143,6 @@ export default function DeckHeader({
 
               <View className="mt-6">
                 <Dropdown
-                  xOffset={-120}
                   expanded={bracketExpanded}
                   setExpanded={setBracketExpanded}
                 >
@@ -195,10 +194,9 @@ export default function DeckHeader({
           >
             <View className="-mx-1">
               <Dropdown
-                xOffset={-100}
                 expanded={optionsExpanded}
                 setExpanded={setOptionsExpanded}
-                className={`mt-5 !max-w-[360px] border-2 border-primary-300 bg-background-100 rounded-2xl overflow-hidden`}
+                className={`mt-1 !max-w-[360px] border-2 border-primary-300 bg-background-100 rounded-2xl overflow-hidden`}
               >
                 <Button
                   square

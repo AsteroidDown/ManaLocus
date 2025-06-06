@@ -67,11 +67,7 @@ export function FolderOptionsMenu({
           onClick={() => setDropdownOpen(!dropdownOpen)}
         />
 
-        <Dropdown
-          xOffset={-88}
-          expanded={dropdownOpen}
-          setExpanded={setDropdownOpen}
-        >
+        <Dropdown expanded={dropdownOpen} setExpanded={setDropdownOpen}>
           <Box className="flex justify-start items-start !p-0 border-2 border-primary-300 !bg-background-100 !bg-opacity-90 overflow-hidden">
             <Button
               start

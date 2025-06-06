@@ -60,12 +60,8 @@ export default function DashboardSectionOptionsMenu({
 
   return (
     <>
-      <Dropdown
-        xOffset={xOffset}
-        expanded={addItemOpen}
-        setExpanded={setAddItemOpen}
-      >
-        <Box className="flex justify-start items-start !p-0 border-2 border-primary-300 !bg-background-100 !bg-opacity-90 overflow-hidden">
+      <Dropdown expanded={addItemOpen} setExpanded={setAddItemOpen}>
+        <Box className="flex justify-start items-start !p-0 border-2 border-primary-300 !bg-background-100 !bg-opacity-95 overflow-hidden">
           <Button
             start
             square

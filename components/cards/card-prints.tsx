@@ -56,12 +56,12 @@ export default function CardPrints({
 
       <View className="-my-2 -mx-1">
         <Dropdown
-          className={`!max-w-[392px] border-2 border-primary-200 rounded-2xl shadow-xl`}
-          xOffset={iconOnly ? -160 : -200}
+          horizontal="center"
           expanded={expanded}
           setExpanded={setExpanded}
+          className={`!max-w-[392px]`}
         >
-          <Box className="pb-6 overflow-hidden !bg-background-100">
+          <Box className="pb-6 mb-7 overflow-hidden !bg-background-100 border-2 border-primary-200 rounded-2xl shadow-xl">
             <Text size="lg" weight="bold" className="mb-2">
               {`Available Prints (${cardPrints.length})`}
             </Text>

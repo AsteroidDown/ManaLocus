@@ -182,64 +182,6 @@ export default function CardSearch({
               <View className="flex flex-row justify-center items-end w-full gap-2">
                 <CardPrints card={card} setCard={setCard} />
 
-                <View className="-mx-px">
-                  <Dropdown
-                    xOffset={24}
-                    expanded={addMultipleOpen}
-                    setExpanded={setAddMultipleOpen}
-                  >
-                    <Box className="flex justify-start items-start !p-0 border-2 border-primary-300 !bg-background-100 overflow-hidden">
-                      <Button
-                        start
-                        square
-                        size="sm"
-                        type="clear"
-                        text="Add 2"
-                        className="w-full"
-                        icon={faPlus}
-                        disabled={
-                          !card ||
-                          (board === "side" &&
-                            sideboardCount >= SideBoardLimit - 1)
-                        }
-                        onClick={() => saveCard(card, 2)}
-                      />
-
-                      <Button
-                        start
-                        square
-                        size="sm"
-                        type="clear"
-                        text="Add 3"
-                        className="w-full"
-                        icon={faPlus}
-                        disabled={
-                          !card ||
-                          (board === "side" &&
-                            sideboardCount >= SideBoardLimit - 2)
-                        }
-                        onClick={() => saveCard(card, 3)}
-                      />
-
-                      <Button
-                        start
-                        square
-                        size="sm"
-                        type="clear"
-                        text="Add 4"
-                        className="w-full"
-                        icon={faPlus}
-                        disabled={
-                          !card ||
-                          (board === "side" &&
-                            sideboardCount >= SideBoardLimit - 3)
-                        }
-                        onClick={() => saveCard(card, 4)}
-                      />
-                    </Box>
-                  </Dropdown>
-                </View>
-
                 <View className="flex-1 flex flex-row">
                   <Button
                     squareRight
@@ -266,6 +208,63 @@ export default function CardSearch({
                     }
                     onClick={() => setAddMultipleOpen(true)}
                   />
+
+                  <View className="-mx-px">
+                    <Dropdown
+                      expanded={addMultipleOpen}
+                      setExpanded={setAddMultipleOpen}
+                    >
+                      <Box className="flex justify-start items-start !p-0 mt-5 border-2 border-primary-300 !bg-background-95 overflow-hidden">
+                        <Button
+                          start
+                          square
+                          size="sm"
+                          type="clear"
+                          text="Add 2"
+                          className="w-full"
+                          icon={faPlus}
+                          disabled={
+                            !card ||
+                            (board === "side" &&
+                              sideboardCount >= SideBoardLimit - 1)
+                          }
+                          onClick={() => saveCard(card, 2)}
+                        />
+
+                        <Button
+                          start
+                          square
+                          size="sm"
+                          type="clear"
+                          text="Add 3"
+                          className="w-full"
+                          icon={faPlus}
+                          disabled={
+                            !card ||
+                            (board === "side" &&
+                              sideboardCount >= SideBoardLimit - 2)
+                          }
+                          onClick={() => saveCard(card, 3)}
+                        />
+
+                        <Button
+                          start
+                          square
+                          size="sm"
+                          type="clear"
+                          text="Add 4"
+                          className="w-full"
+                          icon={faPlus}
+                          disabled={
+                            !card ||
+                            (board === "side" &&
+                              sideboardCount >= SideBoardLimit - 3)
+                          }
+                          onClick={() => saveCard(card, 4)}
+                        />
+                      </Box>
+                    </Dropdown>
+                  </View>
                 </View>
               </View>
             </CardDetailedPreview>

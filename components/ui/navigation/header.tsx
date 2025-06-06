@@ -79,12 +79,8 @@ export default function Header() {
                 />
 
                 <View className="-mx-1">
-                  <Dropdown
-                    xOffset={-76}
-                    expanded={exploreOpen}
-                    setExpanded={setExploreOpen}
-                  >
-                    <View className="flex flex-col mt-6 border-2 border-primary-300 !bg-background-100 rounded-xl !bg-opacity-95 overflow-auto max-h-[250px]">
+                  <Dropdown expanded={exploreOpen} setExpanded={setExploreOpen}>
+                    <View className="flex flex-col mt-3 border-2 border-primary-300 !bg-background-100 rounded-xl !bg-opacity-95 overflow-auto max-h-[250px]">
                       <Button
                         start
                         square

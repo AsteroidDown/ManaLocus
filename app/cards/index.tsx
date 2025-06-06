@@ -179,11 +179,7 @@ function SetFilter({ selectedSets, setSelectedSets }: SetFilterProps) {
       ></Button>
 
       <View className="-mx-2">
-        <Dropdown
-          xOffset={-124}
-          expanded={selectSetsOpen}
-          setExpanded={setSelectSetsOpen}
-        >
+        <Dropdown expanded={selectSetsOpen} setExpanded={setSelectSetsOpen}>
           <Box className="flex justify-start items-start !p-0 border-2 border-primary-300 !bg-background-100 !bg-opacity-95 overflow-auto max-h-[250px]">
             {setTypes.map((setType, index) => (
               <Button

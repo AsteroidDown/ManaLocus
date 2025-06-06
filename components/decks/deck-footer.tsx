@@ -131,9 +131,8 @@ export default function DeckFooter({
                 icon={legalityEvaluation.legal ? faCheckCircle : faCircleXmark}
                 onClick={() => setLegalityOpen(!legalityOpen)}
               >
-                <View className="-mx-1.5 -mb-6">
+                <View className="-mx-1.5">
                   <Dropdown
-                    xOffset={-132}
                     expanded={legalityOpen}
                     setExpanded={setLegalityOpen}
                   >

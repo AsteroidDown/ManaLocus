@@ -464,7 +464,7 @@ export function CardItemFooter({
 
         <View className="-mx-1">
           <Dropdown expanded={moveOpen} setExpanded={setMoveOpen}>
-            <Box className="flex justify-start items-start !p-0 border-2 border-primary-300 !bg-background-100 !bg-opacity-90 overflow-hidden">
+            <Box className="flex justify-start items-start !p-0 mt-1 border-2 border-primary-300 !bg-background-100 !bg-opacity-95 overflow-hidden">
               {board !== BoardTypes.MAIN && (
                 <Button
                   start

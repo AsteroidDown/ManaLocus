@@ -5,6 +5,7 @@ import BoxHeader from "@/components/ui/box/box-header";
 import Button from "@/components/ui/button/button";
 import Checkbox from "@/components/ui/checkbox/checkbox";
 import Dropdown from "@/components/ui/dropdown/dropdown";
+import Icon from "@/components/ui/icon/icon";
 import Input from "@/components/ui/input/input";
 import Select from "@/components/ui/input/select";
 import Text from "@/components/ui/text/text";
@@ -33,7 +34,7 @@ import { Card } from "@/models/card/card";
 import { DeckDTO } from "@/models/deck/dtos/deck.dto";
 import { faInfoCircle, faSave } from "@fortawesome/free-solid-svg-icons";
 import { router } from "expo-router";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { Image, SafeAreaView, useWindowDimensions, View } from "react-native";
 
 export default function DeckSettingsPage() {
@@ -50,6 +51,8 @@ export default function DeckSettingsPage() {
   } = useContext(DeckContext);
 
   const width = useWindowDimensions().width;
+
+  const triggerRef = useRef<View>(null);
 
   const [saving, setSaving] = useState(false);
   const [bracketExpanded, setBracketExpanded] = useState(false);
@@ -402,36 +405,31 @@ export default function DeckSettingsPage() {
                       }))}
                       labelEnd={
                         <>
-                          <Button
-                            rounded
-                            type="clear"
+                          <Icon
                             action="default"
                             icon={faInfoCircle}
-                            buttonClasses="!w-2 !h-2"
                             onClick={() => setBracketExpanded(!bracketExpanded)}
                           />
 
-                          <View className="mt-5">
-                            <Dropdown
-                              xOffset={-100}
-                              expanded={bracketExpanded}
-                              setExpanded={setBracketExpanded}
-                            >
-                              <Box className="flex justify-start items-start border-2 !px-4 !py-2 border-primary-300 !bg-background-200 !bg-opacity-95 overflow-auto max-w-[450px]">
-                                {deck && bracketInfo && (
-                                  <DeckBracketInfo
-                                    user={deck.user!}
-                                    bracket={bracketInfo}
-                                    bracketSet={bracket}
-                                    bracketGuess={
-                                      bracketGuess ??
-                                      BracketNumber[bracketInfo.bracket]
-                                    }
-                                  />
-                                )}
-                              </Box>
-                            </Dropdown>
-                          </View>
+                          <Dropdown
+                            horizontal="center"
+                            expanded={bracketExpanded}
+                            setExpanded={setBracketExpanded}
+                          >
+                            <Box className="flex justify-start items-start border-2 !px-4 !py-2 border-primary-300 !bg-background-200 !bg-opacity-95 overflow-auto max-w-[450px]">
+                              {deck && bracketInfo && (
+                                <DeckBracketInfo
+                                  user={deck.user!}
+                                  bracket={bracketInfo}
+                                  bracketSet={bracket}
+                                  bracketGuess={
+                                    bracketGuess ??
+                                    BracketNumber[bracketInfo.bracket]
+                                  }
+                                />
+                              )}
+                            </Box>
+                          </Dropdown>
                         </>
                       }
                     />
@@ -467,38 +465,33 @@ export default function DeckSettingsPage() {
                         }))}
                         labelEnd={
                           <>
-                            <Button
-                              rounded
-                              type="clear"
+                            <Icon
                               action="default"
                               icon={faInfoCircle}
-                              buttonClasses="!w-2 !h-2"
                               onClick={() =>
                                 setBracketExpanded(!bracketExpanded)
                               }
                             />
 
-                            <View className="mt-5">
-                              <Dropdown
-                                xOffset={-100}
-                                expanded={bracketExpanded}
-                                setExpanded={setBracketExpanded}
-                              >
-                                <Box className="flex justify-start items-start border-2 !px-4 !py-2 border-primary-300 !bg-background-200 !bg-opacity-95 overflow-auto max-w-[450px]">
-                                  {deck && bracketInfo && (
-                                    <DeckBracketInfo
-                                      user={deck.user!}
-                                      bracket={bracketInfo}
-                                      bracketSet={bracket}
-                                      bracketGuess={
-                                        bracketGuess ??
-                                        BracketNumber[bracketInfo.bracket]
-                                      }
-                                    />
-                                  )}
-                                </Box>
-                              </Dropdown>
-                            </View>
+                            <Dropdown
+                              horizontal="center"
+                              expanded={bracketExpanded}
+                              setExpanded={setBracketExpanded}
+                            >
+                              <Box className="flex justify-start items-start border-2 !px-4 !py-2 border-primary-300 !bg-background-200 !bg-opacity-95 overflow-auto max-w-[450px]">
+                                {deck && bracketInfo && (
+                                  <DeckBracketInfo
+                                    user={deck.user!}
+                                    bracket={bracketInfo}
+                                    bracketSet={bracket}
+                                    bracketGuess={
+                                      bracketGuess ??
+                                      BracketNumber[bracketInfo.bracket]
+                                    }
+                                  />
+                                )}
+                              </Box>
+                            </Dropdown>
                           </>
                         }
                       />
