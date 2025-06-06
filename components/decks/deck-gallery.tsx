@@ -130,7 +130,7 @@ export default function DeckGallery({
     if (listView) {
       const decksToShow = decks.reduce((acc, deck, index) => {
         if (
-          user?.access?.showAds &&
+          (!user || user?.access?.showAds) &&
           index >= AD_THRESHOLD &&
           index % AD_THRESHOLD === 0
         ) {
@@ -150,7 +150,7 @@ export default function DeckGallery({
     } else {
       const cardsToShow = decks.reduce((acc, deck, index) => {
         if (
-          user?.access?.showAds &&
+          (!user || user?.access?.showAds) &&
           index >= AD_THRESHOLD &&
           index % AD_THRESHOLD === 0
         ) {
