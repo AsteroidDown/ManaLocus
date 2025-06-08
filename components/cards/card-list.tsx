@@ -1,5 +1,5 @@
 import { getCardType } from "@/functions/cards/card-information";
-import { titleCase } from "@/functions/text-manipulation";
+import { currency, titleCase } from "@/functions/text-manipulation";
 import { PaginationMeta } from "@/hooks/pagination";
 import { Card } from "@/models/card/card";
 import { DeckViewType } from "@/models/deck/dtos/deck-filters.dto";
@@ -16,12 +16,14 @@ export interface CardListProps {
   cards: Card[];
   includeSet?: boolean;
   viewType?: DeckViewType;
+  showPrice?: boolean;
 }
 
 export default function CardList({
   cards,
   includeSet,
   viewType,
+  showPrice,
 }: CardListProps) {
   const { setId } = useLocalSearchParams();
 
@@ -55,20 +57,33 @@ export default function CardList({
       {viewType === DeckViewType.CARD ? (
         <View className="flex flex-row flex-wrap lg:justify-start justify-center gap-2">
           {cards.map((card, index) => (
-            <CardImage
-              card={card}
+            <View
               key={card.scryfallId + index}
-              shouldLoad={loadIndex >= index}
-              onClick={() =>
-                router.push(
-                  `cards/${setId ?? card.set}/${card.collectorNumber}`
-                )
-              }
-              onLoad={() => {
-                if (index < loadIndex) return;
-                setLoadIndex(index + 1);
-              }}
-            />
+              className="bg-dark-100 rounded-xl overflow-hidden"
+            >
+              <CardImage
+                card={card}
+                shouldLoad={loadIndex >= index}
+                onClick={() =>
+                  router.push(
+                    `cards/${setId ?? card.set}/${card.collectorNumber}`
+                  )
+                }
+                onLoad={() => {
+                  if (index < loadIndex) return;
+                  setLoadIndex(index + 1);
+                }}
+              />
+
+              {showPrice && (
+                <Text center className="py-1 bg-dark-200">
+                  {includeSet ? card.set.toUpperCase() + " " : ""}
+                  {card.collectorNumber}
+                  {" | "}
+                  {currency(card.prices?.usd)}
+                </Text>
+              )}
+            </View>
           ))}
         </View>
       ) : (
@@ -100,6 +115,14 @@ export default function CardList({
                 title: "Type",
                 row: (card) => <Text>{titleCase(getCardType(card))}</Text>,
               },
+              ...(showPrice
+                ? [
+                    {
+                      title: "Price",
+                      row: (card: Card) => <Text>{card.prices?.usd}</Text>,
+                    },
+                  ]
+                : []),
             ]}
           />
           {meta && meta.totalItems > 0 && (

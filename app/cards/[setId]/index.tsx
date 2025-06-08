@@ -43,6 +43,8 @@ export default function SetPage() {
   const [filters, setFilters] = useState({} as CardFilters);
   const [viewType, setViewType] = useState(DeckViewType.CARD);
 
+  const [baseSetCutoff, setBaseSetCutoff] = useState(null as number | null);
+
   const [tabs, setTabs] = useState([] as TabProps[]);
 
   const baseCards: Card[] = [];
@@ -97,14 +99,65 @@ export default function SetPage() {
   useEffect(() => {
     if (!cards?.length) return;
 
+    if (baseSetCutoff === null) {
+      const showcase = cards.filter(
+        (card) =>
+          card.frameEffects?.includes("showcase") ||
+          card.faces?.front.frameEffects?.includes("showcase")
+      );
+
+      const borderless = cards.filter(
+        (card) => card.borderColor === "borderless"
+      );
+
+      const extendedArt = cards.filter(
+        (card) =>
+          card.frameEffects?.includes("extendedart") ||
+          card.faces?.front.frameEffects?.includes("extendedart")
+      );
+
+      const fullArt = cards.filter(
+        (card) =>
+          card.frameEffects?.includes("fullart") ||
+          card.faces?.front.frameEffects?.includes("fullart")
+      );
+
+      const promos = cards.filter((card) => card.promoTypes?.length);
+
+      const cutoff = findFirstValidCollectorNumber(
+        showcase,
+        borderless,
+        extendedArt,
+        fullArt,
+        promos
+      );
+
+      setBaseSetCutoff(cutoff);
+    }
+  }, [cards, baseSetCutoff]);
+
+  useEffect(() => {
+    if (!cards?.length || baseSetCutoff === null) return;
+
+    baseCards.length = 0;
+    showcaseCards.length = 0;
+    borderlessCards.length = 0;
+    extendedArtCards.length = 0;
+    fullArtCards.length = 0;
+    promoCards.length = 0;
+    specialPromos.length = 0;
+
+    const specialPromoCandidates: Card[] = [];
+
     filteredCards.forEach((card) => {
       if (
         card.frameEffects?.includes("showcase") ||
         card.faces?.front.frameEffects?.includes("showcase")
       ) {
         showcaseCards.push(card);
-      } else if (card.borderColor === "borderless") borderlessCards.push(card);
-      else if (
+      } else if (card.borderColor === "borderless") {
+        borderlessCards.push(card);
+      } else if (
         card.frameEffects?.includes("extendedart") ||
         card.faces?.front.frameEffects?.includes("extendedart")
       ) {
@@ -114,33 +167,70 @@ export default function SetPage() {
         card.faces?.front.frameEffects?.includes("fullart")
       ) {
         fullArtCards.push(card);
-      } else if (card.promo) promoCards.push(card);
-      else if (card.promoTypes?.length) specialPromos.push(card);
-      else baseCards.push(card);
+      } else if (card.promo) {
+        promoCards.push(card);
+      } else if (card.promoTypes?.length) {
+        specialPromoCandidates.push(card);
+      } else {
+        baseCards.push(card);
+      }
     });
 
+    specialPromoCandidates.forEach((card) => {
+      const number = getCollectorNumber(card);
+      if (number !== null && number <= baseSetCutoff) {
+        baseCards.push(card);
+      } else {
+        specialPromos.push(card);
+      }
+    });
+
+    const showPrice = !!filters.priceSort && filters.priceSort !== null;
+
     setTabs([
-      ...(baseCards?.length ? getTabContent("Base", baseCards, viewType) : []),
+      ...(baseCards?.length
+        ? getTabContent("Base", baseCards, viewType, showPrice)
+        : []),
       ...(showcaseCards?.length
-        ? getTabContent("Showcase", showcaseCards, viewType)
+        ? getTabContent("Showcase", showcaseCards, viewType, showPrice)
         : []),
       ...(borderlessCards?.length
-        ? getTabContent("Borderless", borderlessCards, viewType)
+        ? getTabContent("Borderless", borderlessCards, viewType, showPrice)
         : []),
       ...(extendedArtCards?.length
-        ? getTabContent("Extended Art", extendedArtCards, viewType)
+        ? getTabContent("Extended Art", extendedArtCards, viewType, showPrice)
         : []),
       ...(fullArtCards?.length
-        ? getTabContent("Full Art", fullArtCards, viewType)
+        ? getTabContent("Full Art", fullArtCards, viewType, showPrice)
         : []),
       ...(promoCards?.length
-        ? getTabContent("Promo", promoCards, viewType)
+        ? getTabContent("Promo", promoCards, viewType, showPrice)
         : []),
       ...(specialPromos?.length
-        ? getTabContent("Special Promos", specialPromos, viewType)
+        ? getTabContent("Special Promos", specialPromos, viewType, showPrice)
         : []),
     ]);
-  }, [filteredCards, viewType]);
+  }, [filteredCards, viewType, baseSetCutoff]);
+
+  function getCollectorNumber(card: Card) {
+    const match = card.collectorNumber.match(/^(\d+)/);
+    return match ? parseInt(match[1], 10) : null;
+  }
+
+  function getCollectorNumbers(cards: Card[]) {
+    return cards
+      .map((card) => getCollectorNumber(card))
+      .filter((n): n is number => n !== null)
+      .sort((a, b) => a - b);
+  }
+
+  function findFirstValidCollectorNumber(...groups: Card[][]): number | null {
+    for (const group of groups) {
+      const collectorNumbers = getCollectorNumbers(group);
+      if (collectorNumbers.length) return collectorNumbers[0] - 1;
+    }
+    return null;
+  }
 
   if (!set) return;
 
@@ -218,7 +308,12 @@ export default function SetPage() {
   );
 }
 
-function getTabContent(title: string, cards: Card[], viewType: DeckViewType) {
+function getTabContent(
+  title: string,
+  cards: Card[],
+  viewType: DeckViewType,
+  showPrice: boolean
+) {
   const total = cards.reduce((acc, card) => acc + (card.prices.usd ?? 0), 0);
   const euroTotal = cards.reduce(
     (acc, card) => acc + (card.prices.eur ?? 0),
@@ -236,7 +331,12 @@ function getTabContent(title: string, cards: Card[], viewType: DeckViewType) {
             {currency(euroTotal, true)} | {currency(tixTotal)}
           </Text>
 
-          <CardList cards={cards} viewType={viewType} />
+          <CardList
+            cards={cards}
+            viewType={viewType}
+            includeSet={showPrice}
+            showPrice={showPrice}
+          />
         </View>
       ),
     },
