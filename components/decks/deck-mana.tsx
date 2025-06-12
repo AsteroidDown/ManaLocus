@@ -194,28 +194,30 @@ export default function DeckMana({ deck }: DeckManaProps) {
   }
 
   return (
-    <View className="relative flex gap-4 max-h-fit lg:w-fit w-full">
+    <View className="relative flex gap-4 lg:ml-4 lg:mr-8 max-h-fit lg:w-fit w-full">
       <Text size="lg" weight="bold" className="mb-2">
         Card Costs & Land Mana
       </Text>
 
-      <PieChart
-        size={200}
-        series={[
-          {
-            gapWidth: 4,
-            innerRadius: 3,
-            outerRadius: 50,
-            data: producedChartData,
-          },
-          {
-            gapWidth: 4,
-            innerRadius: 58,
-            outerRadius: 100,
-            data: pipChartData,
-          },
-        ]}
-      />
+      <View className="flex justify-center items-center">
+        <PieChart
+          size={200}
+          series={[
+            {
+              gapWidth: 4,
+              innerRadius: 3,
+              outerRadius: 50,
+              data: producedChartData,
+            },
+            {
+              gapWidth: 4,
+              innerRadius: 58,
+              outerRadius: 100,
+              data: pipChartData,
+            },
+          ]}
+        />
+      </View>
 
       <CardViewMultipleModal
         open={open}
