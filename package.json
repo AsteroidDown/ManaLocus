@@ -11,13 +11,17 @@
     "web": "expo start --web"
   },
   "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
     "@fortawesome/fontawesome-svg-core": "^6.6.0",
     "@fortawesome/free-brands-svg-icons": "^6.7.2",
     "@fortawesome/free-solid-svg-icons": "^6.6.0",
     "@fortawesome/react-fontawesome": "^0.2.2",
+    "@mui/material": "^7.1.1",
+    "@mui/x-charts": "^8.5.1",
     "axios": "^1.7.7",
     "babel-plugin-module-resolver": "^5.0.2",
-    "expo": "^51.0.39",
+    "expo": "^53.0.11",
     "expo-constants": "~16.0.2",
     "expo-linking": "~6.3.1",
     "expo-router": "~3.5.23",
