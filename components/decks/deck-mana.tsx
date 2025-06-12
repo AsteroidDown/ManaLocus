@@ -1,14 +1,11 @@
 import CardViewMultipleModal from "@/components/cards/card-view-multiple-modal";
+import PieChart, {
+  PieChartSlice,
+} from "@/components/ui/graphs/pie-chart/pie-chart";
 import Text from "@/components/ui/text/text";
-import {
-  MTGColorSymbolMap,
-  MTGColorSymbols,
-  MTGColorValueMap,
-} from "@/constants/mtg/mtg-colors";
-import { titleCase } from "@/functions/text-manipulation";
+import { MTGColorSymbols, MTGColorValueMap } from "@/constants/mtg/mtg-colors";
 import { Card } from "@/models/card/card";
 import { Deck } from "@/models/deck/deck";
-import { PieChart, PieValueType } from "@mui/x-charts";
 import { useEffect, useMemo, useState } from "react";
 import { View } from "react-native";
 
@@ -82,16 +79,19 @@ export default function DeckMana({ deck }: DeckManaProps) {
         const count = manaPips[key as keyof ChartData]?.count || 0;
         return count > 0
           ? ({
-              id: index,
+              key: index,
               value: count,
+              label: `${label} Pips`,
               color: MTGColorValueMap.get(key as baseColorSymbol),
-              label: `${label} Pips (${Math.round(
-                (count / (manaPips.total.count || 1)) * 100
-              )}%)`,
-            } as PieValueType)
+              onClick: () => {
+                setOpen(true);
+                setTitle(`${label} Cards`);
+                setCards(manaPips[key as keyof ChartData]?.cards || []);
+              },
+            } as PieChartSlice)
           : null;
       })
-      .filter((d): d is PieValueType => d !== null);
+      .filter((d): d is PieChartSlice => d !== null);
   }, [manaPips]);
 
   const producedChartData = useMemo(() => {
@@ -100,16 +100,19 @@ export default function DeckMana({ deck }: DeckManaProps) {
         const count = manaProduced[key as keyof ChartData]?.count || 0;
         return count > 0
           ? ({
-              id: index,
+              key: index,
               value: count,
+              label: `${label} Lands`,
               color: MTGColorValueMap.get(key as baseColorSymbol),
-              label: `${label} Lands (${Math.round(
-                (count / (manaProduced.total.count || 1)) * 100
-              )}%)`,
-            } as PieValueType)
+              onClick: () => {
+                setOpen(true);
+                setTitle(`${label} Lands`);
+                setCards(manaProduced[key as keyof ChartData]?.cards || []);
+              },
+            } as PieChartSlice)
           : null;
       })
-      .filter((d): d is PieValueType => d !== null);
+      .filter((d): d is PieChartSlice => d !== null);
   }, [manaProduced]);
 
   useEffect(() => {
@@ -190,30 +193,6 @@ export default function DeckMana({ deck }: DeckManaProps) {
       .filter((pip) => deckColors.includes(pip));
   }
 
-  function showCards(index: number, type: "pips" | "produced") {
-    if (type === "pips") {
-      const color = Object.keys(manaPips).filter(
-        (key) => key !== "total" && manaPips[key as baseColorSymbol].count > 0
-      )[index];
-
-      setCards(manaPips[color as baseColorSymbol]?.cards || []);
-      setTitle(
-        `${titleCase(MTGColorSymbolMap.get(color as baseColorSymbol))} Cards`
-      );
-    } else {
-      const color = Object.keys(manaProduced).filter(
-        (key) =>
-          key !== "total" && manaProduced[key as baseColorSymbol].count > 0
-      )[index];
-
-      setCards(manaProduced[color as baseColorSymbol]?.cards || []);
-      setTitle(
-        `${titleCase(MTGColorSymbolMap.get(color as baseColorSymbol))} Lands`
-      );
-    }
-    setOpen(true);
-  }
-
   return (
     <View className="relative flex gap-4 max-h-fit lg:w-fit w-full">
       <Text size="lg" weight="bold" className="mb-2">
@@ -221,29 +200,18 @@ export default function DeckMana({ deck }: DeckManaProps) {
       </Text>
 
       <PieChart
-        hideLegend
-        width={200}
-        height={200}
-        onItemClick={(_event, data) => {
-          showCards(data.dataIndex, data.seriesId as any);
-        }}
+        size={200}
         series={[
           {
-            id: "produced",
+            gapWidth: 4,
             innerRadius: 3,
             outerRadius: 50,
-            paddingAngle: 4,
-            cornerRadius: 4,
-            highlightScope: { fade: "global", highlight: "item" },
             data: producedChartData,
           },
           {
-            id: "pips",
+            gapWidth: 4,
             innerRadius: 58,
             outerRadius: 100,
-            paddingAngle: 2,
-            cornerRadius: 4,
-            highlightScope: { fade: "global", highlight: "item" },
             data: pipChartData,
           },
         ]}
