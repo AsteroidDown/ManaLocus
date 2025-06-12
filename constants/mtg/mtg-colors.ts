@@ -34,12 +34,34 @@ export enum MTGColorSymbols {
 }
 
 export const MTGColorMap = new Map<MTGColor, MTGColorSymbol>([
-  ["white", "W"],
-  ["blue", "U"],
-  ["black", "B"],
-  ["red", "R"],
-  ["green", "G"],
-  ["gold", "M"],
-  ["colorless", "C"],
-  ["mono", "1"],
+  [MTGColors.WHITE, MTGColorSymbols.WHITE],
+  [MTGColors.BLUE, MTGColorSymbols.BLUE],
+  [MTGColors.BLACK, MTGColorSymbols.BLACK],
+  [MTGColors.RED, MTGColorSymbols.RED],
+  [MTGColors.GREEN, MTGColorSymbols.GREEN],
+  [MTGColors.GOLD, MTGColorSymbols.GOLD],
+  [MTGColors.COLORLESS, MTGColorSymbols.COLORLESS],
+  ["mono", MTGColorSymbols.MONO],
+]);
+
+export const MTGColorSymbolMap = new Map<MTGColorSymbol, MTGColor>([
+  [MTGColorSymbols.WHITE, MTGColors.WHITE],
+  [MTGColorSymbols.BLUE, MTGColors.BLUE],
+  [MTGColorSymbols.BLACK, MTGColors.BLACK],
+  [MTGColorSymbols.RED, MTGColors.RED],
+  [MTGColorSymbols.GREEN, MTGColors.GREEN],
+  [MTGColorSymbols.GOLD, MTGColors.GOLD],
+  [MTGColorSymbols.COLORLESS, MTGColors.COLORLESS],
+  [MTGColorSymbols.MONO, "mono"],
+]);
+
+export const MTGColorValueMap = new Map<MTGColorSymbol, string>([
+  [MTGColorSymbols.WHITE, "#f9faf4"],
+  [MTGColorSymbols.BLUE, "#0e68ab"],
+  [MTGColorSymbols.BLACK, "#471480"],
+  [MTGColorSymbols.RED, "#d3202a"],
+  [MTGColorSymbols.GREEN, "#00733d"],
+  [MTGColorSymbols.GOLD, "#fcba03"],
+  [MTGColorSymbols.COLORLESS, "#878787"],
+  [MTGColorSymbols.MONO, "#471480"],
 ]);
