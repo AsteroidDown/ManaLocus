@@ -68,6 +68,7 @@ export interface CardFace {
   manaCost: string;
   loyalty?: string;
   defense?: string;
+  producedMana?: string[];
   power?: string;
   toughness?: string;
   oracleText: string;

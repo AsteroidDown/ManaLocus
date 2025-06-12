@@ -64,6 +64,7 @@ export interface ScryfallCardFace {
   toughness?: string;
   loyalty?: string;
   defense?: string;
+  produced_mana: any[];
   oracle_text: string;
   flavor_text?: string;
   image_uris: ScryfallImageUris;
