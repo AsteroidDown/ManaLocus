@@ -7,6 +7,7 @@ import DeckExampleHand from "@/components/decks/deck-example-hand";
 import DeckFooter from "@/components/decks/deck-footer";
 import DeckHeader from "@/components/decks/deck-header";
 import DeckKits from "@/components/decks/deck-kits";
+import DeckMana from "@/components/decks/deck-mana";
 import DeckTokens from "@/components/decks/deck-tokens";
 import Graph from "@/components/graph/graph";
 import Box from "@/components/ui/box/box";
@@ -136,6 +137,8 @@ export default function DeckPage() {
               }
             />
           </Box>
+
+          <DeckMana deck={deck} />
 
           <DeckChangeLog className="flex-1 min-w-[250px]" deck={deck} />
         </View>
