@@ -20,18 +20,11 @@ import "@/global.css";
 import UserService from "@/hooks/services/user.service";
 import { UserPreferences } from "@/models/preferences/user-preferences";
 import { User } from "@/models/user/user";
-import { createTheme, ThemeProvider } from "@mui/material";
 import { Stack } from "expo-router";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { ScrollView } from "react-native";
 import { Host } from "react-native-portalize";
-
-const darkTheme = createTheme({
-  palette: {
-    mode: "dark",
-  },
-});
 
 export default function RootLayout() {
   const [loading, setLoading] = useState(false);
@@ -90,30 +83,28 @@ export default function RootLayout() {
   return (
     <Host>
       <UserContext.Provider value={{ user, setUser }}>
-        <ThemeProvider theme={darkTheme}>
-          <UserPreferencesContext.Provider
-            value={{ preferences, setPreferences }}
-          >
-            <LoadingContext.Provider value={{ loading, setLoading }}>
-              <ToastProvider>
-                <Header />
+        <UserPreferencesContext.Provider
+          value={{ preferences, setPreferences }}
+        >
+          <LoadingContext.Provider value={{ loading, setLoading }}>
+            <ToastProvider>
+              <Header />
 
-                <ScrollView className="flex w-full bg-background-100">
-                  <Stack screenOptions={{ headerShown: false }}>
-                    <Stack.Screen name="index" />
-                    <Stack.Screen name="users" />
-                    <Stack.Screen name="login" />
-                    <Stack.Screen name="reset" />
-                    <Stack.Screen name="verify" />
-                    <Stack.Screen name="+not-found" />
-                  </Stack>
+              <ScrollView className="flex w-full bg-background-100">
+                <Stack screenOptions={{ headerShown: false }}>
+                  <Stack.Screen name="index" />
+                  <Stack.Screen name="users" />
+                  <Stack.Screen name="login" />
+                  <Stack.Screen name="reset" />
+                  <Stack.Screen name="verify" />
+                  <Stack.Screen name="+not-found" />
+                </Stack>
 
-                  <LoadingView />
-                </ScrollView>
-              </ToastProvider>
-            </LoadingContext.Provider>
-          </UserPreferencesContext.Provider>
-        </ThemeProvider>
+                <LoadingView />
+              </ScrollView>
+            </ToastProvider>
+          </LoadingContext.Provider>
+        </UserPreferencesContext.Provider>
       </UserContext.Provider>
     </Host>
   );
