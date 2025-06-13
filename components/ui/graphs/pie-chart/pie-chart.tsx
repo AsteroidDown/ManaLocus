@@ -126,7 +126,7 @@ export default function PieChart({ series, size = 200 }: PieChartProps) {
           setTooltip((prev) => ({
             ...prev,
             x: mouseX + 10,
-            y: mouseY + 10,
+            y: mouseY + 22,
           }));
         }}
         onMouseLeave={() => {
