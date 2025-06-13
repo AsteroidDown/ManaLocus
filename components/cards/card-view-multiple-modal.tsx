@@ -8,7 +8,6 @@ import React from "react";
 import { Linking, View } from "react-native";
 import { ChartType } from "../chart/chart";
 import Box from "../ui/box/box";
-import BoxHeader from "../ui/box/box-header";
 import Button from "../ui/button/button";
 import Modal from "../ui/modal/modal";
 import Placeholder from "../ui/placeholder/placeholder";
@@ -68,9 +67,7 @@ export default function CardViewMultipleModal({
   )}`;
 
   return (
-    <Modal open={open} setOpen={setOpen}>
-      <BoxHeader title={modalTitle} subtitle={subtitle} />
-
+    <Modal title={modalTitle} subtitle={subtitle} open={open} setOpen={setOpen}>
       <Box className="flex flex-row lg:justify-start justify-center gap-2 flex-wrap min-h-[350px] max-h-[75vh] w-fit min-w-[228px] max-w-[1000px] !p-0 !bg-background-100 overflow-x-auto">
         {cards?.map((card, index) => (
           <Box
