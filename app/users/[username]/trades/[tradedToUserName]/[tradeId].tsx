@@ -135,7 +135,7 @@ export default function TradePage() {
         </View>
 
         <View className="flex lg:flex-row gap-4 mb-6 min-h-fit">
-          <View className="flex-1 flex gap-2">
+          <View className="flex-1 flex gap-2 min-h-fit">
             <Text size="lg" weight="semi">
               Your Cards
             </Text>
