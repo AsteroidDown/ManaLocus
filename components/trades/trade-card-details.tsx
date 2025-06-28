@@ -50,7 +50,7 @@ export default function TradeCardDetails({
   const [open, setOpen] = useState(false);
 
   const imageUri = tradeCard.card?.faces
-    ? tradeCard.card.faces.front.imageUris.png
+    ? (tradeCard.card.faces as any)?.[0]?.image_uris?.png
     : tradeCard.card?.imageURIs?.png;
 
   const cardIsItem = !tradeCard.card && tradeCard.name !== undefined;
