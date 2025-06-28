@@ -29,7 +29,7 @@ export default function DeckCombos({ deck }: { deck: Deck }) {
           Top combos for {deck.name}
         </Text>
 
-        {!allCombos && (
+        {!allCombos && combos.length > 3 && (
           <Button
             size="sm"
             type="outlined"
