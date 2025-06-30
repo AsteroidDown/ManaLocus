@@ -19,6 +19,7 @@ import {
   CardFilterSortType,
 } from "@/models/sorted-cards/sorted-cards";
 import { faFilter, faTimes } from "@fortawesome/free-solid-svg-icons";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import React, {
   Dispatch,
   SetStateAction,
@@ -45,6 +46,10 @@ export default function CardFiltersModal({
   filters,
   setFilters,
 }: CardFiltersModalProps) {
+  const router = useRouter();
+
+  const { ...rawParams } = useLocalSearchParams();
+
   const { setPreferences } = useContext(BuilderPreferencesContext);
 
   const [cardFilters, setCardFilters] = useState(
@@ -66,6 +71,33 @@ export default function CardFiltersModal({
   const [priceSort, setPriceSort] = useState(null as SortType);
   const [manaValueSort, setManaValueSort] = useState(null as SortType);
   const [alphabeticalSort, setAlphabeticalSort] = useState(null as SortType);
+
+  useEffect(() => {
+    const paramFilters = queryParamsToFilters(
+      rawParams as Record<string, string>
+    );
+
+    if (paramFilters.colorFilter?.length) {
+      setColorFilter(paramFilters.colorFilter);
+    }
+    if (paramFilters.typeFilter?.length) {
+      setTypeFilter(paramFilters.typeFilter);
+    }
+    if (paramFilters.rarityFilter?.length) {
+      setRarityFilter(paramFilters.rarityFilter);
+    }
+    if (paramFilters.priceSort) {
+      setPriceSort(paramFilters.priceSort);
+    }
+    if (paramFilters.manaValueSort) {
+      setManaValueSort(paramFilters.manaValueSort);
+    }
+    if (paramFilters.alphabeticalSort) {
+      setAlphabeticalSort(paramFilters.alphabeticalSort);
+    }
+
+    applyFilters(paramFilters);
+  }, []);
 
   useEffect(() => {
     const filters: CardFilters = {
@@ -95,10 +127,13 @@ export default function CardFiltersModal({
     alphabeticalSort,
   ]);
 
-  function applyFilters() {
+  function applyFilters(givenFilters?: CardFilters) {
     setOpen(false);
-    if (filters) setFilters?.(cardFilters);
-    else {
+
+    if (filters ?? givenFilters) {
+      setFilters?.(givenFilters ?? cardFilters);
+      router.setParams(filtersToQueryParams(givenFilters ?? cardFilters));
+    } else {
       setLocalStorageBuilderPreferences({ filters: cardFilters });
       setPreferences(getLocalStorageBuilderPreferences() || {});
     }
@@ -119,12 +154,40 @@ export default function CardFiltersModal({
         typeFilter: [],
         rarityFilter: [],
       });
+      router.replace(`/cards/${rawParams.setId}`);
     } else {
       setLocalStorageBuilderPreferences({
         filters: { colorFilter: [], typeFilter: [], rarityFilter: [] },
       });
       setPreferences(getLocalStorageBuilderPreferences() || {});
     }
+  }
+
+  function filtersToQueryParams(filters: CardFilters) {
+    const params: Record<string, string> = {};
+
+    if (filters.colorFilter?.length)
+      params.color = filters.colorFilter.join(",");
+    if (filters.typeFilter?.length) params.type = filters.typeFilter.join(",");
+    if (filters.rarityFilter?.length)
+      params.rarity = filters.rarityFilter.join(",");
+
+    if (filters.priceSort) params.priceSort = filters.priceSort;
+    if (filters.manaValueSort) params.manaSort = filters.manaValueSort;
+    if (filters.alphabeticalSort) params.alphaSort = filters.alphabeticalSort;
+
+    return params;
+  }
+
+  function queryParamsToFilters(params: Record<string, string>): CardFilters {
+    return {
+      colorFilter: (params.color?.split(",") ?? []) as MTGColor[],
+      typeFilter: (params.type?.split(",") ?? []) as MTGCardType[],
+      rarityFilter: (params.rarity?.split(",") ?? []) as MTGRarity[],
+      priceSort: (params.priceSort as SortType) || null,
+      manaValueSort: (params.manaSort as SortType) || null,
+      alphabeticalSort: (params.alphaSort as SortType) || null,
+    };
   }
 
   return (
