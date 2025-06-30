@@ -21,6 +21,10 @@ export default function CardText({
     let loyalty: "add" | "remove" | undefined = undefined;
     let value: string | undefined = undefined;
 
+    if (line.includes("STATION")) {
+      return { loyalty: undefined, value: line, sections: [] };
+    }
+
     if (
       (!text.includes("Spree") && line[0] === "+") ||
       line[0] === "−" ||
@@ -84,7 +88,7 @@ export default function CardText({
     <View className={`flex gap-4 ${className}`}>
       <View className="flex flex-row flex-wrap gap-2 items-center">
         {lines.map((line, index) => (
-          <Text className="items-center" key={index}>
+          <Text className="items-center min-w-full" key={index}>
             {line.value && (
               <View className="flex flex-row items-center gap-2">
                 <Text
