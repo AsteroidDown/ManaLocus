@@ -627,6 +627,7 @@ export const MassLandDenial = [
   "Naked Singularity",
   "Obliterate",
   "Omen of Fire",
+  "Planetary Annihilation",
   "Raiding Party",
   "Ravages of War",
   "Razia's Purification",
