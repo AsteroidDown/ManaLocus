@@ -284,7 +284,7 @@ export default function DeckGallery({
           userId,
           {
             ...searchDto,
-            includePrivate: user?.id === userPageUser?.id ? "true" : "false",
+            includePrivate: user?.id === userPageUser?.id ? true : false,
           },
           { page, items: 50 }
         ).then((response) => {
@@ -351,7 +351,7 @@ export default function DeckGallery({
       ...(exclusiveCardSearch && { exclusiveCardSearch }),
       ...(partnerSearch !== undefined && { partner: partnerSearch }),
       ...(commanderSearch !== undefined && { commander: commanderSearch }),
-      ...(user?.id === userPageUser?.id && { includePrivate: "true" }),
+      ...(user?.id === userPageUser?.id && { includePrivate: true }),
     });
   }
 

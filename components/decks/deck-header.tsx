@@ -11,6 +11,7 @@ import {
   faEllipsisV,
   faEye,
   faHeart,
+  faLeftRight,
   faPen,
   faTrash,
 } from "@fortawesome/free-solid-svg-icons";
@@ -24,6 +25,7 @@ import Chip from "../ui/chip/chip";
 import Dropdown from "../ui/dropdown/dropdown";
 import Text from "../ui/text/text";
 import DeckBracketInfo from "./deck-bracket-info";
+import DeckCompareModal from "./deck-compare-modal";
 import DeckDeleteModal from "./deck-delete-modal";
 
 export default function DeckHeader({
@@ -42,6 +44,8 @@ export default function DeckHeader({
 
   const [bracketExpanded, setBracketExpanded] = useState(false);
   const [optionsExpanded, setOptionsExpanded] = useState(false);
+
+  const [compareModalOpen, setCompareModalOpen] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
 
   useEffect(() => {
@@ -198,7 +202,23 @@ export default function DeckHeader({
                 setExpanded={setOptionsExpanded}
                 className={`mt-1 !max-w-[360px] border-2 border-primary-300 bg-background-100 rounded-2xl overflow-hidden`}
               >
+                {user && (
+                  <Button
+                    start
+                    square
+                    type="clear"
+                    text="Compare"
+                    className="w-full"
+                    icon={faLeftRight}
+                    onClick={() => {
+                      setCompareModalOpen(true);
+                      setOptionsExpanded(false);
+                    }}
+                  />
+                )}
+
                 <Button
+                  start
                   square
                   type="clear"
                   text="Delete"
@@ -210,6 +230,12 @@ export default function DeckHeader({
                   }}
                 />
               </Dropdown>
+
+              <DeckCompareModal
+                deck={deck}
+                open={compareModalOpen}
+                setOpen={setCompareModalOpen}
+              />
 
               <DeckDeleteModal
                 deck={deck}
