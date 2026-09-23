@@ -159,17 +159,16 @@ export default function DeckColumn({
             <View key={index + group.title} className="mt-1">
               {!commander && group.title !== title && (
                 <View className="flex flex-row justify-between items-center px-2">
-                  <Text weight="semi">{titleCase(group.title)}</Text>
-
                   <View className="flex flex-row gap-2">
-                    {!commander && <Text>{group.count}</Text>}
-
                     {showPrice && (
                       <Text className="w-14 text-right">
                         {currency(group.price)}
                       </Text>
                     )}
+                    <Text weight="semi">{titleCase(group.title)}</Text>
                   </View>
+
+                  {!commander && <Text>{group.count}</Text>}
                 </View>
               )}
 
