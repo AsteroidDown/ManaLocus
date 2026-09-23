@@ -100,7 +100,8 @@ export default function DeckColumn({
           ) || 0,
         price:
           (groupedCards as any)[key]?.reduce(
-            (acc: number, card: Card) => (acc += card.prices?.usd || 0),
+            (acc: number, card: Card) =>
+              (acc += (card.prices?.usd || 0) * card.count),
             0,
           ) || 0,
       });
