@@ -11,7 +11,7 @@ import {
   faCopy,
   faFileArrowDown,
 } from "@fortawesome/free-solid-svg-icons";
-import React, { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Image, useWindowDimensions, View } from "react-native";
 import CardImportExportModal from "../cards/card-import-export-modal";
 import Box from "../ui/box/box";
@@ -73,39 +73,43 @@ export default function DeckFooter({
     setTotalValue(
       deck.main.reduce(
         (acc, card) => acc + (card.prices?.usd ?? 0) * card.count,
-        0
-      )
+        0,
+      ) +
+        deck.side.reduce(
+          (acc, card) => acc + (card.prices?.usd ?? 0) * card.count,
+          0,
+        ),
     );
 
     const groupedCards = groupCardsByType(deck.main);
 
     setCreatureCount(
-      groupedCards.creature?.reduce((acc, card) => (acc += card.count), 0) || 0
+      groupedCards.creature?.reduce((acc, card) => (acc += card.count), 0) || 0,
     );
     setInstantCount(
-      groupedCards.instant?.reduce((acc, card) => (acc += card.count), 0) || 0
+      groupedCards.instant?.reduce((acc, card) => (acc += card.count), 0) || 0,
     );
     setSorceryCount(
-      groupedCards.sorcery?.reduce((acc, card) => (acc += card.count), 0) || 0
+      groupedCards.sorcery?.reduce((acc, card) => (acc += card.count), 0) || 0,
     );
     setArtifactCount(
-      groupedCards.artifact?.reduce((acc, card) => (acc += card.count), 0) || 0
+      groupedCards.artifact?.reduce((acc, card) => (acc += card.count), 0) || 0,
     );
     setEnchantmentCount(
       groupedCards.enchantment?.reduce((acc, card) => (acc += card.count), 0) ||
-        0
+        0,
     );
     setPlaneswalkerCount(
       groupedCards.planeswalker?.reduce(
         (acc, card) => (acc += card.count),
-        0
-      ) || 0
+        0,
+      ) || 0,
     );
     setBattleCount(
-      groupedCards.battle?.reduce((acc, card) => (acc += card.count), 0) || 0
+      groupedCards.battle?.reduce((acc, card) => (acc += card.count), 0) || 0,
     );
     setLandCount(
-      groupedCards.land?.reduce((acc, card) => (acc += card.count), 0) || 0
+      groupedCards.land?.reduce((acc, card) => (acc += card.count), 0) || 0,
     );
   }, [deck]);
 
@@ -349,11 +353,11 @@ export default function DeckFooter({
                 ? user.access?.kitCount === -1 ||
                   (user.access?.kitCount || 0) > (user.kitCount || 0)
                 : deck.isCollection
-                ? user.access?.collectionCount === -1 ||
-                  (user.access?.collectionCount || 0) >
-                    (user.collectionCount || 0)
-                : user.access?.deckCount === -1 ||
-                  (user.access?.deckCount || 0) > (user.deckCount || 0)) && (
+                  ? user.access?.collectionCount === -1 ||
+                    (user.access?.collectionCount || 0) >
+                      (user.collectionCount || 0)
+                  : user.access?.deckCount === -1 ||
+                    (user.access?.deckCount || 0) > (user.deckCount || 0)) && (
                 <Button
                   rounded
                   type="clear"

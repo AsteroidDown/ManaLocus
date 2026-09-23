@@ -15,7 +15,7 @@ import {
   faMagnifyingGlassPlus,
   faMountain,
 } from "@fortawesome/free-solid-svg-icons";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Pressable, View } from "react-native";
 import CardDetailedPreview from "../cards/card-detailed-preview";
 import CardImage from "../cards/card-image";
@@ -70,13 +70,16 @@ export default function DeckColumn({
   const [cardPreviewModalOpen, setCardPreviewModalOpen] = useState(false);
 
   const [cardGroupings, setCardGroupings] = useState(
-    [] as DeckColumnCardGrouping[] | null
+    [] as DeckColumnCardGrouping[] | null,
   );
 
   useEffect(() => {
     setCount(cards?.reduce((acc, card) => acc + card.count, 0) || 0);
     setPrice(
-      cards?.reduce((acc, card) => acc + (card.prices?.usd || 0), 0) || 0
+      cards?.reduce(
+        (acc, card) => acc + (card.prices?.usd || 0) * card.count,
+        0,
+      ) || 0,
     );
   }, [cards]);
 
@@ -93,12 +96,12 @@ export default function DeckColumn({
         count:
           (groupedCards as any)[key]?.reduce(
             (acc: number, card: Card) => (acc += card.count),
-            0
+            0,
           ) || 0,
         price:
           (groupedCards as any)[key]?.reduce(
             (acc: number, card: Card) => (acc += card.prices?.usd || 0),
-            0
+            0,
           ) || 0,
       });
     });
@@ -250,7 +253,7 @@ function DeckCard({
 
   function cardListIncludes(list: Card[] | undefined, card: Card) {
     return !!list?.some(
-      (cardInList) => cardInList.scryfallId === card.scryfallId
+      (cardInList) => cardInList.scryfallId === card.scryfallId,
     );
   }
 
@@ -260,7 +263,7 @@ function DeckCard({
     const { legal, restricted, reasons } = evaluateCardLegality(
       card,
       format,
-      colorIdentity
+      colorIdentity,
     );
 
     if (!legal) {
@@ -297,8 +300,8 @@ function DeckCard({
                       banned
                         ? "!text-red-500"
                         : restricted
-                        ? "!text-orange-500"
-                        : ""
+                          ? "!text-orange-500"
+                          : ""
                     }`}
                   >
                     {card.count}
@@ -312,8 +315,8 @@ function DeckCard({
                     banned
                       ? "!text-red-500"
                       : restricted
-                      ? "!text-orange-500"
-                      : ""
+                        ? "!text-orange-500"
+                        : ""
                   }`}
                 >
                   {card.name}
@@ -330,16 +333,16 @@ function DeckCard({
                           {isGameChanger || isTutor
                             ? " a "
                             : isExtraTurn
-                            ? " an "
-                            : " "}
+                              ? " an "
+                              : " "}
                           <Text action="primary">
                             {isGameChanger
                               ? "Game Changer"
                               : isTutor
-                              ? "Tutor"
-                              : isExtraTurn
-                              ? "Extra Turn spell"
-                              : "Mass Land Denial"}
+                                ? "Tutor"
+                                : isExtraTurn
+                                  ? "Extra Turn spell"
+                                  : "Mass Land Denial"}
                           </Text>
                         </Text>
                       }
@@ -351,10 +354,10 @@ function DeckCard({
                           isGameChanger
                             ? faBurst
                             : isTutor
-                            ? faMagnifyingGlassPlus
-                            : isExtraTurn
-                            ? faCalendarPlus
-                            : faMountain
+                              ? faMagnifyingGlassPlus
+                              : isExtraTurn
+                                ? faCalendarPlus
+                                : faMountain
                         }
                       />
                     </Tooltip>
@@ -375,7 +378,7 @@ function DeckCard({
 
               {showPrice && (
                 <Text className="w-14 text-right">
-                  {currency(card.prices?.usd)}
+                  {currency((card.prices?.usd || 0) * card.count)}
                 </Text>
               )}
             </View>
