@@ -1,8 +1,19 @@
-import { Buffer } from "buffer";
+function bytesToBase64(bytes: Uint8Array): string {
+  let binary = "";
+  bytes.forEach((byte) => {
+    binary += String.fromCharCode(byte);
+  });
+
+  return btoa(binary);
+}
+
+function base64ToBytes(data: string): Uint8Array {
+  return Uint8Array.from(atob(data), (char) => char.charCodeAt(0));
+}
 
 export function encode(data: string, prefix = "") {
-  return Buffer.from(`${prefix ? `${prefix}_` : ""}${data}`, "utf8").toString(
-    "base64"
+  return bytesToBase64(
+    new TextEncoder().encode(`${prefix ? `${prefix}_` : ""}${data}`)
   );
 }
 
@@ -11,7 +22,7 @@ export function decode(data: string, prefix = "") {
     throw new TypeError("Invalid parameters for decode()");
   }
 
-  return Buffer.from(data, "base64")
-    .toString("utf8")
+  return new TextDecoder()
+    .decode(base64ToBytes(data))
     .split(`${prefix ? `${prefix}_` : ""}`)[prefix ? 1 : 0];
 }

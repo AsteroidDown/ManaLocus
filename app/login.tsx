@@ -288,7 +288,7 @@ export default function Login() {
               action="primary"
               className="flex-1"
               type={login ? "default" : "outlined"}
-              onClick={() => setLogin(false)}
+              onClick={() => setLogin(true)}
             />
 
             <Button
