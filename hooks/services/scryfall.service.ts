@@ -13,7 +13,6 @@ import {
   ScryfallSetList,
 } from "@/models/scryfall/scryfall-list";
 import { ScryfallSet } from "@/models/scryfall/scryfall-set";
-import axios from "axios";
 import API from "../api-methods/api-methods";
 import ScryfallAPI from "../api-methods/scryfall-api-methods";
 
@@ -179,17 +178,7 @@ async function getSetCards(searchURI: string): Promise<Card[]> {
 }
 
 async function getAllCards() {
-  const response: ScryfallCardList = await ScryfallAPI.get(
-    `bulk-data/default-cards`
-  ).catch((error) => console.error(error));
-
-  await axios.get((response as any).download_uri).then((response2) => {
-    const data = response2.data;
-
-    API.post(`scryfall/`, {
-      cards: data,
-    });
-  });
+  return await API.post(`scryfall/`);
 }
 
 const ScryfallService = {

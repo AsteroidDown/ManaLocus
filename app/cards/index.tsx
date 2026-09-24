@@ -8,18 +8,28 @@ import SearchBar from "@/components/ui/search-bar/search-bar";
 import Table, { TableColumn } from "@/components/ui/table/table";
 import Text from "@/components/ui/text/text";
 import { MTGSetType, MTGSetTypes } from "@/constants/mtg/mtg-set-types";
+import ToastContext from "@/contexts/ui/toast.context";
 import { titleCase } from "@/functions/text-manipulation";
 import { PaginationMeta } from "@/hooks/pagination";
 import ScryfallService from "@/hooks/services/scryfall.service";
 import { faCheck, faFilter, faSearch } from "@fortawesome/free-solid-svg-icons";
 import { router } from "expo-router";
-import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
+import {
+  Dispatch,
+  SetStateAction,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { Image, SafeAreaView, View } from "react-native";
 import { Set } from "../../models/card/set";
 
 export default function CardsPage() {
+  const { addToast } = useContext(ToastContext);
+
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(false);
+  const [importing, setImporting] = useState(false);
 
   const [page, setPage] = useState(1);
   const [items, setItems] = useState(25);
@@ -67,8 +77,36 @@ export default function CardsPage() {
     });
   }, [sets, selectedSets, page, sets]);
 
-  function importAllCards() {
-    ScryfallService.getAllCards();
+  async function importAllCards() {
+    if (importing) return;
+
+    setImporting(true);
+    addToast({
+      action: "info",
+      title: "Import Started",
+      subtitle: "Scryfall cards are importing in the backend.",
+    });
+
+    ScryfallService.getAllCards()
+      .then((response) =>
+        addToast({
+          action: "success",
+          title: "Import Complete",
+          subtitle: `${response?.processed ?? "All"} cards were imported.`,
+        }),
+      )
+      .catch((error) =>
+        addToast({
+          action: "danger",
+          title: "Import Failed",
+          subtitle:
+            error?.response?.data?.detail ||
+            error?.response?.data?.message ||
+            error?.message ||
+            "Unable to import cards.",
+        }),
+      )
+      .finally(() => setImporting(false));
   }
 
   return (
@@ -79,7 +117,13 @@ export default function CardsPage() {
           title="Find Cards"
           subtitle="Search for cards or view full sets"
           className="!pb-0"
-          // end={<Button text={"Import All Cards"} onClick={importAllCards} />}
+          // end={
+          //   <Button
+          //     text={importing ? "Importing Cards" : "Import All Cards"}
+          //     disabled={importing}
+          //     onClick={importAllCards}
+          //   />
+          // }
         />
 
         <SearchBar
